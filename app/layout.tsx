@@ -1,6 +1,8 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { CSRFProvider } from '@/lib/providers/csrf-provider';
+import { PostHogProvider } from '@/lib/providers/posthog-provider';
 
 /**
  * Font Optimization for Core Web Vitals
@@ -90,8 +92,19 @@ export default function RootLayout({
           {/* Preconnect to Supabase for data fetching */}
           <link rel="preconnect" href="https://supabase.co" />
           <link rel="dns-prefetch" href="https://supabase.co" />
+          {/* Preconnect to PostHog for analytics */}
+          {process.env.NEXT_PUBLIC_POSTHOG_HOST && (
+            <>
+              <link rel="preconnect" href={process.env.NEXT_PUBLIC_POSTHOG_HOST} />
+              <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_POSTHOG_HOST} />
+            </>
+          )}
         </head>
-        <body className="antialiased">{children}</body>
+        <body className="antialiased">
+          <PostHogProvider>
+            <CSRFProvider>{children}</CSRFProvider>
+          </PostHogProvider>
+        </body>
       </html>
     </ClerkProvider>
   );

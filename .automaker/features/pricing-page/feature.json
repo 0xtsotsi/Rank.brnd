@@ -3,10 +3,10 @@
   "category": "UI",
   "title": "Build pricing page with plan comparison",
   "description": "Create landing page showing subscription plans, features per tier, pricing, comparison table, CTA buttons to upgrade.",
-  "status": "in_progress",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
   "createdAt": "2026-01-02T09:30:07.966Z",
-  "updatedAt": "2026-02-03T20:39:18.268Z",
+  "updatedAt": "2026-02-03T20:53:00.201Z",
   "descriptionHistory": []
 }

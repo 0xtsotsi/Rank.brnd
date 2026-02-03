@@ -3,12 +3,12 @@
   "category": "State Management",
   "title": "Configure React Query for server state",
   "description": "Install and configure React Query with 5-minute stale time, automatic cache invalidation, implement custom hooks for API calls.",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": 2,
   "complexity": "simple",
-  "dependencies": ["nextjs-project-setup"],
   "createdAt": "2026-01-02T09:30:07.963Z",
-  "updatedAt": "2026-01-02T10:49:31.504Z",
+  "updatedAt": "2026-02-03T20:53:16.289Z",
   "branchName": "feature/configure-react-query-for-server-state",
-  "startedAt": "2026-01-02T10:49:27.759Z"
+  "startedAt": "2026-01-02T10:49:27.759Z",
+  "descriptionHistory": []
 }

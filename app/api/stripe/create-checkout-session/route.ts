@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireUserId, requireOrganizationId } from '@/lib/auth';
 import { getStripeClient } from '@/lib/stripe';
+import {
+  createCheckoutSessionSchema,
+  validateRequest,
+} from '@/lib/schemas';
 import type Stripe from 'stripe';
 
 /**

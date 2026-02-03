@@ -1,15 +1,16 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 /**
- * Clerk Middleware Configuration
+ * Middleware Configuration
  *
- * This middleware protects routes and handles authentication flow.
- * It uses httpOnly cookies for secure JWT token storage by default.
+ * This middleware handles:
+ * 1. Authentication flow via Clerk
+ * 2. CSRF protection for state-changing operations
  *
  * Route Protection:
  * - Public routes: accessible without authentication
  * - Protected routes: require authentication
- * - API routes: may require authentication based on prefix
+ * - API routes: may require authentication and CSRF validation
  */
 
 // Define protected routes that require authentication
@@ -34,10 +35,122 @@ const isPublicRoute = createRouteMatcher([
   '/api/health(.*)',
 ]);
 
+// Routes that should be excluded from CSRF validation
+const isCSRFExemptRoute = createRouteMatcher([
+  '/api/webhooks(.*)',      // Webhooks from external services
+  '/api/health(.*)',        // Health check endpoints
+  '/api/csrf-token(.*)',    // CSRF token endpoint
+]);
+
+// State-changing methods that require CSRF protection
+const STATE_CHANGING_METHODS = new Set(['POST', 'PUT', 'DELETE', 'PATCH']);
+
+/**
+ * Validate Origin header for state-changing requests
+ * This helps prevent CSRF attacks by verifying the request source
+ */
+function validateOrigin(
+  requestOrigin: string | null,
+  requestReferer: string | null
+): boolean {
+  // Get allowed origins from environment
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const allowedOrigins = new Set([appUrl]);
+
+  // Add localhost URLs for development
+  if (process.env.NODE_ENV === 'development') {
+    allowedOrigins.add('http://localhost:3000');
+    allowedOrigins.add('http://localhost:3001');
+  }
+
+  // If no origin or referer, reject (better to be safe)
+  if (!requestOrigin && !requestReferer) {
+    return false;
+  }
+
+  // Check origin first (more reliable)
+  if (requestOrigin) {
+    try {
+      const originUrl = new URL(requestOrigin);
+      const origin = `${originUrl.protocol}//${originUrl.host}`;
+      if (allowedOrigins.has(origin)) {
+        return true;
+      }
+    } catch {
+      // Invalid URL, continue to referer check
+    }
+  }
+
+  // Fallback to referer
+  if (requestReferer) {
+    try {
+      const refererUrl = new URL(requestReferer);
+      const referer = `${refererUrl.protocol}//${refererUrl.host}`;
+      if (allowedOrigins.has(referer)) {
+        return true;
+      }
+    } catch {
+      // Invalid URL
+      return false;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Validate CSRF token for state-changing requests
+ * Note: Full token validation happens in API routes
+ * This is a lightweight check in middleware
+ */
+function hasCSRFToken(request: Request): boolean {
+  const csrfToken = request.headers.get('x-csrf-token');
+  return csrfToken !== null && csrfToken.length > 0;
+}
+
 export default clerkMiddleware(async (auth, request) => {
   // Check if route is public (no auth required)
   if (isPublicRoute(request)) {
     return;
+  }
+
+  // CSRF protection for state-changing API requests
+  const isAPIRoute = request.nextUrl.pathname.startsWith('/api/');
+  const isStateChanging = STATE_CHANGING_METHODS.has(request.method);
+
+  if (isAPIRoute && isStateChanging && !isCSRFExemptRoute(request)) {
+    const requestOrigin = request.headers.get('origin');
+    const requestReferer = request.headers.get('referer');
+
+    // Validate origin header
+    if (!validateOrigin(requestOrigin, requestReferer)) {
+      return new Response(
+        JSON.stringify({
+          error: 'Invalid origin',
+          message: 'Request origin is not allowed',
+        }),
+        {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Check for CSRF token header
+    // Note: Full validation happens in the API route
+    // This is a quick check to reject obvious missing tokens
+    if (!hasCSRFToken(request)) {
+      return new Response(
+        JSON.stringify({
+          error: 'CSRF token missing',
+          message: 'CSRF token is required for state-changing requests',
+        }),
+        {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
   }
 
   // Check if route is protected (auth required)

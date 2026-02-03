@@ -129,6 +129,26 @@ Reverse-engineered from live analysis of Outrank.so application, incorporating 9
       <name>Create new user onboarding flow</name>
       <description>Build interactive onboarding with product tour, first article creation walkthrough, integration setup prompts, success celebrations.</description>
     </feature>
+    <feature>
+      <name>Configure PostgreSQL and Drizzle ORM</name>
+      <description>Set up PostgreSQL 16 connection, install and configure Drizzle ORM with type-safe database toolkit, create migrations system, and establish database connection pooling.</description>
+    </feature>
+    <feature>
+      <name>Build pricing page with plan comparison</name>
+      <description>Create landing page showing subscription plans, features per tier, pricing, comparison table, CTA buttons to upgrade.</description>
+    </feature>
+    <feature>
+      <name>Configure Vercel deployment</name>
+      <description>Connect project to Vercel, set up environment variables, configure preview deployments, set up automatic deployment on main branch push.</description>
+    </feature>
+    <feature>
+      <name>Implement CSRF protection</name>
+      <description>Add CSRF token generation and validation for state-changing operations, verify origin headers.</description>
+    </feature>
+    <feature>
+      <name>Configure Tailwind CSS and shadcn/ui</name>
+      <description>Install and configure Tailwind CSS 3.4 with custom design tokens (Indigo-600 primary color, Inter typography). Set up shadcn/ui as component foundation with custom theme.</description>
+    </feature>
   </implemented_features>
 
   <additional_requirements>

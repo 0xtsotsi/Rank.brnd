@@ -3,12 +3,12 @@
   "category": "SEO",
   "title": "Add JSON-LD structured data markup",
   "description": "Implement JSON-LD for Article, FAQPage, BreadcrumbList, Organization schemas, add to relevant pages.",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": 2,
   "complexity": "moderate",
-  "dependencies": ["nextjs-project-setup"],
   "createdAt": "2026-01-02T09:30:07.968Z",
-  "updatedAt": "2026-01-02T10:48:10.613Z",
+  "updatedAt": "2026-02-03T20:53:18.457Z",
   "branchName": "feature/add-json-ld-structured-data-markup",
-  "startedAt": "2026-01-02T10:48:07.957Z"
+  "startedAt": "2026-01-02T10:48:07.957Z",
+  "descriptionHistory": []
 }

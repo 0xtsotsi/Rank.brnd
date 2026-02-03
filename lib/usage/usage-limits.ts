@@ -4,6 +4,10 @@
  * This service provides functionality to check and enforce usage limits
  * based on subscription plans. It integrates with the subscription system
  * to track usage across different features.
+ *
+ * Storage backend:
+ * - Uses Upstash Redis when configured (production)
+ * - Falls back to in-memory storage when Redis is unavailable (development)
  */
 
 import type {
@@ -21,6 +25,10 @@ import type {
   UsageLimits as PlanUsageLimits,
 } from '@/types/subscription';
 import { getPlan, canUseFeature as checkPlanFeature } from '@/lib/stripe/plans';
+import {
+  createUsageTracker as createRedisUsageTracker,
+  isRedisConfigured,
+} from '@/lib/redis';
 
 /**
  * Mapping of usage metrics to feature keys and plan limit fields
@@ -98,11 +106,22 @@ const METRIC_FEATURE_MAP: Record<UsageMetric, MetricFeatureMapping> = {
 };
 
 /**
- * In-memory storage for usage tracking
- * In production, this should be replaced with a database-backed solution
+ * Storage for usage tracking
+ *
+ * Uses Upstash Redis when configured, falls back to in-memory storage
+ * for development/testing scenarios.
  */
 class UsageTracker {
-  private usage: Map<string, UsageAggregate[]> = new Map();
+  private memory: Map<string, UsageAggregate[]> = new Map();
+  private useRedis: boolean;
+
+  constructor() {
+    this.useRedis = isRedisConfigured();
+  }
+
+  private getRedisTracker() {
+    return createRedisUsageTracker();
+  }
 
   /**
    * Get current usage for a metric in the billing period
@@ -113,8 +132,22 @@ class UsageTracker {
     periodStart: Date,
     periodEnd: Date
   ): Promise<number> {
+    // Try Redis first
+    if (this.useRedis) {
+      const redisTracker = this.getRedisTracker();
+      if (redisTracker) {
+        return redisTracker.getCurrentUsage(
+          organizationId,
+          metric,
+          periodStart,
+          periodEnd
+        );
+      }
+    }
+
+    // Fall back to in-memory storage
     const key = this.getKey(organizationId, metric, periodStart, periodEnd);
-    const records = this.usage.get(key) || [];
+    const records = this.memory.get(key) || [];
 
     return records.reduce((total, record) => total + record.totalUsage, 0);
   }
@@ -129,8 +162,24 @@ class UsageTracker {
     periodStart: Date,
     periodEnd: Date
   ): Promise<void> {
+    // Try Redis first
+    if (this.useRedis) {
+      const redisTracker = this.getRedisTracker();
+      if (redisTracker) {
+        await redisTracker.recordUsage(
+          organizationId,
+          metric,
+          quantity,
+          periodStart,
+          periodEnd
+        );
+        return;
+      }
+    }
+
+    // Fall back to in-memory storage
     const key = this.getKey(organizationId, metric, periodStart, periodEnd);
-    const records = this.usage.get(key) || [];
+    const records = this.memory.get(key) || [];
 
     // Find existing aggregate or create new one
     let aggregate = records.find(
@@ -153,7 +202,7 @@ class UsageTracker {
       records.push(aggregate);
     }
 
-    this.usage.set(key, records);
+    this.memory.set(key, records);
   }
 
   /**
@@ -165,8 +214,23 @@ class UsageTracker {
     periodStart: Date,
     periodEnd: Date
   ): Promise<void> {
+    // Try Redis first
+    if (this.useRedis) {
+      const redisTracker = this.getRedisTracker();
+      if (redisTracker) {
+        await redisTracker.resetUsage(
+          organizationId,
+          metric,
+          periodStart,
+          periodEnd
+        );
+        return;
+      }
+    }
+
+    // Fall back to in-memory storage
     const key = this.getKey(organizationId, metric, periodStart, periodEnd);
-    this.usage.set(key, []);
+    this.memory.set(key, []);
   }
 
   /**
@@ -191,9 +255,36 @@ class UsageTracker {
   ): Promise<UsageAggregate[]> {
     const results: UsageAggregate[] = [];
 
+    // If using Redis, we need to query each metric
+    if (this.useRedis) {
+      const redisTracker = this.getRedisTracker();
+      if (redisTracker) {
+        for (const metric of Object.keys(METRIC_FEATURE_MAP) as UsageMetric[]) {
+          const usage = await redisTracker.getCurrentUsage(
+            organizationId,
+            metric,
+            periodStart,
+            periodEnd
+          );
+          if (usage > 0) {
+            results.push({
+              organizationId,
+              metric,
+              totalUsage: usage,
+              periodStart,
+              periodEnd,
+              lastResetAt: new Date(),
+            });
+          }
+        }
+        return results;
+      }
+    }
+
+    // Fall back to in-memory storage
     for (const metric of Object.keys(METRIC_FEATURE_MAP) as UsageMetric[]) {
       const key = this.getKey(organizationId, metric, periodStart, periodEnd);
-      const records = this.usage.get(key);
+      const records = this.memory.get(key);
       if (records && records.length > 0) {
         results.push(...records);
       }

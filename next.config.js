@@ -7,6 +7,14 @@ const nextConfig = {
   },
 
   // ============================================
+  // Security Headers Configuration
+  // Protects against XSS, clickjacking, and other vulnerabilities
+  // ============================================
+
+  // Power off x-powered-by header for security and smaller response
+  poweredByHeader: false,
+
+  // ============================================
   // Core Web Vitals Optimization Configuration
   // Targets: LCP < 2.5s, FID < 100ms, CLS < 0.1
   // ============================================
@@ -46,16 +54,72 @@ const nextConfig = {
   // Enable strict mode for better performance patterns
   reactStrictMode: true,
 
-  // Power off x-powered-by header for security and smaller response
-  poweredByHeader: false,
-
-  // Configure headers for performance and caching
+  // Configure headers for performance, caching, and security
   async headers() {
+    // Content Security Policy
+    // Controls which resources the browser is allowed to load
+    const ContentSecurityPolicy = `
+      default-src 'self';
+      script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.com https://*.clerk.accounts.dev;
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in https://*.clerk.com https://*.clerk.accounts.dev;
+      font-src 'self' data:;
+      connect-src 'self' https://*.supabase.co https://*.supabase.in https://*.clerk.com https://*.clerk.accounts.dev;
+      media-src 'self' blob:;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      frame-ancestors 'none';
+      upgrade-insecure-requests;
+    `.replace(/\s{2,}/g, ' ').trim();
+
     return [
       {
         // Apply to all routes
         source: '/:path*',
         headers: [
+          // Content Security Policy (CSP)
+          // Mitigates XSS attacks by controlling which resources can be loaded
+          {
+            key: 'Content-Security-Policy',
+            value: ContentSecurityPolicy,
+          },
+          // Strict-Transport-Security (HSTS)
+          // Forces HTTPS connections for the specified duration
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
+          // X-Frame-Options
+          // Prevents clickjacking attacks by blocking iframe embedding
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          // X-Content-Type-Options
+          // Prevents MIME sniffing to reduce XSS risk
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          // X-XSS-Protection
+          // Enables browser's XSS filtering (legacy, but still useful)
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          // Referrer-Policy
+          // Controls how much referrer information is sent
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          // Permissions-Policy
+          // Disables browser features that could be exploited
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), payment=()',
+          },
           // Enable preloading for critical resources
           {
             key: 'Link',

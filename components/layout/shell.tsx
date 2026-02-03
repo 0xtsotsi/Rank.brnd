@@ -5,12 +5,20 @@
  *
  * The main layout wrapper that combines the sidebar navigation,
  * top header bar, and main content area with responsive behavior.
+ *
+ * Uses Zustand store for state management of sidebar collapse and theme.
  */
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { SidebarNavigation } from '@/components/navigation/sidebar-navigation';
 import { TopHeaderBar } from '@/components/navigation/top-header-bar';
 import { cn } from '@/lib/utils';
+import {
+  useSidebarCollapsed,
+  useMobileSidebarOpen,
+  useSetMobileSidebarOpen,
+  initializeTheme,
+} from '@/lib/ui-store';
 
 interface ShellProps {
   children: React.ReactNode;
@@ -21,15 +29,29 @@ interface ShellProps {
 }
 
 export function Shell({ children, title, breadcrumbs }: ShellProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const sidebarCollapsed = useSidebarCollapsed();
+  const mobileSidebarOpen = useMobileSidebarOpen();
+  const setMobileSidebarOpen = useSetMobileSidebarOpen();
+
+  // Initialize theme on mount
+  useEffect(() => {
+    const cleanup = initializeTheme();
+    return cleanup;
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Sidebar - Fixed on desktop, drawer on mobile */}
-      <SidebarNavigation
-        collapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-      />
+      <SidebarNavigation />
+
+      {/* Mobile Overlay */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden"
+          onClick={() => setMobileSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Main Content Area */}
       <div
@@ -40,11 +62,7 @@ export function Shell({ children, title, breadcrumbs }: ShellProps) {
         )}
       >
         {/* Top Header Bar */}
-        <TopHeaderBar
-          title={title}
-          breadcrumbs={breadcrumbs}
-          sidebarCollapsed={sidebarCollapsed}
-        />
+        <TopHeaderBar title={title} breadcrumbs={breadcrumbs} />
 
         {/* Page Content */}
         <main className="p-4 sm:p-6 lg:p-8">

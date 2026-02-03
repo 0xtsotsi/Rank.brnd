@@ -1,0 +1,14 @@
+{
+  "id": "api-error-handling",
+  "category": "Feature",
+  "title": "Implement consistent API error handling",
+  "description": "Create error handling middleware for API routes, return consistent error format { error: { code, message } }, proper HTTP status codes.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "createdAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-01-02T10:46:44.926Z",
+  "branchName": "feature/implement-consistent-api-error-handling",
+  "startedAt": "2026-01-02T10:44:11.139Z",
+  "descriptionHistory": []
+}

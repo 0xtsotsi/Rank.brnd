@@ -3,12 +3,12 @@
   "category": "Testing",
   "title": "Configure Vitest for unit testing",
   "description": "Install and configure Vitest, create test configuration, set up test utilities and mocks.",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": 2,
   "complexity": "simple",
-  "dependencies": ["nextjs-project-setup"],
   "createdAt": "2026-01-02T09:30:07.967Z",
-  "updatedAt": "2026-01-02T10:53:56.183Z",
+  "updatedAt": "2026-02-03T20:53:01.927Z",
   "branchName": "feature/configure-vitest-for-unit-testing",
-  "startedAt": "2026-01-02T10:53:50.343Z"
+  "startedAt": "2026-01-02T10:53:50.343Z",
+  "descriptionHistory": []
 }

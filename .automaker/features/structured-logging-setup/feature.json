@@ -3,12 +3,12 @@
   "category": "DevOps",
   "title": "Implement structured logging with correlation IDs",
   "description": "Create structured logging service with correlation IDs, log levels (debug, info, warn, error, critical), implement in API routes.",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": 2,
   "complexity": "moderate",
-  "dependencies": ["nextjs-project-setup"],
   "createdAt": "2026-01-02T09:30:07.967Z",
-  "updatedAt": "2026-01-02T10:49:57.262Z",
+  "updatedAt": "2026-02-03T20:51:49.268Z",
   "branchName": "feature/implement-structured-logging-with-correlation-ids",
-  "startedAt": "2026-01-02T10:49:53.352Z"
+  "startedAt": "2026-01-02T10:49:53.352Z",
+  "descriptionHistory": []
 }

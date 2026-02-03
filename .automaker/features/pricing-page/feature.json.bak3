@@ -1,0 +1,12 @@
+{
+  "id": "pricing-page",
+  "category": "UI",
+  "title": "Build pricing page with plan comparison",
+  "description": "Create landing page showing subscription plans, features per tier, pricing, comparison table, CTA buttons to upgrade.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["tailwind-shadcn-setup", "subscription-plans-definition"],
+  "createdAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-01-02T09:30:07.966Z"
+}

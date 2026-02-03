@@ -3,7 +3,7 @@
   "category": "CMS Integration",
   "title": "Implement Shopify CMS adapter",
   "description": "Create Shopify adapter using Admin API, create products/articles, manage collections, upload product images, publish blog posts.",
-  "status": "completed",
+  "status": "verified",
   "priority": 2,
   "complexity": "complex",
   "dependencies": [

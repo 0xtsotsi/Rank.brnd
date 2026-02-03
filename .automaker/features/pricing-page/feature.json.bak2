@@ -6,7 +6,7 @@
   "status": "backlog",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["tailwind-shadcn-setup", "subscription-plans-definition"],
   "createdAt": "2026-01-02T09:30:07.966Z",
-  "updatedAt": "2026-01-02T09:30:07.966Z"
+  "updatedAt": "2026-01-02T09:30:07.966Z",
+  "descriptionHistory": []
 }

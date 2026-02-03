@@ -3,7 +3,7 @@
   "category": "Database",
   "title": "Configure PostgreSQL and Drizzle ORM",
   "description": "Set up PostgreSQL 16 connection, install and configure Drizzle ORM with type-safe database toolkit, create migrations system, and establish database connection pooling.",
-  "status": "in_progress",
+  "status": "backlog",
   "priority": 1,
   "complexity": "simple",
   "createdAt": "2026-01-02T09:30:07.961Z",

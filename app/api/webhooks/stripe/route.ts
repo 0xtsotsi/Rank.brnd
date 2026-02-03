@@ -36,88 +36,104 @@ import {
   getUserIdFromCustomer,
   type StripeWebhookEvent,
 } from '@/lib/stripe';
+import { createRequestLogger, withLoggingHeaders, getCorrelationId, type ILogger } from '@/lib/logger';
 
 /**
  * Handle Stripe webhook events
  */
 export async function POST(req: NextRequest) {
+  const log = await createRequestLogger('StripeWebhook');
+  const correlationId = await getCorrelationId();
+
   // Get signature header
   const headerPayload = await headers();
   const signature = headerPayload.get('stripe-signature');
 
   if (!signature) {
-    console.error('Missing Stripe signature header');
-    return new NextResponse('Error: Missing signature', { status: 400 });
+    log.warn('Missing Stripe signature header');
+    return withLoggingHeaders(
+      new NextResponse('Error: Missing signature', { status: 400 }),
+      correlationId
+    );
   }
 
   // Get raw body for signature verification
   const rawBody = await req.text();
 
+  log.debug('Received Stripe webhook', { hasSignature: !!signature });
+
   // Verify webhook signature
   let event;
   try {
     event = await verifyStripeWebhook(rawBody, signature);
+    log.info('Webhook signature verified', { eventType: event.type });
   } catch (err) {
-    if (err instanceof Error) {
-      console.error('Error verifying webhook:', err.message);
-    }
-    return new NextResponse('Error: Invalid signature', { status: 403 });
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    log.error('Error verifying webhook', err, { signaturePresent: !!signature });
+    return withLoggingHeaders(
+      new NextResponse('Error: Invalid signature', { status: 403 }),
+      correlationId
+    );
   }
-
-  // Log received event
-  console.log(`Received Stripe webhook: ${event.type}`);
 
   // Handle the webhook event
   try {
     switch (event.type) {
       case 'checkout.session.completed':
-        await handleCheckoutSessionCompleted(event);
+        await handleCheckoutSessionCompleted(event, log);
         break;
 
       case 'customer.subscription.created':
-        await handleSubscriptionCreated(event);
+        await handleSubscriptionCreated(event, log);
         break;
 
       case 'customer.subscription.updated':
-        await handleSubscriptionUpdated(event);
+        await handleSubscriptionUpdated(event, log);
         break;
 
       case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event);
+        await handleSubscriptionDeleted(event, log);
         break;
 
       case 'customer.subscription.trial_will_end':
-        await handleTrialWillEnd(event);
+        await handleTrialWillEnd(event, log);
         break;
 
       case 'invoice.paid':
-        await handleInvoicePaid(event);
+        await handleInvoicePaid(event, log);
         break;
 
       case 'invoice.payment_failed':
-        await handleInvoicePaymentFailed(event);
+        await handleInvoicePaymentFailed(event, log);
         break;
 
       case 'invoice.upcoming':
-        await handleInvoiceUpcoming(event);
+        await handleInvoiceUpcoming(event, log);
         break;
 
       case 'customer.created':
-        await handleCustomerCreated(event);
+        await handleCustomerCreated(event, log);
         break;
 
       case 'customer.updated':
-        await handleCustomerUpdated(event);
+        await handleCustomerUpdated(event, log);
         break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        log.debug('Unhandled event type', { eventType: event.type });
     }
 
-    return NextResponse.json({ success: true, received: true });
+    log.info('Webhook processed successfully', { eventType: event.type });
+    return withLoggingHeaders(
+      NextResponse.json({ success: true, received: true }),
+      correlationId
+    );
   } catch (error) {
-    console.error(`Error processing webhook ${event.type}:`, error);
-    return new NextResponse('Error processing webhook', { status: 500 });
+    log.error(`Error processing webhook ${event.type}`, error, { eventType: event.type });
+    return withLoggingHeaders(
+      new NextResponse('Error processing webhook', { status: 500 }),
+      correlationId
+    );
   }
 }
 
@@ -125,12 +141,12 @@ export async function POST(req: NextRequest) {
  * Handle checkout.session.completed
  * Called when a user completes the Stripe checkout flow
  */
-async function handleCheckoutSessionCompleted(event: Stripe.Event) {
+async function handleCheckoutSessionCompleted(event: Stripe.Event, log: ILogger) {
   if (!isEventType(event, 'checkout.session.completed')) return;
 
   const sessionData = extractCheckoutSessionCompleted(event);
 
-  console.log('Checkout completed:', {
+  log.info('Checkout completed', {
     sessionId: sessionData.sessionId,
     customerId: sessionData.customerId,
     customerEmail: sessionData.customerEmail,
@@ -148,12 +164,12 @@ async function handleCheckoutSessionCompleted(event: Stripe.Event) {
  * Handle customer.subscription.created
  * Called when a new subscription is created
  */
-async function handleSubscriptionCreated(event: Stripe.Event) {
+async function handleSubscriptionCreated(event: Stripe.Event, log: ILogger) {
   if (!isEventType(event, 'customer.subscription.created')) return;
 
   const subscriptionData = extractSubscriptionCreated(event);
 
-  console.log('Subscription created:', {
+  log.info('Subscription created', {
     subscriptionId: subscriptionData.subscriptionId,
     customerId: subscriptionData.customerId,
     priceId: subscriptionData.priceId,
@@ -181,12 +197,12 @@ async function handleSubscriptionCreated(event: Stripe.Event) {
  * Handle customer.subscription.updated
  * Called when a subscription is modified (plan change, cancellation, etc.)
  */
-async function handleSubscriptionUpdated(event: Stripe.Event) {
+async function handleSubscriptionUpdated(event: Stripe.Event, log: ILogger) {
   if (!isEventType(event, 'customer.subscription.updated')) return;
 
   const subscriptionData = extractSubscriptionUpdated(event);
 
-  console.log('Subscription updated:', {
+  log.info('Subscription updated', {
     subscriptionId: subscriptionData.subscriptionId,
     status: subscriptionData.status,
     priceId: subscriptionData.priceId,
@@ -209,7 +225,9 @@ async function handleSubscriptionUpdated(event: Stripe.Event) {
 
   // If subscription was canceled, update organization status
   if (subscriptionData.status === 'canceled') {
-    console.log(`Subscription ${subscriptionData.subscriptionId} was canceled`);
+    log.warn('Subscription canceled', {
+      subscriptionId: subscriptionData.subscriptionId,
+    });
     // TODO: Update organization to reflect cancellation
   }
 }
@@ -218,12 +236,12 @@ async function handleSubscriptionUpdated(event: Stripe.Event) {
  * Handle customer.subscription.deleted
  * Called when a subscription is fully canceled and expires
  */
-async function handleSubscriptionDeleted(event: Stripe.Event) {
+async function handleSubscriptionDeleted(event: Stripe.Event, log: ILogger) {
   if (!isEventType(event, 'customer.subscription.deleted')) return;
 
   const subscriptionData = extractSubscriptionDeleted(event);
 
-  console.log('Subscription deleted:', {
+  log.info('Subscription deleted', {
     subscriptionId: subscriptionData.subscriptionId,
     status: subscriptionData.status,
   });
@@ -242,12 +260,12 @@ async function handleSubscriptionDeleted(event: Stripe.Event) {
  * Handle customer.subscription.trial_will_end
  * Sent 7 days before trial ends
  */
-async function handleTrialWillEnd(event: Stripe.Event) {
+async function handleTrialWillEnd(event: Stripe.Event, log: ILogger) {
   if (!isEventType(event, 'customer.subscription.trial_will_end')) return;
 
   const subscription = event.data.object;
 
-  console.log('Trial will end soon:', {
+  log.info('Trial will end soon', {
     subscriptionId: subscription.id,
     trialEnd: subscription.trial_end,
   });
@@ -259,12 +277,12 @@ async function handleTrialWillEnd(event: Stripe.Event) {
  * Handle invoice.paid
  * Called when a payment succeeds
  */
-async function handleInvoicePaid(event: Stripe.Event) {
+async function handleInvoicePaid(event: Stripe.Event, log: ILogger) {
   if (!isEventType(event, 'invoice.paid')) return;
 
   const invoiceData = extractInvoicePaid(event);
 
-  console.log('Invoice paid:', {
+  log.info('Invoice paid', {
     invoiceId: invoiceData.invoiceId,
     subscriptionId: invoiceData.subscriptionId,
     amountPaid: invoiceData.amountPaid,
@@ -281,12 +299,12 @@ async function handleInvoicePaid(event: Stripe.Event) {
  * Handle invoice.payment_failed
  * Called when a payment fails
  */
-async function handleInvoicePaymentFailed(event: Stripe.Event) {
+async function handleInvoicePaymentFailed(event: Stripe.Event, log: ILogger) {
   if (!isEventType(event, 'invoice.payment_failed')) return;
 
   const invoiceData = extractInvoicePaymentFailed(event);
 
-  console.log('Invoice payment failed:', {
+  log.warn('Invoice payment failed', {
     invoiceId: invoiceData.invoiceId,
     subscriptionId: invoiceData.subscriptionId,
     amountDue: invoiceData.amountDue,
@@ -299,7 +317,10 @@ async function handleInvoicePaymentFailed(event: Stripe.Event) {
   // - Grace period handling
 
   if (invoiceData.attemptCount >= 3) {
-    console.log(`Payment failed 3 times for invoice ${invoiceData.invoiceId}`);
+    log.critical('Payment failed 3 times', {
+      invoiceId: invoiceData.invoiceId,
+      subscriptionId: invoiceData.subscriptionId,
+    });
     // TODO: Downgrade or suspend access
   }
 }
@@ -308,12 +329,12 @@ async function handleInvoicePaymentFailed(event: Stripe.Event) {
  * Handle invoice.upcoming
  * Sent ~1 week before invoice is created
  */
-async function handleInvoiceUpcoming(event: Stripe.Event) {
+async function handleInvoiceUpcoming(event: Stripe.Event, log: ILogger) {
   if (!isEventType(event, 'invoice.upcoming')) return;
 
   const invoice = event.data.object;
 
-  console.log('Upcoming invoice:', {
+  log.debug('Upcoming invoice', {
     customerId: invoice.customer,
     subscriptionId: invoice.subscription,
     amountDue: invoice.amount_due,
@@ -326,14 +347,14 @@ async function handleInvoiceUpcoming(event: Stripe.Event) {
  * Handle customer.created
  * Called when a new Stripe customer is created
  */
-async function handleCustomerCreated(event: Stripe.Event) {
+async function handleCustomerCreated(event: Stripe.Event, log: ILogger) {
   if (!isEventType(event, 'customer.created')) return;
 
   const customer = event.data.object;
   const organizationId = getOrganizationIdFromCustomer(customer);
   const userId = getUserIdFromCustomer(customer);
 
-  console.log('Customer created:', {
+  log.info('Customer created', {
     customerId: customer.id,
     email: customer.email,
     name: customer.name,
@@ -354,12 +375,12 @@ async function handleCustomerCreated(event: Stripe.Event) {
  * Handle customer.updated
  * Called when customer details are updated
  */
-async function handleCustomerUpdated(event: Stripe.Event) {
+async function handleCustomerUpdated(event: Stripe.Event, log: ILogger) {
   if (!isEventType(event, 'customer.updated')) return;
 
   const customer = event.data.object;
 
-  console.log('Customer updated:', {
+  log.info('Customer updated', {
     customerId: customer.id,
     email: customer.email,
     name: customer.name,

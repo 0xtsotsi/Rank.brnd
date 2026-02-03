@@ -161,7 +161,7 @@
       "title": "Feature Verified",
       "message": "\"content-planner-page\" has been verified and is complete.",
       "createdAt": "2026-02-03T20:06:37.845Z",
-      "read": false,
+      "read": true,
       "dismissed": false,
       "featureId": "content-planner-page",
       "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
@@ -186,6 +186,61 @@
       "read": false,
       "dismissed": false,
       "featureId": "onboarding-flow",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "ed3e35ef-f654-4d72-a259-87ecd3388963",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"postgresql-drizzle-setup\" has been verified and is complete.",
+      "createdAt": "2026-02-03T20:51:54.258Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "postgresql-drizzle-setup",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "f314292f-8249-4a08-a83e-2d1d624be162",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"pricing-page\" has been verified and is complete.",
+      "createdAt": "2026-02-03T20:53:00.202Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "pricing-page",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "e858aac2-d883-4bbf-96ef-865f78ba0f0e",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"vercel-deployment-setup\" has been verified and is complete.",
+      "createdAt": "2026-02-03T21:03:02.328Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "vercel-deployment-setup",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "b5b056cd-ef6e-4644-ba0f-c3c2b53dc9d2",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"csrf-protection\" has been verified and is complete.",
+      "createdAt": "2026-02-03T21:04:02.141Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "csrf-protection",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "b775ee7f-5a84-4800-8437-8dac611c4d37",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"tailwind-shadcn-setup\" has been verified and is complete.",
+      "createdAt": "2026-02-03T21:04:38.481Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "tailwind-shadcn-setup",
       "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
     }
   ]

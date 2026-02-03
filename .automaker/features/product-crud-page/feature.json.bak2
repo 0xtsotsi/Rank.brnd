@@ -6,7 +6,10 @@
   "status": "backlog",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["base-layout-shell", "tailwind-shadcn-setup"],
+  "dependencies": [
+    "base-layout-shell"
+  ],
   "createdAt": "2026-01-02T09:30:07.963Z",
-  "updatedAt": "2026-01-02T09:30:07.963Z"
+  "updatedAt": "2026-01-02T09:30:07.963Z",
+  "descriptionHistory": []
 }

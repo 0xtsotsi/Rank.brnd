@@ -1,0 +1,14 @@
+{
+  "id": "tailwind-shadcn-setup",
+  "category": "UI",
+  "title": "Configure Tailwind CSS and shadcn/ui",
+  "description": "Install and configure Tailwind CSS 3.4 with custom design tokens (Indigo-600 primary color, Inter typography). Set up shadcn/ui as component foundation with custom theme.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": ["nextjs-project-setup"],
+  "createdAt": "2026-01-02T09:30:07.961Z",
+  "updatedAt": "2026-01-02T10:46:29.243Z",
+  "branchName": "feature/configure-tailwind-css-and-shadcn-ui",
+  "startedAt": "2026-01-02T10:44:07.401Z"
+}

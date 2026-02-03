@@ -5,21 +5,22 @@
  *
  * A responsive sidebar navigation with collapsible functionality,
  * active state highlighting, and mobile drawer support.
+ *
+ * Uses Zustand store for state management of collapse and mobile open state.
  */
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { mainNavigation, isNavItemActive } from '@/lib/navigation';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import type { NavItem } from '@/types/navigation';
-
-interface SidebarProps {
-  /** Whether the sidebar is collapsed (icon-only mode) */
-  collapsed?: boolean;
-  /** Callback when sidebar toggle is clicked */
-  onToggle?: () => void;
-}
+import {
+  useSidebarCollapsed,
+  useToggleSidebar,
+  useMobileSidebarOpen,
+  useSetMobileSidebarOpen,
+} from '@/lib/ui-store';
 
 // Simple icon components (using SVG directly to avoid additional dependencies)
 const Icons = {
@@ -312,28 +313,21 @@ function NavItemComponent({
   );
 }
 
-export function SidebarNavigation({
-  collapsed = false,
-  onToggle,
-}: SidebarProps) {
+export function SidebarNavigation() {
   const pathname = usePathname();
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const collapsed = useSidebarCollapsed();
+  const toggleSidebar = useToggleSidebar();
+  const mobileSidebarOpen = useMobileSidebarOpen();
+  const setMobileSidebarOpen = useSetMobileSidebarOpen();
 
   // Close mobile sidebar on route change
   useEffect(() => {
-    setIsMobileOpen(false);
-  }, [pathname]);
+    setMobileSidebarOpen(false);
+  }, [pathname, setMobileSidebarOpen]);
 
   return (
     <>
-      {/* Mobile Overlay */}
-      {isMobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden"
-          onClick={() => setIsMobileOpen(false)}
-          aria-hidden="true"
-        />
-      )}
+      {/* Mobile Overlay - now handled in Shell component to prevent z-index issues */}
 
       {/* Sidebar Container */}
       <aside
@@ -341,7 +335,7 @@ export function SidebarNavigation({
           'fixed lg:sticky top-0 z-50 h-screen flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-all duration-300',
           // Mobile: off-closed by default, slides in when open
           'lg:flex w-64 -translate-x-full lg:translate-x-0',
-          isMobileOpen && 'translate-x-0',
+          mobileSidebarOpen && 'translate-x-0',
           collapsed && 'lg:w-16'
         )}
         aria-label="Sidebar navigation"
@@ -374,7 +368,7 @@ export function SidebarNavigation({
           <button
             type="button"
             className="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
-            onClick={() => setIsMobileOpen(false)}
+            onClick={() => setMobileSidebarOpen(false)}
             aria-label="Close sidebar"
           >
             <Icons.X className="h-5 w-5" />
@@ -413,7 +407,7 @@ export function SidebarNavigation({
               'hover:bg-gray-100 dark:hover:bg-gray-800',
               'transition-all duration-200'
             )}
-            onClick={onToggle}
+            onClick={toggleSidebar}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <Icons.ChevronLeft
@@ -431,7 +425,7 @@ export function SidebarNavigation({
       <button
         type="button"
         className="lg:hidden fixed bottom-4 right-4 z-50 p-3 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-colors"
-        onClick={() => setIsMobileOpen(true)}
+        onClick={() => setMobileSidebarOpen(true)}
         aria-label="Open menu"
       >
         <Icons.Menu className="h-6 w-6" />

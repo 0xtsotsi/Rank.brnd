@@ -1,0 +1,14 @@
+{
+  "id": "csrf-protection",
+  "category": "Security",
+  "title": "Implement CSRF protection",
+  "description": "Add CSRF token generation and validation for state-changing operations, verify origin headers.",
+  "status": "in_progress",
+  "priority": 2,
+  "complexity": "moderate",
+  "createdAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-02-03T20:51:43.383Z",
+  "branchName": "feature/implement-csrf-protection",
+  "startedAt": "2026-01-02T10:47:59.638Z",
+  "descriptionHistory": []
+}

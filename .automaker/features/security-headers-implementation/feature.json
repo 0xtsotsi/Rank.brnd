@@ -3,12 +3,12 @@
   "category": "Security",
   "title": "Implement security headers (CSP, HSTS)",
   "description": "Configure CSP, HSTS, X-Frame-Options, X-Content-Type-Options headers via next.config.js middleware.",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": 2,
   "complexity": "simple",
-  "dependencies": ["nextjs-project-setup"],
   "createdAt": "2026-01-02T09:30:07.967Z",
-  "updatedAt": "2026-01-02T10:49:36.515Z",
+  "updatedAt": "2026-02-03T20:52:43.788Z",
   "branchName": "feature/implement-security-headers-csp-hsts",
-  "startedAt": "2026-01-02T10:49:32.961Z"
+  "startedAt": "2026-01-02T10:49:32.961Z",
+  "descriptionHistory": []
 }

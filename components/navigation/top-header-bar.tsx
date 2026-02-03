@@ -5,19 +5,20 @@
  *
  * A responsive header bar with search functionality, notifications,
  * and user menu dropdown using Clerk's UserButton.
+ *
+ * Uses Zustand store for theme toggle functionality.
  */
 
 import { UserButton } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { useToggleTheme, useTheme, useEffectiveTheme } from '@/lib/ui-store';
 
 interface HeaderBarProps {
   /** Optional title to display in the header */
   title?: string;
   /** Breadcrumb items to display */
   breadcrumbs?: { label: string; href?: string }[];
-  /** Whether sidebar is collapsed (adjusts margin) */
-  sidebarCollapsed?: boolean;
 }
 
 // Simple icon components
@@ -37,6 +38,64 @@ const Icons = {
     >
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.3-4.3" />
+    </svg>
+  ),
+  Sun: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2" />
+      <path d="M12 20v2" />
+      <path d="m4.93 4.93 1.41 1.41" />
+      <path d="m17.66 17.66 1.41 1.41" />
+      <path d="M2 12h2" />
+      <path d="M20 12h2" />
+      <path d="m6.34 17.66-1.41-1.41" />
+      <path d="m19.07 4.93-1.41 1.41" />
+    </svg>
+  ),
+  Moon: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    </svg>
+  ),
+  Monitor: (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <rect width="20" height="14" x="2" y="3" rx="2" />
+      <line x1="8" x2="16" y1="21" y2="21" />
+      <line x1="12" x2="12" y1="17" y2="21" />
     </svg>
   ),
   Bell: (props: React.SVGProps<SVGSVGElement>) => (
@@ -95,10 +154,20 @@ const Icons = {
 export function TopHeaderBar({
   title,
   breadcrumbs = [],
-  sidebarCollapsed,
 }: HeaderBarProps) {
   const [searchValue, setSearchValue] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+  const toggleTheme = useToggleTheme();
+  const theme = useTheme();
+  const effectiveTheme = useEffectiveTheme();
+
+  // Determine which icon to show based on theme
+  const ThemeIcon =
+    theme === 'system'
+      ? Icons.Monitor
+      : effectiveTheme === 'dark'
+        ? Icons.Sun
+        : Icons.Moon;
 
   return (
     <header
@@ -191,6 +260,17 @@ export function TopHeaderBar({
           >
             <Icons.HelpCircle className="h-5 w-5" />
           </a>
+
+          {/* Theme Toggle Button */}
+          <button
+            type="button"
+            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors tap-highlight-none"
+            onClick={toggleTheme}
+            aria-label={`Toggle theme (current: ${theme})`}
+            title={`Current theme: ${theme}${theme === 'system' ? ` (${effectiveTheme})` : ''}`}
+          >
+            <ThemeIcon className="h-5 w-5" />
+          </button>
 
           {/* User Menu (Clerk UserButton) */}
           <UserButton

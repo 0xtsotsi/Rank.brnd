@@ -3,12 +3,12 @@
   "category": "Feature",
   "title": "Implement consistent API error handling",
   "description": "Create error handling middleware for API routes, return consistent error format { error: { code, message } }, proper HTTP status codes.",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": 2,
   "complexity": "moderate",
-  "dependencies": ["nextjs-project-setup"],
   "createdAt": "2026-01-02T09:30:07.967Z",
-  "updatedAt": "2026-01-02T10:46:44.926Z",
+  "updatedAt": "2026-02-03T20:52:41.523Z",
   "branchName": "feature/implement-consistent-api-error-handling",
-  "startedAt": "2026-01-02T10:44:11.139Z"
+  "startedAt": "2026-01-02T10:44:11.139Z",
+  "descriptionHistory": []
 }
