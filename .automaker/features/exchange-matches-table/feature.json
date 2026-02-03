@@ -1,0 +1,13 @@
+{
+  "id": "exchange-matches-table",
+  "category": "Database",
+  "title": "Create exchange matches database table",
+  "description": "Create table tracking exchange matches: organization_id, product_id, exchange_site_id, status (pending/approved/published), credits_used, created_at.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": ["exchange-network-table"],
+  "createdAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-01-02T09:30:07.966Z",
+  "descriptionHistory": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "activity-feed-page",
+  "category": "UI",
+  "title": "Build team activity feed page",
+  "description": "Create feed showing recent team activities (article creation, publishing, configuration changes) with timestamps and user names.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": ["base-layout-shell", "activity-feed-table"],
+  "createdAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-01-02T09:30:07.967Z"
+}

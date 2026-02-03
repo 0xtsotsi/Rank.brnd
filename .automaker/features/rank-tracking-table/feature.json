@@ -1,0 +1,13 @@
+{
+  "id": "rank-tracking-table",
+  "category": "Database",
+  "title": "Create rank tracking database table",
+  "description": "Create table for rank position history: organization_id, product_id, keyword_id, position, device, location, date, created_at.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": ["keywords-table"],
+  "createdAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-01-02T09:30:07.966Z",
+  "descriptionHistory": []
+}

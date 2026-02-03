@@ -1,0 +1,12 @@
+{
+  "id": "activity-feed-table",
+  "category": "Database",
+  "title": "Create activity feed database table",
+  "description": "Create activity_logs table: organization_id, user_id, action (create/update/delete/publish), resource_type, resource_id, timestamp.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "createdAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-01-02T09:30:07.967Z",
+  "descriptionHistory": []
+}

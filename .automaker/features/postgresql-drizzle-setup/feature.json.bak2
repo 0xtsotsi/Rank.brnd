@@ -1,0 +1,16 @@
+{
+  "id": "postgresql-drizzle-setup",
+  "category": "Database",
+  "title": "Configure PostgreSQL and Drizzle ORM",
+  "description": "Set up PostgreSQL 16 connection, install and configure Drizzle ORM with type-safe database toolkit, create migrations system, and establish database connection pooling.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "simple",
+  "createdAt": "2026-01-02T09:30:07.961Z",
+  "updatedAt": "2026-02-03T20:43:57.288Z",
+  "branchName": "feature/configure-postgresql-and-drizzle-orm",
+  "startedAt": "2026-01-07T06:05:04.746Z",
+  "failureCount": 1,
+  "lastFailedAt": "2026-01-07T06:05:08.227Z",
+  "descriptionHistory": []
+}

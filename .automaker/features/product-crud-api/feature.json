@@ -1,0 +1,12 @@
+{
+  "id": "product-crud-api",
+  "category": "API",
+  "title": "Implement product CRUD API endpoints",
+  "description": "Create /api/products endpoints for POST, GET, PUT, DELETE operations with proper organization isolation and validation.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["products-table", "rls-policy-setup"],
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-01-02T09:30:07.963Z"
+}

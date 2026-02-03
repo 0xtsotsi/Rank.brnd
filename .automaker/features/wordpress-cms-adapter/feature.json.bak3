@@ -1,0 +1,18 @@
+{
+  "id": "wordpress-cms-adapter",
+  "category": "CMS Integration",
+  "title": "Implement WordPress CMS adapter",
+  "description": "Create WordPress adapter using REST API, implement OAuth 2.0 authentication, category/tag mapping, image upload, draft/publish status, Yoast SEO integration.",
+  "status": "verified",
+  "priority": 1,
+  "complexity": "complex",
+  "dependencies": [
+    "cms-abstract-interface"
+  ],
+  "createdAt": "2026-01-02T09:30:07.965Z",
+  "updatedAt": "2026-02-03T18:52:03.803Z",
+  "branchName": "master",
+  "startedAt": "2026-01-07T06:05:09.790Z",
+  "failureCount": 2,
+  "lastFailedAt": "2026-01-07T06:05:08.897Z"
+}

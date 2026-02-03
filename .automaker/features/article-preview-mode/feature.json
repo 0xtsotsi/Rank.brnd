@@ -1,0 +1,12 @@
+{
+  "id": "article-preview-mode",
+  "category": "UI",
+  "title": "Implement article preview mode",
+  "description": "Create preview mode in article editor showing published appearance, SERP snippet preview, featured image display.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": ["article-editor-page"],
+  "createdAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-01-02T09:30:07.964Z"
+}

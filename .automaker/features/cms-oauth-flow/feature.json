@@ -1,0 +1,12 @@
+{
+  "id": "cms-oauth-flow",
+  "category": "Feature",
+  "title": "Implement CMS OAuth 2.0 connection flow",
+  "description": "Create OAuth callback handlers, secure token storage, token refresh logic, connection status checking and validation.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["cms-connections-page", "integrations-table"],
+  "createdAt": "2026-01-02T09:30:07.965Z",
+  "updatedAt": "2026-01-02T09:30:07.965Z"
+}

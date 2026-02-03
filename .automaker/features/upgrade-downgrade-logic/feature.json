@@ -1,0 +1,12 @@
+{
+  "id": "upgrade-downgrade-logic",
+  "category": "Feature",
+  "title": "Implement upgrade/downgrade prorated billing",
+  "description": "Create logic to handle plan changes with prorated billing adjustments, update Stripe subscription, update usage limits.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": ["subscriptions-table"],
+  "createdAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-01-02T09:30:07.967Z"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "usage-limits-enforcement",
+  "category": "Feature",
+  "title": "Implement usage limits per plan",
+  "description": "Create middleware/service to check plan limits (articles/month, keywords, CMS connections), block operations when limits exceeded, show quota warnings.",
+  "status": "verified",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["subscription-plans-definition"],
+  "createdAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-01-02T13:45:44.699Z",
+  "branchName": "feature/implement-usage-limits-per-plan",
+  "startedAt": "2026-01-02T13:30:43.756Z",
+  "failureCount": 0,
+  "permanentlyFailed": false
+}

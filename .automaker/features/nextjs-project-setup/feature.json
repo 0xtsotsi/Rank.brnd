@@ -1,0 +1,14 @@
+{
+  "id": "nextjs-project-setup",
+  "category": "Core",
+  "title": "Initialize Next.js 14 project with TypeScript",
+  "description": "Set up a new Next.js 14 project with App Router, TypeScript strict mode, and essential configuration files (tsconfig.json, next.config.js, ESLint, Prettier).",
+  "status": "verified",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-02T09:30:07.960Z",
+  "updatedAt": "2026-01-02T10:43:53.710Z",
+  "branchName": "feature/initialize-next-js-14-project-with-typescript",
+  "startedAt": "2026-01-02T10:26:09.635Z"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "backlink-exchange-marketplace-page",
+  "category": "UI",
+  "title": "Build backlink exchange marketplace page",
+  "description": "Create marketplace UI showing available sites for exchange, filters by domain authority/niche, exchange request workflow, approval panel.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": ["base-layout-shell", "exchange-network-table"],
+  "createdAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-01-02T09:30:07.966Z"
+}

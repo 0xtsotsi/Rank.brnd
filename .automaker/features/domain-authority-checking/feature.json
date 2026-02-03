@@ -1,0 +1,14 @@
+{
+  "id": "domain-authority-checking",
+  "category": "Feature",
+  "title": "Integrate domain authority checking (Moz API)",
+  "description": "Set up Moz API integration to check domain authority of backlink sources, cache results with 30-day TTL.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": ["nextjs-project-setup"],
+  "createdAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-01-02T10:48:04.055Z",
+  "branchName": "feature/integrate-domain-authority-checking-moz-api",
+  "startedAt": "2026-01-02T10:48:01.183Z"
+}

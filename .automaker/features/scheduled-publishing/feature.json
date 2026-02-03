@@ -1,0 +1,12 @@
+{
+  "id": "scheduled-publishing",
+  "category": "Feature",
+  "title": "Implement scheduled publishing",
+  "description": "Create background job system using cron/queue (Bull/Bullmq) to publish articles at scheduled times, handle timezone management.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": ["publishing-queue-table"],
+  "createdAt": "2026-01-02T09:30:07.965Z",
+  "updatedAt": "2026-01-02T09:30:07.965Z"
+}

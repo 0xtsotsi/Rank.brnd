@@ -1,0 +1,13 @@
+{
+  "id": "google-search-console-table",
+  "category": "Database",
+  "title": "Create GSC data database table",
+  "description": "Create table to store Google Search Console data: organization_id, product_id, keyword, impressions, clicks, ctr, avg_position, created_at.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": ["products-table"],
+  "createdAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-01-02T09:30:07.966Z",
+  "descriptionHistory": []
+}

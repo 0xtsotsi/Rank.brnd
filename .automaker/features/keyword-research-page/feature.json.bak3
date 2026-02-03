@@ -1,0 +1,15 @@
+{
+  "id": "keyword-research-page",
+  "category": "UI",
+  "title": "Build keyword research page UI",
+  "description": "Create page for keyword research with search input, results table showing keyword metrics, filters for intent/difficulty, bulk import functionality.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": [
+    "base-layout-shell"
+  ],
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-01-02T09:30:07.963Z",
+  "descriptionHistory": []
+}

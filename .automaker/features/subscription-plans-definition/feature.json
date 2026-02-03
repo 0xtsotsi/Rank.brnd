@@ -1,0 +1,16 @@
+{
+  "id": "subscription-plans-definition",
+  "category": "Configuration",
+  "title": "Define subscription plan tiers",
+  "description": "Create configuration for 3+ plan tiers (Free/Starter $29/Pro $49/Agency $149) with feature limits, API quotas, publishing limits.",
+  "status": "verified",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": ["stripe-subscription-setup"],
+  "createdAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-01-02T13:30:41.858Z",
+  "branchName": "feature/define-subscription-plan-tiers",
+  "startedAt": "2026-01-02T13:21:19.751Z",
+  "failureCount": 0,
+  "permanentlyFailed": false
+}

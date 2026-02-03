@@ -1,0 +1,12 @@
+{
+  "id": "content-planner-page",
+  "category": "UI",
+  "title": "Build content planner page",
+  "description": "Create content planner page with 30-day calendar view, list view, filter by status, keyword-to-calendar linking, status updates from calendar.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-01-02T09:30:07.963Z",
+  "descriptionHistory": []
+}

@@ -1,0 +1,132 @@
+{
+  "branches": [
+    {
+      "name": "master",
+      "createdAt": "2026-01-02T09:46:08.408Z"
+    },
+    {
+      "name": "feature/initialize-next-js-14-project-with-typescript",
+      "createdAt": "2026-01-02T09:52:43.957Z"
+    },
+    {
+      "name": "feature/integrate-clerk-authentication",
+      "createdAt": "2026-01-02T10:43:54.662Z"
+    },
+    {
+      "name": "feature/design-abstract-cms-integration-interface",
+      "createdAt": "2026-01-02T10:43:56.245Z"
+    },
+    {
+      "name": "feature/integrate-dall-e-3-image-generation",
+      "createdAt": "2026-01-02T10:43:57.580Z"
+    },
+    {
+      "name": "feature/integrate-dataforseo-api-for-keyword-research",
+      "createdAt": "2026-01-02T10:43:58.864Z"
+    },
+    {
+      "name": "feature/integrate-openai-gpt-4-turbo-api",
+      "createdAt": "2026-01-02T10:44:01.193Z"
+    },
+    {
+      "name": "feature/configure-postgresql-and-drizzle-orm",
+      "createdAt": "2026-01-02T10:44:02.474Z"
+    },
+    {
+      "name": "feature/integrate-serpapi-for-serp-analysis",
+      "createdAt": "2026-01-02T10:44:04.658Z"
+    },
+    {
+      "name": "feature/configure-tailwind-css-and-shadcn-ui",
+      "createdAt": "2026-01-02T10:44:07.020Z"
+    },
+    {
+      "name": "feature/implement-consistent-api-error-handling",
+      "createdAt": "2026-01-02T10:44:09.747Z"
+    },
+    {
+      "name": "feature/generate-openapi-specification-documentation",
+      "createdAt": "2026-01-02T10:46:30.756Z"
+    },
+    {
+      "name": "feature/implement-csrf-protection",
+      "createdAt": "2026-01-02T10:47:59.322Z"
+    },
+    {
+      "name": "feature/integrate-domain-authority-checking-moz-api",
+      "createdAt": "2026-01-02T10:48:00.717Z"
+    },
+    {
+      "name": "feature/implement-gdpr-right-to-deletion",
+      "createdAt": "2026-01-02T10:48:02.435Z"
+    },
+    {
+      "name": "feature/add-json-ld-structured-data-markup",
+      "createdAt": "2026-01-02T10:48:07.736Z"
+    },
+    {
+      "name": "feature/configure-playwright-for-e2e-testing",
+      "createdAt": "2026-01-02T10:48:54.038Z"
+    },
+    {
+      "name": "feature/set-up-posthog-analytics",
+      "createdAt": "2026-01-02T10:48:56.554Z"
+    },
+    {
+      "name": "feature/implement-comprehensive-seo-meta-tags",
+      "createdAt": "2026-01-02T10:49:06.078Z"
+    },
+    {
+      "name": "feature/generate-sitemap-xml-and-robots-txt",
+      "createdAt": "2026-01-02T10:49:08.776Z"
+    },
+    {
+      "name": "feature/configure-react-query-for-server-state",
+      "createdAt": "2026-01-02T10:49:26.263Z"
+    },
+    {
+      "name": "feature/implement-security-headers-csp-hsts",
+      "createdAt": "2026-01-02T10:49:30.608Z"
+    },
+    {
+      "name": "feature/configure-sentry-error-tracking",
+      "createdAt": "2026-01-02T10:49:37.342Z"
+    },
+    {
+      "name": "feature/implement-structured-logging-with-correlation-ids",
+      "createdAt": "2026-01-02T10:49:51.856Z"
+    },
+    {
+      "name": "feature/configure-upstash-redis-for-rate-limiting",
+      "createdAt": "2026-01-02T10:49:56.757Z"
+    },
+    {
+      "name": "feature/implement-zod-schema-validation",
+      "createdAt": "2026-01-02T10:50:06.375Z"
+    },
+    {
+      "name": "feature/set-up-zustand-for-client-state",
+      "createdAt": "2026-01-02T10:50:09.608Z"
+    },
+    {
+      "name": "feature/configure-vercel-deployment",
+      "createdAt": "2026-01-02T10:53:41.288Z"
+    },
+    {
+      "name": "feature/configure-vitest-for-unit-testing",
+      "createdAt": "2026-01-02T10:53:47.940Z"
+    },
+    {
+      "name": "feature/integrate-stripe-subscription-billing",
+      "createdAt": "2026-01-02T13:09:07.526Z"
+    },
+    {
+      "name": "feature/define-subscription-plan-tiers",
+      "createdAt": "2026-01-02T13:21:19.430Z"
+    },
+    {
+      "name": "feature/implement-usage-limits-per-plan",
+      "createdAt": "2026-01-02T13:30:43.412Z"
+    }
+  ]
+}

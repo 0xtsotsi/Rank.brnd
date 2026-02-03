@@ -1,0 +1,23 @@
+{
+  "id": "clerk-auth-setup",
+  "category": "Authentication",
+  "title": "Integrate Clerk authentication",
+  "description": "# Clerk Authentication Integration\n\nImplement complete authentication system using Clerk with secure JWT handling via httpOnly cookies.\n\n## Technical Implementation\n\n### 1. Package Installation\n```bash\nnpm install @clerk/nextjs @clerk/clerk-sdk-node\n```\n\n### 2. Environment Configuration\n```env\nNEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_***\nCLERK_SECRET_KEY=sk_***\nNEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in\nNEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up\nNEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard\nNEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding\nCLERK_JWT_KEY=<for-local-verification>\n```\n\n### 3. Middleware Setup (middleware.ts)\n```typescript\nimport { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'\n\nconst isProtectedRoute = createRouteMatcher([\n  '/dashboard(.*)',\n  '/api/protected(.*)',\n  '/settings(.*)'\n])\n\nconst isPublicRoute = createRouteMatcher([\n  '/',\n  '/sign-in(.*)',\n  '/sign-up(.*)',\n  '/api/webhooks(.*)'\n])\n```\n\n### 4. JWT httpOnly Cookie Configuration\n- Configure Clerk to use `__session` httpOnly cookie (default behavior)\n- Set `sameSite: 'strict'` for CSRF protection\n- Enable `secure: true` for production\n- Implement token refresh handling via Clerk's automatic rotation\n\n### 5. API Route Protection Pattern\n```typescript\n// Server-side auth verification\nimport { auth } from '@clerk/nextjs/server'\n\n// Verify and extract claims\nconst { userId, sessionClaims } = await auth()\nif (!userId) return new Response('Unauthorized', { status: 401 })\n```\n\n## File Structure\n```\n├── middleware.ts              # Route protection middleware\n├── app/\n│   ├── (auth)/\n│   │   ├── sign-in/[[...sign-in]]/page.tsx\n│   │   └── sign-up/[[...sign-up]]/page.tsx\n│   ├── (protected)/\n│   │   └── dashboard/\n│   └── api/\n│       └── webhooks/clerk/route.ts  # User sync webhook\n├── lib/\n│   └── auth.ts                # Auth utility functions\n└── providers/\n    └── clerk-provider.tsx     # ClerkProvider wrapper\n```\n\n## Security Considerations\n- Validate JWT signature server-side using CLERK_JWT_KEY\n- Implement webhook signature verification for user sync events\n- Set appropriate CORS headers for API routes\n- Use `auth.protect()` for strict route guarding\n- Configure session lifetime and inactivity timeout in Clerk Dashboard\n\n## Integration Points\n- Webhook endpoint for syncing Clerk users to local database\n- Custom session claims for role-based access control\n- Sign-out cleanup handler for local session data\n\n## Error Handling\n- Handle expired tokens with automatic redirect to sign-in\n- Implement retry logic for Clerk API failures\n- Display user-friendly auth error messages\n- Log authentication failures for security monitoring",
+  "status": "verified",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["nextjs-project-setup"],
+  "createdAt": "2026-01-02T09:30:07.961Z",
+  "updatedAt": "2026-01-02T13:09:06.818Z",
+  "branchName": "master",
+  "startedAt": "2026-01-02T12:35:28.717Z",
+  "skipTests": false,
+  "model": "opus",
+  "thinkingLevel": "none",
+  "imagePaths": [],
+  "textFilePaths": [],
+  "planningMode": "skip",
+  "requirePlanApproval": false,
+  "failureCount": 0,
+  "permanentlyFailed": false
+}

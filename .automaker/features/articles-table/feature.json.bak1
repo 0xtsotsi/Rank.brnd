@@ -1,0 +1,17 @@
+{
+  "id": "articles-table",
+  "category": "Database",
+  "title": "Create articles database table",
+  "description": "Create articles table with organization_id, product_id, title, slug, content, keyword_id, status (draft/published), seo_score, created_at, updated_at, published_at.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": [
+    "postgresql-drizzle-setup",
+    "organizations-table",
+    "products-table",
+    "keywords-table"
+  ],
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-01-02T09:30:07.963Z"
+}

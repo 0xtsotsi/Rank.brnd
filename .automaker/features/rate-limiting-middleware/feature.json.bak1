@@ -1,0 +1,12 @@
+{
+  "id": "rate-limiting-middleware",
+  "category": "Feature",
+  "title": "Implement distributed rate limiting",
+  "description": "Create rate limiting middleware (100 requests/min per user) using Upstash Redis, return 429 status when exceeded, differentiate authenticated vs anonymous.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": ["upstash-redis-setup"],
+  "createdAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-01-02T09:30:07.967Z"
+}

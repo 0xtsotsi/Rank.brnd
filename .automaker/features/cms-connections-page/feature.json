@@ -1,0 +1,13 @@
+{
+  "id": "cms-connections-page",
+  "category": "UI",
+  "title": "Build CMS connections management page",
+  "description": "Create page showing connected CMS platforms, connect buttons, configuration options for each platform, disconnect functionality.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["integrations-table"],
+  "createdAt": "2026-01-02T09:30:07.965Z",
+  "updatedAt": "2026-01-02T09:30:07.965Z",
+  "descriptionHistory": []
+}

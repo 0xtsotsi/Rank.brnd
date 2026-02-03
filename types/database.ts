@@ -155,37 +155,73 @@ export interface Database {
       };
 
       /**
-       * Organizations table (extended)
-       * Original organizations table with Stripe customer ID
+       * Organizations table
+       * Multi-tenant organizations with tier, settings, and Stripe integration
        */
       organizations: {
         Row: {
           id: string;
-          clerk_id: string;
+          clerk_id: string | null;
           name: string;
           slug: string;
           image_url: string | null;
           stripe_customer_id: string | null;
+          tier: 'free' | 'starter' | 'pro' | 'agency';
+          settings: Json;
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id?: string;
-          clerk_id: string;
+          clerk_id?: string | null;
           name: string;
           slug: string;
           image_url?: string | null;
           stripe_customer_id?: string | null;
+          tier?: 'free' | 'starter' | 'pro' | 'agency';
+          settings?: Json;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
-          clerk_id?: string;
+          clerk_id?: string | null;
           name?: string;
           slug?: string;
           image_url?: string | null;
           stripe_customer_id?: string | null;
+          tier?: 'free' | 'starter' | 'pro' | 'agency';
+          settings?: Json;
+          updated_at?: string;
+        };
+      };
+
+      /**
+       * Organization members table
+       * Junction table linking users to organizations with roles for multi-tenancy
+       */
+      organization_members: {
+        Row: {
+          id: string;
+          organization_id: string;
+          user_id: string;
+          role: 'owner' | 'admin' | 'member' | 'viewer';
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          user_id: string;
+          role?: 'owner' | 'admin' | 'member' | 'viewer';
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          user_id?: string;
+          role?: 'owner' | 'admin' | 'member' | 'viewer';
           updated_at?: string;
         };
       };
@@ -194,10 +230,36 @@ export interface Database {
       // Placeholder for view definitions
     };
     Functions: {
-      // Placeholder for function definitions
+      get_user_organizations: {
+        Args: {
+          p_user_id: string;
+        };
+        Returns: {
+          id: string;
+          name: string;
+          slug: string;
+          tier: 'free' | 'starter' | 'pro' | 'agency';
+          role: 'owner' | 'admin' | 'member' | 'viewer';
+        }[];
+      };
+      is_organization_member: {
+        Args: {
+          p_org_id: string;
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
+      get_organization_role: {
+        Args: {
+          p_org_id: string;
+          p_user_id: string;
+        };
+        Returns: 'owner' | 'admin' | 'member' | 'viewer' | null;
+      };
     };
     Enums: {
-      // Placeholder for enum definitions
+      organization_tier: 'free' | 'starter' | 'pro' | 'agency';
+      organization_role: 'owner' | 'admin' | 'member' | 'viewer';
     };
     CompositeTypes: {
       // Placeholder for composite type definitions

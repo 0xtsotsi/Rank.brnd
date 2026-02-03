@@ -1,0 +1,305 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+ * Core Web Vitals Optimization Styles
+ *
+ * These styles help achieve:
+ * - LCP < 2.5s: Fast initial render
+ * - FID < 100ms: Responsive interactions
+ * - CLS < 0.1: Stable layouts
+ * ============================================ */
+
+:root {
+  /* Color scheme */
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+
+  /* Font family with fallback for CLS prevention */
+  --font-sans:
+    var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Design system colors from Reverse Engineering Guide */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+
+  /* Spacing base unit */
+  --spacing-unit: 4px;
+
+  /* Shadows for depth */
+  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.08);
+  --shadow-large: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+/* ============================================
+ * Base Layer - CLS Prevention
+ * ============================================ */
+
+@layer base {
+  /* Prevent CLS from font loading */
+  html {
+    /* Use font-display: swap in next/font config */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Prevent CLS from images - always specify dimensions */
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Prevent CLS from ads and embeds - reserve space */
+  .ad-slot,
+  .embed-container {
+    min-height: 250px;
+    background-color: rgb(var(--background-start-rgb));
+  }
+
+  /* Smooth scrolling for better UX without affecting FID */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Reduce motion for accessibility and performance */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  /* Prevent content jump on scrollbar appearance */
+  overflow-y: scroll;
+}
+
+/* ============================================
+ * Component Layer - Optimized Components
+ * ============================================ */
+
+@layer components {
+  /* Skeleton loader for CLS prevention during content load */
+  .skeleton {
+    @apply animate-pulse bg-gray-200 dark:bg-gray-700 rounded;
+  }
+
+  /* Content placeholder with aspect ratio for CLS prevention */
+  .content-placeholder {
+    @apply relative overflow-hidden bg-gray-100 dark:bg-gray-800;
+  }
+
+  .content-placeholder::before {
+    content: '';
+    display: block;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio by default */
+  }
+
+  .content-placeholder[data-ratio='1:1']::before {
+    padding-bottom: 100%;
+  }
+
+  .content-placeholder[data-ratio='4:3']::before {
+    padding-bottom: 75%;
+  }
+
+  .content-placeholder[data-ratio='3:2']::before {
+    padding-bottom: 66.67%;
+  }
+
+  /* Optimized button with instant feedback (FID) */
+  .btn-optimized {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium;
+    @apply transition-colors duration-150;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    /* Use transform for GPU acceleration */
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  .btn-optimized:active {
+    transform: scale(0.98);
+  }
+
+  /* Card component with reserved height for CLS prevention */
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm;
+    @apply border border-gray-200 dark:border-gray-700;
+    /* Prevent layout shift by setting min-height */
+    min-height: var(--card-min-height, auto);
+  }
+
+  /* Input with consistent height for CLS prevention */
+  .input-optimized {
+    @apply block w-full px-3 py-2 rounded-md;
+    @apply border border-gray-300 dark:border-gray-600;
+    @apply focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
+    /* Fixed height prevents CLS on focus */
+    height: 42px;
+  }
+
+  /* Loading spinner optimized for minimal repaint */
+  .spinner {
+    @apply animate-spin rounded-full border-2 border-current border-t-transparent;
+    /* GPU acceleration */
+    will-change: transform;
+  }
+}
+
+/* ============================================
+ * Utility Layer - Performance Utilities
+ * ============================================ */
+
+@layer utilities {
+  /* Text balance for better readability */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Content visibility for lazy rendering (improves LCP) */
+  .content-visibility-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+  }
+
+  /* GPU acceleration for smooth animations */
+  .gpu-accelerated {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Prevent CLS by reserving aspect ratio space */
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .aspect-4-3 {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* Instant tap feedback for mobile (improves perceived FID) */
+  .tap-highlight-none {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Contain layout to prevent CLS propagation */
+  .contain-layout {
+    contain: layout;
+  }
+
+  .contain-paint {
+    contain: paint;
+  }
+
+  .contain-strict {
+    contain: strict;
+  }
+
+  /* Hide content visually but keep for screen readers */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Fade in animation for lazy loaded content */
+  .fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Slide up animation for lazy loaded content */
+  .slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ============================================
+ * Critical CSS - Above the fold styles
+ * These styles are inlined for fastest LCP
+ * ============================================ */
+
+/* Hero section styling for fast LCP */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Primary heading styling */
+.heading-primary {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* Subheading styling */
+.heading-secondary {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+}

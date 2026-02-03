@@ -1,62 +1,231 @@
-import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
+'use client';
 
-export default async function OnboardingPage() {
-  const { userId } = await auth();
+/**
+ * Interactive Onboarding Page
+ *
+ * A comprehensive onboarding flow that guides new users through:
+ * 1. Welcome and expectations
+ * 2. Organization setup
+ * 3. Product tour (optional)
+ * 4. First article creation walkthrough
+ * 5. Integration setup (optional)
+ * 6. Success celebration
+ */
 
-  if (!userId) {
-    redirect('/sign-in');
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { WelcomeStep } from '@/components/onboarding/welcome-step';
+import { OrganizationStep } from '@/components/onboarding/organization-step';
+import {
+  ProductTourStep,
+  ProductTourPreview,
+} from '@/components/onboarding/product-tour-step';
+import { FirstArticleStep } from '@/components/onboarding/first-article-step';
+import { IntegrationStep } from '@/components/onboarding/integration-step';
+import { SuccessStep } from '@/components/onboarding/success-step';
+import { Modal } from '@/components/ui/modal';
+import { getOnboardingStore } from '@/lib/onboarding-store';
+import type { OnboardingStepId } from '@/types/onboarding';
+import { useUser } from '@clerk/nextjs';
+
+// Step component mapping
+const stepComponents: Record<
+  OnboardingStepId,
+  React.ComponentType<{ onNext: () => void; onSkip?: () => void }>
+> = {
+  welcome: WelcomeStep,
+  'organization-setup': OrganizationStep,
+  'product-tour': ({ onNext, onSkip }) => (
+    <ProductTourPreview onStartTour={onNext} onSkip={onSkip} />
+  ),
+  'first-article': FirstArticleStep,
+  'integration-setup': IntegrationStep,
+  success: () => <div />, // Handled separately
+};
+
+// Full tour mode component
+const ProductTour = ProductTourStep;
+
+export default function OnboardingPage() {
+  const router = useRouter();
+  const { user, isLoaded } = useUser();
+  const [currentStep, setCurrentStep] = useState<OnboardingStepId>('welcome');
+  const [isTourActive, setIsTourActive] = useState(false);
+  const [achievements, setAchievements] = useState({
+    organizationCreated: false,
+    firstArticleCreated: false,
+    integrationConnected: false,
+    tourCompleted: false,
+  });
+
+  // Initialize onboarding store
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    const store = getOnboardingStore();
+
+    // Check if onboarding is already complete
+    if (store.isComplete()) {
+      router.push('/dashboard');
+      return;
+    }
+
+    // Start onboarding for this user
+    if (user?.id) {
+      store.start(user.id);
+      setCurrentStep(store.getState().currentStep);
+    }
+
+    // Subscribe to state changes
+    const unsubscribe = store.subscribe(() => {
+      const state = store.getState();
+      setCurrentStep(state.currentStep);
+      setAchievements({
+        organizationCreated: state.organizationCreated,
+        firstArticleCreated: state.firstArticleCreated,
+        integrationConnected: state.integrationConnected,
+        tourCompleted: state.tourCompleted,
+      });
+    });
+
+    return () => unsubscribe();
+  }, [isLoaded, user, router]);
+
+  const handleNext = () => {
+    const store = getOnboardingStore();
+    store.nextStep();
+  };
+
+  const handleSkip = () => {
+    const store = getOnboardingStore();
+    store.skipStep();
+  };
+
+  const handleStepComplete = (stepId: OnboardingStepId) => {
+    const store = getOnboardingStore();
+    store.markAchievement(
+      stepId === 'organization-setup'
+        ? 'organizationCreated'
+        : stepId === 'first-article'
+          ? 'firstArticleCreated'
+          : stepId === 'integration-setup'
+            ? 'integrationConnected'
+            : 'tourCompleted'
+    );
+  };
+
+  const handleTourComplete = () => {
+    const store = getOnboardingStore();
+    store.markAchievement('tourCompleted');
+    setIsTourActive(false);
+    handleNext();
+  };
+
+  const handleComplete = () => {
+    const store = getOnboardingStore();
+    store.complete();
+    // Redirect to dashboard after a short delay
+    setTimeout(() => {
+      router.push('/dashboard');
+    }, 500);
+  };
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600" />
+      </div>
+    );
   }
 
-  // In a real app, you would check if onboarding is complete
-  // and redirect to dashboard if done
+  // Render success step as full page celebration
+  if (currentStep === 'success') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 flex items-center justify-center p-4">
+        <div className="w-full max-w-lg">
+          <SuccessStep
+            userName={user?.firstName || undefined}
+            achievements={achievements}
+            onNext={handleComplete}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Render tour in fullscreen overlay mode
+  if (isTourActive) {
+    return (
+      <>
+        {/* Background - dimmed */}
+        <div className="fixed inset-0 bg-gray-100 dark:bg-gray-900 -z-10" />
+
+        {/* Tour overlay */}
+        <ProductTour onComplete={handleTourComplete} onSkip={handleSkip} />
+      </>
+    );
+  }
+
+  // Render regular step in modal
+  const StepComponent = stepComponents[currentStep];
+  if (!StepComponent) {
+    return null;
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Welcome to Rank.brnd!
-          </h1>
-          <p className="text-gray-600 mb-8">
-            Let&apos;s get your account set up. You&apos;re authenticated as
-            user: {userId}
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
+      {/* Progress Bar */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-800 z-50">
+        <div
+          className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500"
+          style={{
+            width: `${getOnboardingStore().getProgressPercentage()}%`,
+          }}
+        />
+      </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                <span className="text-green-600 font-bold">1</span>
-              </div>
-              <span className="text-gray-700">Create your organization</span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                <span className="text-gray-600 font-bold">2</span>
-              </div>
-              <span className="text-gray-700">
-                Add your first product/website
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                <span className="text-gray-600 font-bold">3</span>
-              </div>
-              <span className="text-gray-700">
-                Start generating SEO content
-              </span>
-            </div>
+      {/* Main Content */}
+      <div className="flex items-center justify-center min-h-screen p-4">
+        <div className="w-full max-w-lg">
+          {/* Step Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
+            <StepComponent
+              onNext={handleNext}
+              onSkip={currentStep !== 'welcome' ? handleSkip : undefined}
+            />
           </div>
 
-          <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
-              <strong>Authentication Status:</strong> You are securely logged in
-              via Clerk with httpOnly cookies. Your session is protected against
-              XSS attacks.
-            </p>
+          {/* Step Indicator */}
+          <div className="flex items-center justify-center gap-2 mt-6">
+            {(
+              [
+                'welcome',
+                'organization-setup',
+                'product-tour',
+                'first-article',
+                'integration-setup',
+              ] as OnboardingStepId[]
+            ).map((stepId, index) => (
+              <div
+                key={stepId}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index <= getOnboardingStore().getCurrentStepIndex()
+                    ? 'bg-indigo-500'
+                    : 'bg-gray-300 dark:bg-gray-700'
+                } ${index < getOnboardingStore().getCurrentStepIndex() ? 'w-8' : 'w-2'}`}
+              />
+            ))}
           </div>
+
+          {/* Skip onboarding link */}
+          {currentStep !== 'welcome' && (
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="mt-4 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            >
+              Exit onboarding
+            </button>
+          )}
         </div>
       </div>
     </div>

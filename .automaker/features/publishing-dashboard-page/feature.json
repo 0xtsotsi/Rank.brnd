@@ -1,0 +1,13 @@
+{
+  "id": "publishing-dashboard-page",
+  "category": "UI",
+  "title": "Build publishing dashboard page",
+  "description": "Create dashboard showing article publishing status per CMS, publish buttons, schedule publishing UI, history view, retry failed publishes.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["publishing-queue-table"],
+  "createdAt": "2026-01-02T09:30:07.965Z",
+  "updatedAt": "2026-01-02T09:30:07.965Z",
+  "descriptionHistory": []
+}

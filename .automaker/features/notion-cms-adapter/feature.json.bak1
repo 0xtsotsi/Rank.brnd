@@ -1,0 +1,18 @@
+{
+  "id": "notion-cms-adapter",
+  "category": "CMS Integration",
+  "title": "Implement Notion CMS adapter",
+  "description": "Create Notion adapter using Notion API, create database pages, handle property mapping, support rich text formatting.",
+  "status": "in_progress",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [
+    "cms-abstract-interface"
+  ],
+  "createdAt": "2026-01-02T09:30:07.965Z",
+  "updatedAt": "2026-02-03T18:41:24.265Z",
+  "branchName": "master",
+  "startedAt": "2026-01-10T17:13:00.560Z",
+  "failureCount": 4,
+  "lastFailedAt": "2026-01-10T17:17:12.022Z"
+}

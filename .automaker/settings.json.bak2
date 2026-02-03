@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "boardBackground": {
+    "imagePath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd/.automaker/board/background.jpg",
+    "cardOpacity": 71,
+    "columnOpacity": 0,
+    "columnBorderEnabled": true,
+    "cardGlassmorphism": true,
+    "cardBorderEnabled": true,
+    "cardBorderOpacity": 100,
+    "hideScrollbar": true,
+    "imageVersion": 1767345127748
+  }
+}

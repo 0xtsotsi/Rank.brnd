@@ -1,0 +1,13 @@
+{
+  "id": "article-editor-page",
+  "category": "UI",
+  "title": "Build rich text article editor page",
+  "description": "Create editor page with Tiptap rich text editor, auto-save functionality, version history, word count, readability metrics display.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "complex",
+  "dependencies": ["articles-table"],
+  "createdAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-01-02T09:30:07.964Z",
+  "descriptionHistory": []
+}

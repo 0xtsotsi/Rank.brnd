@@ -1,0 +1,12 @@
+{
+  "id": "onboarding-flow",
+  "category": "UI",
+  "title": "Create new user onboarding flow",
+  "description": "Build interactive onboarding with product tour, first article creation walkthrough, integration setup prompts, success celebrations.",
+  "status": "in_progress",
+  "priority": 1,
+  "complexity": "moderate",
+  "createdAt": "2026-01-02T09:30:07.968Z",
+  "updatedAt": "2026-02-03T20:22:20.081Z",
+  "descriptionHistory": []
+}

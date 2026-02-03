@@ -1,0 +1,18 @@
+{
+  "id": "dataseo-api-integration",
+  "category": "API Integration",
+  "title": "Integrate DataForSEO API for keyword research",
+  "description": "Implement DataForSEO API client for keyword search, fetch search volume, difficulty, intent, opportunity scoring. Create service functions for API calls.",
+  "status": "in_progress",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": [
+    "nextjs-project-setup"
+  ],
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-02-03T18:31:48.658Z",
+  "branchName": "feature/integrate-dataforseo-api-for-keyword-research",
+  "startedAt": "2026-01-07T06:04:54.000Z",
+  "failureCount": 2,
+  "lastFailedAt": "2026-01-07T06:05:04.857Z"
+}

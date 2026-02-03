@@ -1,0 +1,14 @@
+{
+  "id": "vercel-deployment-setup",
+  "category": "DevOps",
+  "title": "Configure Vercel deployment",
+  "description": "Connect project to Vercel, set up environment variables, configure preview deployments, set up automatic deployment on main branch push.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": ["nextjs-project-setup"],
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-01-02T10:53:45.217Z",
+  "branchName": "feature/configure-vercel-deployment",
+  "startedAt": "2026-01-02T10:53:42.239Z"
+}

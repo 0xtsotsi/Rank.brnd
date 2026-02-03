@@ -1,0 +1,12 @@
+{
+  "id": "brand-settings-form",
+  "category": "UI",
+  "title": "Create brand settings configuration form",
+  "description": "Build form for configuring brand colors (primary, secondary, accent), tone preferences, style guides, logo upload with preview.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["product-crud-page", "tailwind-shadcn-setup"],
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-01-02T09:30:07.963Z"
+}

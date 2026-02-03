@@ -1,0 +1,12 @@
+{
+  "id": "image-generation-ui",
+  "category": "UI",
+  "title": "Build image generation UI in editor",
+  "description": "Create image generation dialog in article editor showing 5 style options, brand color preview, generated images gallery, selection functionality.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["article-editor-page", "image-generation-service"],
+  "createdAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-01-02T09:30:07.964Z"
+}

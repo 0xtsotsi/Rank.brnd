@@ -1,0 +1,12 @@
+{
+  "id": "basic-dashboard-page",
+  "category": "UI",
+  "title": "Create basic dashboard/overview page",
+  "description": "Build dashboard showing key metrics (articles written, keywords tracked, publishing status) with summary cards and quick action buttons.",
+  "status": "in_progress",
+  "priority": 1,
+  "complexity": "simple",
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-02-03T19:08:19.088Z",
+  "descriptionHistory": []
+}

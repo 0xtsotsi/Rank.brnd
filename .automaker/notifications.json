@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "notifications": [
+    {
+      "id": "af8bb77a-cb88-45e1-90ee-4a07a3f87c43",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"ghost-cms-adapter\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:33:20.951Z",
+      "read": true,
+      "dismissed": false,
+      "featureId": "ghost-cms-adapter",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "f7a3ffcf-b24f-40c9-a457-35aaf30ab4fc",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"organizations-table\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:36:35.985Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "organizations-table",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "ad408eff-d586-47e1-a8f8-1ccd4f385312",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"dataseo-api-integration\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:37:34.655Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "dataseo-api-integration",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "db4c8919-bbf4-4b33-9aa5-e8d8cf40b50a",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"wordpress-cms-adapter\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:39:51.311Z",
+      "read": true,
+      "dismissed": false,
+      "featureId": "wordpress-cms-adapter",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "0f43e0db-99de-4bb5-87ab-6ba463acb6fe",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"ghost-cms-adapter\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:41:24.258Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "ghost-cms-adapter",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "e89ef83d-e735-46f2-995c-6c7ef09bdd8d",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"webflow-cms-adapter\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:42:08.214Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "webflow-cms-adapter",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "ad2613e4-849a-4be9-8493-778cdda10e8b",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"notion-cms-adapter\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:46:28.160Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "notion-cms-adapter",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "7778e937-178e-423d-ae60-f9e72389b3dd",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"wordpress-cms-adapter\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:48:42.011Z",
+      "read": true,
+      "dismissed": false,
+      "featureId": "wordpress-cms-adapter",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "cfc87bc0-70b8-4203-8c04-d1cb5c2b70b7",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"organizations-table\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:49:55.881Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "organizations-table",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "10b95638-e870-47bb-96e7-f47d144295f7",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"shopify-cms-adapter\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:51:28.444Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "shopify-cms-adapter",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "f9e1931a-449b-416d-8bd6-ce05ed874c7c",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"wordpress-cms-adapter\" has been verified and is complete.",
+      "createdAt": "2026-02-03T18:52:03.804Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "wordpress-cms-adapter",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "59de20eb-d7b5-457d-b102-fa6889409596",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"base-layout-shell\" has been verified and is complete.",
+      "createdAt": "2026-02-03T19:08:16.468Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "base-layout-shell",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "ef53cd56-a6b6-4772-95d6-d9191303b866",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"basic-dashboard-page\" has been verified and is complete.",
+      "createdAt": "2026-02-03T19:16:30.733Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "basic-dashboard-page",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "9e508aa8-5fbb-4003-a65a-57d7e617619f",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"calendar-component\" has been verified and is complete.",
+      "createdAt": "2026-02-03T19:52:23.576Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "calendar-component",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "fd2e5dde-4c4f-4ba9-90ab-a9012fe38d84",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"content-planner-page\" has been verified and is complete.",
+      "createdAt": "2026-02-03T20:06:37.845Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "content-planner-page",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "7337c948-7d9a-46da-8ef2-1e8f0c275828",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"keyword-research-page\" has been verified and is complete.",
+      "createdAt": "2026-02-03T20:22:16.481Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "keyword-research-page",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "9c9543dc-afe2-4beb-b3de-0338fab289d7",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"onboarding-flow\" has been verified and is complete.",
+      "createdAt": "2026-02-03T20:39:13.521Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "onboarding-flow",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    }
+  ]
+}

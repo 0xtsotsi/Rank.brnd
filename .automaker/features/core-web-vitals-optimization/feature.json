@@ -1,0 +1,16 @@
+{
+  "id": "core-web-vitals-optimization",
+  "category": "Performance",
+  "title": "Optimize Core Web Vitals metrics",
+  "description": "Optimize LCP (< 2.5s), FID (< 100ms), CLS (< 0.1) via code splitting, lazy loading, image optimization, font optimization.",
+  "status": "verified",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": ["nextjs-project-setup"],
+  "createdAt": "2026-01-02T09:30:07.968Z",
+  "updatedAt": "2026-01-03T07:33:27.223Z",
+  "branchName": "master",
+  "startedAt": "2026-01-02T12:35:29.621Z",
+  "failureCount": 0,
+  "permanentlyFailed": false
+}

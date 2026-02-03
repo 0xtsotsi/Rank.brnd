@@ -1,0 +1,16 @@
+{
+  "id": "openai-integration",
+  "category": "API Integration",
+  "title": "Integrate OpenAI GPT-4 Turbo API",
+  "description": "Set up OpenAI client, configure GPT-4 Turbo with 0.7 temperature and 3000 token limit, create service functions for content generation.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["nextjs-project-setup"],
+  "createdAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-01-07T06:05:06.704Z",
+  "branchName": "feature/integrate-openai-gpt-4-turbo-api",
+  "startedAt": "2026-01-07T06:04:57.150Z",
+  "failureCount": 2,
+  "lastFailedAt": "2026-01-07T06:05:06.703Z"
+}

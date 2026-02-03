@@ -1,0 +1,16 @@
+{
+  "id": "keywords-table",
+  "category": "Database",
+  "title": "Create keywords database table",
+  "description": "Create keywords table with organization_id, product_id, keyword, search_volume, difficulty, intent, opportunity_score, status, created_at, updated_at.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": [
+    "postgresql-drizzle-setup",
+    "organizations-table",
+    "products-table"
+  ],
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-01-02T09:30:07.963Z"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "mobile-responsive-testing",
+  "category": "Testing",
+  "title": "Conduct responsive design testing",
+  "description": "Test all pages and components at 640px, 768px, 1024px, 1280px breakpoints, verify mobile navigation, touch targets, orientation changes.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "createdAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-01-02T09:30:07.967Z",
+  "descriptionHistory": []
+}

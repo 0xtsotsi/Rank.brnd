@@ -1,0 +1,16 @@
+{
+  "id": "subscription-management-page",
+  "category": "UI",
+  "title": "Build subscription management page",
+  "description": "Create page showing current plan, usage, upgrade/downgrade options, billing history, invoice download, cancel subscription option.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": [
+    "base-layout-shell",
+    "subscriptions-table",
+    "invoices-table"
+  ],
+  "createdAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-01-02T09:30:07.966Z"
+}

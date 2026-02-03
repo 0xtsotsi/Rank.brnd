@@ -1,0 +1,12 @@
+{
+  "id": "external-linking-service",
+  "category": "Feature",
+  "title": "Implement external linking service",
+  "description": "Create service to identify external link opportunities and suggest authoritative sources for citations based on article content.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": ["openai-integration"],
+  "createdAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-01-02T09:30:07.964Z"
+}

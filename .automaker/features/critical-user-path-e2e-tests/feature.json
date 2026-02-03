@@ -1,0 +1,15 @@
+{
+  "id": "critical-user-path-e2e-tests",
+  "category": "Testing",
+  "title": "Write E2E tests for critical user paths",
+  "description": "Create Playwright E2E tests for registration, login, article creation, keyword search, publishing workflows.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "createdAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-01-10T17:17:08.962Z",
+  "startedAt": "2026-01-10T17:15:40.062Z",
+  "failureCount": 1,
+  "lastFailedAt": "2026-01-10T17:17:08.962Z",
+  "descriptionHistory": []
+}

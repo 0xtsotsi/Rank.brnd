@@ -1,0 +1,12 @@
+{
+  "id": "product-switcher",
+  "category": "UI",
+  "title": "Build product/website switcher",
+  "description": "Create dropdown in sidebar/header to switch between products, store selection in localStorage and Zustand, update all data based on selected product.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": ["sidebar-navigation", "product-crud-api"],
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-01-02T09:30:07.963Z"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "gdpr-data-export",
+  "category": "Compliance",
+  "title": "Implement GDPR user data export",
+  "description": "Create API endpoint to export user data as JSON/CSV, include all organization data, articles, settings, scheduled as background job.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": ["nextjs-project-setup", "organizations-table"],
+  "createdAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-01-02T09:30:07.967Z"
+}

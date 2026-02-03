@@ -1,0 +1,16 @@
+{
+  "id": "keyword-research-integration",
+  "category": "Feature",
+  "title": "Connect keyword research API to UI",
+  "description": "Wire up DataForSEO API integration to keyword research page, implement search functionality, display results in table, add to database functionality.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": [
+    "keyword-research-page",
+    "dataseo-api-integration",
+    "keyword-crud-api"
+  ],
+  "createdAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-01-02T09:30:07.963Z"
+}

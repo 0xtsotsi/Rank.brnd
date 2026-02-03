@@ -1,0 +1,12 @@
+{
+  "id": "exchange-network-table",
+  "category": "Database",
+  "title": "Create backlink exchange network table",
+  "description": "Create table for exchange network with site_id, domain, authority, niche, credits_available, quality_score, spam_score, created_at.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": ["postgresql-drizzle-setup"],
+  "createdAt": "2026-01-02T09:30:07.965Z",
+  "updatedAt": "2026-01-02T09:30:07.965Z"
+}

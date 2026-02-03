@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "events": [
+    {
+      "id": "evt-1770151506074-0eaba2f2",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-03T20:45:06.074Z",
+      "featureName": "Configure PostgreSQL and Drizzle ORM",
+      "featureId": "postgresql-drizzle-setup"
+    },
+    {
+      "id": "evt-1770151153538-8be59bb6",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T20:39:13.538Z",
+      "featureName": "Create new user onboarding flow",
+      "featureId": "onboarding-flow"
+    },
+    {
+      "id": "evt-1770150136487-4fcbbe56",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T20:22:16.487Z",
+      "featureName": "Build keyword research page UI",
+      "featureId": "keyword-research-page"
+    },
+    {
+      "id": "evt-1770149197850-2ee9cb56",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T20:06:37.850Z",
+      "featureName": "Build content planner page",
+      "featureId": "content-planner-page"
+    },
+    {
+      "id": "evt-1770148343585-ec91182a",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T19:52:23.585Z",
+      "featureName": "Build calendar/scheduler component",
+      "featureId": "calendar-component"
+    },
+    {
+      "id": "evt-1770146190740-3e91c7aa",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T19:16:30.740Z",
+      "featureName": "Create basic dashboard/overview page",
+      "featureId": "basic-dashboard-page"
+    },
+    {
+      "id": "evt-1770145696472-ca262448",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T19:08:16.472Z",
+      "featureName": "Build base application layout shell",
+      "featureId": "base-layout-shell"
+    },
+    {
+      "id": "evt-1770144953752-06153e16",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-03T18:55:53.752Z",
+      "featureName": "Implement WordPress CMS adapter",
+      "featureId": "wordpress-cms-adapter"
+    },
+    {
+      "id": "evt-1770144743464-38b4408e",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-03T18:52:23.464Z",
+      "featureName": "Implement Webflow CMS adapter",
+      "featureId": "webflow-cms-adapter"
+    },
+    {
+      "id": "evt-1770144723806-5bad1263",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:52:03.806Z",
+      "featureName": "Implement WordPress CMS adapter",
+      "featureId": "wordpress-cms-adapter"
+    },
+    {
+      "id": "evt-1770144688450-aaef6359",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:51:28.450Z",
+      "featureName": "Implement Shopify CMS adapter",
+      "featureId": "shopify-cms-adapter"
+    },
+    {
+      "id": "evt-1770144595884-897a6bb8",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:49:55.884Z",
+      "featureName": "Create organizations database table",
+      "featureId": "organizations-table"
+    },
+    {
+      "id": "evt-1770144522014-7be5eaea",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:48:42.014Z",
+      "featureName": "Implement WordPress CMS adapter",
+      "featureId": "wordpress-cms-adapter"
+    },
+    {
+      "id": "evt-1770144388162-1e1f2100",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:46:28.162Z",
+      "featureName": "Implement Notion CMS adapter",
+      "featureId": "notion-cms-adapter"
+    },
+    {
+      "id": "evt-1770144128217-a0cbe2a5",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:42:08.217Z",
+      "featureName": "Implement Webflow CMS adapter",
+      "featureId": "webflow-cms-adapter"
+    },
+    {
+      "id": "evt-1770144084260-34d79c7d",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:41:24.260Z",
+      "featureName": "Implement Ghost CMS adapter",
+      "featureId": "ghost-cms-adapter"
+    },
+    {
+      "id": "evt-1770143991316-4bac66ad",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:39:51.316Z",
+      "featureName": "Implement WordPress CMS adapter",
+      "featureId": "wordpress-cms-adapter"
+    },
+    {
+      "id": "evt-1770143854660-e4e54f95",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:37:34.660Z",
+      "featureName": "Integrate DataForSEO API for keyword research",
+      "featureId": "dataseo-api-integration"
+    },
+    {
+      "id": "evt-1770143795990-55fc7daa",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:36:35.990Z",
+      "featureName": "Create organizations database table",
+      "featureId": "organizations-table"
+    },
+    {
+      "id": "evt-1770143669030-074f070e",
+      "trigger": "feature_error",
+      "timestamp": "2026-02-03T18:34:29.030Z",
+      "featureName": "Implement Notion CMS adapter",
+      "featureId": "notion-cms-adapter"
+    },
+    {
+      "id": "evt-1770143600954-bdc1b4aa",
+      "trigger": "feature_success",
+      "timestamp": "2026-02-03T18:33:20.954Z",
+      "featureName": "Implement Ghost CMS adapter",
+      "featureId": "ghost-cms-adapter"
+    }
+  ]
+}

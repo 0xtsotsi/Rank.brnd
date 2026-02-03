@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project_specification>
+  <project_name>Rank.brnd - AI-Powered SEO Optimization Platform</project_name>
+
+  <overview>
+    Rank.brnd is a comprehensive AI-powered SEO automation platform designed to revolutionize content creation and optimization at scale. The platform provides true end-to-end automation from keyword research through AI content generation, brand-styled image creation, intelligent linking strategies, and multi-platform CMS publishing.
+
+**Primary Purpose:**
+Enable content marketers, SEO professionals, digital agencies, and e-commerce businesses to generate up to 3,000-word SEO-optimized articles daily with minimal manual intervention, while maintaining brand voice consistency and maximizing search engine visibility.
+
+**Key Differentiators:**
+- **Complete Automation Pipeline**: Keywords → SERP Analysis → Content Generation → Image Creation → Internal/External Linking → Multi-CMS Publishing
+- **Unique Backlink Exchange Network**: Credit-based community system for building domain authority through strategic link exchanges
+- **Competitive Pricing**: $29-49/month entry point vs. competitor average of $99-200/month
+- **AI Agent Orchestration**: Autonomous workflows leveraging 2025 AI capabilities for hands-free operation
+- **GEO Focus**: Generative Engine Optimization for visibility in AI-powered search (ChatGPT, Perplexity, Google AI Overviews)
+- **Brand-Centric Approach**: Learning and adapting to each user&apos;s unique brand voice and visual identity
+
+**Target Market:**
+- Content marketers managing multiple websites
+- SEO professionals requiring high-volume content production
+- Digital agencies with diverse client portfolios
+- E-commerce businesses needing continuous product content
+- Publishers with aggressive content calendars
+
+**Genesis:**
+Reverse-engineered from live analysis of Outrank.so application, incorporating 9 reference screenshots, UI/UX patterns, API architecture analysis, database schema inference, and comprehensive competitive intelligence. Designed to match feature parity while addressing identified security vulnerabilities and incorporating 2025 market trends.
+  </overview>
+
+  <technology_stack>
+    <technology>Next.js 14 (App Router with React Server Components)</technology>
+    <technology>TypeScript 5.3+</technology>
+    <technology>PostgreSQL 16 (primary database)</technology>
+    <technology>Drizzle ORM (type-safe database toolkit)</technology>
+    <technology>Tailwind CSS 3.4 (utility-first styling)</technology>
+    <technology>shadcn/ui (accessible component library)</technology>
+    <technology>Clerk Authentication (or Supabase Auth alternative)</technology>
+    <technology>Stripe Subscriptions (payment processing)</technology>
+    <technology>Vercel (deployment platform with Edge Functions, ISR)</technology>
+    <technology>OpenAI GPT-4 Turbo (primary content generation)</technology>
+    <technology>Anthropic Claude 3 Sonnet (alternative LLM)</technology>
+    <technology>DALL-E 3 (AI image generation)</technology>
+    <technology>DataForSEO API (keyword research, rankings, SERP data)</technology>
+    <technology>SerpAPI or SerpStack (SERP analysis)</technology>
+    <technology>WordPress REST API (primary CMS integration)</technology>
+    <technology>React Query (server state management with caching)</technology>
+    <technology>Zustand (client-side state management)</technology>
+    <technology>Zod (runtime schema validation)</technology>
+    <technology>Playwright (end-to-end testing)</technology>
+    <technology>Vitest (unit testing)</technology>
+    <technology>Sentry (error tracking and monitoring)</technology>
+    <technology>PostHog (product analytics)</technology>
+    <technology>Vercel Blob or Supabase Storage (file storage)</technology>
+    <technology>Upstash Redis (rate limiting)</technology>
+  </technology_stack>
+
+  <core_capabilities>
+    <capability>AI-Powered Content Generation: Generate up to 3,000-word SEO-optimized articles with adaptive brand voice learning and tone matching</capability>
+    <capability>Automated Keyword Research: DataForSEO-powered keyword discovery with search volume, difficulty, competition analysis, and opportunity scoring</capability>
+    <capability>SERP Analysis Engine: Analyze top 10 search results, extract competitor content structure, identify ranking patterns and content gaps</capability>
+    <capability>Real-Time SEO Scoring: Live content optimization feedback covering keyword density, readability, heading structure, meta tags, and internal/external linking</capability>
+    <capability>Brand-Colored Image Generation: DALL-E 3 integration with 5 style options (realistic, watercolor, illustration, sketch, brand text overlay) and automatic brand color application</capability>
+    <capability>Intelligent Linking Strategy: Automatic internal linking via semantic matching and strategic external linking to authoritative sources</capability>
+    <capability>Multi-Platform CMS Publishing: One-click publishing to 15+ platforms including WordPress, Webflow, Shopify, Notion, Ghost, Medium, and more with auto-publish or draft delivery</capability>
+    <capability>Backlink Exchange Network: Community-driven, credit-based marketplace for building domain authority through quality link exchanges with domain authority checking and niche relevance matching</capability>
+    <capability>Google Search Console Integration: OAuth-powered connection for data-driven keyword targeting, ranking tracking, and opportunity identification</capability>
+    <capability>Content Calendar &amp; Strategic Planning: 30-day visual calendar with drag-drop scheduling, status tracking (planned/in_progress/completed/published), and strategic workflow management</capability>
+    <capability>Multi-Product Management: Manage unlimited websites from a single account with product-specific settings, brand voices, and analytics</capability>
+    <capability>Team Collaboration: Role-based access control (Owner/Admin/Editor/Viewer), team invitations, activity feeds, and concurrent editing with conflict resolution</capability>
+    <capability>Subscription Management: Flexible billing with pause/reactivate/upgrade capabilities, multiple plan tiers, and usage-based limits</capability>
+    <capability>Free Tools Builder: Create embeddable lead generation widgets and SEO tools for user websites</capability>
+    <capability>Human Curated Service: Optional expert quality review for premium content assurance</capability>
+    <capability>Directory Submission Service: Automated submission to 350+ directories for backlink building</capability>
+    <capability>GEO Optimization: Generative Engine Optimization for AI search visibility (AI Overviews, ChatGPT, Perplexity)</capability>
+    <capability>Rank Tracking: Daily automated position monitoring with historical trend analysis and competitor comparison</capability>
+    <capability>Content Performance Analytics: Track traffic, engagement, ROI, keyword growth, and content effectiveness across all products</capability>
+  </core_capabilities>
+
+  <implemented_features>
+    <feature>
+      <name>Implement Ghost CMS adapter</name>
+      <description>Create Ghost adapter using Admin API, publish posts, manage tags/authors, handle scheduled publishing.</description>
+    </feature>
+    <feature>
+      <name>Create organizations database table</name>
+      <description>Create organizations table with columns for id, name, slug, tier, settings, created_at, updated_at. Implement indexes and RLS policy for multi-tenancy.</description>
+    </feature>
+    <feature>
+      <name>Integrate DataForSEO API for keyword research</name>
+      <description>Implement DataForSEO API client for keyword search, fetch search volume, difficulty, intent, opportunity scoring. Create service functions for API calls.</description>
+    </feature>
+    <feature>
+      <name>Implement WordPress CMS adapter</name>
+      <description>Create WordPress adapter using REST API, implement OAuth 2.0 authentication, category/tag mapping, image upload, draft/publish status, Yoast SEO integration.</description>
+    </feature>
+    <feature>
+      <name>Implement Webflow CMS adapter</name>
+      <description>Create Webflow adapter with API authentication, create/update/publish collections, handle Webflow-specific fields and constraints.</description>
+    </feature>
+    <feature>
+      <name>Implement Notion CMS adapter</name>
+      <description>Create Notion adapter using Notion API, create database pages, handle property mapping, support rich text formatting.</description>
+    </feature>
+    <feature>
+      <name>Implement Shopify CMS adapter</name>
+      <description>Create Shopify adapter using Admin API, create products/articles, manage collections, upload product images, publish blog posts.</description>
+    </feature>
+    <feature>
+      <name>Build base application layout shell</name>
+      <description>Create root layout with navigation structure, sidebar navigation component, top header bar with user menu, responsive grid layout for desktop and mobile.</description>
+    </feature>
+    <feature>
+      <name>Create basic dashboard/overview page</name>
+      <description>Build dashboard showing key metrics (articles written, keywords tracked, publishing status) with summary cards and quick action buttons.</description>
+    </feature>
+    <feature>
+      <name>Build calendar/scheduler component</name>
+      <description>Create 30-day calendar view component with day cells, drag-drop capability for scheduling, color-coded status indicators, responsive layout for mobile.</description>
+    </feature>
+    <feature>
+      <name>Build content planner page</name>
+      <description>Create content planner page with 30-day calendar view, list view, filter by status, keyword-to-calendar linking, status updates from calendar.</description>
+    </feature>
+    <feature>
+      <name>Build keyword research page UI</name>
+      <description>Create page for keyword research with search input, results table showing keyword metrics, filters for intent/difficulty, bulk import functionality.</description>
+    </feature>
+    <feature>
+      <name>Create new user onboarding flow</name>
+      <description>Build interactive onboarding with product tour, first article creation walkthrough, integration setup prompts, success celebrations.</description>
+    </feature>
+  </implemented_features>
+
+  <additional_requirements>
+    <requirement>MULTI-TENANT ARCHITECTURE: Organization-based multi-tenancy with Row Level Security (RLS) on all tables. Hierarchy: Organization → Products (websites) → Resources (articles, keywords, backlinks). Each organization manages multiple products with complete data isolation.</requirement>
+    <requirement>AUTHENTICATION SECURITY: Use httpOnly cookies for JWT tokens (NOT localStorage - competitor vulnerability identified). Implement secure session management with refresh tokens, CSRF protection, and XSS prevention.</requirement>
+    <requirement>DATABASE DESIGN: PostgreSQL with Drizzle ORM for type-safe queries. Implement 13 core tables with proper foreign keys, indexes, constraints, and RLS policies. All tables must include organization_id for tenant isolation.</requirement>
+    <requirement>API DESIGN: RESTful API using Next.js Route Handlers or tRPC for end-to-end type safety. Consistent response format: { data, error, meta }. OpenAPI spec for documentation. Proper HTTP status codes and error handling.</requirement>
+    <requirement>STATE MANAGEMENT: React Query for server state with 5-minute stale time, automatic cache invalidation, optimistic updates. Zustand for client state (UI preferences, form data). Implement proper loading, error, and empty states.</requirement>
+    <requirement>RESPONSIVE DESIGN: Mobile-first approach with Tailwind CSS. Breakpoints: 640px (sm), 768px (md), 1024px (lg), 1280px (xl). Test across all device sizes and orientations.</requirement>
+    <requirement>ACCESSIBILITY: WCAG 2.1 AA compliance minimum. Proper ARIA labels, semantic HTML, keyboard navigation, focus management, screen reader support, sufficient color contrast.</requirement>
+    <requirement>PERFORMANCE: Core Web Vitals in &apos;Good&apos; range - LCP &lt; 2.5s, FID &lt; 100ms, CLS &lt; 0.1. Implement code splitting, lazy loading, image optimization (Next.js Image), bundle size monitoring.</requirement>
+    <requirement>SEO: Comprehensive meta tags, structured data (JSON-LD for Article, FAQPage, BreadcrumbList, Organization), sitemap.xml, robots.txt. Optimize for mobile-first indexing and Core Web Vitals.</requirement>
+    <requirement>TESTING: 80%+ code coverage for business logic. Unit tests (Vitest), integration tests for all API endpoints, E2E tests (Playwright) for critical user paths, visual regression testing.</requirement>
+    <requirement>ERROR HANDLING: React error boundaries, centralized error logging (Sentry), user-friendly error messages, proper HTTP status codes, graceful degradation.</requirement>
+    <requirement>RATE LIMITING: Implement distributed rate limiting (100 requests/minute per user) using Upstash Redis. Different limits for authenticated vs. anonymous users.</requirement>
+    <requirement>WEBHOOKS: Support for article creation events, publication confirmations, subscription changes. Implement HMAC signature verification for security.</requirement>
+    <requirement>GDPR COMPLIANCE: User data export functionality, right to deletion, cookie consent management (banner + preferences), data processing agreements, audit logs.</requirement>
+    <requirement>LOGGING: Structured logging with correlation IDs for request tracing. Log all API requests, errors, business events. Use log levels (debug, info, warn, error, critical).</requirement>
+    <requirement>MONITORING: Application Performance Monitoring (APM), uptime monitoring, error rate tracking, API latency monitoring. Set up PagerDuty/Opsgenie alerts for critical issues.</requirement>
+    <requirement>BACKLINK EXCHANGE QUALITY: Implement Moz/Ahrefs API for domain authority checking, algorithmic niche relevance matching, spam detection, quality scoring (0-100), gradual rollout to prevent abuse.</requirement>
+    <requirement>CONTENT QUALITY ASSURANCE: Integrate fact-checking APIs, plagiarism detection (Copyscape/Quetext), grammar/style checking (Grammarly API), AI content detection, quality scoring before delivery.</requirement>
+    <requirement>CMS INTEGRATION RELIABILITY: Exponential backoff retry logic (3 attempts), comprehensive error handling, connection health testing, status monitoring dashboard, fallback mechanisms.</requirement>
+    <requirement>BRAND VOICE LEARNING: Store 5-10 user content samples in database. Use GPT-4 to analyze tone, vocabulary, sentence structure, formatting. Generate custom style guides and adapt all future prompts.</requirement>
+    <requirement>COST OPTIMIZATION: Token usage monitoring per user, request queuing to avoid rate limits, response caching (24-hour TTL for keyword data), batch API calls where possible, cost alerts.</requirement>
+    <requirement>SECURITY HEADERS: Implement CSP, HSTS, X-Frame-Options, X-Content-Type-Options. Regular security audits and dependency updates.</requirement>
+    <requirement>DISASTER RECOVERY: Daily automated backups, point-in-time recovery capability, backup restoration testing, disaster recovery runbook.</requirement>
+    <requirement>SCALABILITY: Horizontal scaling support via stateless architecture, database connection pooling, CDN for static assets, Edge Functions for global performance.</requirement>
+  </additional_requirements>
+
+  <development_guidelines>
+    <guideline>FRONTEND - UI COMPONENT DEVELOPMENT: Reference .automaker/images/Schermafdruk_20260102_074602.png for Scheduler UI patterns. Design system extracted from Outrank.so: Primary color Indigo-600 (#4F46E5), typography Inter/JetBrains Mono, spacing base unit 4px. Use shadcn/ui as foundation, customize with design tokens. All components must support hover/focus/active/disabled/loading/error states with 150ms ease-out transitions. Build 10 key components: Sidebar Navigation, Scheduler/Calendar, Article Cards, Buttons, Input Fields, Data Tables, Modals, Badges, Forms, Notifications. Mobile-first responsive design tested at all breakpoints.</guideline>
+    <guideline>BACKEND - API &amp; DATABASE ARCHITECTURE: Implement 13 core tables with PostgreSQL + Drizzle ORM: organizations, users, products, keywords, articles, serp_analyses, backlinks, exchange_network, exchange_matches, integrations, subscriptions, invoices, competitors. RESTful API with consistent { data, error, meta } responses. Proper HTTP methods and status codes. JWT auth via httpOnly cookies with RLS on all tables. Pagination (cursor-based for large datasets), filtering via query params, rate limiting 100 req/min. Key endpoints: /api/auth/*, /api/products, /api/keywords, /api/articles, /api/backlinks, /api/integrations, /api/subscription, /api/webhooks/*.</guideline>
+    <guideline>ANALYSIS - REVERSE ENGINEERING METHODOLOGY: Reference .automaker/context/Reverse_engineering_guide.md for complete methodology. Use Chrome DevTools for network analysis, React DevTools for component inspection, Lighthouse for performance audits. Document all discoveries systematically. Test hypotheses by interacting with features. Capture API responses for schema inference. Map complete user journeys. Identify and report (don&apos;t exploit) security vulnerabilities.</guideline>
+    <guideline>AI INTEGRATION - CONTENT GENERATION: OpenAI GPT-4 Turbo integration at 0.7 temperature, max 3000 tokens. 10-step pipeline: 1) Keyword Research (DataForSEO), 2) SERP Analysis (SerpAPI), 3) Competitor Extraction, 4) Outline Generation, 5) Draft Generation, 6) Internal Linking, 7) External Linking, 8) Image Generation (DALL-E 3), 9) Quality Scoring, 10) Human Review (optional). DALL-E 3 styles: realistic, watercolor, illustration, sketch, brand_text_overlay with automatic brand color application. SEO scoring: keyword density 1-2%, readability FL 8-10, length 1500-3000 words, proper heading structure H1(1) H2(3-5) H3(5-10), meta tags, internal links 3-5, external links 2-3, image alt text, schema markup.</guideline>
+    <guideline>CMS INTEGRATION - MULTI-PLATFORM PUBLISHING: Build abstract CMS interface with connect(), publish(), validate(), disconnect() methods. Platform-specific adapters for WordPress (REST API), Webflow, Shopify (Admin API), Notion, Ghost (Admin API), Medium, and 10+ others. OAuth 2.0 authentication, webhook support for publish confirmation, exponential backoff retry (3 attempts), comprehensive error handling, connection testing. WordPress primary implementation: Application Passwords auth, endpoints /wp-json/wp/v2/posts and /wp-json/wp/v2/media, auto-create categories/tags, upload images first then attach, support draft/publish status, integrate with Yoast SEO/Rank Math for meta fields.</guideline>
+    <guideline>DEVFLOW BEADS SYSTEM: Use Beads autonomous agent memory system for feature tracking. Create issues for major features with create_beads_issue(). Query memory before implementation with query_beads_memory(). Spawn helper agents for parallel work with spawn_helper_agent(). Update status: pending → in_progress → completed. Document technical decisions in issues. Mark blockers when dependencies exist. Example fields: title, description, type (feature/bug/decision), priority (P0-P3), status, assignee, blockers[], file_locations[].</guideline>
+    <guideline>CODE QUALITY STANDARDS: TypeScript strict mode enabled. Zod schemas for all API inputs/outputs. Consistent error handling with try-catch blocks. Async/await over promises. Functional components with hooks. ESLint + Prettier for code formatting. Meaningful variable names. Comments for complex logic only. No console.logs in production. Proper TypeScript types (avoid &apos;any&apos;). DRY principle - extract reusable logic.</guideline>
+    <guideline>TESTING STRATEGY: Unit tests (Vitest) for all business logic - pure functions, utilities, hooks. Integration tests for API endpoints - test authentication, authorization, error cases, edge cases. E2E tests (Playwright) for critical paths - registration, login, article creation, publishing. Visual regression tests for UI components. Mock external APIs in tests. Aim for 80%+ coverage on business logic.</guideline>
+    <guideline>GIT WORKFLOW: Feature branches from main. Conventional commits (feat:, fix:, docs:, refactor:, test:). PR reviews required before merge. Squash and merge to keep history clean. Tag releases (v1.0.0, v1.1.0). CI/CD runs tests on every PR. Deploy main branch to production automatically after merge.</guideline>
+    <guideline>DOCUMENTATION REQUIREMENTS: README.md with setup instructions. API documentation via OpenAPI spec. Component documentation via Storybook. Inline JSDoc comments for complex functions. Architecture decision records (ADRs) for major technical decisions. Runbooks for deployment and common operations.</guideline>
+  </development_guidelines>
+
+  <implementation_roadmap>
+    <phase>
+      <name>Phase 1: Foundation (Weeks 1-2)</name>
+      <status>pending</status>
+      <description>Initialize Next.js 14 project with TypeScript. Set up PostgreSQL with Drizzle ORM. Configure Tailwind CSS and shadcn/ui. Implement Clerk authentication (register/login/logout/password reset). Create organization-based multi-tenancy with RLS. Build base database schema (organizations, users, products tables). Set up CI/CD (Vercel deployment, GitHub Actions). Configure monitoring (Sentry, PostHog). Create basic layout with sidebar navigation. Deliverables: Working auth flow, database migrations for core tables, basic UI shell, project documentation.</description>
+    </phase>
+    <phase>
+      <name>Phase 2: Core Features - Content Planning (Weeks 3-4)</name>
+      <status>pending</status>
+      <description>Build Keyword Research Module with DataForSEO API integration (search volume, difficulty, intent, opportunity scoring). Implement keyword list management (CRUD, import, clustering). Create Content Planner UI with 30-day calendar view, drag-drop scheduling, status tracking (planned/in_progress/completed/published). Build Product Management (CRUD forms, product switcher, settings for brand colors/tone, analytics dashboard). Deliverables: Working keyword research tool, content planner with calendar UI, product CRUD operations, basic analytics dashboard.</description>
+    </phase>
+    <phase>
+      <name>Phase 3: Content Generation Engine (Weeks 5-6)</name>
+      <status>pending</status>
+      <description>Integrate OpenAI GPT-4 Turbo for article generation. Build 10-step pipeline: keyword research → SERP analysis → competitor extraction → outline → content → internal linking → external linking → image generation → quality scoring → optional human review. Integrate DALL-E 3 with 5 image styles and brand color application. Build brand voice learning system (analyze samples, adapt prompts). Create rich text editor (Tiptap) with auto-save, version history, SEO scoring sidebar, preview mode, word count, readability metrics, quality checks. Deliverables: 3000-word article generation, image generation with brand colors, content editor with real-time SEO scoring, brand voice customization.</description>
+    </phase>
+    <phase>
+      <name>Phase 4: CMS Publishing &amp; Integrations (Weeks 7-8)</name>
+      <status>pending</status>
+      <description>Build abstract CMS integration framework with connect/publish/validate/disconnect interface. Implement WordPress integration (REST API, OAuth 2.0, category/tag mapping, image upload). Add 4+ additional platforms: Webflow, Shopify, Notion, Ghost, Medium. Create publishing dashboard (queue management, history, status tracking, retry logic, bulk publishing, scheduled publishing). Add webhook support for publish confirmations. Deliverables: 5+ CMS integrations working, publishing dashboard, auto-publishing workflow, publish history and analytics.</description>
+    </phase>
+    <phase>
+      <name>Phase 5: Advanced SEO Features (Weeks 9-10)</name>
+      <status>pending</status>
+      <description>Build Backlink Exchange Network marketplace with credit-based system, domain authority checking (Moz API), niche relevance matching, quality scoring, exchange request/approval workflow, tracking. Implement Google Search Console integration (OAuth 2.0, rankings, impressions, CTR data, keyword opportunity identification, gap analysis). Add Rank Tracking (DataForSEO Rank Tracker API, daily tracking, history visualizations, rank change alerts, competitor comparison, SERP feature tracking). Build Advanced Analytics (content performance dashboard, traffic/engagement tracking, ROI calculation, keyword growth visualizations, competitor reports). Deliverables: Backlink exchange network, GSC integration, rank tracking system, advanced analytics dashboards.</description>
+    </phase>
+    <phase>
+      <name>Phase 6: Billing &amp; Team Features (Weeks 11-12)</name>
+      <status>pending</status>
+      <description>Implement Stripe Subscription integration (Checkout, subscription management, plan tiers: Free/Starter $29/Pro $49/Agency $149, prorated upgrades/downgrades, invoice management, payment methods, usage-based limits). Build Team Collaboration (invitation system, RBAC: Owner/Admin/Editor/Viewer, team dashboard, activity feed, audit log, concurrent editing locks, comment/approval workflow). Create comprehensive Settings (business settings, article preferences, integration settings, notification preferences, account settings with 2FA). Deliverables: Stripe billing working, 3+ subscription plans, team collaboration features, comprehensive settings.</description>
+    </phase>
+    <phase>
+      <name>Phase 7: Polish &amp; Launch Preparation (Weeks 13-14)</name>
+      <status>pending</status>
+      <description>Write unit tests for business logic (80% coverage target). Implement integration tests for all API endpoints. Create E2E tests with Playwright for critical user paths. Perform visual regression testing. Conduct load testing and performance optimization. Security audit and penetration testing. Accessibility audit (WCAG 2.1 AA). Write user documentation, API documentation (OpenAPI spec), admin docs. Record video tutorials. Build landing pages (pricing, features, testimonials). Implement onboarding flow. Create email sequences. Set up analytics (conversion tracking, funnel analysis). Prepare launch announcement. Create customer support infrastructure. Deliverables: Production-ready application, comprehensive test suite, complete documentation, marketing website, launch ready.</description>
+    </phase>
+    <phase>
+      <name>Phase 8: Post-Launch Enhancements (Months 4-6)</name>
+      <status>pending</status>
+      <description>Implement AI Agent Orchestration (autonomous research agent, content creation agent, technical SEO agent, link building agent, reporting agent). Build GEO Optimization features (AI Overviews tracking, citation monitoring, optimization suggestions, schema markup generator, vector-friendly content structure). Add Advanced Integrations (Ahrefs API, Semrush API, Zapier/Make, custom webhooks, white-label PDF reporting). Develop Enterprise Features (developer API access, SSO for SAML/LDAP, custom contracts/pricing, dedicated support/SLAs, on-premise deployment option). Deliverables: Autonomous AI agents, GEO optimization tools, advanced integrations, enterprise features.</description>
+    </phase>
+  </implementation_roadmap>
+</project_specification>

@@ -1,0 +1,11 @@
+{
+  "id": "evt-1770151506074-0eaba2f2",
+  "trigger": "feature_error",
+  "timestamp": "2026-02-03T20:45:06.074Z",
+  "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd",
+  "projectName": "Rank.brnd",
+  "featureId": "postgresql-drizzle-setup",
+  "featureName": "Configure PostgreSQL and Drizzle ORM",
+  "error": "Operation was cancelled",
+  "errorType": "cancellation"
+}

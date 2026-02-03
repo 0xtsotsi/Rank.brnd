@@ -1,0 +1,18 @@
+{
+  "id": "article-generation-pipeline-api",
+  "category": "API",
+  "title": "Implement complete article generation pipeline API",
+  "description": "Create /api/articles/generate endpoint orchestrating SERP analysis, outline generation, draft generation, linking, image generation, SEO scoring in sequence.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "complex",
+  "dependencies": [
+    "article-outline-generator",
+    "article-draft-generator",
+    "internal-linking-service",
+    "external-linking-service",
+    "seo-scoring-engine"
+  ],
+  "createdAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-01-02T09:30:07.964Z"
+}

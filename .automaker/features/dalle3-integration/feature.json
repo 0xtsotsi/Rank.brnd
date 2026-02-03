@@ -1,0 +1,16 @@
+{
+  "id": "dalle3-integration",
+  "category": "API Integration",
+  "title": "Integrate DALL-E 3 image generation",
+  "description": "Set up DALL-E 3 API client, implement image style options (realistic, watercolor, illustration, sketch, brand_text_overlay).",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["nextjs-project-setup"],
+  "createdAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-01-07T06:05:16.472Z",
+  "branchName": "feature/integrate-dall-e-3-image-generation",
+  "startedAt": "2026-01-07T06:05:12.587Z",
+  "failureCount": 2,
+  "lastFailedAt": "2026-01-07T06:05:16.471Z"
+}
