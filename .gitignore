@@ -53,3 +53,9 @@ playwright/.cache/
 # Misc
 *.local
 *.log
+
+# Database
+drizzle/
+*.db
+*.db-shm
+*.db-wal
