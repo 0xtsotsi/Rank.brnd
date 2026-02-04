@@ -3,11 +3,10 @@
   "category": "Feature",
   "title": "Implement daily rank tracking service",
   "description": "Create background service using DataForSEO Rank Tracker API to check daily keyword positions for all products, store historical data.",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["rank-tracking-table"],
   "createdAt": "2026-01-02T09:30:07.966Z",
-  "updatedAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-02-04T08:55:35.344Z",
   "descriptionHistory": []
 }

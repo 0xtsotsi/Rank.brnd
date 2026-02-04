@@ -6,7 +6,10 @@
   "status": "backlog",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["articles-table", "rls-policy-setup"],
+  "dependencies": [
+    "rls-policy-setup"
+  ],
   "createdAt": "2026-01-02T09:30:07.963Z",
-  "updatedAt": "2026-01-02T09:30:07.963Z"
+  "updatedAt": "2026-01-02T09:30:07.963Z",
+  "descriptionHistory": []
 }

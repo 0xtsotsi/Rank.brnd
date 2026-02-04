@@ -6,7 +6,9 @@
   "status": "backlog",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["users-table", "products-table"],
+  "dependencies": [
+    "users-table"
+  ],
   "createdAt": "2026-01-02T09:30:07.962Z",
   "updatedAt": "2026-01-02T09:30:07.962Z",
   "descriptionHistory": []

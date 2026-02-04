@@ -6,7 +6,9 @@
   "status": "backlog",
   "priority": 1,
   "complexity": "complex",
-  "dependencies": ["serp-analysis-engine", "brand-voice-analyzer"],
+  "dependencies": [
+    "serp-analysis-engine"
+  ],
   "createdAt": "2026-01-02T09:30:07.964Z",
   "updatedAt": "2026-01-02T09:30:07.964Z",
   "descriptionHistory": []

@@ -3,10 +3,10 @@
   "category": "API",
   "title": "Implement publish article API endpoint",
   "description": "Create /api/articles/{id}/publish endpoint handling single or bulk publishing, managing CMS integrations, error handling, updating status.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "complex",
-  "dependencies": ["wordpress-cms-adapter", "publishing-queue-table"],
   "createdAt": "2026-01-02T09:30:07.965Z",
-  "updatedAt": "2026-01-02T09:30:07.965Z"
+  "updatedAt": "2026-02-04T05:13:33.986Z",
+  "descriptionHistory": []
 }

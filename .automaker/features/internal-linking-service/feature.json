@@ -6,7 +6,6 @@
   "status": "backlog",
   "priority": 2,
   "complexity": "moderate",
-  "dependencies": ["articles-table"],
   "createdAt": "2026-01-02T09:30:07.964Z",
   "updatedAt": "2026-01-02T09:30:07.964Z",
   "descriptionHistory": []

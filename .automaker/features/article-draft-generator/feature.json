@@ -6,7 +6,9 @@
   "status": "backlog",
   "priority": 1,
   "complexity": "complex",
-  "dependencies": ["article-outline-generator", "brand-voice-analyzer"],
+  "dependencies": [
+    "article-outline-generator"
+  ],
   "createdAt": "2026-01-02T09:30:07.964Z",
   "updatedAt": "2026-01-02T09:30:07.964Z",
   "descriptionHistory": []

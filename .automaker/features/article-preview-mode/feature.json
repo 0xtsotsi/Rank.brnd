@@ -6,7 +6,7 @@
   "status": "backlog",
   "priority": 2,
   "complexity": "simple",
-  "dependencies": ["article-editor-page"],
   "createdAt": "2026-01-02T09:30:07.964Z",
-  "updatedAt": "2026-01-02T09:30:07.964Z"
+  "updatedAt": "2026-01-02T09:30:07.964Z",
+  "descriptionHistory": []
 }

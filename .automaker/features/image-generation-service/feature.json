@@ -3,11 +3,10 @@
   "category": "Feature",
   "title": "Build image generation service with brand colors",
   "description": "Create service to generate images via DALL-E 3 with selected style, apply brand colors to generated images, store in image database.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["brand-settings-form"],
   "createdAt": "2026-01-02T09:30:07.964Z",
-  "updatedAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-02-04T00:29:14.902Z",
   "descriptionHistory": []
 }

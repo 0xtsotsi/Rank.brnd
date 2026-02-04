@@ -35,3 +35,18 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Automaker generated files and state
+.automaker/events/
+.automaker/execution-state.json
+.automaker/notifications.json
+.automaker/settings.json.bak*
+.automaker/features/**/feature.json.bak*
+.automaker/features/**/agent-output.md
+.worktrees/
+
+# Backup files
+*.bak
+*.bak1
+*.bak2
+*.bak3

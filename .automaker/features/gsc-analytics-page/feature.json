@@ -3,11 +3,10 @@
   "category": "UI",
   "title": "Build Google Search Console analytics page",
   "description": "Create analytics page displaying GSC data: keywords with best CTR, impressions trend, ranking positions, search performance, opportunity gaps.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["google-search-console-table"],
   "createdAt": "2026-01-02T09:30:07.966Z",
-  "updatedAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-02-04T01:38:46.864Z",
   "descriptionHistory": []
 }

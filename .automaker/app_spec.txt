@@ -149,6 +149,178 @@ Reverse-engineered from live analysis of Outrank.so application, incorporating 9
       <name>Configure Tailwind CSS and shadcn/ui</name>
       <description>Install and configure Tailwind CSS 3.4 with custom design tokens (Indigo-600 primary color, Inter typography). Set up shadcn/ui as component foundation with custom theme.</description>
     </feature>
+    <feature>
+      <name>Implement consistent API error handling</name>
+      <description>Create error handling middleware for API routes, return consistent error format { error: { code, message } }, proper HTTP status codes.</description>
+    </feature>
+    <feature>
+      <name>Generate sitemap.xml and robots.txt</name>
+      <description>Create dynamic sitemap.xml generation for all pages, create robots.txt allowing search engines, submit to Google Search Console.</description>
+    </feature>
+    <feature>
+      <name>Integrate SerpAPI for SERP analysis</name>
+      <description>Set up SerpAPI client, create functions to fetch top 10 search results, extract competitor content structure and metadata.</description>
+    </feature>
+    <feature>
+      <name>Configure Upstash Redis for rate limiting</name>
+      <description>Set up Upstash Redis instance, configure connection in app, create rate limit key patterns.</description>
+    </feature>
+    <feature>
+      <name>Set up Zustand for client state</name>
+      <description>Install and configure Zustand for UI state (theme, sidebar collapse, product selection), create store for preferences.</description>
+    </feature>
+    <feature>
+      <name>Implement security headers (CSP, HSTS)</name>
+      <description>Configure CSP, HSTS, X-Frame-Options, X-Content-Type-Options headers via next.config.js middleware.</description>
+    </feature>
+    <feature>
+      <name>Configure Vitest for unit testing</name>
+      <description>Install and configure Vitest, create test configuration, set up test utilities and mocks.</description>
+    </feature>
+    <feature>
+      <name>Implement structured logging with correlation IDs</name>
+      <description>Create structured logging service with correlation IDs, log levels (debug, info, warn, error, critical), implement in API routes.</description>
+    </feature>
+    <feature>
+      <name>Configure Playwright for E2E testing</name>
+      <description>Install and configure Playwright, create test configuration, set up test utilities and fixtures.</description>
+    </feature>
+    <feature>
+      <name>Integrate domain authority checking (Moz API)</name>
+      <description>Set up Moz API integration to check domain authority of backlink sources, cache results with 30-day TTL.</description>
+    </feature>
+    <feature>
+      <name>Set up PostHog analytics</name>
+      <description>Install PostHog for product analytics, configure event tracking, implement user identification, set up dashboards for key metrics.</description>
+    </feature>
+    <feature>
+      <name>Configure Sentry error tracking</name>
+      <description>Install and configure Sentry for application error monitoring, set up error boundaries in React, configure environment-specific DSN values.</description>
+    </feature>
+    <feature>
+      <name>Integrate DALL-E 3 image generation</name>
+      <description>Set up DALL-E 3 API client, implement image style options (realistic, watercolor, illustration, sketch, brand_text_overlay).</description>
+    </feature>
+    <feature>
+      <name>Configure React Query for server state</name>
+      <description>Install and configure React Query with 5-minute stale time, automatic cache invalidation, implement custom hooks for API calls.</description>
+    </feature>
+    <feature>
+      <name>Build product management page</name>
+      <description>Create page for CRUD operations on products/websites with form for name, URL, brand colors, tone preferences, delete functionality.</description>
+    </feature>
+    <feature>
+      <name>Implement Zod schema validation</name>
+      <description>Create Zod schemas for all API inputs/outputs, validate request bodies in API routes, return validation errors in response.</description>
+    </feature>
+    <feature>
+      <name>Generate OpenAPI specification documentation</name>
+      <description>Create OpenAPI 3.0 spec for all API endpoints, host on dedicated documentation site, generate interactive API explorer.</description>
+    </feature>
+    <feature>
+      <name>Add JSON-LD structured data markup</name>
+      <description>Implement JSON-LD for Article, FAQPage, BreadcrumbList, Organization schemas, add to relevant pages.</description>
+    </feature>
+    <feature>
+      <name>Implement GDPR right to deletion</name>
+      <description>Create account deletion flow, cascade delete all user/organization data, provide deletion confirmation, handle partial deletions.</description>
+    </feature>
+    <feature>
+      <name>Create brand settings configuration form</name>
+      <description>Build form for configuring brand colors (primary, secondary, accent), tone preferences, style guides, logo upload with preview.</description>
+    </feature>
+    <feature>
+      <name>Build image generation service with brand colors</name>
+      <description>Create service to generate images via DALL-E 3 with selected style, apply brand colors to generated images, store in image database.</description>
+    </feature>
+    <feature>
+      <name>Create products database table</name>
+      <description>Create products table for websites with organization_id, name, url, brand_colors, tone_preferences, analytics_config. Implement RLS and foreign keys.</description>
+    </feature>
+    <feature>
+      <name>Create brand voice samples table</name>
+      <description>Create table to store brand voice samples with organization_id, product_id, sample_text, analysis (tone, vocabulary, style), created_at.</description>
+    </feature>
+    <feature>
+      <name>Implement brand voice analysis system</name>
+      <description>Create service to analyze 5-10 stored content samples using GPT-4, extract tone/vocabulary/formatting, generate style guide, store analysis.</description>
+    </feature>
+    <feature>
+      <name>Create GSC data database table</name>
+      <description>Create table to store Google Search Console data: organization_id, product_id, keyword, impressions, clicks, ctr, avg_position, created_at.</description>
+    </feature>
+    <feature>
+      <name>Build Google Search Console analytics page</name>
+      <description>Create analytics page displaying GSC data: keywords with best CTR, impressions trend, ranking positions, search performance, opportunity gaps.</description>
+    </feature>
+    <feature>
+      <name>Create integrations database table</name>
+      <description>Create integrations table with organization_id, product_id, platform (wordpress, webflow, etc), auth_token, config, status, created_at.</description>
+    </feature>
+    <feature>
+      <name>Build CMS connections management page</name>
+      <description>Create page showing connected CMS platforms, connect buttons, configuration options for each platform, disconnect functionality.</description>
+    </feature>
+    <feature>
+      <name>Implement CMS OAuth 2.0 connection flow</name>
+      <description>Create OAuth callback handlers, secure token storage, token refresh logic, connection status checking and validation.</description>
+    </feature>
+    <feature>
+      <name>Implement Google Search Console OAuth 2.0</name>
+      <description>Set up OAuth 2.0 flow to connect Google Search Console, securely store refresh tokens, implement token refresh logic.</description>
+    </feature>
+    <feature>
+      <name>Build GSC data sync service</name>
+      <description>Create background service to periodically sync GSC data (impressions, clicks, rankings), store in database, handle API rate limits.</description>
+    </feature>
+    <feature>
+      <name>Create keywords database table</name>
+      <description>Create keywords table with organization_id, product_id, keyword, search_volume, difficulty, intent, opportunity_score, status, created_at, updated_at.</description>
+    </feature>
+    <feature>
+      <name>Create articles database table</name>
+      <description>Create articles table with organization_id, product_id, title, slug, content, keyword_id, status (draft/published), seo_score, created_at, updated_at, published_at.</description>
+    </feature>
+    <feature>
+      <name>Build rich text article editor page</name>
+      <description>Create editor page with Tiptap rich text editor, auto-save functionality, version history, word count, readability metrics display.</description>
+    </feature>
+    <feature>
+      <name>Build article generation wizard page</name>
+      <description>Create multi-step wizard for article generation: select keyword, review outline, set brand voice preferences, generate content, edit and publish.</description>
+    </feature>
+    <feature>
+      <name>Build image generation UI in editor</name>
+      <description>Create image generation dialog in article editor showing 5 style options, brand color preview, generated images gallery, selection functionality.</description>
+    </feature>
+    <feature>
+      <name>Create images database table</name>
+      <description>Create images table with organization_id, product_id, article_id, url, alt_text, style, created_at with relationships to articles.</description>
+    </feature>
+    <feature>
+      <name>Create publishing queue database table</name>
+      <description>Create table tracking article publishing status per CMS: organization_id, product_id, article_id, platform, status (pending/queued/published/failed), retry_count, last_error.</description>
+    </feature>
+    <feature>
+      <name>Implement publish article API endpoint</name>
+      <description>Create /api/articles/{id}/publish endpoint handling single or bulk publishing, managing CMS integrations, error handling, updating status.</description>
+    </feature>
+    <feature>
+      <name>Implement exponential backoff retry logic</name>
+      <description>Create retry mechanism with exponential backoff (max 3 attempts) for failed publishes, store error messages, retry manually or automatically.</description>
+    </feature>
+    <feature>
+      <name>Build publishing dashboard page</name>
+      <description>Create dashboard showing article publishing status per CMS, publish buttons, schedule publishing UI, history view, retry failed publishes.</description>
+    </feature>
+    <feature>
+      <name>Create rank tracking database table</name>
+      <description>Create table for rank position history: organization_id, product_id, keyword_id, position, device, location, date, created_at.</description>
+    </feature>
+    <feature>
+      <name>Build rank tracking and visualization page</name>
+      <description>Create page showing keyword rankings with position changes, trend visualization, historical chart, device/location filters, rank alerts.</description>
+    </feature>
   </implemented_features>
 
   <additional_requirements>

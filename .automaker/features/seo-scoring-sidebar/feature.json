@@ -6,7 +6,10 @@
   "status": "backlog",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["article-editor-page", "seo-scoring-engine"],
+  "dependencies": [
+    "seo-scoring-engine"
+  ],
   "createdAt": "2026-01-02T09:30:07.964Z",
-  "updatedAt": "2026-01-02T09:30:07.964Z"
+  "updatedAt": "2026-01-02T09:30:07.964Z",
+  "descriptionHistory": []
 }

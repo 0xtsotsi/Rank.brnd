@@ -3,10 +3,10 @@
   "category": "Database",
   "title": "Create products database table",
   "description": "Create products table for websites with organization_id, name, url, brand_colors, tone_preferences, analytics_config. Implement RLS and foreign keys.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "simple",
   "createdAt": "2026-01-02T09:30:07.962Z",
-  "updatedAt": "2026-01-02T09:30:07.962Z",
+  "updatedAt": "2026-02-04T00:37:30.346Z",
   "descriptionHistory": []
 }

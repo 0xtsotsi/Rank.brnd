@@ -3,11 +3,11 @@
   "category": "Feature",
   "title": "Integrate domain authority checking (Moz API)",
   "description": "Set up Moz API integration to check domain authority of backlink sources, cache results with 30-day TTL.",
-  "status": "in_progress",
+  "status": "verified",
   "priority": 2,
   "complexity": "moderate",
   "createdAt": "2026-01-02T09:30:07.966Z",
-  "updatedAt": "2026-02-03T20:52:27.740Z",
+  "updatedAt": "2026-02-03T21:13:15.553Z",
   "branchName": "feature/integrate-domain-authority-checking-moz-api",
   "startedAt": "2026-01-02T10:48:01.183Z",
   "descriptionHistory": []

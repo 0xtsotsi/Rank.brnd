@@ -3,11 +3,11 @@
   "category": "Compliance",
   "title": "Implement GDPR right to deletion",
   "description": "Create account deletion flow, cascade delete all user/organization data, provide deletion confirmation, handle partial deletions.",
-  "status": "in_progress",
+  "status": "verified",
   "priority": 2,
   "complexity": "moderate",
   "createdAt": "2026-01-02T09:30:07.967Z",
-  "updatedAt": "2026-02-03T20:52:47.189Z",
+  "updatedAt": "2026-02-03T21:23:13.994Z",
   "branchName": "feature/implement-gdpr-right-to-deletion",
   "startedAt": "2026-01-02T10:48:02.724Z",
   "descriptionHistory": []

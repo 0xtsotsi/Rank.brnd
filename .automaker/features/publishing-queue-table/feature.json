@@ -3,11 +3,10 @@
   "category": "Database",
   "title": "Create publishing queue database table",
   "description": "Create table tracking article publishing status per CMS: organization_id, product_id, article_id, platform, status (pending/queued/published/failed), retry_count, last_error.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "simple",
-  "dependencies": ["articles-table", "integrations-table"],
   "createdAt": "2026-01-02T09:30:07.965Z",
-  "updatedAt": "2026-01-02T09:30:07.965Z",
+  "updatedAt": "2026-02-04T05:04:44.017Z",
   "descriptionHistory": []
 }
