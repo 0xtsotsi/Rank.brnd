@@ -316,8 +316,8 @@ export async function saveSerpAnalysisResults(
     const analysis = analyzeSerp(response, searchParams);
 
     // Extract competitor URLs and domains
-    const competitorUrls = response.organicResults.map(r => r.link);
-    const competitorDomains = Array.from(
+    const competitorUrls: string[] = response.organicResults.map(r => r.link);
+    const competitorDomains: string[] = Array.from(
       new Set(response.organicResults.map(r => extractDomain(r.link)))
     );
 

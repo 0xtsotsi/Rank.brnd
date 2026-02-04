@@ -6,7 +6,6 @@
   "status": "backlog",
   "priority": 1,
   "complexity": "simple",
-  "dependencies": ["users-table"],
   "createdAt": "2026-01-02T09:30:07.967Z",
   "updatedAt": "2026-01-02T09:30:07.967Z",
   "descriptionHistory": []

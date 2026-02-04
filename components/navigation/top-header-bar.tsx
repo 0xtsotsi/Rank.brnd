@@ -4,15 +4,16 @@
  * Top Header Bar Component
  *
  * A responsive header bar with search functionality, notifications,
- * and user menu dropdown using Clerk's UserButton.
+ * and custom user menu dropdown with profile info, settings link,
+ * team switcher, and logout button.
  *
  * Uses Zustand store for theme toggle functionality.
  */
 
-import { UserButton } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useToggleTheme, useTheme, useEffectiveTheme } from '@/lib/ui-store';
+import { UserMenuDropdown } from './user-menu-dropdown';
 
 interface HeaderBarProps {
   /** Optional title to display in the header */
@@ -272,25 +273,8 @@ export function TopHeaderBar({
             <ThemeIcon className="h-5 w-5" />
           </button>
 
-          {/* User Menu (Clerk UserButton) */}
-          <UserButton
-            afterSignOutUrl="/"
-            appearance={{
-              elements: {
-                avatarBox: {
-                  width: '40px',
-                  height: '40px',
-                },
-                userButtonPopoverCard: {
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                },
-                userButtonBox: {
-                  height: '40px',
-                },
-              },
-            }}
-          />
+          {/* User Menu Dropdown */}
+          <UserMenuDropdown />
         </div>
       </div>
 

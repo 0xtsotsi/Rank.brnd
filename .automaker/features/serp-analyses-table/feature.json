@@ -3,10 +3,10 @@
   "category": "Database",
   "title": "Create SERP analyses database table",
   "description": "Create serp_analyses table with organization_id, product_id, keyword_id, competitor_urls, top_10_results, gaps, created_at.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "simple",
   "createdAt": "2026-01-02T09:30:07.964Z",
-  "updatedAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-02-04T19:09:59.190Z",
   "descriptionHistory": []
 }

@@ -11,10 +11,11 @@ import type {
   KeywordFilters,
   ImportResult,
 } from '@/types/keyword-research';
-import type { KeywordImportRow } from '@/types/keyword-research';
+import type { KeywordImportRow, DifficultyLevel } from '@/types/keyword-research';
 import { KeywordFilters as KeywordFiltersComponent } from '@/components/keyword-research/keyword-filters';
 import { KeywordTable } from '@/components/keyword-research/keyword-table';
 import { BulkImportDialog } from '@/components/keyword-research/bulk-import-dialog';
+import { KeywordSearch } from '@/components/keyword-research/keyword-search';
 import { cn } from '@/lib/utils';
 import {
   Search,
@@ -23,6 +24,8 @@ import {
   TrendingUp,
   BarChart3,
   AlertCircle,
+  Check,
+  X,
 } from 'lucide-react';
 
 const defaultFilters: KeywordFilters = {
@@ -39,7 +42,9 @@ export default function KeywordResearchPage() {
   const [filters, setFilters] = useState<KeywordFilters>(defaultFilters);
   const [isLoading, setIsLoading] = useState(true);
   const [showImportDialog, setShowImportDialog] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Fetch keywords from API
   const fetchKeywords = useCallback(async () => {
@@ -153,6 +158,53 @@ export default function KeywordResearchPage() {
     }
   };
 
+  // Handle add keyword from search
+  const handleAddKeyword = async (
+    keyword: string,
+    metrics: {
+      search_volume: number;
+      difficulty: number;
+      difficulty_level: DifficultyLevel;
+      opportunity: number;
+      cpc: number;
+      competition: number;
+    }
+  ): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/keywords', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bulk: false,
+          organization_id: 'default', // This would come from user context
+          keyword,
+          search_volume: metrics.search_volume,
+          difficulty: metrics.difficulty_level,
+          cpc: metrics.cpc,
+          competition: metrics.competition,
+          opportunity_score: metrics.opportunity,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add keyword');
+      }
+
+      // Show success message
+      setSuccessMessage(`Added "${keyword}" to your keyword list`);
+      setTimeout(() => setSuccessMessage(null), 3000);
+
+      // Refresh keywords
+      await fetchKeywords();
+
+      return true;
+    } catch (err) {
+      console.error('Error adding keyword:', err);
+      setError(err instanceof Error ? err.message : 'Failed to add keyword');
+      return false;
+    }
+  };
+
   // Calculate summary stats
   const stats = {
     total: keywords.length,
@@ -182,6 +234,21 @@ export default function KeywordResearchPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowSearch(!showSearch)}
+            className={cn(
+              'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors',
+              'border border-gray-300 dark:border-gray-600',
+              'bg-white dark:bg-gray-800',
+              'text-gray-700 dark:text-gray-300',
+              'hover:bg-gray-50 dark:hover:bg-gray-700',
+              showSearch && 'ring-2 ring-indigo-500'
+            )}
+            data-testid="toggle-search-button"
+          >
+            <Search className="h-4 w-4" />
+            {showSearch ? 'Hide Search' : 'Search Keywords'}
+          </button>
           <button
             onClick={() => setShowImportDialog(true)}
             className={cn(
@@ -216,14 +283,41 @@ export default function KeywordResearchPage() {
       {error && (
         <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-start gap-3">
           <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
-          <div>
+          <div className="flex-1">
             <p className="font-medium text-red-900 dark:text-red-300">
-              Error loading keywords
+              Error
             </p>
             <p className="text-sm text-red-700 dark:text-red-400 mt-1">
               {error}
             </p>
           </div>
+          <button
+            onClick={() => setError(null)}
+            className="p-1 hover:bg-red-200 dark:hover:bg-red-800 rounded"
+          >
+            <X className="h-4 w-4 text-red-600 dark:text-red-400" />
+          </button>
+        </div>
+      )}
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 flex items-center gap-2">
+          <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+          <p className="text-sm text-green-700 dark:text-green-400">{successMessage}</p>
+          <button
+            onClick={() => setSuccessMessage(null)}
+            className="ml-auto p-1 hover:bg-green-200 dark:hover:bg-green-800 rounded"
+          >
+            <X className="h-3 w-3 text-green-600 dark:text-green-400" />
+          </button>
+        </div>
+      )}
+
+      {/* Keyword Search Panel */}
+      {showSearch && (
+        <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 animate-fade-in">
+          <KeywordSearch onAddKeyword={handleAddKeyword} />
         </div>
       )}
 

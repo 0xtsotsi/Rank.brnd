@@ -3,13 +3,10 @@
   "category": "Authentication",
   "title": "Implement organization creation in auth flow",
   "description": "Add organization creation step during user signup, allow name input, generate slug, set initial tier, create default product, link user as owner.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": [
-    "users-table"
-  ],
   "createdAt": "2026-01-02T09:30:07.962Z",
-  "updatedAt": "2026-01-02T09:30:07.962Z",
+  "updatedAt": "2026-02-04T19:46:47.326Z",
   "descriptionHistory": []
 }

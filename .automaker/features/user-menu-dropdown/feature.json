@@ -3,10 +3,10 @@
   "category": "UI",
   "title": "Build user profile menu dropdown",
   "description": "Create user menu in header showing profile info, settings link, team switcher, logout button with proper dropdown positioning and accessibility.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "simple",
   "createdAt": "2026-01-02T09:30:07.962Z",
-  "updatedAt": "2026-01-02T09:30:07.962Z",
+  "updatedAt": "2026-02-04T19:42:44.077Z",
   "descriptionHistory": []
 }

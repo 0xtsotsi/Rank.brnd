@@ -3,10 +3,10 @@
   "category": "Database",
   "title": "Create users database table",
   "description": "Create users table with organization_id, email, name, role, preferences, last_login, created_at. Set up RLS policies and foreign key constraints.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "simple",
   "createdAt": "2026-01-02T09:30:07.962Z",
-  "updatedAt": "2026-01-02T09:30:07.962Z",
+  "updatedAt": "2026-02-04T19:44:37.799Z",
   "descriptionHistory": []
 }

@@ -4,11 +4,13 @@
  * Organization Setup Step Component
  *
  * Guides users through creating their organization/workspace.
+ * Creates organization in database with default product and links user as owner.
  */
 
 import { useState } from 'react';
 import { Building2, CheckCircle, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useUser } from '@clerk/nextjs';
 
 interface OrganizationStepProps {
   onNext: () => void;
@@ -24,6 +26,7 @@ export function OrganizationStep({
   onSkip,
   existingOrganization,
 }: OrganizationStepProps) {
+  const { user, isLoaded: isUserLoaded } = useUser();
   const [orgName, setOrgName] = useState(existingOrganization?.name || '');
   const [slug, setSlug] = useState(existingOrganization?.slug || '');
   const [isLoading, setIsLoading] = useState(false);
@@ -61,25 +64,55 @@ export function OrganizationStep({
       return;
     }
 
+    if (!isUserLoaded || !user?.id) {
+      setError('Please wait while we verify your account');
+      return;
+    }
+
     setIsLoading(true);
     setError('');
 
     try {
-      // In a real app, this would call an API to create the organization
-      // For now, simulate the API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Check if user already has an org in Clerk
       if (existingOrganization) {
-        // Just proceed
+        // User already has an organization, just proceed
         setIsSuccess(true);
         setTimeout(() => onNext(), 500);
-      } else {
-        // Create the organization
-        setIsSuccess(true);
-        setTimeout(() => onNext(), 500);
+        return;
       }
+
+      // Call the API to create the organization
+      const response = await fetch('/api/organizations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: orgName.trim(),
+          slug: slug.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Failed to create organization. Please try again.');
+        return;
+      }
+
+      // Organization created successfully
+      setIsSuccess(true);
+
+      // Store organization data for next steps
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('createdOrganization', JSON.stringify(data.organization));
+        if (data.product) {
+          sessionStorage.setItem('createdProduct', JSON.stringify(data.product));
+        }
+      }
+
+      setTimeout(() => onNext(), 500);
     } catch (err) {
+      console.error('Error creating organization:', err);
       setError('Failed to create organization. Please try again.');
     } finally {
       setIsLoading(false);

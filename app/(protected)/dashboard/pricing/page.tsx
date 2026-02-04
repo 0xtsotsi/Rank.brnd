@@ -24,23 +24,8 @@ export default function PricingPage() {
     setIsLoading(true);
 
     try {
-      // TODO: Integrate with actual checkout
-      // For now, redirect to billing page
-      window.location.href = `/dashboard/billing?plan=${planId}&interval=${interval}`;
-
-      // Future implementation:
-      // const response = await fetch('/api/stripe/create-checkout-session', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     priceId: plan.stripePriceIdMonthly,
-      //     mode: 'subscription',
-      //     successUrl: `${window.location.origin}/dashboard?checkout=success`,
-      //     cancelUrl: `${window.location.origin}/dashboard/pricing`,
-      //   }),
-      // });
-      // const { url } = await response.json();
-      // window.location.href = url;
+      // Redirect to checkout page with Stripe embedded payment form
+      window.location.href = `/dashboard/checkout?plan=${planId}&interval=${interval}`;
     } catch (error) {
       console.error('Error selecting plan:', error);
       setIsLoading(false);

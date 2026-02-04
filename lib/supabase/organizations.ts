@@ -87,6 +87,33 @@ export async function getOrganizationBySlug(
 }
 
 /**
+ * Get an organization by Stripe customer ID
+ */
+export async function getOrganizationByStripeCustomerId(
+  client: SupabaseClient<Database>,
+  stripeCustomerId: string
+): Promise<OrganizationResult<Organization>> {
+  try {
+    const { data, error } = await client
+      .from('organizations')
+      .select('*')
+      .eq('stripe_customer_id', stripeCustomerId)
+      .single();
+
+    if (error) throw error;
+    if (!data) throw new Error('Organization not found');
+
+    return { success: true, data };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : 'Failed to fetch organization',
+    };
+  }
+}
+
+/**
  * Get all organizations for a user (using the database function)
  */
 export async function getUserOrganizations(

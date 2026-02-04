@@ -37,6 +37,9 @@ import {
   type StripeWebhookEvent,
 } from '@/lib/stripe';
 import { createRequestLogger, withLoggingHeaders, getCorrelationId, type ILogger } from '@/lib/logger';
+import { getSupabaseServerClient } from '@/lib/supabase/client';
+import { upsertInvoiceFromStripe } from '@/lib/supabase/subscriptions';
+import { getOrganizationByStripeCustomerId } from '@/lib/supabase/organizations';
 
 /**
  * Handle Stripe webhook events
@@ -289,10 +292,61 @@ async function handleInvoicePaid(event: Stripe.Event, log: ILogger) {
     currency: invoiceData.currency,
   });
 
-  // TODO: Update subscription payment history
-  // - Record payment in database
-  // - Send payment confirmation email
-  // - Extend access period
+  // Record the invoice in the database
+  const supabase = getSupabaseServerClient();
+
+  // Get organization from Stripe customer ID
+  const orgResult = await getOrganizationByStripeCustomerId(
+    supabase,
+    invoiceData.customerId
+  );
+
+  if (!orgResult.success || !orgResult.data) {
+    log.error('Organization not found for invoice', undefined, {
+      customerId: invoiceData.customerId,
+      invoiceId: invoiceData.invoiceId,
+    });
+    return;
+  }
+
+  // Get subscription ID from our database if available
+  let subscriptionId: string | undefined = undefined;
+  if (invoiceData.subscriptionId) {
+    const { data: subData } = await supabase
+      .from('subscriptions')
+      .select('id')
+      .eq('stripe_subscription_id', invoiceData.subscriptionId)
+      .single();
+
+    subscriptionId = subData?.id;
+  }
+
+  // Upsert the invoice
+  const result = await upsertInvoiceFromStripe(supabase, {
+    organizationId: orgResult.data.id,
+    subscriptionId,
+    stripeInvoiceId: invoiceData.invoiceId,
+    amountPaid: invoiceData.amountPaid,
+    currency: invoiceData.currency,
+    status: invoiceData.status,
+    invoicePdf: invoiceData.invoicePdf,
+    hostedInvoiceUrl: invoiceData.hostedInvoiceUrl,
+    dueDate: invoiceData.dueDate ? new Date(invoiceData.dueDate * 1000) : undefined,
+    paidAt: invoiceData.paidAt ? new Date(invoiceData.paidAt * 1000) : new Date(),
+    metadata: invoiceData.metadata,
+  });
+
+  if (result.success) {
+    log.info('Invoice recorded successfully', {
+      invoiceId: invoiceData.invoiceId,
+      organizationId: orgResult.data.id,
+    });
+  } else {
+    log.error('Failed to record invoice', undefined, {
+      invoiceId: invoiceData.invoiceId,
+      error: result.error,
+    });
+  }
 }
 
 /**
@@ -311,7 +365,63 @@ async function handleInvoicePaymentFailed(event: Stripe.Event, log: ILogger) {
     attemptCount: invoiceData.attemptCount,
   });
 
-  // TODO: Handle payment failure
+  // Record the failed invoice in the database
+  const supabase = getSupabaseServerClient();
+
+  // Get organization from Stripe customer ID
+  const orgResult = await getOrganizationByStripeCustomerId(
+    supabase,
+    invoiceData.customerId
+  );
+
+  if (!orgResult.success || !orgResult.data) {
+    log.error('Organization not found for invoice', undefined, {
+      customerId: invoiceData.customerId,
+      invoiceId: invoiceData.invoiceId,
+    });
+    return;
+  }
+
+  // Get subscription ID from our database if available
+  let subscriptionId: string | undefined = undefined;
+  if (invoiceData.subscriptionId) {
+    const { data: subData } = await supabase
+      .from('subscriptions')
+      .select('id')
+      .eq('stripe_subscription_id', invoiceData.subscriptionId)
+      .single();
+
+    subscriptionId = subData?.id;
+  }
+
+  // Upsert the invoice with 'open' status (failed payment, still owes)
+  const result = await upsertInvoiceFromStripe(supabase, {
+    organizationId: orgResult.data.id,
+    subscriptionId,
+    stripeInvoiceId: invoiceData.invoiceId,
+    amountPaid: 0, // No payment yet
+    currency: invoiceData.currency,
+    status: 'open',
+    invoicePdf: invoiceData.invoicePdf,
+    hostedInvoiceUrl: invoiceData.hostedInvoiceUrl,
+    dueDate: invoiceData.dueDate ? new Date(invoiceData.dueDate * 1000) : undefined,
+    paidAt: undefined,
+    metadata: invoiceData.metadata,
+  });
+
+  if (result.success) {
+    log.info('Failed invoice recorded successfully', {
+      invoiceId: invoiceData.invoiceId,
+      organizationId: orgResult.data.id,
+    });
+  } else {
+    log.error('Failed to record invoice', undefined, {
+      invoiceId: invoiceData.invoiceId,
+      error: result.error,
+    });
+  }
+
+  // Handle payment failure
   // - Send payment failed notification
   // - Update subscription status if retry limit reached
   // - Grace period handling

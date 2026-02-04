@@ -26,6 +26,54 @@ export interface Database {
   public: {
     Tables: {
       /**
+       * Users table
+       * User profiles synced with Clerk, linked to organizations
+       */
+      users: {
+        Row: {
+          id: string;
+          clerk_id: string;
+          organization_id: string | null;
+          email: string;
+          name: string;
+          avatar_url: string | null;
+          role: 'owner' | 'admin' | 'member' | 'viewer';
+          preferences: Json;
+          last_login: string | null;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          clerk_id: string;
+          organization_id?: string | null;
+          email: string;
+          name: string;
+          avatar_url?: string | null;
+          role?: 'owner' | 'admin' | 'member' | 'viewer';
+          preferences?: Json;
+          last_login?: string | null;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          clerk_id?: string;
+          organization_id?: string | null;
+          email?: string;
+          name?: string;
+          avatar_url?: string | null;
+          role?: 'owner' | 'admin' | 'member' | 'viewer';
+          preferences?: Json;
+          last_login?: string | null;
+          is_active?: boolean;
+          updated_at?: string;
+        };
+      };
+
+      /**
        * Subscriptions table
        * Stores Stripe subscription data for each organization
        */
@@ -279,11 +327,196 @@ export interface Database {
           deleted_at?: string | null;
         };
       };
+
+      /**
+       * Keywords table
+       * SEO keywords tracked by organizations for their products
+       */
+      keywords: {
+        Row: {
+          id: string;
+          organization_id: string;
+          product_id: string | null;
+          keyword: string;
+          search_volume: number;
+          difficulty: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
+          intent: 'informational' | 'navigational' | 'transactional' | 'commercial';
+          opportunity_score: number;
+          status: 'tracking' | 'paused' | 'opportunity' | 'ignored';
+          current_rank: number | null;
+          target_url: string | null;
+          cpc: number | null;
+          competition: number | null;
+          notes: string | null;
+          tags: string[];
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          product_id?: string | null;
+          keyword: string;
+          search_volume?: number;
+          difficulty?: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
+          intent?: 'informational' | 'navigational' | 'transactional' | 'commercial';
+          opportunity_score?: number;
+          status?: 'tracking' | 'paused' | 'opportunity' | 'ignored';
+          current_rank?: number | null;
+          target_url?: string | null;
+          cpc?: number | null;
+          competition?: number | null;
+          notes?: string | null;
+          tags?: string[];
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          product_id?: string | null;
+          keyword?: string;
+          search_volume?: number;
+          difficulty?: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
+          intent?: 'informational' | 'navigational' | 'transactional' | 'commercial';
+          opportunity_score?: number;
+          status?: 'tracking' | 'paused' | 'opportunity' | 'ignored';
+          current_rank?: number | null;
+          target_url?: string | null;
+          cpc?: number | null;
+          competition?: number | null;
+          notes?: string | null;
+          tags?: string[];
+          metadata?: Json;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+      };
+
+      /**
+       * SERP Analyses table
+       * Stores SERP analysis results with competitor URLs, top 10 results, and content gaps
+       */
+      serp_analyses: {
+        Row: {
+          id: string;
+          organization_id: string;
+          product_id: string | null;
+          keyword_id: string;
+          query: string;
+          device: string;
+          location: string;
+          competitor_urls: string[];
+          competitor_domains: string[];
+          top_10_results: Json;
+          gaps: Json;
+          serp_features: Json;
+          search_volume: number;
+          difficulty_score: number | null;
+          opportunity_score: number | null;
+          status: 'pending' | 'analyzing' | 'completed' | 'failed';
+          error_message: string | null;
+          recommendations: Json;
+          analyzed_at: string | null;
+          created_at: string;
+          updated_at: string;
+          metadata: Json;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          product_id?: string | null;
+          keyword_id: string;
+          query: string;
+          device?: string;
+          location?: string;
+          competitor_urls?: string[];
+          competitor_domains?: string[];
+          top_10_results?: Json;
+          gaps?: Json;
+          serp_features?: Json;
+          search_volume?: number;
+          difficulty_score?: number | null;
+          opportunity_score?: number | null;
+          status?: 'pending' | 'analyzing' | 'completed' | 'failed';
+          error_message?: string | null;
+          recommendations?: Json;
+          analyzed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          metadata?: Json;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          product_id?: string | null;
+          keyword_id?: string;
+          query?: string;
+          device?: string;
+          location?: string;
+          competitor_urls?: string[];
+          competitor_domains?: string[];
+          top_10_results?: Json;
+          gaps?: Json;
+          serp_features?: Json;
+          search_volume?: number;
+          difficulty_score?: number | null;
+          opportunity_score?: number | null;
+          status?: 'pending' | 'analyzing' | 'completed' | 'failed';
+          error_message?: string | null;
+          recommendations?: Json;
+          analyzed_at?: string | null;
+          updated_at?: string;
+          metadata?: Json;
+        };
+      };
     };
     Views: {
       // Placeholder for view definitions
     };
     Functions: {
+      get_user_by_clerk_id: {
+        Args: {
+          p_clerk_id: string;
+        };
+        Returns: {
+          id: string;
+          clerk_id: string;
+          organization_id: string | null;
+          email: string;
+          name: string;
+          avatar_url: string | null;
+          role: 'owner' | 'admin' | 'member' | 'viewer';
+          is_active: boolean;
+          last_login: string | null;
+        } | null;
+      };
+      get_organization_users: {
+        Args: {
+          p_organization_id: string;
+        };
+        Returns: {
+          id: string;
+          clerk_id: string;
+          email: string;
+          name: string;
+          avatar_url: string | null;
+          role: 'owner' | 'admin' | 'member' | 'viewer';
+          is_active: boolean;
+          last_login: string | null;
+        }[];
+      };
+      is_user_in_organization: {
+        Args: {
+          p_user_id: string;
+          p_organization_id: string;
+        };
+        Returns: boolean;
+      };
       get_user_organizations: {
         Args: {
           p_user_id: string;
@@ -342,11 +575,223 @@ export interface Database {
           updated_at: string;
         }[];
       };
+
+      // Keywords helper functions
+      soft_delete_keyword: {
+        Args: {
+          p_keyword_id: string;
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
+      get_organization_keywords: {
+        Args: {
+          p_org_id: string;
+          p_include_deleted?: boolean;
+          p_product_id?: string;
+        };
+        Returns: {
+          id: string;
+          keyword: string;
+          search_volume: number;
+          difficulty: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
+          intent: 'informational' | 'navigational' | 'transactional' | 'commercial';
+          opportunity_score: number;
+          status: 'tracking' | 'paused' | 'opportunity' | 'ignored';
+          current_rank: number | null;
+          target_url: string | null;
+          cpc: number | null;
+          tags: string[];
+          created_at: string;
+          updated_at: string;
+        }[];
+      };
+      get_product_keywords: {
+        Args: {
+          p_product_id: string;
+          p_include_deleted?: boolean;
+        };
+        Returns: {
+          id: string;
+          keyword: string;
+          search_volume: number;
+          difficulty: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
+          intent: 'informational' | 'navigational' | 'transactional' | 'commercial';
+          opportunity_score: number;
+          status: 'tracking' | 'paused' | 'opportunity' | 'ignored';
+          current_rank: number | null;
+          target_url: string | null;
+          cpc: number | null;
+          tags: string[];
+          created_at: string;
+          updated_at: string;
+        }[];
+      };
+      can_access_keyword: {
+        Args: {
+          p_keyword_id: string;
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
+      calculate_opportunity_score: {
+        Args: {
+          p_search_volume: number;
+          p_difficulty: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
+          p_current_rank?: number | null;
+        };
+        Returns: number;
+      };
+
+      // SERP Analyses helper functions
+      upsert_serp_analysis: {
+        Args: {
+          p_organization_id: string;
+          p_product_id?: string | null;
+          p_keyword_id: string;
+          p_query: string;
+          p_device?: string;
+          p_location?: string;
+          p_competitor_urls?: string[] | null;
+          p_top_10_results?: Json | null;
+          p_gaps?: Json | null;
+          p_serp_features?: Json | null;
+          p_search_volume?: number;
+          p_difficulty_score?: number | null;
+          p_opportunity_score?: number | null;
+          p_recommendations?: Json | null;
+          p_metadata?: Json;
+        };
+        Returns: {
+          id: string;
+          organization_id: string;
+          product_id: string | null;
+          keyword_id: string;
+          query: string;
+          device: string;
+          location: string;
+          competitor_urls: string[];
+          competitor_domains: string[];
+          top_10_results: Json;
+          gaps: Json;
+          serp_features: Json;
+          search_volume: number;
+          difficulty_score: number | null;
+          opportunity_score: number | null;
+          status: 'pending' | 'analyzing' | 'completed' | 'failed';
+          error_message: string | null;
+          recommendations: Json;
+          analyzed_at: string | null;
+          created_at: string;
+          updated_at: string;
+          metadata: Json;
+        };
+      };
+      get_keyword_serp_analysis: {
+        Args: {
+          p_keyword_id: string;
+          p_device?: string;
+          p_location?: string;
+        };
+        Returns: {
+          id: string;
+          query: string;
+          device: string;
+          location: string;
+          competitor_urls: string[];
+          competitor_domains: string[];
+          top_10_results: Json;
+          gaps: Json;
+          serp_features: Json;
+          search_volume: number;
+          difficulty_score: number | null;
+          opportunity_score: number | null;
+          status: 'pending' | 'analyzing' | 'completed' | 'failed';
+          recommendations: Json;
+          analyzed_at: string | null;
+          created_at: string;
+        }[];
+      };
+      get_product_serp_analyses: {
+        Args: {
+          p_product_id: string;
+          p_device?: string | null;
+          p_location?: string | null;
+          p_limit?: number;
+          p_offset?: number;
+        };
+        Returns: {
+          id: string;
+          keyword_id: string;
+          query: string;
+          device: string;
+          location: string;
+          competitor_urls: string[];
+          gaps: Json;
+          opportunity_score: number | null;
+          status: 'pending' | 'analyzing' | 'completed' | 'failed';
+          analyzed_at: string | null;
+        }[];
+      };
+      get_organization_serp_analyses: {
+        Args: {
+          p_organization_id: string;
+          p_product_id?: string | null;
+          p_device?: string | null;
+          p_location?: string | null;
+          p_limit?: number;
+          p_offset?: number;
+        };
+        Returns: {
+          id: string;
+          product_id: string | null;
+          keyword_id: string;
+          query: string;
+          device: string;
+          location: string;
+          competitor_urls: string[];
+          gaps: Json;
+          opportunity_score: number | null;
+          status: 'pending' | 'analyzing' | 'completed' | 'failed';
+          analyzed_at: string | null;
+        }[];
+      };
+      can_access_serp_analysis: {
+        Args: {
+          p_serp_analysis_id: string;
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
+      calculate_serp_opportunity_score: {
+        Args: {
+          p_gaps: Json;
+          p_search_volume: number;
+          p_difficulty_score: number | null;
+        };
+        Returns: number;
+      };
     };
     Enums: {
       organization_tier: 'free' | 'starter' | 'pro' | 'agency';
       organization_role: 'owner' | 'admin' | 'member' | 'viewer';
+      user_role: 'owner' | 'admin' | 'member' | 'viewer';
       product_status: 'active' | 'archived' | 'pending';
+      keyword_status: 'tracking' | 'paused' | 'opportunity' | 'ignored';
+      search_intent: 'informational' | 'navigational' | 'transactional' | 'commercial';
+      difficulty_level: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
+      serp_analysis_status: 'pending' | 'analyzing' | 'completed' | 'failed';
+      gap_type:
+        | 'missing_topic'
+        | 'weak_content'
+        | 'format_mismatch'
+        | 'lack_depth'
+        | 'outdated'
+        | 'no_featured_snippet'
+        | 'no_video'
+        | 'no_images'
+        | 'poor_structure'
+        | 'opportunity';
     };
     CompositeTypes: {
       // Placeholder for composite type definitions

@@ -21,6 +21,7 @@ import {
   useMobileSidebarOpen,
   useSetMobileSidebarOpen,
 } from '@/lib/ui-store';
+import { ProductSwitcher } from './product-switcher';
 
 // Simple icon components (using SVG directly to avoid additional dependencies)
 const Icons = {
@@ -374,6 +375,9 @@ export function SidebarNavigation() {
             <Icons.X className="h-5 w-5" />
           </button>
         </div>
+
+        {/* Product Switcher */}
+        <ProductSwitcher />
 
         {/* Navigation Items */}
         <nav

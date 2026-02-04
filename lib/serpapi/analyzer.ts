@@ -602,7 +602,7 @@ export function getCommonSeoPatterns(
   let mostCommonContentType: ContentType = 'unknown';
   let maxCount = 0;
 
-  for (const [type, count] of typeDistribution.entries()) {
+  for (const [type, count] of Array.from(typeDistribution.entries())) {
     if (count > maxCount) {
       maxCount = count;
       mostCommonContentType = type;

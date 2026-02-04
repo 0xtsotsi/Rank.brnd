@@ -3,10 +3,11 @@
   "category": "Database",
   "title": "Create subscriptions database table",
   "description": "Create subscriptions table: organization_id, stripe_customer_id, plan_id, status, current_period_start, current_period_end, cancel_at_period_end.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "simple",
   "createdAt": "2026-01-02T09:30:07.966Z",
-  "updatedAt": "2026-01-02T09:30:07.966Z",
-  "descriptionHistory": []
+  "updatedAt": "2026-02-04T18:55:36.989Z",
+  "descriptionHistory": [],
+  "startedAt": "2026-02-04T18:53:52.626Z"
 }

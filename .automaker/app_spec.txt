@@ -325,6 +325,90 @@ Reverse-engineered from live analysis of Outrank.so application, incorporating 9
       <name>Implement daily rank tracking service</name>
       <description>Create background service using DataForSEO Rank Tracker API to check daily keyword positions for all products, store historical data.</description>
     </feature>
+    <feature>
+      <name>Build SEO scoring engine</name>
+      <description>Create service to score articles on keyword density, readability (FL score 8-10), heading structure, meta tags, internal/external links, images with alt text.</description>
+    </feature>
+    <feature>
+      <name>Create subscriptions database table</name>
+      <description>Create subscriptions table: organization_id, stripe_customer_id, plan_id, status, current_period_start, current_period_end, cancel_at_period_end.</description>
+    </feature>
+    <feature>
+      <name>Implement Stripe checkout flow</name>
+      <description>Create checkout page with Stripe embedded payment form, handle plan selection, card payment, subscription creation, success/error handling.</description>
+    </feature>
+    <feature>
+      <name>Create invoices database table</name>
+      <description>Create invoices table: organization_id, stripe_invoice_id, amount, currency, status, paid_at, created_at with subscription relationship.</description>
+    </feature>
+    <feature>
+      <name>Build SEO scoring sidebar in editor</name>
+      <description>Create sidebar in article editor showing real-time SEO scoring, checklist items, readability score, keyword density, suggestions for improvement.</description>
+    </feature>
+    <feature>
+      <name>Create SERP analyses database table</name>
+      <description>Create serp_analyses table with organization_id, product_id, keyword_id, competitor_urls, top_10_results, gaps, created_at.</description>
+    </feature>
+    <feature>
+      <name>Build SERP analysis engine</name>
+      <description>Create service functions to fetch SerpAPI data, analyze top 10 results, extract competitor content structure, identify gaps, store results in database.</description>
+    </feature>
+    <feature>
+      <name>Build article outline generation</name>
+      <description>Create service to generate article outline using keyword + SERP analysis + brand voice, return structured H1/H2/H3 hierarchy with section descriptions.</description>
+    </feature>
+    <feature>
+      <name>Build article draft generation</name>
+      <description>Create service to generate 1500-3000 word article from outline using GPT-4, incorporate keyword density 1-2%, maintain brand voice, add internal link placeholders.</description>
+    </feature>
+    <feature>
+      <name>Build setup wizard for first-time users</name>
+      <description>Create multi-step wizard (brand setup, connect CMS, create first keyword, generate article) with progress indicators and helpful guidance.</description>
+    </feature>
+    <feature>
+      <name>Implement sidebar navigation component</name>
+      <description>Create sidebar with main navigation items (Dashboard, Keywords, Articles, Publishing, Analytics), collapsible menu, active state indicators, hover/focus states with transitions.</description>
+    </feature>
+    <feature>
+      <name>Build subscription management page</name>
+      <description>Create page showing current plan, usage, upgrade/downgrade options, billing history, invoice download, cancel subscription option.</description>
+    </feature>
+    <feature>
+      <name>Build user profile menu dropdown</name>
+      <description>Create user menu in header showing profile info, settings link, team switcher, logout button with proper dropdown positioning and accessibility.</description>
+    </feature>
+    <feature>
+      <name>Create users database table</name>
+      <description>Create users table with organization_id, email, name, role, preferences, last_login, created_at. Set up RLS policies and foreign key constraints.</description>
+    </feature>
+    <feature>
+      <name>Implement organization creation in auth flow</name>
+      <description>Add organization creation step during user signup, allow name input, generate slug, set initial tier, create default product, link user as owner.</description>
+    </feature>
+    <feature>
+      <name>Implement Row Level Security policies</name>
+      <description>Create RLS policies for organizations, users, and products tables to ensure tenant isolation. Test policies prevent cross-organization data access.</description>
+    </feature>
+    <feature>
+      <name>Implement keyword CRUD API endpoints</name>
+      <description>Create /api/keywords endpoints for POST (create), GET (list), PUT (update), DELETE operations with RLS checks and pagination.</description>
+    </feature>
+    <feature>
+      <name>Connect keyword research API to UI</name>
+      <description>Wire up DataForSEO API integration to keyword research page, implement search functionality, display results in table, add to database functionality.</description>
+    </feature>
+    <feature>
+      <name>Implement product CRUD API endpoints</name>
+      <description>Create /api/products endpoints for POST, GET, PUT, DELETE operations with proper organization isolation and validation.</description>
+    </feature>
+    <feature>
+      <name>Build product/website switcher</name>
+      <description>Create dropdown in sidebar/header to switch between products, store selection in localStorage and Zustand, update all data based on selected product.</description>
+    </feature>
+    <feature>
+      <name>Implement content schedule CRUD API</name>
+      <description>Create /api/schedule endpoints for creating, updating, deleting scheduled articles with date/status tracking and RLS checks.</description>
+    </feature>
   </implemented_features>
 
   <additional_requirements>

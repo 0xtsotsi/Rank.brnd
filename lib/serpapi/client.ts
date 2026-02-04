@@ -387,7 +387,7 @@ function cleanCache(): void {
   const now = Date.now();
   const ttl = config.cacheTtl * 1000;
 
-  for (const [key, entry] of searchCache.entries()) {
+  for (const [key, entry] of Array.from(searchCache.entries())) {
     if ((now - entry.timestamp) > ttl) {
       searchCache.delete(key);
     }

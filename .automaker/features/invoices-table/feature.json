@@ -3,11 +3,10 @@
   "category": "Database",
   "title": "Create invoices database table",
   "description": "Create invoices table: organization_id, stripe_invoice_id, amount, currency, status, paid_at, created_at with subscription relationship.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "simple",
-  "dependencies": ["subscriptions-table"],
   "createdAt": "2026-01-02T09:30:07.966Z",
-  "updatedAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-02-04T19:03:02.333Z",
   "descriptionHistory": []
 }

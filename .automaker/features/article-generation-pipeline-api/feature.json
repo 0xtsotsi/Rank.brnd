@@ -7,12 +7,10 @@
   "priority": 1,
   "complexity": "complex",
   "dependencies": [
-    "article-outline-generator",
-    "article-draft-generator",
     "internal-linking-service",
-    "external-linking-service",
-    "seo-scoring-engine"
+    "external-linking-service"
   ],
   "createdAt": "2026-01-02T09:30:07.964Z",
-  "updatedAt": "2026-01-02T09:30:07.964Z"
+  "updatedAt": "2026-01-02T09:30:07.964Z",
+  "descriptionHistory": []
 }
