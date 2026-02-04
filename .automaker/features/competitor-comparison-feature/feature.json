@@ -6,7 +6,7 @@
   "status": "backlog",
   "priority": 2,
   "complexity": "moderate",
-  "dependencies": ["rank-tracking-service"],
   "createdAt": "2026-01-02T09:30:07.966Z",
-  "updatedAt": "2026-01-02T09:30:07.966Z"
+  "updatedAt": "2026-01-02T09:30:07.966Z",
+  "descriptionHistory": []
 }

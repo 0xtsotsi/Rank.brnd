@@ -225,6 +225,60 @@ export interface Database {
           updated_at?: string;
         };
       };
+
+      /**
+       * Products table
+       * Stores products/websites owned by organizations with brand colors, tone preferences, and analytics config
+       */
+      products: {
+        Row: {
+          id: string;
+          organization_id: string;
+          name: string;
+          slug: string;
+          url: string | null;
+          description: string | null;
+          status: 'active' | 'archived' | 'pending';
+          brand_colors: Json;
+          tone_preferences: Json;
+          analytics_config: Json;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          name: string;
+          slug: string;
+          url?: string | null;
+          description?: string | null;
+          status?: 'active' | 'archived' | 'pending';
+          brand_colors?: Json;
+          tone_preferences?: Json;
+          analytics_config?: Json;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          name?: string;
+          slug?: string;
+          url?: string | null;
+          description?: string | null;
+          status?: 'active' | 'archived' | 'pending';
+          brand_colors?: Json;
+          tone_preferences?: Json;
+          analytics_config?: Json;
+          metadata?: Json;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+      };
     };
     Views: {
       // Placeholder for view definitions
@@ -256,10 +310,43 @@ export interface Database {
         };
         Returns: 'owner' | 'admin' | 'member' | 'viewer' | null;
       };
+      can_access_product: {
+        Args: {
+          p_product_id: string;
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
+      soft_delete_product: {
+        Args: {
+          p_product_id: string;
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
+      get_organization_products: {
+        Args: {
+          p_org_id: string;
+          p_include_deleted?: boolean;
+        };
+        Returns: {
+          id: string;
+          name: string;
+          slug: string;
+          url: string | null;
+          status: 'active' | 'archived' | 'pending';
+          brand_colors: Json;
+          tone_preferences: Json;
+          analytics_config: Json;
+          created_at: string;
+          updated_at: string;
+        }[];
+      };
     };
     Enums: {
       organization_tier: 'free' | 'starter' | 'pro' | 'agency';
       organization_role: 'owner' | 'admin' | 'member' | 'viewer';
+      product_status: 'active' | 'archived' | 'pending';
     };
     CompositeTypes: {
       // Placeholder for composite type definitions

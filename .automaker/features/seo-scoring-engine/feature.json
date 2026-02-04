@@ -3,10 +3,10 @@
   "category": "Feature",
   "title": "Build SEO scoring engine",
   "description": "Create service to score articles on keyword density, readability (FL score 8-10), heading structure, meta tags, internal/external links, images with alt text.",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": 1,
   "complexity": "moderate",
   "createdAt": "2026-01-02T09:30:07.964Z",
-  "updatedAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-02-04T18:49:25.893Z",
   "descriptionHistory": []
 }
