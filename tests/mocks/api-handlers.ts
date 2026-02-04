@@ -93,7 +93,7 @@ export class ApiHandlers {
    * Mock timeout
    */
   mockTimeout(endpoint: string): void {
-    this.page.route(`**${endpoint}**', (route: Route) => {
+    this.page.route(`**${endpoint}**`, () => {
       // Never fulfill, causing timeout
     });
   }
@@ -150,17 +150,20 @@ export class CommonApiMocks extends ApiHandlers {
   mockAuth(options: { isAuthenticated?: boolean; user?: any } = {}): void {
     const { isAuthenticated = true, user = null } = options;
 
-    this.mockGet('/api/user', isAuthenticated
-      ? {
-          success: true,
-          data: user || {
-            id: 'test-user-id',
-            email: 'test@example.com',
-            firstName: 'Test',
-            lastName: 'User',
-          },
-        }
-      : { success: false, error: { code: '401', message: 'Unauthorized' } },
+    this.mockGet(
+      '/api/user',
+      isAuthenticated
+        ? {
+            success: true,
+            data:
+              user || {
+                id: 'test-user-id',
+                email: 'test@example.com',
+                firstName: 'Test',
+                lastName: 'User',
+              },
+          }
+        : { success: false, error: { code: '401', message: 'Unauthorized' } },
       isAuthenticated ? 200 : 401
     );
   }
