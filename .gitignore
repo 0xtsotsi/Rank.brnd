@@ -50,3 +50,4 @@ next-env.d.ts
 *.bak1
 *.bak2
 *.bak3
+/.worktrees/
