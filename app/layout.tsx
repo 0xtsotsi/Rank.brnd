@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { CSRFProvider } from '@/lib/providers/csrf-provider';
 import { PostHogProvider } from '@/lib/providers/posthog-provider';
+import { OrganizationSchema, WebSiteSchema } from '@/components/seo';
 
 /**
  * Font Optimization for Core Web Vitals
@@ -44,6 +45,51 @@ export const viewport: Viewport = {
   maximumScale: 5,
   themeColor: '#4F46E5',
 };
+
+/**
+ * JSON-LD Structured Data Component
+ *
+ * Adds global structured data for the organization and website.
+ * This data helps search engines understand the entity behind the website.
+ */
+function JsonLdStructuredData() {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rank.brnd';
+
+  return (
+    <>
+      <OrganizationSchema
+        name="Rank.brnd"
+        description="AI-Powered SEO automation platform that helps businesses optimize their online presence with intelligent agents, keyword research, and content planning tools."
+        url={appUrl}
+        logo={`${appUrl}/logo.png`}
+        contactEmail="hello@rank.brnd"
+        contactType="customer service"
+        knowsAbout={[
+          'SEO',
+          'Search Engine Optimization',
+          'Digital Marketing',
+          'Keyword Research',
+          'Content Planning',
+          'AI Agents',
+          'SERP Analysis',
+          'Domain Authority',
+          'Link Building',
+          'On-Page SEO',
+          'Technical SEO',
+        ]}
+        knowsLanguage={['English', 'TypeScript', 'JavaScript']}
+      />
+      <WebSiteSchema
+        name="Rank.brnd"
+        url={appUrl}
+        description="AI-Powered SEO automation platform with intelligent agents for keyword research, content planning, and SERP analysis."
+        searchUrl={`${appUrl}/search?search_term_string={search_term_string}`}
+        publisherName="Rank.brnd"
+        publisherLogo={`${appUrl}/logo.png`}
+      />
+    </>
+  );
+}
 
 export default function RootLayout({
   children,
@@ -99,6 +145,8 @@ export default function RootLayout({
               <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_POSTHOG_HOST} />
             </>
           )}
+          {/* JSON-LD Structured Data for SEO */}
+          <JsonLdStructuredData />
         </head>
         <body className="antialiased">
           <PostHogProvider>
