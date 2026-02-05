@@ -53,12 +53,3 @@ export {
   CORRELATION_COOKIE,
 } from './correlation';
 export { withLoggingHeaders, withLogging, withMiddlewareCorrelationId } from './middleware';
-
-// Types
-export type {
-  ILogger,
-  LoggerOptions,
-  LogEntry,
-  LogLevel,
-} from './types';
-export { LogLevel } from './types';
