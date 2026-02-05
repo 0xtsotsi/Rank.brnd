@@ -208,7 +208,75 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (validatedData.bulk && validatedData.keywords) {
+    // Check if this is a bulk operation
+    const isBulk = body && 'bulk' in body && body.bulk === true;
+
+    // For bulk operations, validate bulk-specific schema
+    if (isBulk) {
+      const validatedData = bulkInsertKeywordsSchema.safeParse(body);
+
+      if (!validatedData.success) {
+        return NextResponse.json(
+          { error: 'Invalid request body', details: validatedData.error },
+          { status: 400 }
+        );
+      }
+
+      const organizationId = validatedData.data.organization_id;
+      const keywords = validatedData.data.keywords;
+
+      // Verify user is a member
+      const isMember = await isOrganizationMember(
+        client,
+        organizationId,
+        userId
+      );
+
+      if (!isMember) {
+        return NextResponse.json(
+          { error: 'Forbidden - Not a member of this organization' },
+          { status: 403 }
+        );
+      }
+
+      // Bulk import keywords
+      const { data, error } = await client
+        .from('keywords')
+        .insert(
+          keywords.map(kw => ({
+            organization_id: organizationId,
+            product_id: validatedData.data.product_id || null,
+            keyword: kw.keyword,
+            search_volume: kw.searchVolume || null,
+            difficulty: kw.difficulty || 'medium',
+            intent: kw.intent || 'informational',
+            cpc: kw.cpc || null,
+            tags: kw.tags ? kw.tags.split(',').map(t => t.trim()) : [],
+            target_url: kw.targetUrl || null,
+            notes: kw.notes || null,
+            status: 'tracking' as const,
+          }))
+        )
+        .select();
+
+      if (error) {
+        console.error('Bulk insert error:', error);
+        return NextResponse.json(
+          { error: 'Failed to import keywords', details: error.message },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({
+        total: keywords.length,
+        successful: data?.length || 0,
+        failed: 0,
+        errors: [],
+      });
+    }
+
+    // For single keyword creation, use standard schema
+    if (!isBulk) {
       // Bulk import
       const keywordsToInsert = validatedData.keywords.map(kw => ({
         organization_id: validatedData.organization_id,
