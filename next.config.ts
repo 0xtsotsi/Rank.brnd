@@ -2,7 +2,6 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   eslint: {
-    // Disable ESLint to allow build to pass
     ignoreDuringBuilds: true,
     ignoreDuringTests: true,
   },
@@ -16,10 +15,10 @@ const nextConfig: NextConfig = {
   // Experimental features for better performance
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: true,
+    // REMOVED: optimizePackageImports (causing build error)
   },
   
-  // Image optimization - use standard format
+  // Optimize images - use standard format
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -32,16 +31,18 @@ const nextConfig: NextConfig = {
       default-src 'self';
       script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.com https://*.clerk.accounts.dev;
       style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https://*.supabase.co https://*.supabase.in;
-      connect-src 'self';
-      font-src 'self';
-      base-uri 'self';
+      img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in https://*.clerk.com https://*.clerk.accounts.dev;
+      connect-src 'self' https://*.supabase.co https://*.supabase.in https://*.clerk.com https://*.clerk.accounts.dev;
+      media-src 'self' blob:;
       object-src 'none';
+      base-uri 'self';
+      form-action 'self';
       frame-ancestors 'none';
       form-action 'self';
       upgrade-insecure-requests;
     `.replace(/\s{2,}/g, ' ');
-    
+      .trim();
+
     return [
       {
         key: 'X-DNS-Prefetch-Control',
@@ -68,25 +69,6 @@ const nextConfig: NextConfig = {
         value: 'camera=(), microphone=(), geolocation=(), payment=()',
       },
     ];
-  },
-  
-  // Webpack configuration for code splitting and optimization
-  webpack: (config, { dev, isServer }) => {
-    // Production optimizations only
-    if (!dev && !isServer) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          chunks: 'all',
-          minSize: 20000,
-          maxSize: 244000,
-          minChunks: 1,
-          maxAsyncRequests: 30,
-          maxInitialRequests: 30,
-        },
-      };
-    }
-    return config;
   },
 };
 
