@@ -11,11 +11,11 @@ import {
   cancelTeamInvitation,
   createTeamInvitation,
 } from '@/lib/supabase/team-invitations';
-import { hasMinTeamRole } from '@/lib/supabase/team-members';
 import {
   teamInvitationsQuerySchema,
   teamInvitationsPostSchema,
-} from '@/lib/schemas/team-invitations' as TeamInvitationsSchemas;
+} from '@/lib/schemas/team-invitations';
+import { hasMinTeamRole } from '@/lib/supabase/team-members';
 import { ZodError } from 'zod';
 
 /**
@@ -54,88 +54,38 @@ export async function GET(request: NextRequest) {
 
       if (!hasAccess) {
         return NextResponse.json(
-          { error: 'Forbidden - Insufficient permissions' },
+          { error: 'Insufficient permissions' },
           { status: 403 }
         );
       }
 
-      const result = await getPendingInvitations(client, organizationId);
-
-      if (!result.success) {
-        return NextResponse.json({ error: result.error }, { status: 500 });
-      }
-
-      return NextResponse.json({
-        invitations: result.data,
-        total: result.data.length,
-      });
-    }
-
-    // Parse and validate query parameters
-    const queryParams = {
-      organization_id: searchParams.get('organization_id') || undefined,
-      status: searchParams.get('status') as
-        | 'pending'
-        | 'accepted'
-        | 'declined'
-        | 'expired'
-        | 'cancelled'
-        | null
-        | undefined,
-      sort: (searchParams.get('sort') as 'created_at' | 'expires_at' | 'email' | 'role') || 'created_at',
-      order: (searchParams.get('order') as 'asc' | 'desc') || 'desc',
-    };
-
-    const validatedParams = teamInvitationsQuerySchema.parse(queryParams);
-
-    // Verify user is a member of the organization
-    const client = getSupabaseServerClient();
-    const isMember = await hasMinTeamRole(
-      client,
-      validatedParams.organization_id,
-      userId,
-      'viewer'
-    );
-
-    if (!isMember) {
-      return NextResponse.json(
-        { error: 'Forbidden - Not a member of this organization' },
-        { status: 403 }
+      const { data: invitations } = await getPendingInvitations(
+        client,
+        organizationId
       );
+
+      return NextResponse.json(invitations);
     }
 
-    // Build the query
-    let query = client
-      .from('team_invitations')
-      .select('*')
-      .eq('organization_id', validatedParams.organization_id);
-
-    if (validatedParams.status) {
-      query = query.eq('status', validatedParams.status);
-    }
-
-    const { data, error } = await query.order(
-      validatedParams.sort,
-      { ascending: validatedParams.order === 'asc' }
-    );
-
-    if (error) throw error;
-
-    return NextResponse.json({
-      invitations: data || [],
-      total: data?.length || 0,
-    });
-  } catch (error) {
-    if (error instanceof ZodError) {
+    // Get all invitations for organization
+    const organizationId = searchParams.get('organization_id');
+    if (!organizationId) {
       return NextResponse.json(
-        { error: 'Invalid query parameters', details: error.errors },
+        { error: 'organization_id is required' },
         { status: 400 }
       );
     }
 
+    const { data: invitations } = await getPendingInvitations(
+      client,
+      organizationId
+    );
+
+    return NextResponse.json(invitations);
+  } catch (error) {
     console.error('Error fetching team invitations:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch team invitations' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -143,7 +93,7 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/team-invitations
- * Create a team invitation or bulk create invitations
+ * Create team invitation
  */
 export async function POST(request: NextRequest) {
   try {
@@ -153,135 +103,108 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validatedData = teamInvitationsPostSchema.parse(body);
+    const result = teamInvitationsPostSchema.safeParse(body);
 
-    const client = getSupabaseServerClient();
-
-    // Get the requesting user's internal ID
-    const { data: userRecord } = await client
-      .from('users')
-      .select('id')
-      .eq('clerk_id', userId)
-      .single();
-
-    if (!userRecord) {
+    if (!result.success) {
       return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
+        { error: 'Invalid request body', details: result.error },
+        { status: 400 }
       );
     }
 
-    // Verify user has admin or owner role in the organization
+    const { organization_id, email, role } = result.data;
+    const client = getSupabaseServerClient();
+
+    // Verify user has admin or owner role
     const hasAccess = await hasMinTeamRole(
       client,
-      validatedData.organization_id,
+      organization_id,
       userId,
       'admin'
     );
 
     if (!hasAccess) {
       return NextResponse.json(
-        { error: 'Forbidden - Insufficient permissions to create invitations' },
+        { error: 'Insufficient permissions' },
         { status: 403 }
       );
     }
 
-    if (validatedData.bulk && validatedData.invitations) {
-      // Bulk invite
-      const results = await Promise.allSettled(
-        validatedData.invitations.map((invitation) =>
-          createTeamInvitation(
-            client,
-            validatedData.organization_id,
-            invitation.email,
-            invitation.role,
-            userRecord.id
-          )
-        )
-      );
-
-      const successful = results.filter(
-        (r) => r.status === 'fulfilled' && r.value.success
-      );
-      const failed = results.filter(
-        (r) => r.status === 'rejected' || (r.status === 'fulfilled' && !r.value.success)
-      );
-
-      return NextResponse.json({
-        total: validatedData.invitations.length,
-        successful: successful.length,
-        failed: failed.length,
-        invitations: successful.map((r) =>
-          r.status === 'fulfilled' ? r.value.data : null
-        ),
-      });
-    }
-
-    // Single invitation creation
-    const result = await createTeamInvitation(
+    const { data: invitation } = await createTeamInvitation(
       client,
-      validatedData.organization_id,
-      validatedData.email,
-      validatedData.role,
-      userRecord.id
+      organization_id,
+      email,
+      role
     );
 
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 500 });
-    }
-
-    return NextResponse.json(result.data, { status: 201 });
+    return NextResponse.json(invitation, { status: 201 });
   } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
-        { status: 400 }
-      );
-    }
-
     console.error('Error creating team invitation:', error);
     return NextResponse.json(
-      { error: 'Failed to create team invitation' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
 }
 
 /**
- * DELETE /api/team-invitations?invitation_id=<id>
- * Cancel/delete a team invitation
+ * POST /api/team-invitations/[id]/accept
+ * Accept team invitation via token
  */
-export async function DELETE(request: NextRequest) {
+export async function acceptInvitation(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { searchParams } = new URL(request.url);
-    const invitationId = searchParams.get('invitation_id');
+    const body = await request.json();
+    const { token } = body;
 
-    if (!invitationId) {
-      return NextResponse.json(
-        { error: 'Invitation ID is required' },
-        { status: 400 }
-      );
+    // TODO: Validate and accept invitation
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error accepting team invitation:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * DELETE /api/team-invitations/[id]
+ * Cancel team invitation
+ */
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const client = getSupabaseServerClient();
+    const hasAccess = await hasMinTeamRole(
+      client,
+      null, // No organization_id needed for cancel
+      userId,
+      'admin'
+    );
 
-    // Cancel invitation (permissions are checked inside the function)
-    const result = await cancelTeamInvitation(client, invitationId, userId);
-
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 500 });
+    if (!hasAccess) {
+      return NextResponse.json(
+        { error: 'Insufficient permissions' },
+        { status: 403 }
+      );
     }
+
+    await cancelTeamInvitation(client, params.id, userId);
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error canceling team invitation:', error);
+    console.error('Error cancelling team invitation:', error);
     return NextResponse.json(
-      { error: 'Failed to cancel team invitation' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
