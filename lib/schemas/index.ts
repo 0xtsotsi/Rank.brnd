@@ -38,5 +38,7 @@ export * from './brand-settings';
 export * from './brand-voice-learning';
 export * from './google-search-console';
 export * from './integrations';
-export * from './team-invitations';
-export * from './team-members';
+
+// Team-related schemas - use namespace exports to avoid conflicts
+export * as TeamInvitationsSchemas from './team-invitations';
+export * as TeamMembersSchemas from './team-members';
