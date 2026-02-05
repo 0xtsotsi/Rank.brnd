@@ -133,21 +133,3 @@ export const invitationEmailDataSchema = z.object({
   invite_link: z.string().url(),
   role: invitationTeamMemberRoleSchema,
 });
-
-// Namespace export to avoid conflicts with team-members
-export namespace TeamInvitationsSchemas {
-  export {
-    createTeamInvitationSchema,
-    bulkInviteTeamMembersSchema,
-    validateInvitationTokenSchema,
-    acceptInvitationSchema,
-    cancelInvitationSchema,
-    resendInvitationSchema,
-    declineInvitationSchema,
-    pendingInvitationsQuerySchema,
-    checkInvitationStatusSchema,
-    invitationEmailDataSchema,
-    invitationTeamMemberRoleSchema,
-    teamInvitationStatusSchema,
-  };
-}
