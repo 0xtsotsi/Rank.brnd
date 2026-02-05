@@ -8,15 +8,13 @@ import { auth } from '@clerk/nextjs/server';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 import {
   getPendingInvitations,
-  cancelTeamInvitation,
   createTeamInvitation,
 } from '@/lib/supabase/team-invitations';
 import {
-  getPendingInvitationsQuerySchema,
+  pendingInvitationsQuerySchema,
   createTeamInvitationSchema,
 } from '@/lib/schemas/team-invitations';
 import { hasMinTeamRole } from '@/lib/supabase/team-members';
-import { ZodError } from 'zod';
 
 /**
  * GET /api/team-invitations
