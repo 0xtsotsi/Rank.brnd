@@ -7,6 +7,31 @@
 import { z } from 'zod';
 
 /**
+ * Team member role enum
+ */
+export const invitationTeamMemberRoleSchema = z.enum([
+  'owner',
+  'admin',
+  'editor',
+  'viewer',
+]);
+
+export type InvitationTeamMemberRole = z.infer<typeof invitationTeamMemberRoleSchema>;
+
+/**
+ * Team invitation status enum
+ */
+export const teamInvitationStatusSchema = z.enum([
+  'pending',
+  'accepted',
+  'declined',
+  'expired',
+  'cancelled',
+]);
+
+export type TeamInvitationStatus = z.infer<typeof teamInvitationStatusSchema>;
+
+/**
  * Create Team Invitation Schema
  *
  * POST /api/team-invitations
@@ -14,24 +39,7 @@ import { z } from 'zod';
 export const createTeamInvitationSchema = z.object({
   organization_id: z.string().min(1, 'Organization ID is required'),
   email: z.string().email('Invalid email address'),
-  role: z.enum(['owner', 'admin', 'editor', 'viewer']).optional().default('viewer'),
-});
-
-/**
- * Bulk Invite Team Members Schema
- *
- * POST /api/team-invitations (bulk mode)
- */
-  bulk: z.literal(true),
-  organization_id: z.string().min(1, 'Organization ID is required'),
-  members: z
-    .array(
-      z.object({
-        email: z.string().min(1, 'User ID is required'),
-        role: z.enum(['owner', 'admin', 'editor', 'viewer']).optional().default('viewer'),
-      })
-    )
-    .min(1, 'At least one member is required'),
+  role: invitationTeamMemberRoleSchema.optional().default('viewer'),
 });
 
 /**
@@ -104,5 +112,5 @@ export const invitationEmailDataSchema = z.object({
   organization_name: z.string(),
   inviter_name: z.string(),
   invite_link: z.string().url(),
-  role: z.enum(['owner', 'admin', 'editor', 'viewer']),
+  role: invitationTeamMemberRoleSchema,
 });
