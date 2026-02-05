@@ -38,25 +38,6 @@ export * from './brand-settings';
 export * from './brand-voice-learning';
 export * from './google-search-console';
 export * from './integrations';
-
-// Team invitations schemas - explicit imports to avoid conflicts
-export {
-  createTeamInvitationSchema,
-  bulkInviteTeamMembersSchema,
-  validateInvitationTokenSchema,
-  acceptInvitationSchema,
-  cancelInvitationSchema,
-  resendInvitationSchema,
-  declineInvitationSchema,
-  pendingInvitationsQuerySchema,
-  checkInvitationStatusSchema,
-  invitationEmailDataSchema,
-  invitationTeamMemberRoleSchema,
-  teamInvitationStatusSchema,
-} from './team-invitations';
-
-// Team members schemas - wildcard import (kept to maintain compatibility)
+export * from './team-invitations';
 export * from './team-members';
-
-// Query schema file
 export * from './team-members-query';

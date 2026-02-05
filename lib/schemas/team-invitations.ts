@@ -32,6 +32,15 @@ export const teamInvitationStatusSchema = z.enum([
 export type TeamInvitationStatus = z.infer<typeof teamInvitationStatusSchema>;
 
 /**
+ * Get Pending Invitations Query Schema
+ *
+ * GET /api/team-invitations/pending
+ */
+export const pendingInvitationsQuerySchema = z.object({
+  organization_id: z.string().min(1, 'Organization ID is required'),
+});
+
+/**
  * Create Team Invitation Schema
  *
  * POST /api/team-invitations
@@ -40,25 +49,6 @@ export const createTeamInvitationSchema = z.object({
   organization_id: z.string().min(1, 'Organization ID is required'),
   email: z.string().email('Invalid email address'),
   role: invitationTeamMemberRoleSchema.optional().default('viewer'),
-});
-
-/**
- * Bulk Invite Team Members Schema
- *
- * POST /api/team-invitations (bulk mode)
- */
-export const bulkInviteTeamMembersSchema = z.object({
-  bulk: z.literal(true),
-  organization_id: z.string().min(1, 'Organization ID is required'),
-  invitations: z
-    .array(
-      z.object({
-        email: z.string().email('Invalid email address'),
-        role: invitationTeamMemberRoleSchema.optional().default('viewer'),
-      })
-    )
-    .min(1, 'At least one invitation is required')
-    .max(50, 'Cannot send more than 50 invitations at once'),
 });
 
 /**
@@ -104,15 +94,6 @@ export const resendInvitationSchema = z.object({
  */
 export const declineInvitationSchema = z.object({
   token: z.string().min(1, 'Token is required'),
-});
-
-/**
- * Get Pending Invitations Query Schema
- *
- * GET /api/team-invitations/pending
- */
-export const pendingInvitationsQuerySchema = z.object({
-  organization_id: z.string().min(1, 'Organization ID is required'),
 });
 
 /**
