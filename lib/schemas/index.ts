@@ -40,3 +40,20 @@ export * from './google-search-console';
 export * from './integrations';
 export * from './team-invitations';
 export * from './team-members';
+
+// Re-export schemas with explicit names to avoid conflicts
+export {
+  // Team Invitations schemas
+  createTeamInvitationSchema,
+  bulkCreateTeamInvitationsSchema,
+  validateInvitationTokenSchema,
+  acceptInvitationSchema,
+  cancelInvitationSchema,
+  resendInvitationSchema,
+  declineInvitationSchema,
+  checkInvitationStatusSchema,
+  pendingInvitationsQuerySchema,
+  invitationEmailDataSchema,
+  invitationTeamMemberRoleSchema,
+  teamInvitationStatusSchema,
+} from './team-invitations';
