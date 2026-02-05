@@ -88,14 +88,13 @@ export const bulkImportKeywordsSchema = z.object({
 /**
  * Combined POST schema for keywords (single or bulk)
  */
-export const keywordsPostSchema = z.discriminatedUnion('bulk', [
-  bulkImportKeywordsSchema,
+export const keywordsPostSchema = bulkImportKeywordsSchema.or(
   createKeywordSchema
     .extend({
       bulk: z.literal(false).optional(),
     })
-    .transform((val) => ({ ...val, bulk: false as const })),
-]);
+    .transform((val) => ({ ...val, bulk: false as const }))
+);
 
 /**
  * Update Keyword Schema

@@ -43,6 +43,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    type UserRecord = { id: string; email: string };
+    const userData = userRecord as UserRecord;
+
     // First validate the token
     const validationResult = await validateInvitationToken(
       client,
@@ -64,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify email matches
-    if (validationResult.data.email.toLowerCase() !== userRecord.email.toLowerCase()) {
+    if (validationResult.data.email.toLowerCase() !== userData.email.toLowerCase()) {
       return NextResponse.json(
         { error: 'This invitation was sent to a different email address' },
         { status: 403 }
@@ -75,7 +78,7 @@ export async function POST(request: NextRequest) {
     const result = await acceptInvitationByToken(
       client,
       validatedData.token,
-      userRecord.id
+      userData.id
     );
 
     if (!result.success) {

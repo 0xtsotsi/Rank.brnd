@@ -303,6 +303,7 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
       <button
         ref={triggerRef}
         type="button"
+        id="user-menu-button"
         onClick={toggleMenu}
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -321,7 +322,7 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
           {avatarUrl ? (
             <img
               src={avatarUrl}
-              alt=""
+              alt={`Avatar for ${displayName}`}
               className="h-full w-full rounded-full object-cover"
             />
           ) : (
@@ -374,7 +375,7 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
                   {avatarUrl ? (
                     <img
                       src={avatarUrl}
-                      alt=""
+                      alt={`Avatar for ${displayName}`}
                       className="h-full w-full rounded-full object-cover"
                     />
                   ) : (
@@ -430,9 +431,9 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
                     >
                       <div className="h-8 w-8 rounded bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300">
                         {org.imageUrl ? (
-                          <img src={org.imageUrl} alt="" className="h-6 w-6 rounded" />
+                          <img src={org.imageUrl} alt={`Logo for ${org.name}`} className="h-6 w-6 rounded" />
                         ) : (
-                          <Icons.Building className="h-4 w-4" />
+                          <Icons.Building className="h-4 w-4" aria-hidden="true" />
                         )}
                       </div>
                       <span className="flex-1 text-left truncate">{org.name}</span>

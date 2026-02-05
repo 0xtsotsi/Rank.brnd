@@ -207,7 +207,7 @@ export function trackError(
   errorMessage: string,
   context?: Record<string, unknown>
 ): void {
-  trackError(ERROR_EVENTS.API_ERROR, errorType, errorMessage, context);
+  trackErrorWithType(ERROR_EVENTS.API_ERROR, errorType, errorMessage, context);
 }
 
 /**

@@ -9,11 +9,8 @@ import { NextResponse } from 'next/server';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database';
 import type { TeamMemberRole } from '@/lib/supabase/team-members';
-import type {
-  Permission,
-  PermissionCategory,
-  Resource,
-} from '@/lib/rbac/types';
+import type { Permission } from '@/lib/rbac/types';
+import { PermissionCategory, Resource } from '@/lib/rbac/types';
 import {
   requireAuth,
   requirePermission,
@@ -217,8 +214,8 @@ export function withTeamManagement(
   handler: AuthenticatedHandler
 ): ((request: Request) => Promise<NextResponse>) {
   return protectRoute({
-    resource: 'team',
-    permission: 'manage_team',
+    resource: Resource.TEAM,
+    permission: PermissionCategory.MANAGE_TEAM,
   })(handler);
 }
 
@@ -229,8 +226,8 @@ export function withSettingsAccess(
   handler: AuthenticatedHandler
 ): ((request: Request) => Promise<NextResponse>) {
   return protectRoute({
-    resource: 'settings',
-    permission: 'manage_settings',
+    resource: Resource.SETTINGS,
+    permission: PermissionCategory.MANAGE_SETTINGS,
   })(handler);
 }
 
@@ -241,8 +238,8 @@ export function withBillingAccess(
   handler: AuthenticatedHandler
 ): ((request: Request) => Promise<NextResponse>) {
   return protectRoute({
-    resource: 'billing',
-    permission: 'manage_billing',
+    resource: Resource.BILLING,
+    permission: PermissionCategory.MANAGE_BILLING,
   })(handler);
 }
 
@@ -253,8 +250,8 @@ export function withPublishAccess(
   handler: AuthenticatedHandler
 ): ((request: Request) => Promise<NextResponse>) {
   return protectRoute({
-    resource: 'publishing',
-    permission: 'publish',
+    resource: Resource.PUBLISHING,
+    permission: PermissionCategory.PUBLISH,
   })(handler);
 }
 
@@ -374,7 +371,7 @@ export async function canAccessResource(
   organizationId: string,
   resourceId: string,
   resourceType: Resource,
-  requiredPermission: PermissionCategory = 'read'
+  requiredPermission: PermissionCategory = PermissionCategory.READ
 ): Promise<boolean> {
   const { validateOperation } = await import('@/lib/rbac/permissions');
   const result = await validateOperation(

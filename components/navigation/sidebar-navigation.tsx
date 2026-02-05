@@ -387,7 +387,7 @@ export function SidebarNavigation() {
           {mainNavigation.map((section) => (
             <div key={section.title || 'main'} className="space-y-1">
               {section.title && !collapsed && (
-                <h3 className="px-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                <h3 className="px-3 text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">
                   {section.title}
                 </h3>
               )}

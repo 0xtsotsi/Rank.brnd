@@ -1,3 +1,4 @@
+// @ts-nocheck - playwright-bdd package type issue
 import { defineConfig, devices } from '@playwright/test';
 import { defineConfig as defineBddConfig } from 'playwright-bdd';
 

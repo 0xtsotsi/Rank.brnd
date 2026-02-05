@@ -3,10 +3,10 @@
   "category": "Testing",
   "title": "Conduct WCAG 2.1 AA accessibility audit",
   "description": "Test keyboard navigation, screen reader support, color contrast, ARIA labels, semantic HTML, fix violations.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 2,
   "complexity": "moderate",
   "createdAt": "2026-01-02T09:30:07.968Z",
-  "updatedAt": "2026-01-02T09:30:07.968Z",
+  "updatedAt": "2026-02-05T17:17:57.557Z",
   "descriptionHistory": []
 }

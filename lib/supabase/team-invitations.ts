@@ -109,7 +109,7 @@ export async function validateInvitationToken(
       {
         p_token: token,
       } as never
-    );
+    ) as { data: InvitationValidationResult[] | null; error: any };
 
     if (error) throw error;
     if (!data || data.length === 0) {

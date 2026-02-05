@@ -409,6 +409,38 @@ Reverse-engineered from live analysis of Outrank.so application, incorporating 9
       <name>Implement content schedule CRUD API</name>
       <description>Create /api/schedule endpoints for creating, updating, deleting scheduled articles with date/status tracking and RLS checks.</description>
     </feature>
+    <feature>
+      <name>Implement drag-drop scheduling logic</name>
+      <description>Wire drag-drop functionality to calendar component, update article scheduling via API, handle drag-drop edge cases and conflicts.</description>
+    </feature>
+    <feature>
+      <name>Create team members database table</name>
+      <description>Create table: organization_id, user_id, role (owner/admin/editor/viewer), invited_at, accepted_at with unique constraint.</description>
+    </feature>
+    <feature>
+      <name>Implement role-based access control (RBAC)</name>
+      <description>Create middleware/utilities to check user role for operations, enforce permissions (owner: all, admin: most, editor: articles/content, viewer: read-only).</description>
+    </feature>
+    <feature>
+      <name>Implement team member invitation system</name>
+      <description>Create email-based invitation flow, generate invite tokens, validate tokens on signup, auto-join team on registration with invited email.</description>
+    </feature>
+    <feature>
+      <name>Build team management page</name>
+      <description>Create page listing team members, roles, invitation status, invite form, role change dropdowns, remove member buttons.</description>
+    </feature>
+    <feature>
+      <name>Conduct WCAG 2.1 AA accessibility audit</name>
+      <description>Test keyboard navigation, screen reader support, color contrast, ARIA labels, semantic HTML, fix violations.</description>
+    </feature>
+    <feature>
+      <name>Create activity feed database table</name>
+      <description>Create activity_logs table: organization_id, user_id, action (create/update/delete/publish), resource_type, resource_id, timestamp.</description>
+    </feature>
+    <feature>
+      <name>Build team activity feed page</name>
+      <description>Create feed showing recent team activities (article creation, publishing, configuration changes) with timestamps and user names.</description>
+    </feature>
   </implemented_features>
 
   <additional_requirements>

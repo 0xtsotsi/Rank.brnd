@@ -854,7 +854,7 @@
       "title": "Feature Verified",
       "message": "\"sidebar-navigation\" has been verified and is complete.",
       "createdAt": "2026-02-04T19:38:50.728Z",
-      "read": false,
+      "read": true,
       "dismissed": false,
       "featureId": "sidebar-navigation",
       "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
@@ -953,7 +953,7 @@
       "title": "Feature Verified",
       "message": "\"product-switcher\" has been verified and is complete.",
       "createdAt": "2026-02-04T20:10:16.105Z",
-      "read": false,
+      "read": true,
       "dismissed": false,
       "featureId": "product-switcher",
       "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
@@ -967,6 +967,94 @@
       "read": false,
       "dismissed": false,
       "featureId": "schedule-crud-api",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "a442835a-ce3a-4e12-8436-cb0697ed2a17",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"schedule-drag-drop-logic\" has been verified and is complete.",
+      "createdAt": "2026-02-05T16:51:58.855Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "schedule-drag-drop-logic",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "25f5cb26-00a3-4e36-ae43-3f3adee94ad5",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"team-members-table\" has been verified and is complete.",
+      "createdAt": "2026-02-05T16:56:55.089Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "team-members-table",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "2392abd1-dead-4935-b028-fbec8b9dd978",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"rbac-enforcement\" has been verified and is complete.",
+      "createdAt": "2026-02-05T17:06:04.237Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "rbac-enforcement",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "06d354d9-8691-4345-845d-699cb23879b8",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"team-invitation-system\" has been verified and is complete.",
+      "createdAt": "2026-02-05T17:09:14.628Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "team-invitation-system",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "cd033144-daaf-4ff5-9786-0c84744e1003",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"team-management-page\" has been verified and is complete.",
+      "createdAt": "2026-02-05T17:15:21.408Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "team-management-page",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "2fcf83e7-2d4e-4d88-9425-2b0c66012b9b",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"accessibility-audit\" has been verified and is complete.",
+      "createdAt": "2026-02-05T17:17:57.558Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "accessibility-audit",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "a4828104-2864-48e6-9fb9-43932acef6a0",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"activity-feed-table\" has been verified and is complete.",
+      "createdAt": "2026-02-05T17:22:17.145Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "activity-feed-table",
+      "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
+    },
+    {
+      "id": "24f3121a-78ad-48aa-a253-84af697a7e1f",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"activity-feed-page\" has been verified and is complete.",
+      "createdAt": "2026-02-05T18:10:11.004Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "activity-feed-page",
       "projectPath": "/home/oxtsotsi/Webrnds/DevFlow/Rank.brnd"
     }
   ]

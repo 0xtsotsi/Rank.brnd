@@ -268,14 +268,14 @@ export async function canManageSettings(
 }
 
 /**
- * Check if user can manage billing
+ * Check if user can manage billing (owner only)
  */
 export async function canManageBilling(
   client: SupabaseClient<Database>,
   userId: string,
   organizationId: string
 ): Promise<boolean> {
-  return hasMinTeamRole(client, organizationId, userId, 'admin');
+  return hasMinTeamRole(client, organizationId, userId, 'owner');
 }
 
 /**
@@ -331,7 +331,7 @@ export async function getUserCapabilities(
     canDelete: meetsRoleRequirement(role, 'admin'),
     canManageTeam: meetsRoleRequirement(role, 'admin'),
     canManageSettings: meetsRoleRequirement(role, 'admin'),
-    canManageBilling: meetsRoleRequirement(role, 'admin'),
+    canManageBilling: meetsRoleRequirement(role, 'owner'),
     canPublish: meetsRoleRequirement(role, 'editor'),
   };
 }

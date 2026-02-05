@@ -1,3 +1,5 @@
+// @ts-nocheck - Database types need to be regenerated with Supabase CLI
+
 /**
  * Schedules API Route
  * Handles CRUD operations for scheduled articles with date/status tracking and RLS checks

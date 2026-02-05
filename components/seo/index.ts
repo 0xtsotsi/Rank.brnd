@@ -62,7 +62,6 @@ export type {
   BreadcrumbList,
   BreadcrumbItem as BreadcrumbItemType,
   FAQPage,
-  FAQItem as FAQItemType,
   Question,
   Answer,
   WebSite,
@@ -70,3 +69,6 @@ export type {
   ContactPoint,
   PostalAddress,
 } from '@/types/seo';
+
+// FAQItem is defined locally in FAQSchema.tsx
+export type { FAQItem } from './FAQSchema';

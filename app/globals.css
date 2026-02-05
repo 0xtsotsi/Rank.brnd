@@ -246,6 +246,18 @@ body {
     border-width: 0;
   }
 
+  /* Show sr-only content when focused (for skip links) */
+  .focus\:not-sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
   /* Fade in animation for lazy loaded content */
   .fade-in {
     animation: fadeIn 0.3s ease-out;

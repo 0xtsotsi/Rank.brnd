@@ -183,3 +183,49 @@ export function sortEventsByPriority(events: CalendarEvent[]): CalendarEvent[] {
     return a.title.localeCompare(b.title);
   });
 }
+
+/**
+ * Convert scheduled articles to calendar events
+ * Maps scheduled article data from the API to CalendarEvent format
+ */
+export interface ScheduledArticle {
+  id: string;
+  article_id: string;
+  title: string;
+  scheduled_at: string;
+  schedule_status?: 'pending' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'cancelled';
+  published_at?: string | null;
+  status?: 'draft' | 'published' | 'archived';
+}
+
+export function scheduledArticlesToCalendarEvents(
+  articles: ScheduledArticle[]
+): CalendarEvent[] {
+  const now = new Date();
+
+  return articles
+    .filter((article) => article.scheduled_at != null)
+    .map((article) => {
+      const scheduledDate = new Date(article.scheduled_at);
+      const isPast = scheduledDate < now;
+      const isPublished = article.published_at != null && new Date(article.published_at) <= now;
+
+      // Determine the event status based on schedule state
+      let eventStatus: CalendarEvent['status'] = 'pending';
+      if (isPublished) {
+        eventStatus = 'completed';
+      } else if (isPast) {
+        eventStatus = 'overdue';
+      } else if (article.schedule_status === 'scheduled') {
+        eventStatus = 'in-progress';
+      }
+
+      return {
+        id: article.article_id || article.id,
+        title: article.title,
+        date: scheduledDate,
+        status: eventStatus,
+        description: `Scheduled for ${formatDate(scheduledDate, 'long')}`,
+      };
+    });
+}

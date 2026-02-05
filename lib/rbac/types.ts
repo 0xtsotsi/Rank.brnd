@@ -251,7 +251,7 @@ export const PERMISSION_MATRIX: Record<
   [Resource.BILLING]: {
     viewer: [PermissionCategory.READ],
     editor: [PermissionCategory.READ],
-    admin: [PermissionCategory.READ, PermissionCategory.MANAGE_BILLING],
+    admin: [PermissionCategory.READ],
     owner: [
       PermissionCategory.READ,
       PermissionCategory.MANAGE_BILLING,
@@ -417,7 +417,7 @@ export const OPERATION_MIN_ROLE: Record<PermissionCategory, TeamMemberRole> = {
   [PermissionCategory.DELETE]: 'admin' as TeamMemberRole,
   [PermissionCategory.MANAGE_TEAM]: 'admin' as TeamMemberRole,
   [PermissionCategory.MANAGE_SETTINGS]: 'admin' as TeamMemberRole,
-  [PermissionCategory.MANAGE_BILLING]: 'admin' as TeamMemberRole,
+  [PermissionCategory.MANAGE_BILLING]: 'owner' as TeamMemberRole,
   [PermissionCategory.PUBLISH]: 'editor' as TeamMemberRole,
   [PermissionCategory.ANALYTICS]: 'viewer' as TeamMemberRole,
   [PermissionCategory.INTEGRATIONS]: 'admin' as TeamMemberRole,

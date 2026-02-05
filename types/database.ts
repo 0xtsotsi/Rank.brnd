@@ -275,6 +275,87 @@ export interface Database {
       };
 
       /**
+       * Team members table
+       * Enhanced organization membership with invitation workflow and extended roles (owner/admin/editor/viewer)
+       */
+      team_members: {
+        Row: {
+          id: string;
+          organization_id: string;
+          user_id: string;
+          role: 'owner' | 'admin' | 'editor' | 'viewer';
+          invited_at: string;
+          accepted_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          user_id: string;
+          role?: 'owner' | 'admin' | 'editor' | 'viewer';
+          invited_at?: string;
+          accepted_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          user_id?: string;
+          role?: 'owner' | 'admin' | 'editor' | 'viewer';
+          invited_at?: string;
+          accepted_at?: string | null;
+          updated_at?: string;
+        };
+      };
+
+      /**
+       * Team invitations table
+       * Email-based invitations with secure tokens for joining organizations
+       */
+      team_invitations: {
+        Row: {
+          id: string;
+          organization_id: string;
+          email: string;
+          role: 'owner' | 'admin' | 'editor' | 'viewer';
+          token: string;
+          invited_by_user_id: string;
+          status: 'pending' | 'accepted' | 'declined' | 'expired' | 'cancelled';
+          expires_at: string;
+          accepted_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          email: string;
+          role?: 'owner' | 'admin' | 'editor' | 'viewer';
+          token: string;
+          invited_by_user_id: string;
+          status?: 'pending' | 'accepted' | 'declined' | 'expired' | 'cancelled';
+          expires_at?: string;
+          accepted_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          email?: string;
+          role?: 'owner' | 'admin' | 'editor' | 'viewer';
+          token?: string;
+          invited_by_user_id?: string;
+          status?: 'pending' | 'accepted' | 'declined' | 'expired' | 'cancelled';
+          expires_at?: string;
+          accepted_at?: string | null;
+          updated_at?: string;
+        };
+      };
+
+      /**
        * Products table
        * Stores products/websites owned by organizations with brand colors, tone preferences, and analytics config
        */
@@ -472,6 +553,48 @@ export interface Database {
           analyzed_at?: string | null;
           updated_at?: string;
           metadata?: Json;
+        };
+      };
+
+      /**
+       * Activity Logs table
+       * Tracks user actions across resources within organizations
+       */
+      activity_logs: {
+        Row: {
+          id: string;
+          organization_id: string;
+          user_id: string;
+          action: 'create' | 'update' | 'delete' | 'publish';
+          resource_type: string;
+          resource_id: string;
+          metadata: Json | null;
+          timestamp: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          user_id: string;
+          action: 'create' | 'update' | 'delete' | 'publish';
+          resource_type: string;
+          resource_id: string;
+          metadata?: Json | null;
+          timestamp?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          user_id?: string;
+          action?: 'create' | 'update' | 'delete' | 'publish';
+          resource_type?: string;
+          resource_id?: string;
+          metadata?: Json | null;
+          timestamp?: string;
+          updated_at?: string;
         };
       };
     };
@@ -771,11 +894,159 @@ export interface Database {
         };
         Returns: number;
       };
+
+      // Team Members helper functions
+      get_organization_team_members: {
+        Args: {
+          p_organization_id: string;
+          p_include_pending?: boolean;
+        };
+        Returns: {
+          id: string;
+          user_id: string;
+          email: string;
+          name: string;
+          avatar_url: string | null;
+          role: 'owner' | 'admin' | 'editor' | 'viewer';
+          invited_at: string;
+          accepted_at: string | null;
+          is_pending: boolean;
+        }[];
+      };
+      get_user_team_memberships: {
+        Args: {
+          p_user_id: string;
+        };
+        Returns: {
+          id: string;
+          organization_id: string;
+          organization_name: string;
+          role: 'owner' | 'admin' | 'editor' | 'viewer';
+          invited_at: string;
+          accepted_at: string | null;
+          is_pending: boolean;
+        }[];
+      };
+      add_team_member: {
+        Args: {
+          p_organization_id: string;
+          p_user_id: string;
+          p_role?: 'owner' | 'admin' | 'editor' | 'viewer';
+        };
+        Returns: string;
+      };
+      accept_team_invitation: {
+        Args: {
+          p_team_member_id: string;
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
+      update_team_member_role: {
+        Args: {
+          p_team_member_id: string;
+          p_new_role: 'owner' | 'admin' | 'editor' | 'viewer';
+          p_requesting_user_id: string;
+        };
+        Returns: boolean;
+      };
+      remove_team_member: {
+        Args: {
+          p_team_member_id: string;
+          p_requesting_user_id: string;
+        };
+        Returns: boolean;
+      };
+      has_team_role: {
+        Args: {
+          p_organization_id: string;
+          p_user_id: string;
+          p_required_roles: ('owner' | 'admin' | 'editor' | 'viewer')[];
+        };
+        Returns: boolean;
+      };
+      get_team_role: {
+        Args: {
+          p_organization_id: string;
+          p_user_id: string;
+        };
+        Returns: 'owner' | 'admin' | 'editor' | 'viewer' | null;
+      };
+
+      // Activity logs helper functions
+      create_activity_log: {
+        Args: {
+          p_organization_id: string;
+          p_user_id: string;
+          p_action: 'create' | 'update' | 'delete' | 'publish';
+          p_resource_type: string;
+          p_resource_id: string;
+          p_metadata?: Json | null;
+        };
+        Returns: string;
+      };
+      get_organization_activity_logs: {
+        Args: {
+          p_org_id: string;
+          p_limit?: number;
+          p_offset?: number;
+          p_action?: 'create' | 'update' | 'delete' | 'publish' | null;
+          p_resource_type?: string | null;
+          p_user_id?: string | null;
+        };
+        Returns: {
+          id: string;
+          organization_id: string;
+          user_id: string;
+          user_name: string;
+          user_email: string;
+          action: 'create' | 'update' | 'delete' | 'publish';
+          resource_type: string;
+          resource_id: string;
+          metadata: Json | null;
+          timestamp: string;
+          created_at: string;
+        }[];
+      };
+      get_resource_activity_logs: {
+        Args: {
+          p_resource_type: string;
+          p_resource_id: string;
+          p_organization_id?: string | null;
+          p_limit?: number;
+        };
+        Returns: {
+          id: string;
+          organization_id: string;
+          user_id: string;
+          user_name: string;
+          user_email: string;
+          action: 'create' | 'update' | 'delete' | 'publish';
+          resource_type: string;
+          resource_id: string;
+          metadata: Json | null;
+          timestamp: string;
+        }[];
+      };
+      get_activity_stats: {
+        Args: {
+          p_org_id: string;
+          p_start_date?: string | null;
+          p_end_date?: string | null;
+        };
+        Returns: {
+          action: 'create' | 'update' | 'delete' | 'publish';
+          count: number;
+          resource_type: string;
+        }[];
+      };
     };
     Enums: {
       organization_tier: 'free' | 'starter' | 'pro' | 'agency';
       organization_role: 'owner' | 'admin' | 'member' | 'viewer';
       user_role: 'owner' | 'admin' | 'member' | 'viewer';
+      team_member_role: 'owner' | 'admin' | 'editor' | 'viewer';
+      team_invitation_status: 'pending' | 'accepted' | 'declined' | 'expired' | 'cancelled';
       product_status: 'active' | 'archived' | 'pending';
       keyword_status: 'tracking' | 'paused' | 'opportunity' | 'ignored';
       search_intent: 'informational' | 'navigational' | 'transactional' | 'commercial';
@@ -792,6 +1063,7 @@ export interface Database {
         | 'no_images'
         | 'poor_structure'
         | 'opportunity';
+      activity_action: 'create' | 'update' | 'delete' | 'publish';
     };
     CompositeTypes: {
       // Placeholder for composite type definitions
