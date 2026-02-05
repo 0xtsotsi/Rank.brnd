@@ -3,13 +3,10 @@
   "category": "API",
   "title": "Implement keyword CRUD API endpoints",
   "description": "Create /api/keywords endpoints for POST (create), GET (list), PUT (update), DELETE operations with RLS checks and pagination.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": [
-    "rls-policy-setup"
-  ],
   "createdAt": "2026-01-02T09:30:07.963Z",
-  "updatedAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-02-04T21:25:26.065Z",
   "descriptionHistory": []
 }

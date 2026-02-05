@@ -275,6 +275,7 @@ export function ProductSwitcher({ className }: ProductSwitcherProps) {
         <button
           ref={triggerRef}
           type="button"
+          id="product-switcher-button"
           onClick={toggleMenu}
           aria-expanded={isOpen}
           aria-haspopup="menu"
@@ -288,7 +289,7 @@ export function ProductSwitcher({ className }: ProductSwitcherProps) {
             className
           )}
         >
-          <Icons.Building className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+          <Icons.Building className="h-5 w-5 text-gray-600 dark:text-gray-400" aria-hidden="true" />
         </button>
 
         {isOpen && (
@@ -382,6 +383,7 @@ export function ProductSwitcher({ className }: ProductSwitcherProps) {
       <button
         ref={triggerRef}
         type="button"
+        id="product-switcher-button"
         onClick={toggleMenu}
         aria-expanded={isOpen}
         aria-haspopup="menu"

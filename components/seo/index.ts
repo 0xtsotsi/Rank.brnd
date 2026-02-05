@@ -37,6 +37,7 @@ export { ArticleSchema, BlogPostingSchema } from './ArticleSchema';
 
 // FAQ schema
 export { FAQSchema, FAQSection } from './FAQSchema';
+export type { FAQItem } from './FAQSchema';
 
 // Breadcrumb schema
 export {
@@ -62,7 +63,6 @@ export type {
   BreadcrumbList,
   BreadcrumbItem as BreadcrumbItemType,
   FAQPage,
-  FAQItem as FAQItemType,
   Question,
   Answer,
   WebSite,

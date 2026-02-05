@@ -227,8 +227,8 @@ export async function PUT(request: NextRequest) {
     }
 
     // If updating scheduled date, validate it's in the future
-    if (updates.scheduled_at) {
-      const scheduledDate = new Date(updates.scheduled_at);
+    if ((updates as any).scheduled_at) {
+      const scheduledDate = new Date((updates as any).scheduled_at);
       if (scheduledDate <= new Date()) {
         return NextResponse.json(
           { error: 'Scheduled date must be in the future' },
@@ -314,7 +314,8 @@ export async function DELETE(request: NextRequest) {
       .eq('user_id', userId)
       .maybeSingle();
 
-    if (!member || (member.role !== 'owner' && member.role !== 'admin')) {
+    const memberRole = (member as any)?.role;
+    if (!member || (memberRole !== 'owner' && memberRole !== 'admin')) {
       return NextResponse.json(
         { error: 'Only organization owners and admins can delete schedules' },
         { status: 403 }

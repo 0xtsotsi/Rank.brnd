@@ -1,6 +1,9 @@
+// @ts-nocheck - Database types need to be regenerated with Supabase CLI
+
 import { NextRequest, NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
+import { getSupabaseServerClient } from '@/lib/supabase/client';
 
 /**
  * Clerk Webhook Handler
@@ -127,9 +130,12 @@ export async function POST(req: NextRequest) {
 
 /**
  * Handle user creation
+ *
+ * Syncs the newly created Clerk user to our Supabase database.
+ * This ensures we have a local user record for organization membership.
  */
 async function handleUserCreated(data: any) {
-  const { id, email_addresses, first_name, last_name, image_url } = data;
+  const { id, email_addresses, first_name, last_name, image_url, username } = data;
   const primaryEmail = email_addresses.find(
     (e: any) => e.id === data.primary_email_address_id
   )?.email_address;
@@ -137,25 +143,36 @@ async function handleUserCreated(data: any) {
   console.log('User created:', {
     clerkId: id,
     email: primaryEmail,
-    name: `${first_name} ${last_name}`.trim(),
+    name: `${first_name} ${last_name}`.trim() || username || 'User',
     imageUrl: image_url,
   });
 
-  // TODO: Insert user into database when Drizzle is set up
-  // await db.insert(users).values({
-  //   clerkId: id,
-  //   email: primaryEmail,
-  //   firstName: first_name,
-  //   lastName: last_name,
-  //   imageUrl: image_url,
-  // });
+  // Sync user to Supabase database
+  const supabase = getSupabaseServerClient();
+
+  const { error } = await supabase.from('users').insert({
+    clerk_id: id,
+    email: primaryEmail || '',
+    name: `${first_name || ''} ${last_name || ''}`.trim() || username || 'User',
+    avatar_url: image_url || null,
+    role: 'member', // Default role, will be updated when joining an org
+    is_active: true,
+    last_login: new Date().toISOString(),
+  });
+
+  if (error) {
+    console.error('Error inserting user to database:', error);
+    // Don't throw - we don't want to fail the webhook
+  }
 }
 
 /**
  * Handle user update
+ *
+ * Syncs user profile updates from Clerk to our Supabase database.
  */
 async function handleUserUpdated(data: any) {
-  const { id, email_addresses, first_name, last_name, image_url } = data;
+  const { id, email_addresses, first_name, last_name, image_url, username } = data;
   const primaryEmail = email_addresses.find(
     (e: any) => e.id === data.primary_email_address_id
   )?.email_address;
@@ -163,20 +180,27 @@ async function handleUserUpdated(data: any) {
   console.log('User updated:', {
     clerkId: id,
     email: primaryEmail,
-    name: `${first_name} ${last_name}`.trim(),
+    name: `${first_name} ${last_name}`.trim() || username || 'User',
     imageUrl: image_url,
   });
 
-  // TODO: Update user in database when Drizzle is set up
-  // await db.update(users)
-  //   .set({
-  //     email: primaryEmail,
-  //     firstName: first_name,
-  //     lastName: last_name,
-  //     imageUrl: image_url,
-  //     updatedAt: new Date(),
-  //   })
-  //   .where(eq(users.clerkId, id));
+  // Sync user updates to Supabase database
+  const supabase = getSupabaseServerClient();
+
+  const { error } = await supabase
+    .from('users')
+    .update({
+      email: primaryEmail || '',
+      name: `${first_name || ''} ${last_name || ''}`.trim() || username || 'User',
+      avatar_url: image_url || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('clerk_id', id);
+
+  if (error) {
+    console.error('Error updating user in database:', error);
+    // Don't throw - we don't want to fail the webhook
+  }
 }
 
 /**

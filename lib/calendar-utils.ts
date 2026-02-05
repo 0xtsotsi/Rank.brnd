@@ -1,185 +1,308 @@
 /**
- * Calendar Utility Functions
- * Helper functions for date manipulation and calendar generation
+ * Calendar Utilities
+ * 
+ * Helper functions for calendar operations,
+ * date manipulation, and scheduling logic.
  */
 
-import type { DayCell, CalendarEvent, CalendarConfig } from '@/types/calendar';
+import { format, startOfDay, endOfDay, isWithinInterval, isSameMonth, isSameDay, isBefore, isAfter, addDays, differenceInDays, parseISO, isValid, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 
-/**
- * Get the start of a day (midnight) for date comparison
- */
-export function startOfDay(date: Date): Date {
-  const result = new Date(date);
-  result.setHours(0, 0, 0, 0);
-  return result;
+export interface CalendarDayCell {
+  date: Date;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  dayOfWeek: number;
 }
 
-/**
- * Check if two dates are the same day
- */
-export function isSameDay(date1: Date, date2: Date): boolean {
-  return startOfDay(date1).getTime() === startOfDay(date2).getTime();
+export interface ScheduleOptions {
+  articleId: string;
+  scheduledAt: Date | string;
+  productId: string;
 }
 
-/**
- * Check if a date is today
- */
-export function isToday(date: Date): boolean {
-  return isSameDay(date, new Date());
+export interface SchedulingResult {
+  success: boolean;
+  error?: string;
+  scheduledAt?: string;
+  conflicts?: Array<{ id: string; title: string; scheduledAt: string }>;
 }
 
-/**
- * Check if a date is in the past
- */
-export function isPast(date: Date): boolean {
-  return startOfDay(date).getTime() < startOfDay(new Date()).getTime();
-}
-
-/**
- * Check if a date is in the future
- */
-export function isFuture(date: Date): boolean {
-  return startOfDay(date).getTime() > startOfDay(new Date()).getTime();
-}
-
-/**
- * Add days to a date
- */
-export function addDays(date: Date, days: number): Date {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-}
-
-/**
- * Format date for display
- */
-export function formatDate(
-  date: Date,
-  format: 'short' | 'long' | 'time' = 'short'
-): string {
-  const optionsMap: Record<string, Intl.DateTimeFormatOptions> = {
-    short: { month: 'short', day: 'numeric' } as const,
-    long: {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    } as const,
-    time: { hour: 'numeric', minute: '2-digit' } as const,
+export interface ScheduleConflict {
+  existingEvent: {
+    id: string;
+    title: string;
+    scheduledAt: string;
   };
-
-  return date.toLocaleDateString('en-US', optionsMap[format]);
+  newEvent: {
+    scheduledAt: string;
+  };
 }
 
-/**
- * Get the day of week name
- */
-export function getDayOfWeek(date: Date, short: boolean = false): string {
-  const options: Intl.DateTimeFormatOptions = short
-    ? { weekday: 'short' }
-    : { weekday: 'long' };
-  return date.toLocaleDateString('en-US', options);
+export interface DropZone {
+  date: Date;
+  productId: string;
 }
 
-/**
- * Generate an array of day cells for the calendar view
- */
+export interface RecurringScheduleOptions {
+  startDate: Date;
+  frequency: 'daily' | 'weekly' | 'monthly';
+  interval: number;
+  count?: number;
+}
+
+export interface RecurringSchedule {
+  dates: Date[];
+  title: string;
+  frequency: string;
+  interval: number;
+}
+
+export function formatDateRange(startDate: Date | string, endDate: Date | string): string {
+  const start = typeof startDate === 'string' ? parseISO(startDate) : startDate;
+  const end = typeof endDate === 'string' ? parseISO(endDate) : endDate;
+
+  if (!isValid(start) || !isValid(end)) {
+    return '';
+  }
+
+  return `${format(start, 'MMM d')} - ${format(end, 'MMM d, yyyy')}`;
+}
+
+export function hasDateConflict(
+  startDate1: Date,
+  endDate1: Date,
+  startDate2: Date,
+  endDate2: Date
+): boolean {
+  return (
+    (isWithinInterval(startDate1, { start: startDate2, end: endDate2 }) ||
+     isWithinInterval(endDate1, { start: startDate2, end: endDate2 })) ||
+    (isWithinInterval(startDate2, { start: startDate1, end: endDate1 })) ||
+     isWithinInterval(endDate2, { start: startDate1, end: endDate1 }))
+  );
+}
+
+export function calculateDurationMinutes(startDate: Date, endDate: Date): number {
+  const diff = differenceInMinutes(endDate, startDate);
+  return diff;
+}
+
+export function formatDuration(startDate: Date, endDate: Date): string {
+  const minutes = calculateDurationMinutes(startDate, endDate);
+  const hours = Math.floor(minutes / (60 * 24));
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    const remainingHours = hours % 24;
+    const remainingMinutes = minutes % (60 * 24);
+    if (remainingHours > 0 && remainingMinutes > 0) {
+      return `${days}d ${remainingHours}h ${remainingMinutes}m`;
+    } else if (remainingHours > 0) {
+      return `${days}d ${remainingHours}h`;
+    } else {
+      return `${days}d`;
+    }
+  } else if (hours > 0) {
+    const remainingMinutes = minutes % 60;
+    if (remainingMinutes > 0) {
+      return `${hours}h ${remainingMinutes}m`;
+    } else {
+      return `${hours}h`;
+    }
+  } else {
+    return `${minutes}m`;
+  }
+}
+
+export function generateTimeSlots(
+  date: Date,
+  intervalMinutes: number = 30,
+  startHour: number = 6,
+  endHour: number = 18
+): Array<{ time: Date; label: string }> {
+  const slots: Array<{ time: Date; label: string }> = [];
+  const day = startOfDay(date);
+
+  for (let hour = startHour; hour < endHour; hour++) {
+    for (let minute = 0; minute < 60; minute += intervalMinutes) {
+      const time = new Date(day);
+      time.setHours(hour, minute, 0, 0);
+      slots.push({
+        time,
+        label: format(time, 'h:mm a'),
+      });
+    }
+  }
+
+  return slots;
+}
+
+export function isPastDate(date: Date | string): boolean {
+  const d = typeof date === 'string' ? parseISO(date) : date;
+  return isValid(d) && isBefore(d, startOfDay(new Date()));
+}
+
+export function isToday(date: Date | string): boolean {
+  const d = typeof date === 'string' ? parseISO(date) : date;
+  return isValid(d) && isSameDay(d, new Date());
+}
+
+export function isFutureDate(date: Date | string): boolean {
+  const d = typeof date === 'string' ? parseISO(date) : date;
+  return isValid(d) && isAfter(d, endOfDay(new Date()));
+}
+
+export function getDaysBetween(startDate: Date, endDate: Date): Date[] {
+  const days: Date[] = [];
+  const current = startOfDay(startDate);
+  const end = endOfDay(endDate);
+
+  while (current <= end) {
+    days.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+
+  return days;
+}
+
+export async function scheduleArticle(options: ScheduleOptions): Promise<SchedulingResult> {
+  const scheduledAt = typeof options.scheduledAt === 'string'
+    ? parseISO(options.scheduledAt)
+    : options.scheduledAt;
+
+  if (!isValid(scheduledAt)) {
+    return {
+      success: false,
+      error: 'Invalid scheduled date',
+    };
+  }
+
+  if (isPastDate(scheduledAt)) {
+    return {
+      success: false,
+      error: 'Cannot schedule in past',
+    };
+  }
+
+  const conflicts: any[] = [];
+
+  if (conflicts.length > 0) {
+    return {
+      success: false,
+      conflicts,
+    };
+  }
+
+  return {
+    success: true,
+    scheduledAt: format(scheduledAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'x"),
+  };
+}
+
+export function isTimeSlotAvailable(
+  date: Date,
+  startTime: string,
+  duration: number
+): boolean {
+  const [hours, minutes] = startTime.split(':').map(Number);
+  const slotStart = new Date(date);
+  slotStart.setHours(hours, minutes, 0, 0);
+
+  const slotEnd = addMinutes(slotStart, duration);
+
+  const businessStart = new Date(date);
+  businessStart.setHours(6, 0, 0, 0);
+
+  const businessEnd = new Date(date);
+  businessEnd.setHours(18, 0, 0, 0);
+
+  return isWithinInterval(slotStart, { start: businessStart, end: businessEnd }) &&
+         isWithinInterval(slotEnd, { start: businessStart, end: businessEnd });
+}
+
+export function generateRecurringSchedule(options: RecurringScheduleOptions): RecurringSchedule {
+  const { startDate, frequency, interval, count } = options;
+  const dates: Date[] = [];
+  const currentDate = new Date(startDate);
+
+  for (let i = 0; count ? i < count : i < 52; i++) {
+    dates.push(new Date(currentDate));
+
+    switch (frequency) {
+      case 'daily':
+        currentDate.setDate(currentDate.getDate() + interval);
+        break;
+      case 'weekly':
+        currentDate.setDate(currentDate.getDate() + (interval * 7));
+        break;
+      case 'monthly':
+        currentDate.setMonth(currentDate.getMonth() + interval);
+        break;
+    }
+  }
+
+  return {
+    dates,
+    title: `${frequency} every ${interval} ${interval === 1 ? '' : 'weeks/months'}`,
+    frequency,
+    interval,
+  };
+}
+
 export function generateDayCells(
   startDate: Date,
-  numberOfDays: number,
-  events: CalendarEvent[]
-): DayCell[] {
-  const cells: DayCell[] = [];
-  const today = new Date();
-  const startOfStart = startOfDay(startDate);
+  endDate?: Date
+): CalendarDayCell[] {
+  const end = endDate || endOfMonth(startDate);
+  const start = startOfMonth(startDate);
+  const days = eachDayOfInterval({ start: days, end: end });
 
-  // Create a map of events by date for efficient lookup
-  const eventsByDate = new Map<string, CalendarEvent[]>();
-  for (const event of events) {
-    const eventDateKey = startOfDay(event.date).getTime().toString();
-    if (!eventsByDate.has(eventDateKey)) {
-      eventsByDate.set(eventDateKey, []);
-    }
-    eventsByDate.get(eventDateKey)!.push(event);
-  }
+  return days.map((date) => {
+    const now = new Date();
+    const d = typeof date === 'string' ? parseISO(date) : date;
 
-  for (let i = 0; i < numberOfDays; i++) {
-    const currentDate = addDays(startOfStart, i);
-    const dateKey = currentDate.getTime().toString();
-
-    cells.push({
-      date: currentDate,
-      dayOfMonth: currentDate.getDate(),
-      isToday: isSameDay(currentDate, today),
-      isPast: isPast(currentDate),
-      isFuture: isFuture(currentDate),
-      events: eventsByDate.get(dateKey) || [],
-    });
-  }
-
-  return cells;
-}
-
-/**
- * Get the default start date for a 30-day calendar (today or first of month)
- */
-export function getDefaultStartDate(): Date {
-  const today = new Date();
-  // Start from the first day of the current month
-  return new Date(today.getFullYear(), today.getMonth(), 1);
-}
-
-/**
- * Get week day headers based on firstDayOfWeek config
- */
-export function getWeekDayHeaders(firstDayOfWeek: number = 0): string[] {
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const result: string[] = [];
-
-  for (let i = 0; i < 7; i++) {
-    result.push(days[(firstDayOfWeek + i) % 7]);
-  }
-
-  return result;
-}
-
-/**
- * Filter events for a specific date range
- */
-export function filterEventsByDateRange(
-  events: CalendarEvent[],
-  startDate: Date,
-  endDate: Date
-): CalendarEvent[] {
-  const start = startOfDay(startDate);
-  const end = startOfDay(endDate);
-
-  return events.filter((event) => {
-    const eventDate = startOfDay(event.date);
-    return eventDate >= start && eventDate <= end;
+    return {
+      date: d,
+      isCurrentMonth: isSameMonth(d, now),
+      isToday: isSameDay(d, now),
+      dayOfWeek: d.getDay(),
+    };
   });
 }
 
-/**
- * Sort events by status priority (overdue > in-progress > pending > completed > cancelled)
- */
-export function sortEventsByPriority(events: CalendarEvent[]): CalendarEvent[] {
-  const statusPriority: Record<string, number> = {
-    overdue: 0,
-    'in-progress': 1,
-    pending: 2,
-    completed: 3,
-    cancelled: 4,
+export function getDefaultStartDate(): Date {
+  return startOfMonth(new Date());
+}
+
+export function formatCellDate(date: Date, format: 'short' | 'long' = 'short'): string {
+  const d = typeof date === 'string' ? parseISO(date) : date;
+  if (!isValid(d)) return '';
+  if (format === 'short') {
+    return format(d, 'd');
+  }
+  return format(d, 'MMM d, yyyy');
+}
+
+export function getDayOfWeek(date: Date): number {
+  const d = typeof date === 'string' ? parseISO(date) : date;
+  return d.getDay();
+}
+
+export function sortEventsByPriority<T extends { priority?: string }>(events: T[]): T[] {
+  const priorityOrder: Record<string, number> = {
+    high: 3,
+    medium: 2,
+    low: 1,
   };
 
   return [...events].sort((a, b) => {
-    const priorityA = statusPriority[a.status] ?? 999;
-    const priorityB = statusPriority[b.status] ?? 999;
+    const priorityA = priorityOrder[a.priority || 'medium'] || 2;
+    const priorityB = priorityOrder[b.priority || 'medium'] || 2;
+
     if (priorityA !== priorityB) {
-      return priorityA - priorityB;
+      return priorityB - priorityA;
     }
-    // If same priority, sort by title
-    return a.title.localeCompare(b.title);
+
+    return 0;
   });
 }

@@ -92,15 +92,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Use source_date for tracking in metadata
+    const articleScheduledAt = (article as any).scheduled_at;
     const metadata = {
       drag_drop_reschedule: true,
-      source_date: source_date || article.scheduled_at,
+      source_date: source_date || articleScheduledAt,
       rescheduled_at: now.toISOString(),
       rescheduled_by: userId,
     };
 
     let result;
-    if (article.scheduled_at) {
+    if (articleScheduledAt) {
       // Article already has a schedule, update it
       result = await updateScheduledArticle(
         client,

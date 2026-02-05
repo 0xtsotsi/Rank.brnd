@@ -20,6 +20,7 @@ import { KeywordSetupStep } from '@/components/setup-wizard/keyword-setup-step';
 import { ArticleGenerationStep } from '@/components/setup-wizard/article-generation-step';
 import { WizardCompleteStep } from '@/components/setup-wizard/wizard-complete-step';
 import { getSetupWizardStore } from '@/lib/setup-wizard-store';
+import { cn } from '@/lib/utils';
 import type { SetupWizardStepId } from '@/types/setup-wizard';
 
 // Step component mapping
@@ -285,9 +286,4 @@ export default function SetupWizardPage() {
       </div>
     </div>
   );
-}
-
-// Helper function to merge classes
-function cn(...classes: (string | boolean | undefined | null)[]) {
-  return classes.filter(Boolean).join(' ');
 }

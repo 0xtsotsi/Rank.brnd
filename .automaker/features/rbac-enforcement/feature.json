@@ -3,10 +3,10 @@
   "category": "Feature",
   "title": "Implement role-based access control (RBAC)",
   "description": "Create middleware/utilities to check user role for operations, enforce permissions (owner: all, admin: most, editor: articles/content, viewer: read-only).",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["team-members-table"],
   "createdAt": "2026-01-02T09:30:07.967Z",
-  "updatedAt": "2026-01-02T09:30:07.967Z"
+  "updatedAt": "2026-02-04T20:27:56.822Z",
+  "descriptionHistory": []
 }

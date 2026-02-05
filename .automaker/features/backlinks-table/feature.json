@@ -3,10 +3,10 @@
   "category": "Database",
   "title": "Create backlinks database table",
   "description": "Create backlinks table with organization_id, product_id, article_id, source_url, target_url, domain_authority, status, created_at.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 2,
   "complexity": "simple",
   "createdAt": "2026-01-02T09:30:07.965Z",
-  "updatedAt": "2026-01-02T09:30:07.965Z",
+  "updatedAt": "2026-02-04T23:35:09.170Z",
   "descriptionHistory": []
 }

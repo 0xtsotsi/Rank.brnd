@@ -6,7 +6,7 @@
  * Displays a list of articles with filtering, search, and actions.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Plus,
@@ -21,6 +21,8 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BulkPublishButton } from '@/components/articles/bulk-publish-modal';
+import type { BulkPublishResult } from '@/components/articles/bulk-publish-modal';
 
 interface Article {
   id: string;
@@ -42,6 +44,12 @@ interface ArticleListProps {
   status?: string;
   search?: string;
   category?: string;
+  integrations?: Array<{
+    id: string;
+    platform: string;
+    name: string;
+    status: string;
+  }>;
 }
 
 export function ArticleList({
@@ -49,6 +57,7 @@ export function ArticleList({
   status: initialStatus,
   search: initialSearch,
   category: initialCategory,
+  integrations = [],
 }: ArticleListProps) {
   const router = useRouter();
   const [articles, setArticles] = useState<Article[]>([]);
@@ -60,11 +69,33 @@ export function ArticleList({
   const [showFilters, setShowFilters] = useState(false);
   const [selectedArticles, setSelectedArticles] = useState<Set<string>>(new Set());
   const [actionMenuOpen, setActionMenuOpen] = useState<string | null>(null);
+  const [selectAll, setSelectAll] = useState(false);
 
   // Fetch articles
   useEffect(() => {
     fetchArticles();
   }, [organizationId, selectedStatus, selectedCategory, searchTerm]);
+
+  // Handle select all toggle
+  const handleSelectAll = useCallback(() => {
+    if (selectAll) {
+      setSelectedArticles(new Set());
+    } else {
+      setSelectedArticles(new Set(articles.map(a => a.id)));
+    }
+    setSelectAll(!selectAll);
+  }, [selectAll, articles]);
+
+  // Handle bulk publish completion
+  const handlePublishComplete = useCallback((result: BulkPublishResult) => {
+    // Clear selection after successful publish
+    if (result.successful > 0) {
+      setSelectedArticles(new Set());
+      setSelectAll(false);
+      // Refresh articles to show updated status
+      fetchArticles();
+    }
+  }, []);
 
   async function fetchArticles() {
     setLoading(true);
@@ -179,8 +210,25 @@ export function ArticleList({
 
         {/* Bulk Actions */}
         {selectedArticles.size > 0 && (
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            {selectedArticles.size} article{selectedArticles.size > 1 ? 's' : ''} selected
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSelectAll}
+                className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                {selectAll ? 'Deselect All' : 'Select All'}
+              </button>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                {selectedArticles.size} article{selectedArticles.size > 1 ? 's' : ''} selected
+              </span>
+            </div>
+            <BulkPublishButton
+              selectedArticles={selectedArticles}
+              articles={articles}
+              integrations={integrations}
+              organizationId={organizationId}
+              onPublishComplete={handlePublishComplete}
+            />
           </div>
         )}
       </div>
@@ -267,7 +315,22 @@ export function ArticleList({
         <div className="space-y-2">
           {/* Header */}
           <div className="hidden sm:grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-            <div className="col-span-5">Article</div>
+            <div className="col-span-5 flex items-center gap-3">
+              <input
+                type="checkbox"
+                checked={selectAll && selectedArticles.size === articles.length}
+                onChange={handleSelectAll}
+                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                ref={(el) => {
+                  if (el && selectedArticles.size > 0 && !selectAll) {
+                    el.indeterminate = true;
+                  } else if (el) {
+                    el.indeterminate = false;
+                  }
+                }}
+              />
+              Article
+            </div>
             <div className="col-span-2">Status</div>
             <div className="col-span-2">Category</div>
             <div className="col-span-2">Updated</div>

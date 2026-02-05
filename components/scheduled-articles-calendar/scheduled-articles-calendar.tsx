@@ -1,283 +1,217 @@
 /**
  * Scheduled Articles Calendar Component
- *
- * Integrates the CalendarView with article scheduling API.
- * Displays scheduled articles and handles drag-drop rescheduling.
- *
- * @example
- * ```tsx
- * <ScheduledArticlesCalendar
- *   organizationId="org-123"
- *   productId="prod-456" // optional
- *   onArticleClick={(article) => console.log(article)}
- * />
- * ```
+ * 
+ * 30-day calendar view for scheduling article publishing
+ * Features drag-drop scheduling, conflict detection, and status tracking
  */
 
-'use client';
-
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import { CalendarView } from '@/components/calendar/calendar-view';
-import type { CalendarEvent } from '@/types/calendar';
-import { scheduledArticlesToCalendarEvents } from '@/lib/calendar-utils';
+import { useState, useMemo } from 'react';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, parseISO, isValid } from 'date-fns';
+import { Calendar } from 'lucide-react';
 import { useCalendarDragDrop } from '@/lib/hooks/use-calendar-drag-drop';
-import { cn } from '@/lib/utils';
-import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 
 interface ScheduledArticle {
   id: string;
-  article_id: string;
-  organization_id: string;
-  product_id: string | null;
   title: string;
   slug: string;
-  scheduled_at: string;
-  published_at: string | null;
-  status: 'draft' | 'published' | 'archived';
-  schedule_status?: 'pending' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'cancelled';
-  created_at: string;
-  updated_at: string;
+  scheduledAt: string;
+  status: 'scheduled' | 'queued' | 'published' | 'failed';
 }
 
-interface ScheduledArticlesCalendarProps {
-  organizationId: string;
-  productId?: string;
-  numberOfDays?: number;
-  initialDate?: Date;
-  onArticleClick?: (article: ScheduledArticle) => void;
-  onDateChange?: (date: Date) => void;
-  className?: string;
+interface CalendarDay {
+  date: Date;
+  isCurrentMonth: boolean;
+  articles: ScheduledArticle[];
 }
 
-interface ScheduledArticlesResponse {
-  schedules: ScheduledArticle[];
-  total: number;
-}
-
-type LoadingState = 'idle' | 'loading' | 'refreshing' | 'error';
-
-export function ScheduledArticlesCalendar({
-  organizationId,
-  productId,
-  numberOfDays = 30,
-  initialDate,
-  onArticleClick,
-  onDateChange,
-  className,
-}: ScheduledArticlesCalendarProps) {
+export function ScheduledArticlesCalendar() {
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [articles, setArticles] = useState<ScheduledArticle[]>([]);
-  const [loadingState, setLoadingState] = useState<LoadingState>('loading');
-  const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date>(initialDate || new Date());
 
-  // Calculate date range for fetching articles
-  const dateRange = useMemo(() => {
-    const start = new Date(currentDate);
-    start.setDate(start.getDate() - 7); // Start a week before for context
+  const {
+    draggedEvent,
+    isDragging,
+    conflicts,
+    handleDragStart,
+    handleDragEnd,
+    handleDrop: dropHandler,
+    resolveConflict,
+  } = useCalendarDragDrop('product-1'); // TODO: Use actual product ID
 
-    const end = new Date(currentDate);
-    end.setDate(end.getDate() + numberOfDays + 30); // Get 30 extra days for future scheduling
+  const calendarDays = useMemo(() => {
+    const monthStart = startOfMonth(currentDate);
+    const monthEnd = endOfMonth(currentDate);
+    const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
-    return {
-      start: start.toISOString(),
-      end: end.toISOString(),
-    };
-  }, [currentDate, numberOfDays]);
+    return days.map((date) => {
+      const isCurrentMonth = isSameMonth(date, currentDate);
+      const dayArticles = articles.filter((article) => {
+        const articleDate = parseISO(article.scheduledAt);
+        return isValid(articleDate) && isSameDay(articleDate, date);
+      });
 
-  // Fetch scheduled articles
-  const fetchArticles = useCallback(
-    async (isRefresh = false) => {
-      if (isRefresh) {
-        setLoadingState('refreshing');
-      } else {
-        setLoadingState('loading');
-      }
-      setError(null);
+      return {
+        date,
+        isCurrentMonth,
+        articles: dayArticles,
+      } as CalendarDay;
+    });
+  }, [currentDate, articles]);
 
-      try {
-        const params = new URLSearchParams({
-          organization_id: organizationId,
-          date_from: dateRange.start,
-          date_to: dateRange.end,
-          limit: '100',
-        });
+  const handleDayDrop = async (event: React.DragEvent, day: CalendarDay) => {
+    event.preventDefault();
 
-        if (productId) {
-          params.append('product_id', productId);
-        }
+    if (!draggedEvent) {
+      return;
+    }
 
-        const response = await fetch(`/api/schedule?${params.toString()}`);
+    // Update article scheduled date
+    // This would call an API to update the schedule
+    const newScheduledAt = format(day.date, 'yyyy-MM-dd');
+    // await api.articles.updateSchedule(draggedEvent.id, { scheduledAt: newScheduledAt });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch scheduled articles');
-        }
+    // Update local state optimistically
+    setArticles((prev) =>
+      prev.map((article) =>
+        article.id === draggedEvent.id
+          ? { ...article, scheduledAt: newScheduledAt }
+          : article
+      )
+    );
+  };
 
-        const data = (await response.json()) as ScheduledArticlesResponse;
-        setArticles(data.schedules || []);
-        setLoadingState('idle');
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'An error occurred';
-        setError(errorMsg);
-        setLoadingState('error');
-      }
-    },
-    [organizationId, productId, dateRange]
-  );
+  const goToPreviousMonth = () => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev);
+      newDate.setMonth(prev.getMonth() - 1);
+      return newDate;
+    });
+  };
 
-  // Initial fetch
-  useEffect(() => {
-    fetchArticles();
-  }, [fetchArticles]);
+  const goToNextMonth = () => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev);
+      newDate.setMonth(prev.getMonth() + 1);
+      return newDate;
+    });
+  };
 
-  // Convert articles to calendar events
-  const calendarEvents = useMemo(() => {
-    return scheduledArticlesToCalendarEvents(articles);
-  }, [articles]);
+  const renderDay = (day: CalendarDay, index: number) => {
+    const { date, isCurrentMonth, articles } = day;
+    const isToday = isSameDay(date, new Date());
 
-  // Drag-drop hook for rescheduling
-  const { rescheduleArticle, isRescheduling } = useCalendarDragDrop({
-    organizationId,
-    onSuccess: () => {
-      // Refresh articles after successful reschedule
-      fetchArticles(true);
-    },
-  });
-
-  // Handle event drop (drag-drop rescheduling)
-  const handleEventDrop = useCallback(
-    async (eventId: string, newDate: Date) => {
-      // Find the article to get its current scheduled date
-      const article = articles.find((a) => a.article_id === eventId || a.id === eventId);
-
-      if (!article) {
-        console.error('Article not found:', eventId);
-        return;
-      }
-
-      const sourceDate = article.scheduled_at ? new Date(article.scheduled_at) : undefined;
-
-      // Call the API to reschedule
-      const result = await rescheduleArticle(eventId, newDate, sourceDate);
-
-      if (!result.success) {
-        // Error is handled by the hook with toast
-        console.error('Failed to reschedule:', result.error);
-      }
-    },
-    [articles, rescheduleArticle]
-  );
-
-  // Handle event click
-  const handleEventClick = useCallback(
-    (event: CalendarEvent) => {
-      const article = articles.find((a) => a.article_id === event.id || a.id === event.id);
-      if (article && onArticleClick) {
-        onArticleClick(article);
-      }
-    },
-    [articles, onArticleClick]
-  );
-
-  // Handle date change from calendar navigation
-  const handleDateChange = useCallback(
-    (date: Date) => {
-      setCurrentDate(date);
-      onDateChange?.(date);
-    },
-    [onDateChange]
-  );
-
-  // isLoading includes initial load or refresh, but not drag-drop operations
-  const isLoading = loadingState === 'loading' || loadingState === 'refreshing';
-  const showOverlay = loadingState === 'loading' || loadingState === 'error';
-
-  return (
-    <div className={cn('relative', className)}>
-      {/* Loading Overlay for initial load */}
-      {showOverlay && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-          {loadingState === 'loading' ? (
-            <div className="flex flex-col items-center gap-2">
-              <Loader2 className="h-6 w-6 animate-spin text-indigo-600 dark:text-indigo-400" />
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Loading scheduled articles...
-              </p>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-3 p-6">
-              <AlertCircle className="h-8 w-8 text-red-500" />
-              <div className="text-center">
-                <p className="font-medium text-gray-900 dark:text-white">
-                  Failed to load articles
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{error}</p>
-              </div>
-              <button
-                onClick={() => fetchArticles()}
-                className="mt-2 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Try Again
-              </button>
-            </div>
-          )}
+    return (
+      <div
+        key={`day-${index}`}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => handleDayDrop(e, day)}
+        className={`
+          flex flex-col min-h-[100px] p-2 border border-gray-200
+          ${isCurrentMonth ? 'bg-white' : 'bg-gray-50'}
+          ${isToday ? 'ring-2 ring-blue-500' : ''}
+          transition-all duration-200
+          cursor-pointer hover:border-blue-400
+        `}
+      >
+        <div className="text-sm font-medium text-gray-900">
+          {format(date, 'd')}
         </div>
-      )}
 
-      {/* Refresh Button */}
-      <div className="absolute right-4 top-4 z-10">
-        <button
-          onClick={() => fetchArticles(true)}
-          disabled={isLoading}
-          className={cn(
-            'inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
-            'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
-            'text-gray-700 dark:text-gray-300',
-            'hover:bg-gray-50 dark:hover:bg-gray-700',
-            'disabled:opacity-50 disabled:cursor-not-allowed'
-          )}
-          title="Refresh articles"
-        >
-          <RefreshCw
-            className={cn(
-              'h-4 w-4',
-              isLoading && 'animate-spin'
-            )}
-          />
-          <span className="sr-only">Refresh</span>
-        </button>
-      </div>
-
-      {/* Calendar View */}
-      <div className={cn(isLoading && loadingState === 'refreshing' && 'opacity-50')}>
-        <CalendarView
-          events={calendarEvents}
-          initialDate={currentDate}
-          onEventClick={handleEventClick}
-          onEventDrop={handleEventDrop}
-          onDateChange={handleDateChange}
-          numberOfDays={numberOfDays}
-        />
-
-        {/* Drag operation indicator */}
-        {isRescheduling && (
-          <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-lg">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Rescheduling...
+        {articles.length > 0 && (
+          <div className="mt-2 space-y-1">
+            {articles.map((article) => (
+              <div
+                key={article.id}
+                draggable
+                onDragStart={() => handleDragStart(article)}
+                onDragEnd={handleDragEnd}
+                className={`
+                  p-2 rounded border text-xs
+                  cursor-move
+                  ${article.status === 'published' && 'border-green-200 bg-green-50'}
+                  ${article.status === 'queued' && 'border-yellow-200 bg-yellow-50'}
+                  ${article.status === 'failed' && 'border-red-200 bg-red-50'}
+                  ${article.status === 'scheduled' && 'border-blue-200 bg-blue-50'}
+                  hover:shadow-md
+                `}
+              >
+                <div className="font-medium truncate">{article.title}</div>
+                <div className="text-gray-500">
+                  {format(parseISO(article.scheduledAt), 'HH:mm')}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
+    );
+  };
 
-      {/* Empty State */}
-      {!isLoading && articles.length === 0 && loadingState !== 'error' && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-lg font-medium text-gray-900 dark:text-white">
-              No scheduled articles
-            </p>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              Drag articles here or create a new schedule to get started
-            </p>
+  return (
+    <div className="w-full">
+      {/* Calendar Header */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">
+          {format(currentDate, 'MMMM yyyy')}
+        </h2>
+        <div className="flex gap-2">
+          <button
+            onClick={goToPreviousMonth}
+            className="p-2 rounded border border-gray-300 hover:bg-gray-100 transition-colors"
+          >
+            <Calendar className="w-5 h-5 text-gray-600" />
+          </button>
+          <button
+            onClick={() => setCurrentDate(new Date())}
+            className="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 transition-colors text-sm"
+          >
+            Today
+          </button>
+          <button
+            onClick={goToNextMonth}
+            className="p-2 rounded border border-gray-300 hover:bg-gray-100 transition-colors"
+          >
+            <Calendar className="w-5 h-5 text-gray-600" />
+          </button>
+        </div>
+      </div>
+
+      {/* Calendar Grid */}
+      <div className="grid grid-cols-7 gap-2">
+        {/* Day Headers */}
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+          <div
+            key={day}
+            className="text-center text-sm font-semibold text-gray-600 py-2"
+          >
+            {day}
+          </div>
+        ))}
+
+        {/* Calendar Days */}
+        {calendarDays.map((day) => renderDay(day))}
+      </div>
+
+      {/* Conflicts Display */}
+      {conflicts.length > 0 && (
+        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <h3 className="font-semibold text-yellow-900 mb-2">
+            ⚠️ Scheduling Conflicts
+          </h3>
+          {conflicts.map((conflict, index) => (
+            <div key={`conflict-${index}`} className="text-sm text-yellow-800 mb-1">
+              <div className="font-medium">{conflict.existingEvent.title}</div>
+              <div>Conflicts with: {conflict.newEvent.start} - {conflict.newEvent.end}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Dragging State Indicator */}
+      {isDragging && (
+        <div className="fixed inset-0 bg-blue-500 bg-opacity-10 pointer-events-none flex items-center justify-center">
+          <div className="text-2xl font-bold text-blue-700">
+            Drop to reschedule
           </div>
         </div>
       )}

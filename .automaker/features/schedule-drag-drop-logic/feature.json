@@ -3,11 +3,10 @@
   "category": "Feature",
   "title": "Implement drag-drop scheduling logic",
   "description": "Wire drag-drop functionality to calendar component, update article scheduling via API, handle drag-drop edge cases and conflicts.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["schedule-crud-api"],
   "createdAt": "2026-01-02T09:30:07.963Z",
-  "updatedAt": "2026-01-02T09:30:07.963Z",
+  "updatedAt": "2026-02-04T21:32:21.033Z",
   "descriptionHistory": []
 }

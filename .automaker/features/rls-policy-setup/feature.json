@@ -3,13 +3,10 @@
   "category": "Database",
   "title": "Implement Row Level Security policies",
   "description": "Create RLS policies for organizations, users, and products tables to ensure tenant isolation. Test policies prevent cross-organization data access.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": [
-    "users-table"
-  ],
   "createdAt": "2026-01-02T09:30:07.962Z",
-  "updatedAt": "2026-01-02T09:30:07.962Z",
+  "updatedAt": "2026-02-04T21:20:08.587Z",
   "descriptionHistory": []
 }

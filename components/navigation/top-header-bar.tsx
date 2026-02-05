@@ -4,15 +4,16 @@
  * Top Header Bar Component
  *
  * A responsive header bar with search functionality, notifications,
- * and user menu dropdown using Clerk's UserButton.
+ * and custom user menu dropdown with profile info, settings link,
+ * team switcher, and logout button.
  *
  * Uses Zustand store for theme toggle functionality.
  */
 
-import { UserButton } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useToggleTheme, useTheme, useEffectiveTheme } from '@/lib/ui-store';
+import { UserMenuDropdown } from './user-menu-dropdown';
 
 interface HeaderBarProps {
   /** Optional title to display in the header */
@@ -188,12 +189,12 @@ export function TopHeaderBar({
               {breadcrumbs.map((crumb, index) => (
                 <div key={index} className="flex items-center gap-2">
                   {index > 0 && (
-                    <Icons.ChevronRight className="h-4 w-4 text-gray-400" />
+                    <Icons.ChevronRight className="h-4 w-4 text-gray-400 dark:text-gray-500" aria-hidden="true" />
                   )}
                   {crumb.href ? (
                     <a
                       href={crumb.href}
-                      className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
+                      className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                     >
                       {crumb.label}
                     </a>
@@ -226,7 +227,7 @@ export function TopHeaderBar({
                   'ring-2 ring-indigo-500 border-indigo-500 dark:border-indigo-400'
               )}
             >
-              <Icons.Search className="h-4 w-4 text-gray-400 ml-3" />
+              <Icons.Search className="h-4 w-4 text-gray-400 ml-3" aria-hidden="true" />
               <input
                 type="search"
                 placeholder="Search..."
@@ -243,11 +244,11 @@ export function TopHeaderBar({
           {/* Notifications Button */}
           <button
             type="button"
-            className="relative p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors tap-highlight-none"
+            className="relative p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors tap-highlight-none"
             aria-label="View notifications"
           >
             <Icons.Bell className="h-5 w-5" />
-            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500" />
+            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500" aria-label="Unread notifications" />
           </button>
 
           {/* Help Button */}
@@ -255,8 +256,8 @@ export function TopHeaderBar({
             href="https://docs.rank.brnd"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:block p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors tap-highlight-none"
-            aria-label="Get help"
+            className="hidden sm:block p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors tap-highlight-none"
+            aria-label="Get help (opens in new tab)"
           >
             <Icons.HelpCircle className="h-5 w-5" />
           </a>
@@ -264,7 +265,7 @@ export function TopHeaderBar({
           {/* Theme Toggle Button */}
           <button
             type="button"
-            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors tap-highlight-none"
+            className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors tap-highlight-none"
             onClick={toggleTheme}
             aria-label={`Toggle theme (current: ${theme})`}
             title={`Current theme: ${theme}${theme === 'system' ? ` (${effectiveTheme})` : ''}`}
@@ -272,25 +273,8 @@ export function TopHeaderBar({
             <ThemeIcon className="h-5 w-5" />
           </button>
 
-          {/* User Menu (Clerk UserButton) */}
-          <UserButton
-            afterSignOutUrl="/"
-            appearance={{
-              elements: {
-                avatarBox: {
-                  width: '40px',
-                  height: '40px',
-                },
-                userButtonPopoverCard: {
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                },
-                userButtonBox: {
-                  height: '40px',
-                },
-              },
-            }}
-          />
+          {/* User Menu Dropdown */}
+          <UserMenuDropdown />
         </div>
       </div>
 
@@ -305,7 +289,7 @@ export function TopHeaderBar({
               'ring-2 ring-indigo-500 border-indigo-500 dark:border-indigo-400'
           )}
         >
-          <Icons.Search className="h-4 w-4 text-gray-400 ml-3" />
+          <Icons.Search className="h-4 w-4 text-gray-400 ml-3" aria-hidden="true" />
           <input
             type="search"
             placeholder="Search..."

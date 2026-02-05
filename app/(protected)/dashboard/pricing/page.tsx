@@ -164,7 +164,7 @@ export default function PricingPage() {
             <h3 className="text-2xl font-bold">Need an Enterprise Solution?</h3>
             <p className="mt-2 text-indigo-100">
               Custom integrations, dedicated support, SLA guarantees, and flexible
-              pricing for large teams. Let's build something great together.
+              pricing for large teams. Let&apos;s build something great together.
             </p>
             <button
               onClick={() => (window.location.href = 'mailto:enterprise@rank.brnd')}

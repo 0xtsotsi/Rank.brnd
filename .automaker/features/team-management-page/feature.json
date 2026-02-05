@@ -3,11 +3,10 @@
   "category": "UI",
   "title": "Build team management page",
   "description": "Create page listing team members, roles, invitation status, invite form, role change dropdowns, remove member buttons.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["team-members-table"],
   "createdAt": "2026-01-02T09:30:07.967Z",
-  "updatedAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-02-04T21:09:24.328Z",
   "descriptionHistory": []
 }

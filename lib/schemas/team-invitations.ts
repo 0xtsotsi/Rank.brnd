@@ -5,18 +5,10 @@
  */
 
 import { z } from 'zod';
+import { teamMemberRoleSchema } from './team-members';
 
-/**
- * Team member role enum
- */
-export const teamMemberRoleSchema = z.enum([
-  'owner',
-  'admin',
-  'editor',
-  'viewer',
-]);
-
-export type TeamMemberRole = z.infer<typeof teamMemberRoleSchema>;
+// Re-export from team-members to avoid duplication
+export type { TeamMemberRole } from './team-members';
 
 /**
  * Team invitation status enum
@@ -64,13 +56,9 @@ export const bulkCreateTeamInvitationsSchema = z.object({
 /**
  * Combined POST schema for team invitations (single or bulk)
  */
-export const teamInvitationsPostSchema = z.discriminatedUnion('bulk', [
+export const teamInvitationsPostSchema = z.union([
   bulkCreateTeamInvitationsSchema,
-  createTeamInvitationSchema
-    .extend({
-      bulk: z.literal(false).optional(),
-    })
-    .transform((val) => ({ ...val, bulk: false as const })),
+  createTeamInvitationSchema,
 ]);
 
 /**
@@ -138,7 +126,7 @@ export const declineInvitationSchema = z.object({
  *
  * GET /api/team-invitations/pending
  */
-export const pendingInvitationsQuerySchema = z.object({
+export const teamInvitationsPendingQuerySchema = z.object({
   organization_id: z.string().min(1, 'Organization ID is required'),
 });
 

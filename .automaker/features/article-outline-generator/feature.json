@@ -3,13 +3,10 @@
   "category": "Feature",
   "title": "Build article outline generation",
   "description": "Create service to generate article outline using keyword + SERP analysis + brand voice, return structured H1/H2/H3 hierarchy with section descriptions.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "complex",
-  "dependencies": [
-    "serp-analysis-engine"
-  ],
   "createdAt": "2026-01-02T09:30:07.964Z",
-  "updatedAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-02-04T20:40:31.916Z",
   "descriptionHistory": []
 }

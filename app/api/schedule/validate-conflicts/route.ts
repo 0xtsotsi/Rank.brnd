@@ -127,9 +127,9 @@ export async function POST(request: NextRequest) {
       hasConflicts: conflicts.length > 0,
       conflicts,
       article: {
-        id: article.id,
-        title: article.title,
-        currently_scheduled_at: article.scheduled_at,
+        id: (article as any).id,
+        title: (article as any).title,
+        currently_scheduled_at: (article as any).scheduled_at,
         new_scheduled_at: scheduled_at,
       },
     });

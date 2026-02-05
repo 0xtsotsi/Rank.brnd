@@ -106,7 +106,7 @@ export async function requireOrganizationMember(
   organizationId: string,
   userId: string
 ): Promise<void> {
-  const isMember = await client.rpc('is_organization_member', {
+  const isMember = await (client as any).rpc('is_organization_member', {
     p_org_id: organizationId,
     p_user_id: userId,
   });

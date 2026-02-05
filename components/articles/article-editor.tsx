@@ -37,6 +37,7 @@ import {
 import { TiptapEditor, calculateReadabilityScore } from './tiptap-editor';
 import { ImageGenerationDialog } from './image-generation-dialog';
 import { SEOSidebar } from './seo-sidebar';
+import { ArticlePreviewModal } from './article-preview-modal';
 import { cn } from '@/lib/utils';
 import type { ImageGenerationResponse } from '@/types/image-generation';
 
@@ -85,6 +86,8 @@ interface ArticleEditorProps {
   organizationId: string;
   userId?: string;
   brandSettings?: import('@/types/brand-settings').BrandSettings | null;
+  siteUrl?: string;
+  siteName?: string;
   onSave?: (article: Partial<Article>) => Promise<void>;
   onPublish?: (articleId: string) => Promise<void>;
   onUnpublish?: (articleId: string) => Promise<void>;
@@ -97,6 +100,8 @@ export function ArticleEditor({
   organizationId,
   userId,
   brandSettings,
+  siteUrl = 'https://example.com',
+  siteName = 'My Blog',
   onSave,
   onPublish,
   onUnpublish,
@@ -776,32 +781,26 @@ export function ArticleEditor({
       )}
 
       {/* Preview Modal */}
-      {showPreview && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setShowPreview(false)}
-          />
-          <div className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Article Preview
-              </h3>
-              <button
-                onClick={() => setShowPreview(false)}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-6 overflow-y-auto max-h-[calc(90vh-60px)] prose dark:prose-invert max-w-none">
-              {title && <h1>{title}</h1>}
-              {excerpt && <p className="text-xl text-gray-600 dark:text-gray-400">{excerpt}</p>}
-              <div dangerouslySetInnerHTML={{ __html: content }} />
-            </div>
-          </div>
-        </div>
-      )}
+      <ArticlePreviewModal
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        article={{
+          title,
+          slug,
+          content,
+          excerpt,
+          featuredImageUrl: featuredImageUrl || null,
+          metaTitle,
+          metaDescription,
+          author: userId ? undefined : article?.author_id || undefined,
+          publishedAt: article?.published_at,
+          tags,
+          category,
+          readingTime,
+        }}
+        siteUrl={siteUrl}
+        siteName={siteName}
+      />
 
       {/* Image Generation Dialog */}
       {userId && (

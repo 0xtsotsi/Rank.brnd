@@ -3,10 +3,10 @@
   "category": "Feature",
   "title": "Implement bulk publishing feature",
   "description": "Create UI and API for selecting multiple articles to publish to selected CMS platforms simultaneously with progress tracking.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 2,
   "complexity": "moderate",
   "createdAt": "2026-01-02T09:30:07.965Z",
-  "updatedAt": "2026-01-02T09:30:07.965Z",
+  "updatedAt": "2026-02-04T23:59:08.773Z",
   "descriptionHistory": []
 }

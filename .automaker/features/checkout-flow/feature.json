@@ -3,11 +3,10 @@
   "category": "Feature",
   "title": "Implement Stripe checkout flow",
   "description": "Create checkout page with Stripe embedded payment form, handle plan selection, card payment, subscription creation, success/error handling.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": ["subscriptions-table"],
   "createdAt": "2026-01-02T09:30:07.966Z",
-  "updatedAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-02-04T20:55:39.692Z",
   "descriptionHistory": []
 }

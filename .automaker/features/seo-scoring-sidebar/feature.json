@@ -3,13 +3,10 @@
   "category": "UI",
   "title": "Build SEO scoring sidebar in editor",
   "description": "Create sidebar in article editor showing real-time SEO scoring, checklist items, readability score, keyword density, suggestions for improvement.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 1,
   "complexity": "moderate",
-  "dependencies": [
-    "seo-scoring-engine"
-  ],
   "createdAt": "2026-01-02T09:30:07.964Z",
-  "updatedAt": "2026-01-02T09:30:07.964Z",
+  "updatedAt": "2026-02-04T20:33:24.195Z",
   "descriptionHistory": []
 }

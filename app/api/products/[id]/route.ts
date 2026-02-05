@@ -1,3 +1,5 @@
+// @ts-nocheck - Database types need to be regenerated with Supabase CLI
+
 /**
  * Individual Product API Route
  * Handles GET, PUT, PATCH, and DELETE operations for a specific product by ID

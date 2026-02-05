@@ -59,6 +59,5 @@ export type {
   ILogger,
   LoggerOptions,
   LogEntry,
-  LogLevel,
 } from './types';
 export { LogLevel } from './types';

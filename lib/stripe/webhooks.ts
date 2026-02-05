@@ -83,6 +83,11 @@ export interface InvoicePaidData {
   amountPaid: number;
   currency: string;
   status: 'paid' | 'void' | 'uncollectible';
+  invoicePdf?: string | null;
+  hostedInvoiceUrl?: string | null;
+  dueDate?: number | null;
+  paidAt?: number | null;
+  metadata?: Record<string, string>;
 }
 
 export interface InvoicePaymentFailedData {
@@ -93,6 +98,10 @@ export interface InvoicePaymentFailedData {
   currency: string;
   attemptCount: number;
   nextPaymentAttempt: number | null;
+  invoicePdf?: string | null;
+  hostedInvoiceUrl?: string | null;
+  dueDate?: number | null;
+  metadata?: Record<string, string>;
 }
 
 export interface CheckoutSessionCompletedData {
@@ -182,6 +191,11 @@ export function extractInvoicePaid(
     amountPaid: invoice.amount_paid,
     currency: invoice.currency,
     status: (invoice.status as 'paid' | 'void' | 'uncollectible') ?? 'paid',
+    invoicePdf: invoice.invoice_pdf ?? null,
+    hostedInvoiceUrl: invoice.hosted_invoice_url ?? null,
+    dueDate: invoice.due_date ?? null,
+    paidAt: invoice.status_transitions.paid_at ?? null,
+    metadata: invoice.metadata ?? {},
   };
 }
 
@@ -201,6 +215,10 @@ export function extractInvoicePaymentFailed(
     currency: invoice.currency,
     attemptCount: invoice.attempt_count,
     nextPaymentAttempt: invoice.next_payment_attempt,
+    invoicePdf: invoice.invoice_pdf ?? null,
+    hostedInvoiceUrl: invoice.hosted_invoice_url ?? null,
+    dueDate: invoice.due_date ?? null,
+    metadata: invoice.metadata ?? {},
   };
 }
 

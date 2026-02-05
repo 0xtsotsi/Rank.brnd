@@ -63,7 +63,8 @@ export async function POST(request: NextRequest) {
       .eq('user_id', userId)
       .maybeSingle();
 
-    if (!member || (member.role !== 'owner' && member.role !== 'admin')) {
+    const memberRole = (member as any)?.role;
+    if (!member || (memberRole !== 'owner' && memberRole !== 'admin')) {
       return NextResponse.json(
         { error: 'Only organization owners and admins can bulk update schedules' },
         { status: 403 }

@@ -112,11 +112,16 @@ export async function validateInvitationToken(
     );
 
     if (error) throw error;
-    if (!data || data.length === 0) {
+    if (!data) {
       throw new Error('Invalid invitation token');
     }
 
-    const result = data[0] as InvitationValidationResult;
+    const dataArray = data as unknown as InvitationValidationResult[];
+    if (dataArray.length === 0) {
+      throw new Error('Invalid invitation token');
+    }
+
+    const result = dataArray[0] as InvitationValidationResult;
 
     return { success: true, data: result };
   } catch (error) {

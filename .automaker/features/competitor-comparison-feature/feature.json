@@ -3,10 +3,10 @@
   "category": "Feature",
   "title": "Implement competitor rank comparison",
   "description": "Create feature to compare user keyword rankings with competitors, show ranking gaps, identify quick-win opportunities.",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": 2,
   "complexity": "moderate",
   "createdAt": "2026-01-02T09:30:07.966Z",
-  "updatedAt": "2026-01-02T09:30:07.966Z",
+  "updatedAt": "2026-02-04T23:59:09.158Z",
   "descriptionHistory": []
 }

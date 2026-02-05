@@ -40,3 +40,6 @@ export * from './google-search-console';
 export * from './integrations';
 export * from './team-invitations';
 export * from './team-members';
+export * from './backlinks';
+export * from './activity-logs';
+export * from './competitor-comparisons';
