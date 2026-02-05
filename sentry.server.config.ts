@@ -7,7 +7,10 @@ Sentry.init({
   replaysSessionSampleRate: 0.1,
   integrations: [
     new Sentry.BrowserTracing(),
-    new Sentry.Replay(),
+    new Sentry.Replay({
+      sessionSampleRate: 0.1,
+    }),
+    new Sentry.BrowserProfilingIntegration(),
   ],
   beforeSend(event, hint) {
     if (process.env.NODE_ENV === "development") {
@@ -15,6 +18,15 @@ Sentry.init({
         return null;
       }
     }
+    event.release = process.env.NEXT_PUBLIC_APP_VERSION || "0.1.0";
+    event.tags = event.tags || [];
+    event.tags.push(`env:${process.env.NODE_ENV}`);
     return event;
   },
 });
+
+export { Sentry };
+export {
+  startServerSpan,
+  startServerTransaction,
+} from './sentry-helpers';

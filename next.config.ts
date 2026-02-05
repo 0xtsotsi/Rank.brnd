@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   eslint: {
-    // During builds we'll turn off ESLint to not slow down the build
-    // We will also turn off ESLint when developing with dev server
+    // Completely disable ESLint to allow build to proceed
+    // We'll fix individual ESLint errors in subsequent commits
     ignoreDuringBuilds: true,
     ignoreDuringTests: true,
   },
