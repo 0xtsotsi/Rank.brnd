@@ -9,9 +9,7 @@ import {
   queueArticleForPublishingSchema,
   validateRequest,
 } from '@/lib/schemas';
-import {
-  queueArticleForPublishing,
-} from '@/lib/supabase/publishing-queue';
+import { queueArticleForPublishing } from '@/lib/supabase/publishing-queue';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 import { handleAPIError } from '@/lib/api-error-handler';
 
@@ -27,7 +25,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validationResult = validateRequest(body, queueArticleForPublishingSchema);
+    const validationResult = validateRequest(
+      body,
+      queueArticleForPublishingSchema
+    );
 
     if (!validationResult.success) {
       return NextResponse.json(validationResult.error, { status: 400 });
@@ -53,10 +54,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data, { status: 201 });

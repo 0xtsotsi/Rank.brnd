@@ -37,10 +37,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!userRecord) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     type UserRecord = { id: string; email: string };
@@ -67,7 +64,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify email matches
-    if (validationResult.data.email.toLowerCase() !== userData.email.toLowerCase()) {
+    if (
+      validationResult.data.email.toLowerCase() !== userData.email.toLowerCase()
+    ) {
       return NextResponse.json(
         { error: 'This invitation was sent to a different email address' },
         { status: 403 }
@@ -82,10 +81,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -95,7 +91,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }

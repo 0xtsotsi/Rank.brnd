@@ -119,9 +119,9 @@ export async function getBatchKeywordMetrics(
     throw new Error('DataForSEO credentials not configured');
   }
 
-  const requests = keywords.slice(0, 100).map((keyword) =>
-    dfClient.createRequest(keyword, options)
-  );
+  const requests = keywords
+    .slice(0, 100)
+    .map((keyword) => dfClient.createRequest(keyword, options));
 
   const results = await dfClient.getKeywordDataBatch(requests);
 
@@ -240,7 +240,10 @@ export async function getOpportunityScore(
  * @param client - Optional DataForSEO client
  * @returns Search intent type
  */
-export function getSearchIntent(keyword: string, client?: DataForSEOKeywordClient): SearchIntent {
+export function getSearchIntent(
+  keyword: string,
+  client?: DataForSEOKeywordClient
+): SearchIntent {
   const dfClient = client ?? createClient();
 
   if (dfClient) {
@@ -250,17 +253,24 @@ export function getSearchIntent(keyword: string, client?: DataForSEOKeywordClien
   // Fallback basic intent detection
   const lowerKeyword = keyword.toLowerCase();
 
-  const transactionalWords = ['buy', 'purchase', 'order', 'cheap', 'discount', 'sale'];
+  const transactionalWords = [
+    'buy',
+    'purchase',
+    'order',
+    'cheap',
+    'discount',
+    'sale',
+  ];
   const commercialWords = ['best', 'top', 'review', 'comparison', 'compare'];
   const navigationalPatterns = ['.com', 'www', 'login', 'facebook', 'google'];
 
-  if (transactionalWords.some(word => lowerKeyword.includes(word))) {
+  if (transactionalWords.some((word) => lowerKeyword.includes(word))) {
     return 'transactional';
   }
-  if (commercialWords.some(word => lowerKeyword.includes(word))) {
+  if (commercialWords.some((word) => lowerKeyword.includes(word))) {
     return 'commercial';
   }
-  if (navigationalPatterns.some(pattern => lowerKeyword.includes(pattern))) {
+  if (navigationalPatterns.some((pattern) => lowerKeyword.includes(pattern))) {
     return 'navigational';
   }
 
@@ -319,12 +329,14 @@ export async function researchKeywordsBatch(
   keywords: string[],
   options: KeywordResearchOptions = {},
   client?: DataForSEOKeywordClient
-): Promise<Array<{
-  keyword: string;
-  metrics: KeywordMetrics;
-  intent: SearchIntent;
-  recommended: boolean;
-}>> {
+): Promise<
+  Array<{
+    keyword: string;
+    metrics: KeywordMetrics;
+    intent: SearchIntent;
+    recommended: boolean;
+  }>
+> {
   const metrics = await getBatchKeywordMetrics(keywords, options, client);
 
   return metrics.map((metric, i) => ({
@@ -359,7 +371,9 @@ function createClient(): DataForSEOKeywordClient | null {
 /**
  * Transform API result to KeywordMetrics
  */
-function transformToKeywordMetrics(result: KeywordDataTaskResult): KeywordMetrics {
+function transformToKeywordMetrics(
+  result: KeywordDataTaskResult
+): KeywordMetrics {
   return {
     searchVolume: result.keyword_volume ?? 0,
     difficulty: result.keyword_difficulty ?? 0,
@@ -378,7 +392,9 @@ function transformToKeywordMetrics(result: KeywordDataTaskResult): KeywordMetric
 /**
  * Transform suggestion item to KeywordMetrics
  */
-function transformSuggestionToMetrics(item: KeywordSuggestionItem): Omit<KeywordMetrics, 'keyword'> {
+function transformSuggestionToMetrics(
+  item: KeywordSuggestionItem
+): Omit<KeywordMetrics, 'keyword'> {
   return {
     searchVolume: item.keyword_volume ?? 0,
     difficulty: item.keyword_difficulty ?? 0,

@@ -169,7 +169,10 @@ export class BreadcrumbBuilder {
  * }
  * ```
  */
-export function useBreadcrumbs(pathname: string, labels?: Record<string, string>): BreadcrumbItem[] {
+export function useBreadcrumbs(
+  pathname: string,
+  labels?: Record<string, string>
+): BreadcrumbItem[] {
   const builder = new BreadcrumbBuilder();
 
   // Get the base URL from environment or use a default

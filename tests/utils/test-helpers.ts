@@ -107,7 +107,11 @@ export class TestHelpers {
   /**
    * Upload a test file
    */
-  async uploadFile(selector: string, fileName: string, content: Buffer | string): Promise<void> {
+  async uploadFile(
+    selector: string,
+    fileName: string,
+    content: Buffer | string
+  ): Promise<void> {
     const buffer = typeof content === 'string' ? Buffer.from(content) : content;
     await this.page.locator(selector).setInputFiles({
       name: fileName,
@@ -240,7 +244,11 @@ export class AssertiveHelpers extends TestHelpers {
     await expect(this.page.locator(selector)).toBeDisabled();
   }
 
-  async assertAttributeValue(selector: string, attribute: string, value: string): Promise<void> {
+  async assertAttributeValue(
+    selector: string,
+    attribute: string,
+    value: string
+  ): Promise<void> {
     const { expect } = await import('@playwright/test');
     await expect(this.page.locator(selector)).toHaveAttribute(attribute, value);
   }

@@ -25,7 +25,10 @@ export async function POST(request: NextRequest) {
 
     if (!csrfToken) {
       return NextResponse.json(
-        { error: 'CSRF token missing', message: 'x-csrf-token header is required' },
+        {
+          error: 'CSRF token missing',
+          message: 'x-csrf-token header is required',
+        },
         { status: 403 }
       );
     }

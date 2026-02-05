@@ -46,10 +46,13 @@ export async function GET(
     const client = getSupabaseServerClient();
 
     // Check if user has access to the article
-    const hasAccess = await client.rpc('can_access_article' as any, {
-      p_article_id: id,
-      p_user_id: userId,
-    } as any);
+    const hasAccess = await client.rpc(
+      'can_access_article' as any,
+      {
+        p_article_id: id,
+        p_user_id: userId,
+      } as any
+    );
 
     if (!hasAccess.data) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -59,18 +62,14 @@ export async function GET(
     const articleResult = await getArticleById(client, id);
 
     if (!articleResult.success) {
-      return NextResponse.json(
-        { error: 'Article not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
     const article = articleResult.data;
 
     // Return the stored SEO score and metadata
-    const seoData = (article.metadata as Record<string, unknown>)?.seo_analysis as
-      | Record<string, unknown>
-      | undefined;
+    const seoData = (article.metadata as Record<string, unknown>)
+      ?.seo_analysis as Record<string, unknown> | undefined;
 
     return NextResponse.json({
       article_id: article.id,
@@ -108,7 +107,7 @@ export async function POST(
 
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Invalid request', details: validationResult.error.errors },
+        { error: 'Invalid request', details: validationResult.error.issues },
         { status: 400 }
       );
     }
@@ -118,10 +117,13 @@ export async function POST(
     const client = getSupabaseServerClient();
 
     // Check if user has access to the article
-    const hasAccess = await client.rpc('can_access_article' as any, {
-      p_article_id: id,
-      p_user_id: userId,
-    } as any);
+    const hasAccess = await client.rpc(
+      'can_access_article' as any,
+      {
+        p_article_id: id,
+        p_user_id: userId,
+      } as any
+    );
 
     if (!hasAccess.data) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -131,10 +133,7 @@ export async function POST(
     const articleResult = await getArticleById(client, id);
 
     if (!articleResult.success) {
-      return NextResponse.json(
-        { error: 'Article not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
     const article = articleResult.data;

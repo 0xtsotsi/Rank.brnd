@@ -148,11 +148,14 @@ export default function PricingPage() {
           <div className="flex-1">
             <h3 className="text-2xl font-bold">Need an Enterprise Solution?</h3>
             <p className="mt-2 text-indigo-100">
-              Custom integrations, dedicated support, SLA guarantees, and flexible
-              pricing for large teams. Let&apos;s build something great together.
+              Custom integrations, dedicated support, SLA guarantees, and
+              flexible pricing for large teams. Let&apos;s build something great
+              together.
             </p>
             <button
-              onClick={() => (window.location.href = 'mailto:enterprise@rank.brnd')}
+              onClick={() =>
+                (window.location.href = 'mailto:enterprise@rank.brnd')
+              }
               className="mt-6 inline-flex items-center rounded-lg bg-white px-6 py-3 font-semibold text-indigo-600 transition-colors hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600"
             >
               Contact Sales
@@ -175,9 +178,7 @@ function FAQItem({ question, answer }: FAQItemProps) {
       <dt className="text-lg font-semibold text-gray-900 dark:text-white">
         {question}
       </dt>
-      <dd className="mt-2 text-gray-600 dark:text-gray-400">
-        {answer}
-      </dd>
+      <dd className="mt-2 text-gray-600 dark:text-gray-400">{answer}</dd>
     </div>
   );
 }

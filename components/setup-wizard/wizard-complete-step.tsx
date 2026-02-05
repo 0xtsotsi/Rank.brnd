@@ -81,10 +81,30 @@ export function WizardCompleteStep({
   }, [achievements]);
 
   const achievementItems = [
-    { key: 'brandSetupComplete', icon: '🎨', label: 'Brand configured', completed: achievements.brandSetupComplete },
-    { key: 'cmsConnected', icon: '🔗', label: 'CMS connected', completed: achievements.cmsConnected },
-    { key: 'keywordCreated', icon: '🎯', label: 'Keyword added', completed: achievements.keywordCreated },
-    { key: 'articleGenerated', icon: '📝', label: 'Article generated', completed: achievements.articleGenerated },
+    {
+      key: 'brandSetupComplete',
+      icon: '🎨',
+      label: 'Brand configured',
+      completed: achievements.brandSetupComplete,
+    },
+    {
+      key: 'cmsConnected',
+      icon: '🔗',
+      label: 'CMS connected',
+      completed: achievements.cmsConnected,
+    },
+    {
+      key: 'keywordCreated',
+      icon: '🎯',
+      label: 'Keyword added',
+      completed: achievements.keywordCreated,
+    },
+    {
+      key: 'articleGenerated',
+      icon: '📝',
+      label: 'Article generated',
+      completed: achievements.articleGenerated,
+    },
   ];
 
   const completedCount = achievementItems.filter((a) => a.completed).length;
@@ -143,7 +163,8 @@ export function WizardCompleteStep({
           You&apos;re All Set, {userName || 'Partner'}!
         </h2>
         <p className="text-gray-600 dark:text-gray-400 text-lg">
-          {brandConfig?.name || 'Your workspace'} is ready to start creating amazing content.
+          {brandConfig?.name || 'Your workspace'} is ready to start creating
+          amazing content.
         </p>
       </div>
 
@@ -202,8 +223,12 @@ export function WizardCompleteStep({
                   <Icon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div className="flex-1">
-                  <div className="font-medium text-gray-900 dark:text-white">{step.title}</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">{step.description}</div>
+                  <div className="font-medium text-gray-900 dark:text-white">
+                    {step.title}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    {step.description}
+                  </div>
                 </div>
                 <ArrowRight className="w-5 h-5 text-gray-400" />
               </button>

@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { CSRFProvider } from '@/lib/providers/csrf-provider';
 import { PostHogProvider } from '@/lib/providers/posthog-provider';
+import { CookieConsentProvider } from '@/lib/providers/cookie-consent-provider';
 import { OrganizationSchema, WebSiteSchema } from '@/components/seo';
 
 /**
@@ -141,8 +142,14 @@ export default function RootLayout({
           {/* Preconnect to PostHog for analytics */}
           {process.env.NEXT_PUBLIC_POSTHOG_HOST && (
             <>
-              <link rel="preconnect" href={process.env.NEXT_PUBLIC_POSTHOG_HOST} />
-              <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_POSTHOG_HOST} />
+              <link
+                rel="preconnect"
+                href={process.env.NEXT_PUBLIC_POSTHOG_HOST}
+              />
+              <link
+                rel="dns-prefetch"
+                href={process.env.NEXT_PUBLIC_POSTHOG_HOST}
+              />
             </>
           )}
           {/* JSON-LD Structured Data for SEO */}
@@ -150,7 +157,9 @@ export default function RootLayout({
         </head>
         <body className="antialiased">
           <PostHogProvider>
-            <CSRFProvider>{children}</CSRFProvider>
+            <CookieConsentProvider>
+              <CSRFProvider>{children}</CSRFProvider>
+            </CookieConsentProvider>
           </PostHogProvider>
         </body>
       </html>

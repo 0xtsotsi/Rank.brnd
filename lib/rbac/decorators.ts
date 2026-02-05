@@ -18,9 +18,7 @@ import {
   requireOwner,
   requireAdminOrOwner,
 } from '@/lib/rbac/middleware';
-import {
-  canModifyUserRole,
-} from '@/lib/rbac/permissions';
+import { canModifyUserRole } from '@/lib/rbac/permissions';
 
 /**
  * Extended context passed to protected route handlers
@@ -111,7 +109,8 @@ export function protectRoute(options: ProtectRouteOptions = {}) {
         }
 
         // 3. Get Supabase client
-        const { getSupabaseServerClient } = await import('@/lib/supabase/client');
+        const { getSupabaseServerClient } =
+          await import('@/lib/supabase/client');
         const client = getSupabaseServerClient();
 
         // 4. Check role/permission requirements
@@ -121,7 +120,12 @@ export function protectRoute(options: ProtectRouteOptions = {}) {
           await requireOwner(client, organizationId, userId);
           role = 'owner';
         } else if (options.minRole) {
-          role = await requireMinRole(client, organizationId, userId, options.minRole);
+          role = await requireMinRole(
+            client,
+            organizationId,
+            userId,
+            options.minRole
+          );
         } else if (options.resource && options.permission) {
           role = await requirePermission(client, userId, organizationId, {
             resource: options.resource,
@@ -162,7 +166,7 @@ export function protectRoute(options: ProtectRouteOptions = {}) {
  */
 export function withViewerAccess(
   handler: AuthenticatedHandler
-): ((request: Request) => Promise<NextResponse>) {
+): (request: Request) => Promise<NextResponse> {
   return protectRoute({ minRole: 'viewer' })(handler);
 }
 
@@ -171,7 +175,7 @@ export function withViewerAccess(
  */
 export function withEditorAccess(
   handler: AuthenticatedHandler
-): ((request: Request) => Promise<NextResponse>) {
+): (request: Request) => Promise<NextResponse> {
   return protectRoute({ minRole: 'editor' })(handler);
 }
 
@@ -180,7 +184,7 @@ export function withEditorAccess(
  */
 export function withAdminAccess(
   handler: AuthenticatedHandler
-): ((request: Request) => Promise<NextResponse>) {
+): (request: Request) => Promise<NextResponse> {
   return protectRoute({ minRole: 'admin' })(handler);
 }
 
@@ -189,7 +193,7 @@ export function withAdminAccess(
  */
 export function withOwnerAccess(
   handler: AuthenticatedHandler
-): ((request: Request) => Promise<NextResponse>) {
+): (request: Request) => Promise<NextResponse> {
   return protectRoute({ requireOwner: true })(handler);
 }
 
@@ -212,7 +216,7 @@ export function withPermission(
  */
 export function withTeamManagement(
   handler: AuthenticatedHandler
-): ((request: Request) => Promise<NextResponse>) {
+): (request: Request) => Promise<NextResponse> {
   return protectRoute({
     resource: Resource.TEAM,
     permission: PermissionCategory.MANAGE_TEAM,
@@ -224,7 +228,7 @@ export function withTeamManagement(
  */
 export function withSettingsAccess(
   handler: AuthenticatedHandler
-): ((request: Request) => Promise<NextResponse>) {
+): (request: Request) => Promise<NextResponse> {
   return protectRoute({
     resource: Resource.SETTINGS,
     permission: PermissionCategory.MANAGE_SETTINGS,
@@ -236,7 +240,7 @@ export function withSettingsAccess(
  */
 export function withBillingAccess(
   handler: AuthenticatedHandler
-): ((request: Request) => Promise<NextResponse>) {
+): (request: Request) => Promise<NextResponse> {
   return protectRoute({
     resource: Resource.BILLING,
     permission: PermissionCategory.MANAGE_BILLING,
@@ -248,7 +252,7 @@ export function withBillingAccess(
  */
 export function withPublishAccess(
   handler: AuthenticatedHandler
-): ((request: Request) => Promise<NextResponse>) {
+): (request: Request) => Promise<NextResponse> {
   return protectRoute({
     resource: Resource.PUBLISHING,
     permission: PermissionCategory.PUBLISH,
@@ -263,10 +267,13 @@ export function withRoleModification(
   handler: (
     request: Request,
     context: ProtectedRouteContext & {
-      canModifyRole: (targetUserId: string, newRole: TeamMemberRole) => Promise<boolean>;
+      canModifyRole: (
+        targetUserId: string,
+        newRole: TeamMemberRole
+      ) => Promise<boolean>;
     }
   ) => Promise<NextResponse>
-): ((request: Request) => Promise<NextResponse>) {
+): (request: Request) => Promise<NextResponse> {
   return protectRoute({ minRole: 'admin' })(async (request, context) => {
     const canModifyRole = async (
       targetUserId: string,
@@ -335,7 +342,7 @@ export async function validateRequestBody<T extends Record<string, any>>(
   } = {}
 ): Promise<{ valid: boolean; error?: string; data?: T }> {
   try {
-    const body = await request.json() as T;
+    const body = (await request.json()) as T;
 
     // Validate organization ID matches if required
     if (options.validateOrganization && body.organization_id) {

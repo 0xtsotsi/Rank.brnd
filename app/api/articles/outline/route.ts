@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: validationResult.error.errors[0].message },
+        { error: validationResult.error.issues[0].message },
         { status: 400 }
       );
     }
@@ -109,7 +109,10 @@ function generateMiddleSections(keyword: string, count: number) {
   const keywordLower = keyword.toLowerCase();
 
   // Define section templates for different article types
-  const templates: Record<string, Array<{ title: string; points: string[] }>> = {
+  const templates: Record<
+    string,
+    Array<{ title: string; points: string[] }>
+  > = {
     // How-to articles
     howTo: [
       {

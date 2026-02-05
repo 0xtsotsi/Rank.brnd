@@ -6,9 +6,7 @@
   "status": "verified",
   "priority": 2,
   "complexity": "simple",
-  "dependencies": [
-    "nextjs-project-setup"
-  ],
+  "dependencies": ["nextjs-project-setup"],
   "createdAt": "2026-01-02T09:30:07.967Z",
   "updatedAt": "2026-02-03T21:08:41.387Z",
   "branchName": "feature/configure-upstash-redis-for-rate-limiting",

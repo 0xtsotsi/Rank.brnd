@@ -66,7 +66,9 @@ export function PublishingQueueTable({
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [actionMenu, setActionMenu] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<PublishingQueueStatus | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<
+    PublishingQueueStatus | 'all'
+  >('all');
 
   // Handle sort toggle
   const handleSort = (field: SortField) => {
@@ -83,7 +85,7 @@ export function PublishingQueueTable({
     let result = [...items];
 
     if (statusFilter !== 'all') {
-      result = result.filter(item => item.status === statusFilter);
+      result = result.filter((item) => item.status === statusFilter);
     }
 
     return result;
@@ -97,10 +99,12 @@ export function PublishingQueueTable({
 
       switch (sortField) {
         case 'created_at':
-          comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          comparison =
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
           break;
         case 'updated_at':
-          comparison = new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime();
+          comparison =
+            new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime();
           break;
         case 'status':
           comparison = a.status.localeCompare(b.status);
@@ -112,13 +116,21 @@ export function PublishingQueueTable({
           comparison = (a as any).priority - (b as any).priority;
           break;
         case 'scheduled_for':
-          const aScheduled = (a as any).scheduled_for ? new Date((a as any).scheduled_for).getTime() : 0;
-          const bScheduled = (b as any).scheduled_for ? new Date((b as any).scheduled_for).getTime() : 0;
+          const aScheduled = (a as any).scheduled_for
+            ? new Date((a as any).scheduled_for).getTime()
+            : 0;
+          const bScheduled = (b as any).scheduled_for
+            ? new Date((b as any).scheduled_for).getTime()
+            : 0;
           comparison = aScheduled - bScheduled;
           break;
         case 'completed_at':
-          const aCompleted = (a as any).completed_at ? new Date((a as any).completed_at).getTime() : 0;
-          const bCompleted = (b as any).completed_at ? new Date((b as any).completed_at).getTime() : 0;
+          const aCompleted = (a as any).completed_at
+            ? new Date((a as any).completed_at).getTime()
+            : 0;
+          const bCompleted = (b as any).completed_at
+            ? new Date((b as any).completed_at).getTime()
+            : 0;
           comparison = aCompleted - bCompleted;
           break;
       }
@@ -188,7 +200,7 @@ export function PublishingQueueTable({
       failed: 0,
       cancelled: 0,
     };
-    items.forEach(item => {
+    items.forEach((item) => {
       counts[item.status]++;
     });
     return counts;
@@ -203,7 +215,10 @@ export function PublishingQueueTable({
   }
 
   return (
-    <div className={cn('publishing-queue-table w-full', className)} data-testid="publishing-queue-table">
+    <div
+      className={cn('publishing-queue-table w-full', className)}
+      data-testid="publishing-queue-table"
+    >
       {/* Status Filter Tabs */}
       <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2">
         <button
@@ -377,9 +392,7 @@ export function PublishingQueueTable({
                         {item.status === 'published' && (
                           <Check className="h-3 w-3" />
                         )}
-                        {item.status === 'failed' && (
-                          <X className="h-3 w-3" />
-                        )}
+                        {item.status === 'failed' && <X className="h-3 w-3" />}
                         {item.status === 'cancelled' && (
                           <X className="h-3 w-3" />
                         )}
@@ -428,9 +441,12 @@ export function PublishingQueueTable({
                       ) : (item as any).scheduled_for ? (
                         <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                           <Calendar className="h-3 w-3" />
-                          {new Date((item as any).scheduled_for).toLocaleDateString()}
-                          {' '}
-                          {new Date((item as any).scheduled_for).toLocaleTimeString([], {
+                          {new Date(
+                            (item as any).scheduled_for
+                          ).toLocaleDateString()}{' '}
+                          {new Date(
+                            (item as any).scheduled_for
+                          ).toLocaleTimeString([], {
                             hour: '2-digit',
                             minute: '2-digit',
                           })}
@@ -477,7 +493,8 @@ export function PublishingQueueTable({
                                 <RefreshCw className="h-4 w-4" /> Retry
                               </button>
                             )}
-                            {(item.status === 'pending' || item.status === 'queued') && (
+                            {(item.status === 'pending' ||
+                              item.status === 'queued') && (
                               <button
                                 onClick={() => handleAction(item.id, 'cancel')}
                                 className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
@@ -492,7 +509,8 @@ export function PublishingQueueTable({
                                 rel="noopener noreferrer"
                                 className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
                               >
-                                <ExternalLink className="h-4 w-4" /> View Published
+                                <ExternalLink className="h-4 w-4" /> View
+                                Published
                               </a>
                             )}
                             <div className="border-t border-gray-200 dark:border-gray-600" />
@@ -558,7 +576,9 @@ export function PublishingQueueTable({
                                   Completed
                                 </dt>
                                 <dd className="font-medium text-gray-900 dark:text-white">
-                                  {formatRelativeTime((item as any).completed_at)}
+                                  {formatRelativeTime(
+                                    (item as any).completed_at
+                                  )}
                                 </dd>
                               </div>
                             )}
@@ -631,8 +651,8 @@ export function PublishingQueueTable({
       {/* Summary Footer */}
       <div className="mt-4 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
         <p>
-          Showing <span className="font-medium">{sortedItems.length}</span>{' '}
-          of <span className="font-medium">{items.length}</span> items
+          Showing <span className="font-medium">{sortedItems.length}</span> of{' '}
+          <span className="font-medium">{items.length}</span> items
         </p>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">

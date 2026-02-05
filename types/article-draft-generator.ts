@@ -256,7 +256,9 @@ export const DEFAULT_BRAND_VOICE: BrandVoiceConfig = {
 export function calculateKeywordDensity(text: string, keyword: string): number {
   const words = text.toLowerCase().split(/\s+/);
   const keywordLower = keyword.toLowerCase();
-  const keywordCount = words.filter(word => word.includes(keywordLower)).length;
+  const keywordCount = words.filter((word) =>
+    word.includes(keywordLower)
+  ).length;
   return keywordCount / words.length;
 }
 
@@ -271,7 +273,10 @@ export function calculateWordCount(text: string): number {
  * Calculate reading time
  */
 export function calculateReadingTime(wordCount: number): number {
-  return Math.max(1, Math.ceil(wordCount / DEFAULT_DRAFT_CONFIG.reading_speed_wpm));
+  return Math.max(
+    1,
+    Math.ceil(wordCount / DEFAULT_DRAFT_CONFIG.reading_speed_wpm)
+  );
 }
 
 /**
@@ -301,15 +306,22 @@ export function validateDraftRequest(
   }
 
   if (!request.outline || request.outline.length === 0) {
-    errors.push({ field: 'outline', message: 'At least one outline section is required' });
+    errors.push({
+      field: 'outline',
+      message: 'At least one outline section is required',
+    });
   }
 
   if (!request.organization_id || request.organization_id.trim().length === 0) {
-    errors.push({ field: 'organization_id', message: 'Organization ID is required' });
+    errors.push({
+      field: 'organization_id',
+      message: 'Organization ID is required',
+    });
   }
 
   // Validate word count
-  const targetWordCount = request.target_word_count ?? DEFAULT_DRAFT_CONFIG.target_word_count;
+  const targetWordCount =
+    request.target_word_count ?? DEFAULT_DRAFT_CONFIG.target_word_count;
   if (targetWordCount < DEFAULT_DRAFT_CONFIG.min_word_count) {
     warnings.push({
       field: 'target_word_count',
@@ -328,10 +340,16 @@ export function validateDraftRequest(
     for (let i = 0; i < request.outline.length; i++) {
       const section = request.outline[i];
       if (!section.title || section.title.trim().length === 0) {
-        errors.push({ field: `outline[${i}].title`, message: 'Section title is required' });
+        errors.push({
+          field: `outline[${i}].title`,
+          message: 'Section title is required',
+        });
       }
       if (!section.points || section.points.length === 0) {
-        warnings.push({ field: `outline[${i}].points`, message: 'Section has no bullet points' });
+        warnings.push({
+          field: `outline[${i}].points`,
+          message: 'Section has no bullet points',
+        });
       }
     }
   }

@@ -37,10 +37,7 @@ export async function POST(req: NextRequest) {
     // Authenticate user
     const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse and validate request body
@@ -107,10 +104,7 @@ export async function GET(req: NextRequest) {
     // Authenticate user
     const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
@@ -136,10 +130,7 @@ export async function GET(req: NextRequest) {
       const draft = await getDraftById(draftId, organizationId);
 
       if (!draft) {
-        return NextResponse.json(
-          { error: 'Draft not found' },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: 'Draft not found' }, { status: 404 });
       }
 
       return NextResponse.json({
@@ -155,18 +146,21 @@ export async function GET(req: NextRequest) {
     );
 
     if (!queryResult.success || !queryResult.data) {
-      return NextResponse.json(
-        { error: queryResult.error },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: queryResult.error }, { status: 400 });
     }
 
-    const { limit = 20, offset = 0, status, organization_id } = queryResult.data;
-
-    const drafts = await listOrganizationDrafts(
+    const {
+      limit = 20,
+      offset = 0,
+      status,
       organization_id,
-      { limit, offset, status }
-    );
+    } = queryResult.data;
+
+    const drafts = await listOrganizationDrafts(organization_id, {
+      limit,
+      offset,
+      status,
+    });
 
     return NextResponse.json({
       success: true,
@@ -196,10 +190,7 @@ export async function PATCH(req: NextRequest) {
     // Authenticate user
     const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse and validate request body
@@ -219,10 +210,7 @@ export async function PATCH(req: NextRequest) {
     const existingDraft = await getDraftById(data.id, data.organization_id);
 
     if (!existingDraft) {
-      return NextResponse.json(
-        { error: 'Draft not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Draft not found' }, { status: 404 });
     }
 
     // Apply updates
@@ -230,12 +218,18 @@ export async function PATCH(req: NextRequest) {
     const metadata = (existingDraft.metadata as Record<string, unknown>) || {};
 
     if (data.content_updates) {
-      if (data.content_updates.title) updates.title = data.content_updates.title;
-      if (data.content_updates.content) updates.content = data.content_updates.content;
-      if (data.content_updates.excerpt) updates.excerpt = data.content_updates.excerpt;
+      if (data.content_updates.title)
+        updates.title = data.content_updates.title;
+      if (data.content_updates.content)
+        updates.content = data.content_updates.content;
+      if (data.content_updates.excerpt)
+        updates.excerpt = data.content_updates.excerpt;
 
       // Handle internal link additions/removals
-      if (data.content_updates.add_internal_link || data.content_updates.remove_internal_link) {
+      if (
+        data.content_updates.add_internal_link ||
+        data.content_updates.remove_internal_link
+      ) {
         const internalLinks = (metadata.internal_links || []) as Array<{
           anchor_text: string;
           target_keyword: string;
@@ -247,7 +241,9 @@ export async function PATCH(req: NextRequest) {
 
         if (data.content_updates.remove_internal_link) {
           const toRemove = data.content_updates.remove_internal_link;
-          const index = internalLinks.findIndex(l => l.anchor_text === toRemove.anchor_text);
+          const index = internalLinks.findIndex(
+            (l) => l.anchor_text === toRemove.anchor_text
+          );
           if (index >= 0) internalLinks.splice(index, 1);
         }
 
@@ -287,7 +283,12 @@ export async function PATCH(req: NextRequest) {
     console.error('Article draft update error:', error);
 
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to update article draft' },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to update article draft',
+      },
       { status: 500 }
     );
   }
@@ -302,10 +303,7 @@ export async function DELETE(req: NextRequest) {
     // Authenticate user
     const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse and validate request body
@@ -339,7 +337,12 @@ export async function DELETE(req: NextRequest) {
     console.error('Article draft deletion error:', error);
 
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to delete article draft' },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to delete article draft',
+      },
       { status: 500 }
     );
   }

@@ -110,7 +110,10 @@ export async function createDeletionRequest(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to create deletion request',
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to create deletion request',
     };
   }
 }
@@ -149,7 +152,10 @@ export async function getDeletionRequest(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to get deletion request',
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to get deletion request',
     };
   }
 }
@@ -194,7 +200,8 @@ export async function confirmDeletionRequest(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to confirm deletion',
+      error:
+        error instanceof Error ? error.message : 'Failed to confirm deletion',
     };
   }
 }
@@ -225,7 +232,10 @@ export async function cancelDeletionRequest(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to cancel deletion request',
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to cancel deletion request',
     };
   }
 }
@@ -266,7 +276,10 @@ export async function getPendingDeletionRequest(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to get pending request',
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to get pending request',
     };
   }
 }
@@ -377,7 +390,10 @@ async function executeUserDeletion(
     console.error('Error during user deletion:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Deletion failed with partial results',
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Deletion failed with partial results',
       details,
     };
   }
@@ -450,7 +466,10 @@ async function deleteOrganizationData(
     .eq('organization_id', organizationId);
 
   // Delete the organization
-  await (supabase as any).from('organizations').delete().eq('id', organizationId);
+  await (supabase as any)
+    .from('organizations')
+    .delete()
+    .eq('id', organizationId);
 }
 
 /**
@@ -601,7 +620,8 @@ export async function getUserActiveSubscriptions(
       .in('status', ['active', 'trialing']);
 
     const count = subscriptions?.length || 0;
-    const organizations = subscriptions?.map((s: any) => s.organizations?.name) || [];
+    const organizations =
+      subscriptions?.map((s: any) => s.organizations?.name) || [];
 
     return { hasActive: count > 0, count, organizations };
   } catch (error) {
@@ -613,9 +633,7 @@ export async function getUserActiveSubscriptions(
 /**
  * Get a summary of what will be deleted for a user
  */
-export async function getDeletionSummary(
-  clerkUserId: string
-): Promise<{
+export async function getDeletionSummary(clerkUserId: string): Promise<{
   success: boolean;
   error?: string;
   summary?: {
@@ -662,7 +680,10 @@ export async function getDeletionSummary(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to get deletion summary',
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to get deletion summary',
     };
   }
 }

@@ -9,7 +9,11 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { analyzeSEO, type SEOAnalysisOptions, type ArticleInput } from '@/lib/seo';
+import {
+  analyzeSEO,
+  type SEOAnalysisOptions,
+  type ArticleInput,
+} from '@/lib/seo';
 import { handleAPIError } from '@/lib/api-error-handler';
 import { z } from 'zod';
 
@@ -49,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Invalid request', details: validationResult.error.errors },
+        { error: 'Invalid request', details: validationResult.error.issues },
         { status: 400 }
       );
     }
@@ -159,8 +163,11 @@ function getGrade(score: number): string {
  */
 function getGradeDescription(score: number): string {
   if (score >= 90) return 'Excellent - Your content is well optimized for SEO.';
-  if (score >= 80) return 'Good - Your content has strong SEO with minor improvements possible.';
-  if (score >= 70) return 'Fair - Your content has decent SEO but needs some improvements.';
-  if (score >= 60) return 'Poor - Your content needs significant SEO improvements.';
+  if (score >= 80)
+    return 'Good - Your content has strong SEO with minor improvements possible.';
+  if (score >= 70)
+    return 'Fair - Your content has decent SEO but needs some improvements.';
+  if (score >= 60)
+    return 'Poor - Your content needs significant SEO improvements.';
   return 'Very Poor - Your content requires major SEO work.';
 }

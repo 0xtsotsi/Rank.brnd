@@ -95,7 +95,9 @@ export function OrganizationStep({
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Failed to create organization. Please try again.');
+        setError(
+          data.error || 'Failed to create organization. Please try again.'
+        );
         return;
       }
 
@@ -104,9 +106,15 @@ export function OrganizationStep({
 
       // Store organization data for next steps
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('createdOrganization', JSON.stringify(data.organization));
+        sessionStorage.setItem(
+          'createdOrganization',
+          JSON.stringify(data.organization)
+        );
         if (data.product) {
-          sessionStorage.setItem('createdProduct', JSON.stringify(data.product));
+          sessionStorage.setItem(
+            'createdProduct',
+            JSON.stringify(data.product)
+          );
         }
       }
 

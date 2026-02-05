@@ -61,8 +61,7 @@ export async function getArticleById(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to fetch article',
+      error: error instanceof Error ? error.message : 'Failed to fetch article',
     };
   }
 }
@@ -91,8 +90,7 @@ export async function getArticleBySlug(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to fetch article',
+      error: error instanceof Error ? error.message : 'Failed to fetch article',
     };
   }
 }
@@ -116,7 +114,15 @@ export async function getOrganizationArticles(
     authorId?: string;
     limit?: number;
     offset?: number;
-    sortBy?: 'title' | 'slug' | 'status' | 'seo_score' | 'word_count' | 'published_at' | 'scheduled_at' | 'created_at';
+    sortBy?:
+      | 'title'
+      | 'slug'
+      | 'status'
+      | 'seo_score'
+      | 'word_count'
+      | 'published_at'
+      | 'scheduled_at'
+      | 'created_at';
     sortOrder?: 'asc' | 'desc';
   } = {}
 ): Promise<ArticleResult<Article[]>> {
@@ -155,7 +161,9 @@ export async function getOrganizationArticles(
     }
 
     if (options.search) {
-      query = query.or(`title.ilike.%${options.search}%,content.ilike.%${options.search}%,slug.ilike.%${options.search}%`);
+      query = query.or(
+        `title.ilike.%${options.search}%,content.ilike.%${options.search}%,slug.ilike.%${options.search}%`
+      );
     }
 
     if (options.tags && options.tags.length > 0) {
@@ -176,7 +184,10 @@ export async function getOrganizationArticles(
       query = query.limit(options.limit);
     }
     if (options.offset) {
-      query = query.range(options.offset, (options.offset || 0) + (options.limit || 50) - 1);
+      query = query.range(
+        options.offset,
+        (options.offset || 0) + (options.limit || 50) - 1
+      );
     }
 
     const { data, error } = await query;
@@ -207,10 +218,7 @@ export async function getProductArticles(
   } = {}
 ): Promise<ArticleResult<Article[]>> {
   try {
-    let query = client
-      .from('articles')
-      .select('*')
-      .eq('product_id', productId);
+    let query = client.from('articles').select('*').eq('product_id', productId);
 
     if (!options.includeDeleted) {
       query = query.is('deleted_at', null);
@@ -220,7 +228,10 @@ export async function getProductArticles(
       query = query.eq('status', options.status);
     }
 
-    query = query.order('published_at', { ascending: false, nullsFirst: false });
+    query = query.order('published_at', {
+      ascending: false,
+      nullsFirst: false,
+    });
 
     if (options.limit) {
       query = query.limit(options.limit);
@@ -254,10 +265,7 @@ export async function getKeywordArticles(
   } = {}
 ): Promise<ArticleResult<Article[]>> {
   try {
-    let query = client
-      .from('articles')
-      .select('*')
-      .eq('keyword_id', keywordId);
+    let query = client.from('articles').select('*').eq('keyword_id', keywordId);
 
     if (!options.includeDeleted) {
       query = query.is('deleted_at', null);
@@ -316,18 +324,22 @@ export async function createArticle(
         status: article.status || DEFAULT_ARTICLE_VALUES.status,
         seo_score: article.seo_score ?? DEFAULT_ARTICLE_VALUES.seo_score,
         word_count: article.word_count ?? DEFAULT_ARTICLE_VALUES.word_count,
-        reading_time_minutes: readingTime ?? DEFAULT_ARTICLE_VALUES.reading_time_minutes,
+        reading_time_minutes:
+          readingTime ?? DEFAULT_ARTICLE_VALUES.reading_time_minutes,
         meta_title: article.meta_title || null,
         meta_description: article.meta_description || null,
-        meta_keywords: (article.meta_keywords || DEFAULT_ARTICLE_VALUES.meta_keywords) as unknown as Json,
+        meta_keywords: (article.meta_keywords ||
+          DEFAULT_ARTICLE_VALUES.meta_keywords) as unknown as Json,
         canonical_url: article.canonical_url || null,
         schema_type: article.schema_type || null,
-        schema_data: (article.schema_data || DEFAULT_ARTICLE_VALUES.schema_data) as unknown as Json,
+        schema_data: (article.schema_data ||
+          DEFAULT_ARTICLE_VALUES.schema_data) as unknown as Json,
         scheduled_at: article.scheduled_at || null,
         author_id: article.author_id || null,
         tags: (article.tags || DEFAULT_ARTICLE_VALUES.tags) as unknown as Json,
         category: article.category || null,
-        metadata: (article.metadata || DEFAULT_ARTICLE_VALUES.metadata) as unknown as Json,
+        metadata: (article.metadata ||
+          DEFAULT_ARTICLE_VALUES.metadata) as unknown as Json,
       })
       .select()
       .single();
@@ -363,7 +375,9 @@ export async function bulkCreateArticles(
     meta_title?: string;
     meta_description?: string;
   }>
-): Promise<ArticleResult<{ successful: number; failed: number; errors: string[] }>> {
+): Promise<
+  ArticleResult<{ successful: number; failed: number; errors: string[] }>
+> {
   const errors: string[] = [];
   let successful = 0;
 
@@ -389,7 +403,9 @@ export async function bulkCreateArticles(
         errors.push(`${article.title}: ${result.error}`);
       }
     } catch (error) {
-      errors.push(`${article.title}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      errors.push(
+        `${article.title}: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -414,7 +430,10 @@ export async function updateArticle(
   try {
     // If word_count is being updated and reading_time_minutes isn't, recalculate reading time
     let finalUpdates = { ...updates };
-    if (updates.word_count !== undefined && updates.reading_time_minutes === undefined) {
+    if (
+      updates.word_count !== undefined &&
+      updates.reading_time_minutes === undefined
+    ) {
       finalUpdates = {
         ...updates,
         reading_time_minutes: Math.max(1, Math.ceil(updates.word_count / 200)),
@@ -602,14 +621,16 @@ export async function getArticleStats(
   client: SupabaseClient<Database>,
   organizationId: string,
   productId?: string
-): Promise<ArticleResult<{
-  total: number;
-  byStatus: Record<ArticleStatus, number>;
-  avgSeoScore: number;
-  totalWordCount: number;
-  publishedThisMonth: number;
-  scheduledCount: number;
-}>> {
+): Promise<
+  ArticleResult<{
+    total: number;
+    byStatus: Record<ArticleStatus, number>;
+    avgSeoScore: number;
+    totalWordCount: number;
+    publishedThisMonth: number;
+    scheduledCount: number;
+  }>
+> {
   try {
     let query = client
       .from('articles')
@@ -677,7 +698,9 @@ export async function getArticleStats(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch article stats',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch article stats',
     };
   }
 }
@@ -713,7 +736,9 @@ export function validateArticle(article: {
     } else if (article.slug.length > 500) {
       errors.push('Slug cannot exceed 500 characters');
     } else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(article.slug)) {
-      errors.push('Slug must contain only lowercase letters, numbers, and hyphens');
+      errors.push(
+        'Slug must contain only lowercase letters, numbers, and hyphens'
+      );
     }
   }
 
@@ -721,7 +746,10 @@ export function validateArticle(article: {
     errors.push('Content must be a string');
   }
 
-  if (article.featured_image_url !== undefined && article.featured_image_url !== '') {
+  if (
+    article.featured_image_url !== undefined &&
+    article.featured_image_url !== ''
+  ) {
     try {
       new URL(article.featured_image_url);
     } catch {
@@ -729,11 +757,19 @@ export function validateArticle(article: {
     }
   }
 
-  if (article.seo_score !== undefined && (typeof article.seo_score !== 'number' || article.seo_score < 0 || article.seo_score > 100)) {
+  if (
+    article.seo_score !== undefined &&
+    (typeof article.seo_score !== 'number' ||
+      article.seo_score < 0 ||
+      article.seo_score > 100)
+  ) {
     errors.push('SEO score must be a number between 0 and 100');
   }
 
-  if (article.word_count !== undefined && (typeof article.word_count !== 'number' || article.word_count < 0)) {
+  if (
+    article.word_count !== undefined &&
+    (typeof article.word_count !== 'number' || article.word_count < 0)
+  ) {
     errors.push('Word count must be a non-negative number');
   }
 
@@ -790,7 +826,17 @@ export async function publishArticleToCMS(
   articleId: string,
   options: {
     integrationId?: string;
-    platform?: 'wordpress' | 'webflow' | 'shopify' | 'ghost' | 'notion' | 'squarespace' | 'wix' | 'contentful' | 'strapi' | 'custom';
+    platform?:
+      | 'wordpress'
+      | 'webflow'
+      | 'shopify'
+      | 'ghost'
+      | 'notion'
+      | 'squarespace'
+      | 'wix'
+      | 'contentful'
+      | 'strapi'
+      | 'custom';
     scheduledFor?: string;
     priority?: number;
     productId?: string;
@@ -861,7 +907,9 @@ export async function publishArticleToCMS(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to publish article to CMS',
+        error instanceof Error
+          ? error.message
+          : 'Failed to publish article to CMS',
     };
   }
 }
@@ -874,7 +922,17 @@ export async function bulkPublishArticlesToCMS(
   articleIds: string[],
   options: {
     integrationId?: string;
-    platform?: 'wordpress' | 'webflow' | 'shopify' | 'ghost' | 'notion' | 'squarespace' | 'wix' | 'contentful' | 'strapi' | 'custom';
+    platform?:
+      | 'wordpress'
+      | 'webflow'
+      | 'shopify'
+      | 'ghost'
+      | 'notion'
+      | 'squarespace'
+      | 'wix'
+      | 'contentful'
+      | 'strapi'
+      | 'custom';
     scheduledFor?: string;
     priority?: number;
     metadata?: Record<string, unknown>;
@@ -924,10 +982,22 @@ export async function getOrganizationIntegrations(
   client: SupabaseClient<Database>,
   organizationId: string,
   options: {
-    platform?: 'wordpress' | 'webflow' | 'shopify' | 'ghost' | 'notion' | 'squarespace' | 'wix' | 'contentful' | 'strapi' | 'custom';
+    platform?:
+      | 'wordpress'
+      | 'webflow'
+      | 'shopify'
+      | 'ghost'
+      | 'notion'
+      | 'squarespace'
+      | 'wix'
+      | 'contentful'
+      | 'strapi'
+      | 'custom';
     productId?: string;
   } = {}
-): Promise<ArticleResult<Array<{ id: string; platform: string; name: string }>>> {
+): Promise<
+  ArticleResult<Array<{ id: string; platform: string; name: string }>>
+> {
   try {
     let query = client
       .from('integrations')

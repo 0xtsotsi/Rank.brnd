@@ -29,7 +29,9 @@ export function IntegrationCard({
   onTest,
 }: IntegrationCardProps) {
   const [testing, setTesting] = useState(false);
-  const [testResult, setTestResult] = useState<'success' | 'error' | null>(null);
+  const [testResult, setTestResult] = useState<'success' | 'error' | null>(
+    null
+  );
 
   const platformClasses = PLATFORM_COLORS[integration.platform as Platform];
   const statusClasses = STATUS_COLORS[integration.status as Status];
@@ -127,7 +129,9 @@ export function IntegrationCard({
         )}
         {integration.config.shopDomain && (
           <div className="flex items-center gap-2">
-            <span className="text-gray-500 dark:text-gray-400">Shop Domain:</span>
+            <span className="text-gray-500 dark:text-gray-400">
+              Shop Domain:
+            </span>
             <span className="text-gray-700 dark:text-gray-300 font-mono">
               {integration.config.shopDomain}
             </span>
@@ -151,7 +155,9 @@ export function IntegrationCard({
         )}
         {integration.last_synced_at && (
           <div className="flex items-center gap-2">
-            <span className="text-gray-500 dark:text-gray-400">Last synced:</span>
+            <span className="text-gray-500 dark:text-gray-400">
+              Last synced:
+            </span>
             <span className="text-gray-700 dark:text-gray-300">
               {formatDate(integration.last_synced_at)}
             </span>
@@ -182,22 +188,52 @@ export function IntegrationCard({
           >
             {testResult === 'success' ? (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
                 Connected
               </>
             ) : testResult === 'error' ? (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
                 Failed
               </>
             ) : (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
                 </svg>
                 {testing ? 'Testing...' : 'Test'}
               </>
@@ -215,7 +251,12 @@ export function IntegrationCard({
           )}
           data-testid={`edit-integration-${integration.id}`}
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -236,7 +277,12 @@ export function IntegrationCard({
           )}
           data-testid={`disconnect-integration-${integration.id}`}
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

@@ -51,7 +51,8 @@ const CMS_OPTIONS: Array<{
     description: 'Visual website builder',
     icon: '🟣',
     popular: true,
-    setupUrl: 'https://university.webflow.com/lesson/introduction-to-the-webflow-api',
+    setupUrl:
+      'https://university.webflow.com/lesson/introduction-to-the-webflow-api',
     requiresApiKey: true,
     requiresSiteUrl: true,
   },
@@ -100,7 +101,9 @@ export function CMSConnectionStep({
   const [isLoading, setIsLoading] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
   const [error, setError] = useState('');
-  const [testStatus, setTestStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [testStatus, setTestStatus] = useState<'idle' | 'success' | 'error'>(
+    'idle'
+  );
   const [isSuccess, setIsSuccess] = useState(false);
 
   const selectedOption = CMS_OPTIONS.find((opt) => opt.id === selectedProvider);
@@ -325,7 +328,9 @@ export function CMSConnectionStep({
                 htmlFor="apiKey"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                {selectedOption.id === 'wordpress' ? 'Application Password' : 'API Key'}
+                {selectedOption.id === 'wordpress'
+                  ? 'Application Password'
+                  : 'API Key'}
               </label>
               <div className="relative">
                 <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -338,7 +343,11 @@ export function CMSConnectionStep({
                     setError('');
                     setTestStatus('idle');
                   }}
-                  placeholder={selectedOption.id === 'wordpress' ? 'Enter application password' : 'Enter API key'}
+                  placeholder={
+                    selectedOption.id === 'wordpress'
+                      ? 'Enter application password'
+                      : 'Enter API key'
+                  }
                   disabled={isLoading}
                   className={cn(
                     'w-full pl-12 pr-4 py-3 rounded-lg border',

@@ -59,10 +59,7 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      const result = await getPendingInvitations(
-        client,
-        organizationId
-      );
+      const result = await getPendingInvitations(client, organizationId);
 
       return NextResponse.json(result.success ? result.data : []);
     }
@@ -77,10 +74,7 @@ export async function GET(request: NextRequest) {
     }
 
     const client = getSupabaseServerClient();
-    const result = await getPendingInvitations(
-      client,
-      organizationId
-    );
+    const result = await getPendingInvitations(client, organizationId);
 
     return NextResponse.json(result.success ? result.data : []);
   } catch (error) {
@@ -160,7 +154,10 @@ export async function POST(request: NextRequest) {
  * DELETE /api/team-invitations/[id]
  * Cancel team invitation
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -178,7 +175,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       .single();
 
     if (!invitation) {
-      return NextResponse.json({ error: 'Invitation not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Invitation not found' },
+        { status: 404 }
+      );
     }
 
     const hasAccess = await hasMinTeamRole(
@@ -197,7 +197,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     // Call the correct function with invitationId
     // TODO: Implement cancelTeamInvitation properly
-    return NextResponse.json({ success: true, message: 'Cancellation not implemented yet' });
+    return NextResponse.json({
+      success: true,
+      message: 'Cancellation not implemented yet',
+    });
   } catch (error) {
     console.error('Error cancelling team invitation:', error);
     return NextResponse.json(

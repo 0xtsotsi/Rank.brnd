@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { createRequestLogger, getCorrelationId, withLoggingHeaders } from '@/lib/logger';
+import {
+  createRequestLogger,
+  getCorrelationId,
+  withLoggingHeaders,
+} from '@/lib/logger';
 
 /**
  * Health Check Endpoint
@@ -72,8 +76,5 @@ export async function GET(request: Request) {
 
   log.info('Health check passed');
 
-  return withLoggingHeaders(
-    NextResponse.json(healthData),
-    correlationId
-  );
+  return withLoggingHeaders(NextResponse.json(healthData), correlationId);
 }

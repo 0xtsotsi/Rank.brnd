@@ -9,7 +9,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateCSRFToken } from './csrf';
 
 // State-changing methods that require CSRF protection
-export const STATE_CHANGING_METHODS = new Set(['POST', 'PUT', 'DELETE', 'PATCH']);
+export const STATE_CHANGING_METHODS = new Set([
+  'POST',
+  'PUT',
+  'DELETE',
+  'PATCH',
+]);
 
 /**
  * Validate CSRF token for a request
@@ -43,7 +48,8 @@ export async function validateCSRF(
     return NextResponse.json(
       {
         error: 'CSRF token invalid',
-        message: 'The provided CSRF token is invalid or expired. Please refresh and try again.',
+        message:
+          'The provided CSRF token is invalid or expired. Please refresh and try again.',
       },
       { status: 403 }
     );
@@ -67,7 +73,7 @@ export function withCSRFValidation<
   T extends (
     request: NextRequest,
     context?: { params: Promise<Record<string, string>> }
-  ) => Promise<NextResponse> | NextResponse
+  ) => Promise<NextResponse> | NextResponse,
 >(handler: T): T {
   return (async (
     request: NextRequest,

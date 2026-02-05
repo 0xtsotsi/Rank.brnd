@@ -75,10 +75,7 @@ export function BillingHistoryCard({
   };
 
   return (
-    <div
-      className="card"
-      data-testid="billing-history-card"
-    >
+    <div className="card" data-testid="billing-history-card">
       {/* Header */}
       <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
         <div className="flex items-center gap-3">
@@ -112,7 +109,8 @@ export function BillingHistoryCard({
               No invoices yet
             </h3>
             <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              Your billing history will appear here once you have an active subscription.
+              Your billing history will appear here once you have an active
+              subscription.
             </p>
           </div>
         ) : (
@@ -134,8 +132,8 @@ export function BillingHistoryCard({
         <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30 px-6 py-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Showing {startIndex + 1} to {Math.min(endIndex, totalCount)} of {totalCount}{' '}
-              invoices
+              Showing {startIndex + 1} to {Math.min(endIndex, totalCount)} of{' '}
+              {totalCount} invoices
             </p>
             <div className="flex items-center gap-2">
               <button
@@ -214,7 +212,10 @@ function InvoiceRow({
   onDownload,
   onView,
 }: InvoiceRowProps) {
-  const statusStyles: Record<string, { bg: string; text: string; label: string }> = {
+  const statusStyles: Record<
+    string,
+    { bg: string; text: string; label: string }
+  > = {
     paid: {
       bg: 'bg-green-100 dark:bg-green-900/30',
       text: 'text-green-800 dark:text-green-400',

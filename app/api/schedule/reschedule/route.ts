@@ -7,10 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import {
-  rescheduleSchema,
-  validateRequest,
-} from '@/lib/schemas';
+import { rescheduleSchema, validateRequest } from '@/lib/schemas';
 import {
   updateScheduledArticle,
   canUserAccessSchedule,
@@ -73,7 +70,10 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!article) {
-      return NextResponse.json({ error: 'Schedule not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Schedule not found' },
+        { status: 404 }
+      );
     }
 
     // Store the reason in metadata notes
@@ -93,10 +93,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({

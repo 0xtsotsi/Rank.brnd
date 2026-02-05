@@ -10,12 +10,7 @@ import { useState, useEffect } from 'react';
 import type { PublishingPlatform } from '@/types/publishing-queue';
 import { PUBLISHING_PLATFORM_LABELS } from '@/types/publishing-queue';
 import { cn } from '@/lib/utils';
-import {
-  X,
-  Calendar,
-  Clock,
-  Send,
-} from 'lucide-react';
+import { X, Calendar, Clock, Send } from 'lucide-react';
 
 interface Article {
   id: string;
@@ -42,7 +37,9 @@ export function SchedulePublishDialog({
   onClose,
   onSuccess,
 }: SchedulePublishDialogProps) {
-  const [step, setStep] = useState<'article' | 'platform' | 'schedule' | 'confirm'>('article');
+  const [step, setStep] = useState<
+    'article' | 'platform' | 'schedule' | 'confirm'
+  >('article');
   const [articles, setArticles] = useState<Article[]>([]);
   const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<string | null>(null);
@@ -69,14 +66,18 @@ export function SchedulePublishDialog({
     setLoading(true);
     try {
       // Fetch articles
-      const articlesResponse = await fetch('/api/articles?limit=50&status=draft');
+      const articlesResponse = await fetch(
+        '/api/articles?limit=50&status=draft'
+      );
       if (articlesResponse.ok) {
         const data = await articlesResponse.json();
         setArticles(data.articles || []);
       }
 
       // Fetch integrations (CMS platforms)
-      const integrationsResponse = await fetch('/api/integrations?status=active');
+      const integrationsResponse = await fetch(
+        '/api/integrations?status=active'
+      );
       if (integrationsResponse.ok) {
         const data = await integrationsResponse.json();
         setIntegrations(data.integrations || []);
@@ -158,15 +159,27 @@ export function SchedulePublishDialog({
                   step === s
                     ? 'bg-indigo-600 text-white'
                     : index <
-                      ['article', 'platform', 'schedule', 'confirm'].indexOf(step)
-                    ? 'bg-green-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                        ['article', 'platform', 'schedule', 'confirm'].indexOf(
+                          step
+                        )
+                      ? 'bg-green-500 text-white'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
                 )}
               >
                 {index <
                 ['article', 'platform', 'schedule', 'confirm'].indexOf(step) ? (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 ) : (
                   index + 1
@@ -177,7 +190,9 @@ export function SchedulePublishDialog({
                   className={cn(
                     'w-8 h-0.5 mx-1',
                     index <
-                      ['article', 'platform', 'schedule', 'confirm'].indexOf(step)
+                      ['article', 'platform', 'schedule', 'confirm'].indexOf(
+                        step
+                      )
                       ? 'bg-green-500'
                       : 'bg-gray-200 dark:bg-gray-700'
                   )}
@@ -246,7 +261,9 @@ export function SchedulePublishDialog({
                         No active CMS integrations found.
                       </p>
                       <button
-                        onClick={() => window.location.href = '/dashboard/integrations'}
+                        onClick={() =>
+                          (window.location.href = '/dashboard/integrations')
+                        }
                         className="text-indigo-600 dark:text-indigo-400 hover:underline"
                       >
                         Add an integration
@@ -282,9 +299,11 @@ export function SchedulePublishDialog({
                               {integration.name}
                             </p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {PUBLISHING_PLATFORM_LABELS[
-                                integration.platform as PublishingPlatform
-                              ]}
+                              {
+                                PUBLISHING_PLATFORM_LABELS[
+                                  integration.platform as PublishingPlatform
+                                ]
+                              }
                             </p>
                           </div>
                         </button>
@@ -392,21 +411,30 @@ export function SchedulePublishDialog({
 
                   <div className="space-y-3">
                     <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                      <span className="text-gray-600 dark:text-gray-400">Article</span>
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Article
+                      </span>
                       <span className="font-medium text-gray-900 dark:text-white">
                         {articles.find((a) => a.id === selectedArticle)?.title}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                      <span className="text-gray-600 dark:text-gray-400">Platform</span>
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Platform
+                      </span>
                       <span className="font-medium text-gray-900 dark:text-white">
-                        {integrations.find((i) => i.id === selectedPlatform)?.name}
+                        {
+                          integrations.find((i) => i.id === selectedPlatform)
+                            ?.name
+                        }
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                      <span className="text-gray-600 dark:text-gray-400">Schedule</span>
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Schedule
+                      </span>
                       <span className="font-medium text-gray-900 dark:text-white">
                         {!scheduledFor
                           ? 'Immediately'

@@ -55,8 +55,8 @@ export function Confetti({
 }: ConfettiProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
-  const animationRef = useRef<number>();
-  const startTimeRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
+  const startTimeRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     if (!isActive) return;
@@ -214,7 +214,7 @@ export function ConfettiCannon({
 }: ConfettiCannonProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
   const hasFiredRef = useRef(false);
 
   useEffect(() => {

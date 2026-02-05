@@ -152,10 +152,7 @@ const Icons = {
   ),
 };
 
-export function TopHeaderBar({
-  title,
-  breadcrumbs = [],
-}: HeaderBarProps) {
+export function TopHeaderBar({ title, breadcrumbs = [] }: HeaderBarProps) {
   const [searchValue, setSearchValue] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const toggleTheme = useToggleTheme();
@@ -189,7 +186,10 @@ export function TopHeaderBar({
               {breadcrumbs.map((crumb, index) => (
                 <div key={index} className="flex items-center gap-2">
                   {index > 0 && (
-                    <Icons.ChevronRight className="h-4 w-4 text-gray-400 dark:text-gray-500" aria-hidden="true" />
+                    <Icons.ChevronRight
+                      className="h-4 w-4 text-gray-400 dark:text-gray-500"
+                      aria-hidden="true"
+                    />
                   )}
                   {crumb.href ? (
                     <a
@@ -227,7 +227,10 @@ export function TopHeaderBar({
                   'ring-2 ring-indigo-500 border-indigo-500 dark:border-indigo-400'
               )}
             >
-              <Icons.Search className="h-4 w-4 text-gray-400 ml-3" aria-hidden="true" />
+              <Icons.Search
+                className="h-4 w-4 text-gray-400 ml-3"
+                aria-hidden="true"
+              />
               <input
                 type="search"
                 placeholder="Search..."
@@ -248,7 +251,10 @@ export function TopHeaderBar({
             aria-label="View notifications"
           >
             <Icons.Bell className="h-5 w-5" aria-hidden="true" />
-            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500" aria-label="Unread notifications" />
+            <span
+              className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500"
+              aria-label="Unread notifications"
+            />
           </button>
 
           {/* Help Button */}
@@ -289,7 +295,10 @@ export function TopHeaderBar({
               'ring-2 ring-indigo-500 border-indigo-500 dark:border-indigo-400'
           )}
         >
-          <Icons.Search className="h-4 w-4 text-gray-400 ml-3" aria-hidden="true" />
+          <Icons.Search
+            className="h-4 w-4 text-gray-400 ml-3"
+            aria-hidden="true"
+          />
           <input
             type="search"
             placeholder="Search..."

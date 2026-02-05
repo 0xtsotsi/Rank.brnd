@@ -74,7 +74,7 @@ export async function DELETE(req: NextRequest) {
     // Cancel subscription at period end
     const subscription = await stripe.subscriptions.update(subscriptionId, {
       cancel_at_period_end: true,
-    });
+    }) as Stripe.Subscription;
 
     // TODO: Update database
     // await db.update(subscriptions)
@@ -139,7 +139,7 @@ export async function PATCH(req: NextRequest) {
     const stripe = getStripeClient();
 
     // Get subscription
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId) as Stripe.Subscription;
 
     // Update subscription with new price
     const updatedSubscription = await stripe.subscriptions.update(
@@ -153,7 +153,7 @@ export async function PATCH(req: NextRequest) {
         ],
         proration_behavior: 'create_prorations',
       }
-    );
+    ) as Stripe.Subscription;
 
     // TODO: Update database
     // await db.update(subscriptions)

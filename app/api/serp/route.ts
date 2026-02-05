@@ -41,7 +41,10 @@ export async function GET(request: NextRequest) {
     // Check if SerpAPI is configured
     if (!isSerpApiConfigured()) {
       return NextResponse.json(
-        { error: 'SerpAPI is not configured. Please set SERPAPI_API_KEY environment variable.' },
+        {
+          error:
+            'SerpAPI is not configured. Please set SERPAPI_API_KEY environment variable.',
+        },
         { status: 503 }
       );
     }
@@ -54,7 +57,11 @@ export async function GET(request: NextRequest) {
       );
 
       // Check access
-      const hasAccess = await canUserAccessSerpAnalysis(supabase, analysisId, userId);
+      const hasAccess = await canUserAccessSerpAnalysis(
+        supabase,
+        analysisId,
+        userId
+      );
       if (!hasAccess) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
       }
@@ -82,7 +89,10 @@ export async function GET(request: NextRequest) {
         .single();
 
       if (!keyword) {
-        return NextResponse.json({ error: 'Keyword not found' }, { status: 404 });
+        return NextResponse.json(
+          { error: 'Keyword not found' },
+          { status: 404 }
+        );
       }
 
       // Check if user is member of organization
@@ -111,7 +121,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ error: 'Either id or keywordId is required' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Either id or keywordId is required' },
+      { status: 400 }
+    );
   } catch (error) {
     console.error('Error fetching SERP analysis:', error);
     return NextResponse.json(
@@ -135,13 +148,24 @@ export async function POST(request: NextRequest) {
     // Check if SerpAPI is configured
     if (!isSerpApiConfigured()) {
       return NextResponse.json(
-        { error: 'SerpAPI is not configured. Please set SERPAPI_API_KEY environment variable.' },
+        {
+          error:
+            'SerpAPI is not configured. Please set SERPAPI_API_KEY environment variable.',
+        },
         { status: 503 }
       );
     }
 
     const body = await request.json();
-    const { action, keywordId, query, organizationId, productId, device, location } = body;
+    const {
+      action,
+      keywordId,
+      query,
+      organizationId,
+      productId,
+      device,
+      location,
+    } = body;
 
     const supabase = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -188,7 +212,10 @@ export async function POST(request: NextRequest) {
     if (action === 'analyze') {
       // Perform live SERP analysis
       if (!query) {
-        return NextResponse.json({ error: 'Query is required' }, { status: 400 });
+        return NextResponse.json(
+          { error: 'Query is required' },
+          { status: 400 }
+        );
       }
 
       // Fetch SERP data
@@ -235,7 +262,10 @@ export async function POST(request: NextRequest) {
       });
 
       if (!createResult.success) {
-        return NextResponse.json({ error: createResult.error }, { status: 500 });
+        return NextResponse.json(
+          { error: createResult.error },
+          { status: 500 }
+        );
       }
 
       const analysisId = createResult.data.id;
@@ -255,7 +285,11 @@ export async function POST(request: NextRequest) {
           supabase,
           analysisId,
           response,
-          { query, device: device || 'desktop', location: location || 'United States' }
+          {
+            query,
+            device: device || 'desktop',
+            location: location || 'United States',
+          }
         );
 
         if (!saveResult.success) {
@@ -265,13 +299,22 @@ export async function POST(request: NextRequest) {
             'failed',
             saveResult.error
           );
-          return NextResponse.json({ error: saveResult.error }, { status: 500 });
+          return NextResponse.json(
+            { error: saveResult.error },
+            { status: 500 }
+          );
         }
 
         return NextResponse.json(saveResult.data, { status: 201 });
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        await updateSerpAnalysisStatus(supabase, analysisId, 'failed', errorMessage);
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error';
+        await updateSerpAnalysisStatus(
+          supabase,
+          analysisId,
+          'failed',
+          errorMessage
+        );
         throw error;
       }
     }
@@ -309,7 +352,10 @@ export async function PUT(request: NextRequest) {
     const { analysisId, status } = body;
 
     if (!analysisId) {
-      return NextResponse.json({ error: 'Analysis ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Analysis ID is required' },
+        { status: 400 }
+      );
     }
 
     const supabase = createClient<Database>(
@@ -318,14 +364,22 @@ export async function PUT(request: NextRequest) {
     );
 
     // Check access
-    const hasAccess = await canUserAccessSerpAnalysis(supabase, analysisId, userId);
+    const hasAccess = await canUserAccessSerpAnalysis(
+      supabase,
+      analysisId,
+      userId
+    );
     if (!hasAccess) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Update status
     if (status) {
-      const result = await updateSerpAnalysisStatus(supabase, analysisId, status);
+      const result = await updateSerpAnalysisStatus(
+        supabase,
+        analysisId,
+        status
+      );
       if (!result.success) {
         return NextResponse.json({ error: result.error }, { status: 500 });
       }
@@ -357,7 +411,10 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'Analysis ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Analysis ID is required' },
+        { status: 400 }
+      );
     }
 
     const supabase = createClient<Database>(

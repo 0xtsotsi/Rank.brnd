@@ -7,10 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import {
-  publishArticleToCMSSchema,
-  validateRequest,
-} from '@/lib/schemas';
+import { publishArticleToCMSSchema, validateRequest } from '@/lib/schemas';
 import {
   getArticleById,
   publishArticleToCMS,
@@ -53,10 +50,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const articleResult = await getArticleById(client, articleId);
 
     if (!articleResult.success) {
-      return NextResponse.json(
-        { error: 'Article not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
     const article = articleResult.data;
@@ -97,7 +91,10 @@ export async function POST(request: NextRequest, context: RouteContext) {
 
       if (!integration) {
         return NextResponse.json(
-          { error: 'Integration not found or does not belong to your organization' },
+          {
+            error:
+              'Integration not found or does not belong to your organization',
+          },
           { status: 404 }
         );
       }
@@ -128,7 +125,10 @@ export async function POST(request: NextRequest, context: RouteContext) {
         publishOptions.platform = integrationsResult.data[0].platform as any;
       } else {
         return NextResponse.json(
-          { error: 'No active CMS integration found. Please connect a CMS platform first.' },
+          {
+            error:
+              'No active CMS integration found. Please connect a CMS platform first.',
+          },
           { status: 400 }
         );
       }
@@ -138,10 +138,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const result = await publishArticleToCMS(client, articleId, publishOptions);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({

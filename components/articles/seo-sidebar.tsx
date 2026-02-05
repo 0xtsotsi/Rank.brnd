@@ -57,7 +57,10 @@ interface CategoryGroup {
   items: SEOCheckItem[];
 }
 
-const CATEGORY_CONFIG: Record<string, { label: string; icon: React.ComponentType<{ className?: string }> }> = {
+const CATEGORY_CONFIG: Record<
+  string,
+  { label: string; icon: React.ComponentType<{ className?: string }> }
+> = {
   content: { label: 'Content', icon: FileText },
   metadata: { label: 'Metadata', icon: Settings },
   structure: { label: 'Structure', icon: TrendingUp },
@@ -75,7 +78,9 @@ export function SEOSidebar({
   featuredImageUrl,
   wordCount,
 }: SEOSidebarProps) {
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+  const [expandedSections, setExpandedSections] = useState<
+    Record<string, boolean>
+  >({
     score: true,
     checklist: true,
     keywords: true,
@@ -95,12 +100,22 @@ export function SEOSidebar({
       wordCount,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, content, excerpt, metaTitle, metaDescription, metaKeywords, slug, featuredImageUrl, wordCount]);
+  }, [
+    title,
+    content,
+    excerpt,
+    metaTitle,
+    metaDescription,
+    metaKeywords,
+    slug,
+    featuredImageUrl,
+    wordCount,
+  ]);
 
   // Group checklist items by category
   const groupedChecklist = useMemo(() => {
     const groups: Record<string, SEOCheckItem[]> = {};
-    seoResult.checklist.forEach(item => {
+    seoResult.checklist.forEach((item) => {
       if (!groups[item.category]) {
         groups[item.category] = [];
       }
@@ -111,7 +126,7 @@ export function SEOSidebar({
 
   // Toggle section expansion
   const toggleSection = (section: string) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
       [section]: !prev[section],
     }));
@@ -144,7 +159,12 @@ export function SEOSidebar({
   return (
     <div className="space-y-4">
       {/* Overall Score Card */}
-      <div className={cn('bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4', getScoreBg(seoResult.score))}>
+      <div
+        className={cn(
+          'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4',
+          getScoreBg(seoResult.score)
+        )}
+      >
         <button
           onClick={() => toggleSection('score')}
           className="flex items-center justify-between w-full"
@@ -178,7 +198,10 @@ export function SEOSidebar({
                     cx="48"
                     cy="48"
                     r="40"
-                    className={cn('transition-all duration-500', getScoreRingColor(seoResult.score))}
+                    className={cn(
+                      'transition-all duration-500',
+                      getScoreRingColor(seoResult.score)
+                    )}
                     strokeWidth="8"
                     fill="none"
                     strokeDasharray={`${2 * Math.PI * 40}`}
@@ -187,7 +210,12 @@ export function SEOSidebar({
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className={cn('text-2xl font-bold', getScoreColor(seoResult.score))}>
+                  <span
+                    className={cn(
+                      'text-2xl font-bold',
+                      getScoreColor(seoResult.score)
+                    )}
+                  >
                     {seoResult.score}
                   </span>
                 </div>
@@ -195,11 +223,17 @@ export function SEOSidebar({
 
               {/* Score Details */}
               <div className="flex-1">
-                <p className={cn('text-lg font-semibold', getScoreColor(seoResult.score))}>
+                <p
+                  className={cn(
+                    'text-lg font-semibold',
+                    getScoreColor(seoResult.score)
+                  )}
+                >
                   {seoResult.level}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  {seoResult.checklist.filter(i => i.passed).length} of {seoResult.checklist.length} checks passed
+                  {seoResult.checklist.filter((i) => i.passed).length} of{' '}
+                  {seoResult.checklist.length} checks passed
                 </p>
               </div>
             </div>
@@ -212,7 +246,10 @@ export function SEOSidebar({
                 </p>
                 <ul className="space-y-1">
                   {seoResult.suggestions.slice(0, 3).map((suggestion, idx) => (
-                    <li key={idx} className="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-2">
+                    <li
+                      key={idx}
+                      className="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-2"
+                    >
                       <AlertCircle className="w-3 h-3 flex-shrink-0 mt-0.5 text-yellow-500" />
                       <span>{suggestion}</span>
                     </li>
@@ -248,10 +285,13 @@ export function SEOSidebar({
               if (!config) return null;
 
               const Icon = config.icon;
-              const passedCount = items.filter(i => i.passed).length;
+              const passedCount = items.filter((i) => i.passed).length;
 
               return (
-                <div key={category} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                <div
+                  key={category}
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+                >
                   <button
                     onClick={() => toggleSection(category)}
                     className="flex items-center justify-between w-full px-3 py-2 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
@@ -272,7 +312,7 @@ export function SEOSidebar({
 
                   {expandedSections[category] && (
                     <div className="p-3 space-y-2">
-                      {items.map(item => (
+                      {items.map((item) => (
                         <div
                           key={item.id}
                           className={cn(
@@ -336,34 +376,40 @@ export function SEOSidebar({
           <div className="mt-4">
             {seoResult.keywordDensity.topKeywords.length > 0 ? (
               <div className="space-y-2">
-                {seoResult.keywordDensity.topKeywords.slice(0, 8).map((keyword, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <span className="text-xs text-gray-500 w-6">{idx + 1}</span>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          {keyword.word}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {keyword.count}x ({keyword.density.toFixed(1)}%)
-                        </span>
-                      </div>
-                      <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                        <div
-                          className={cn(
-                            'h-full rounded-full transition-all',
-                            keyword.density > 3
-                              ? 'bg-red-500'
-                              : keyword.density > 1.5
-                                ? 'bg-yellow-500'
-                                : 'bg-green-500'
-                          )}
-                          style={{ width: `${Math.min(keyword.density * 20, 100)}%` }}
-                        />
+                {seoResult.keywordDensity.topKeywords
+                  .slice(0, 8)
+                  .map((keyword, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <span className="text-xs text-gray-500 w-6">
+                        {idx + 1}
+                      </span>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {keyword.word}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {keyword.count}x ({keyword.density.toFixed(1)}%)
+                          </span>
+                        </div>
+                        <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className={cn(
+                              'h-full rounded-full transition-all',
+                              keyword.density > 3
+                                ? 'bg-red-500'
+                                : keyword.density > 1.5
+                                  ? 'bg-yellow-500'
+                                  : 'bg-green-500'
+                            )}
+                            style={{
+                              width: `${Math.min(keyword.density * 20, 100)}%`,
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             ) : (
               <p className="text-sm text-gray-500 dark:text-gray-400">

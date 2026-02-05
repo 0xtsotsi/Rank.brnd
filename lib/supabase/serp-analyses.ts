@@ -75,7 +75,9 @@ export async function getSerpAnalysisById(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch SERP analysis',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch SERP analysis',
     };
   }
 }
@@ -89,7 +91,11 @@ export async function getKeywordSerpAnalyses(
   options: {
     status?: SerpAnalysisStatus;
     limit?: number;
-    sortBy?: 'analyzed_at' | 'created_at' | 'difficulty_score' | 'opportunity_score';
+    sortBy?:
+      | 'analyzed_at'
+      | 'created_at'
+      | 'difficulty_score'
+      | 'opportunity_score';
     sortOrder?: 'asc' | 'desc';
   } = {}
 ): Promise<SerpAnalysisResult<SerpAnalysisRow[]>> {
@@ -121,7 +127,9 @@ export async function getKeywordSerpAnalyses(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch SERP analyses',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch SERP analyses',
     };
   }
 }
@@ -159,7 +167,10 @@ export async function getOrganizationSerpAnalyses(
       query = query.limit(options.limit);
     }
     if (options.offset) {
-      query = query.range(options.offset, (options.offset || 0) + (options.limit || 50) - 1);
+      query = query.range(
+        options.offset,
+        (options.offset || 0) + (options.limit || 50) - 1
+      );
     }
 
     const { data, error } = await query;
@@ -172,7 +183,9 @@ export async function getOrganizationSerpAnalyses(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch SERP analyses',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch SERP analyses',
     };
   }
 }
@@ -201,7 +214,9 @@ export async function getLatestSerpAnalysis(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch latest SERP analysis',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch latest SERP analysis',
     };
   }
 }
@@ -250,7 +265,9 @@ export async function createSerpAnalysis(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to create SERP analysis',
+        error instanceof Error
+          ? error.message
+          : 'Failed to create SERP analysis',
     };
   }
 }
@@ -279,7 +296,9 @@ export async function updateSerpAnalysis(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to update SERP analysis',
+        error instanceof Error
+          ? error.message
+          : 'Failed to update SERP analysis',
     };
   }
 }
@@ -316,9 +335,9 @@ export async function saveSerpAnalysisResults(
     const analysis = analyzeSerp(response, searchParams);
 
     // Extract competitor URLs and domains
-    const competitorUrls: string[] = response.organicResults.map(r => r.link);
+    const competitorUrls: string[] = response.organicResults.map((r) => r.link);
     const competitorDomains: string[] = Array.from(
-      new Set(response.organicResults.map(r => extractDomain(r.link)))
+      new Set(response.organicResults.map((r) => extractDomain(r.link)))
     );
 
     // Prepare SERP features data
@@ -331,14 +350,14 @@ export async function saveSerpAnalysisResults(
     };
 
     // Prepare gaps data
-    const gapsData = analysis.contentGaps.map(gap => ({
+    const gapsData = analysis.contentGaps.map((gap) => ({
       type: gap.type,
       description: gap.description,
       opportunityScore: gap.opportunityScore,
     }));
 
     // Prepare recommendations data
-    const recommendationsData = analysis.recommendations.map(rec => ({
+    const recommendationsData = analysis.recommendations.map((rec) => ({
       type: rec.type,
       recommendation: rec.recommendation,
       priority: rec.priority,
@@ -368,7 +387,9 @@ export async function saveSerpAnalysisResults(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to save SERP analysis results',
+        error instanceof Error
+          ? error.message
+          : 'Failed to save SERP analysis results',
     };
   }
 }
@@ -393,7 +414,9 @@ export async function deleteSerpAnalysis(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to delete SERP analysis',
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete SERP analysis',
     };
   }
 }
@@ -405,12 +428,14 @@ export async function getSerpAnalysisStats(
   client: SupabaseClient,
   organizationId: string,
   productId?: string
-): Promise<SerpAnalysisResult<{
-  total: number;
-  byStatus: Record<SerpAnalysisStatus, number>;
-  avgDifficultyScore: number;
-  avgOpportunityScore: number;
-}>> {
+): Promise<
+  SerpAnalysisResult<{
+    total: number;
+    byStatus: Record<SerpAnalysisStatus, number>;
+    avgDifficultyScore: number;
+    avgOpportunityScore: number;
+  }>
+> {
   try {
     let query = client
       .from('serp_analyses')
@@ -472,15 +497,19 @@ export async function getSerpAnalysisStats(
       data: {
         total: data.length,
         byStatus,
-        avgDifficultyScore: scoredCount > 0 ? totalDifficultyScore / scoredCount : 0,
-        avgOpportunityScore: scoredCount > 0 ? totalOpportunityScore / scoredCount : 0,
+        avgDifficultyScore:
+          scoredCount > 0 ? totalDifficultyScore / scoredCount : 0,
+        avgOpportunityScore:
+          scoredCount > 0 ? totalOpportunityScore / scoredCount : 0,
       },
     };
   } catch (error) {
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch SERP analysis stats',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch SERP analysis stats',
     };
   }
 }
@@ -536,18 +565,30 @@ export function validateSerpAnalysis(analysis: {
     }
   }
 
-  if (analysis.difficulty_score !== undefined && analysis.difficulty_score !== null) {
+  if (
+    analysis.difficulty_score !== undefined &&
+    analysis.difficulty_score !== null
+  ) {
     if (typeof analysis.difficulty_score !== 'number') {
       errors.push('Difficulty score must be a number');
-    } else if (analysis.difficulty_score < 0 || analysis.difficulty_score > 100) {
+    } else if (
+      analysis.difficulty_score < 0 ||
+      analysis.difficulty_score > 100
+    ) {
       errors.push('Difficulty score must be between 0 and 100');
     }
   }
 
-  if (analysis.opportunity_score !== undefined && analysis.opportunity_score !== null) {
+  if (
+    analysis.opportunity_score !== undefined &&
+    analysis.opportunity_score !== null
+  ) {
     if (typeof analysis.opportunity_score !== 'number') {
       errors.push('Opportunity score must be a number');
-    } else if (analysis.opportunity_score < 0 || analysis.opportunity_score > 100) {
+    } else if (
+      analysis.opportunity_score < 0 ||
+      analysis.opportunity_score > 100
+    ) {
       errors.push('Opportunity score must be between 0 and 100');
     }
   }

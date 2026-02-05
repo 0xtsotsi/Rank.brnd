@@ -59,7 +59,9 @@ interface KeywordSearchProps {
 export function KeywordSearch({ onAddKeyword, className }: KeywordSearchProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState<SearchResponse | null>(null);
+  const [searchResults, setSearchResults] = useState<SearchResponse | null>(
+    null
+  );
   const [error, setError] = useState<string | null>(null);
   const [addedKeywords, setAddedKeywords] = useState<Set<string>>(new Set());
   const [isAdding, setIsAdding] = useState<Set<string>>(new Set());
@@ -215,7 +217,9 @@ export function KeywordSearch({ onAddKeyword, className }: KeywordSearchProps) {
                   {/* Volume */}
                   <MetricCard
                     label="Search Volume"
-                    value={formatSearchVolume(searchResults.metrics.search_volume)}
+                    value={formatSearchVolume(
+                      searchResults.metrics.search_volume
+                    )}
                     icon={TrendingUp}
                     color="indigo"
                   />
@@ -223,9 +227,13 @@ export function KeywordSearch({ onAddKeyword, className }: KeywordSearchProps) {
                   {/* Difficulty */}
                   <MetricCard
                     label="Difficulty"
-                    value={DIFFICULTY_LABELS[searchResults.metrics.difficulty_level]}
+                    value={
+                      DIFFICULTY_LABELS[searchResults.metrics.difficulty_level]
+                    }
                     icon={BarChart3}
-                    color={getDifficultyColor(searchResults.metrics.difficulty_level)}
+                    color={getDifficultyColor(
+                      searchResults.metrics.difficulty_level
+                    )}
                   />
 
                   {/* CPC */}
@@ -250,9 +258,15 @@ export function KeywordSearch({ onAddKeyword, className }: KeywordSearchProps) {
               {onAddKeyword && (
                 <button
                   onClick={() =>
-                    handleAddKeyword(searchResults.keyword, searchResults.metrics)
+                    handleAddKeyword(
+                      searchResults.keyword,
+                      searchResults.metrics
+                    )
                   }
-                  disabled={isAdding.has(searchResults.keyword) || addedKeywords.has(searchResults.keyword)}
+                  disabled={
+                    isAdding.has(searchResults.keyword) ||
+                    addedKeywords.has(searchResults.keyword)
+                  }
                   className={cn(
                     'flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors',
                     addedKeywords.has(searchResults.keyword)
@@ -281,24 +295,27 @@ export function KeywordSearch({ onAddKeyword, className }: KeywordSearchProps) {
           </div>
 
           {/* Suggestions */}
-          {searchResults.suggestions && searchResults.suggestions.length > 0 && (
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Keyword Suggestions ({searchResults.suggestions.length})
-              </h4>
-              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                {searchResults.suggestions.map((suggestion) => (
-                  <SuggestionCard
-                    key={suggestion.keyword}
-                    suggestion={suggestion}
-                    isAdded={addedKeywords.has(suggestion.keyword)}
-                    isAdding={isAdding.has(suggestion.keyword)}
-                    onAdd={() => handleAddKeyword(suggestion.keyword, suggestion)}
-                  />
-                ))}
+          {searchResults.suggestions &&
+            searchResults.suggestions.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Keyword Suggestions ({searchResults.suggestions.length})
+                </h4>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {searchResults.suggestions.map((suggestion) => (
+                    <SuggestionCard
+                      key={suggestion.keyword}
+                      suggestion={suggestion}
+                      isAdded={addedKeywords.has(suggestion.keyword)}
+                      isAdding={isAdding.has(suggestion.keyword)}
+                      onAdd={() =>
+                        handleAddKeyword(suggestion.keyword, suggestion)
+                      }
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       )}
     </div>
@@ -378,7 +395,12 @@ interface SuggestionCardProps {
   onAdd: () => void;
 }
 
-function SuggestionCard({ suggestion, isAdded, isAdding, onAdd }: SuggestionCardProps) {
+function SuggestionCard({
+  suggestion,
+  isAdded,
+  isAdding,
+  onAdd,
+}: SuggestionCardProps) {
   const difficultyColors = DIFFICULTY_COLORS[suggestion.difficulty_level];
 
   return (

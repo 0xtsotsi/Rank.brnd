@@ -86,8 +86,16 @@ export interface ILogger {
   debug(message: string, data?: Record<string, unknown>): void;
   info(message: string, data?: Record<string, unknown>): void;
   warn(message: string, data?: Record<string, unknown>): void;
-  error(message: string, error?: Error | unknown, data?: Record<string, unknown>): void;
-  critical(message: string, error?: Error | unknown, data?: Record<string, unknown>): void;
+  error(
+    message: string,
+    error?: Error | unknown,
+    data?: Record<string, unknown>
+  ): void;
+  critical(
+    message: string,
+    error?: Error | unknown,
+    data?: Record<string, unknown>
+  ): void;
   withContext(context: string): ILogger;
   withData(data: Record<string, unknown>): ILogger;
   withCorrelationId(correlationId: string): ILogger;

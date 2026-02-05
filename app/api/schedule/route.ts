@@ -44,18 +44,22 @@ export async function GET(request: NextRequest) {
       schedulesQuerySchema
     );
 
-    const params = validationResult.success ? validationResult.data : {
-      organization_id: request.nextUrl.searchParams.get('organization_id') || undefined,
-      product_id: request.nextUrl.searchParams.get('product_id') || undefined,
-      status: request.nextUrl.searchParams.get('status') || undefined,
-      date_from: request.nextUrl.searchParams.get('date_from') || undefined,
-      date_to: request.nextUrl.searchParams.get('date_to') || undefined,
-      search: request.nextUrl.searchParams.get('search') || undefined,
-      limit: request.nextUrl.searchParams.get('limit') || '50',
-      offset: request.nextUrl.searchParams.get('offset') || '0',
-      sort: request.nextUrl.searchParams.get('sort') || 'scheduled_at',
-      order: request.nextUrl.searchParams.get('order') || 'asc',
-    };
+    const params = validationResult.success
+      ? validationResult.data
+      : {
+          organization_id:
+            request.nextUrl.searchParams.get('organization_id') || undefined,
+          product_id:
+            request.nextUrl.searchParams.get('product_id') || undefined,
+          status: request.nextUrl.searchParams.get('status') || undefined,
+          date_from: request.nextUrl.searchParams.get('date_from') || undefined,
+          date_to: request.nextUrl.searchParams.get('date_to') || undefined,
+          search: request.nextUrl.searchParams.get('search') || undefined,
+          limit: request.nextUrl.searchParams.get('limit') || '50',
+          offset: request.nextUrl.searchParams.get('offset') || '0',
+          sort: request.nextUrl.searchParams.get('sort') || 'scheduled_at',
+          order: request.nextUrl.searchParams.get('order') || 'asc',
+        };
 
     if (!params || !params.organization_id) {
       return NextResponse.json(
@@ -94,10 +98,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -170,10 +171,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data, { status: 201 });
@@ -247,10 +245,7 @@ export async function PUT(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data);
@@ -305,7 +300,10 @@ export async function DELETE(request: NextRequest) {
       .single();
 
     if (!article) {
-      return NextResponse.json({ error: 'Schedule not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Schedule not found' },
+        { status: 404 }
+      );
     }
 
     // Check if user has admin or owner role
@@ -323,13 +321,14 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const result = await removeSchedule(client, id, (article as any).organization_id);
+    const result = await removeSchedule(
+      client,
+      id,
+      (article as any).organization_id
+    );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });

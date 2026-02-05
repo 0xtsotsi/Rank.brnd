@@ -15,6 +15,7 @@ import {
   AlertCircle,
   TrendingUp,
 } from 'lucide-react';
+import { InlineErrorBoundary } from '@/components/error-boundaries';
 
 interface PublishingStatsCardsProps {
   stats: PublishingQueueStats;
@@ -71,13 +72,15 @@ export function PublishingStatsCards({
 
   // Calculate success rate
   const totalCompleted = stats.byStatus?.published || 0 + stats.failedCount;
-  const successRate = totalCompleted > 0
-    ? Math.round(((stats.byStatus?.published || 0) / totalCompleted) * 100)
-    : 0;
+  const successRate =
+    totalCompleted > 0
+      ? Math.round(((stats.byStatus?.published || 0) / totalCompleted) * 100)
+      : 0;
 
   return (
-    <div className={cn('grid gap-4 sm:grid-cols-2 lg:grid-cols-4', className)}>
-      {cards.map((card) => {
+    <InlineErrorBoundary>
+      <div className={cn('grid gap-4 sm:grid-cols-2 lg:grid-cols-4', className)}>
+        {cards.map((card) => {
         const Icon = card.icon;
         return (
           <div
@@ -124,7 +127,12 @@ export function PublishingStatsCards({
               {successRate}%
             </p>
           </div>
-          <div className={cn('rounded-lg p-2', 'bg-purple-100 dark:bg-purple-900/30')}>
+          <div
+            className={cn(
+              'rounded-lg p-2',
+              'bg-purple-100 dark:bg-purple-900/30'
+            )}
+          >
             <TrendingUp className="h-5 w-5 text-purple-600 dark:text-purple-400" />
           </div>
         </div>
@@ -140,5 +148,6 @@ export function PublishingStatsCards({
         )}
       </div>
     </div>
+    </InlineErrorBoundary>
   );
 }

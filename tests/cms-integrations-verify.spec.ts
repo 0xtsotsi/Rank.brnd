@@ -87,8 +87,16 @@ test.describe('CMS Integrations Feature Verification', () => {
 
   test('API: Platform options are valid', async ({ request }) => {
     const validPlatforms = [
-      'wordpress', 'webflow', 'shopify', 'ghost', 'notion',
-      'squarespace', 'wix', 'contentful', 'strapi', 'custom'
+      'wordpress',
+      'webflow',
+      'shopify',
+      'ghost',
+      'notion',
+      'squarespace',
+      'wix',
+      'contentful',
+      'strapi',
+      'custom',
     ];
 
     const response = await request.get('/api/integrations');

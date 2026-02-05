@@ -20,8 +20,14 @@ export const brandColorsSchema = z.object({
   accent: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
     message: 'Accent color must be a valid hex color (e.g., #000000)',
   }),
-  background: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).optional(),
-  text: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).optional(),
+  background: z
+    .string()
+    .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
+    .optional(),
+  text: z
+    .string()
+    .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
+    .optional(),
 });
 
 /**
@@ -29,10 +35,11 @@ export const brandColorsSchema = z.object({
  */
 export const tonePreferencesSchema = z.object({
   tone: z.enum(['professional', 'casual', 'friendly', 'formal'], {
-    errorMap: () => ({ message: 'Tone must be one of: professional, casual, friendly, formal' }),
+    message: 'Tone must be one of: professional, casual, friendly, formal',
   }),
   voice: z.enum(['first-person', 'second-person', 'third-person'], {
-    errorMap: () => ({ message: 'Voice must be one of: first-person, second-person, third-person' }),
+    message:
+      'Voice must be one of: first-person, second-person, third-person',
   }),
   style: z.string().optional(),
 });
@@ -43,7 +50,10 @@ export const tonePreferencesSchema = z.object({
 export const analyticsConfigSchema = z.object({
   enabled: z.boolean().default(false),
   tracking_id: z.string().optional(),
-  provider: z.enum(['google-analytics', 'plausible', 'fathom']).nullable().default(null),
+  provider: z
+    .enum(['google-analytics', 'plausible', 'fathom'])
+    .nullable()
+    .default(null),
 });
 
 /**
@@ -60,36 +70,49 @@ export const productMetadataSchema = z.object({
 /**
  * URL validation with optional https:// prefix
  */
-const urlWithOptionalProtocol = z.string().transform((val, ctx) => {
-  if (!val || val.trim() === '') return null;
-  try {
-    new URL(val.startsWith('http') ? val : `https://${val}`);
-    return val.trim();
-  } catch {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'Invalid URL format',
-    });
-    return z.NEVER;
-  }
-}).nullable();
+const urlWithOptionalProtocol = z
+  .string()
+  .transform((val, ctx) => {
+    if (!val || val.trim() === '') return null;
+    try {
+      new URL(val.startsWith('http') ? val : `https://${val}`);
+      return val.trim();
+    } catch {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Invalid URL format',
+      });
+      return z.NEVER;
+    }
+  })
+  .nullable();
 
 /**
  * Base product schema with common fields
  */
 const baseProductSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
-  slug: z.string()
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .max(100, 'Name must be less than 100 characters'),
+  slug: z
+    .string()
     .min(1, 'Slug is required')
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
       message: 'Slug must contain only lowercase letters, numbers, and hyphens',
     })
     .max(100, 'Slug must be less than 100 characters'),
   url: urlWithOptionalProtocol,
-  description: z.string().max(500, 'Description must be less than 500 characters').nullable().optional(),
-  status: z.enum(['active', 'archived', 'pending'], {
-    errorMap: () => ({ message: 'Status must be one of: active, archived, pending' }),
-  }).default('active'),
+  description: z
+    .string()
+    .max(500, 'Description must be less than 500 characters')
+    .nullable()
+    .optional(),
+  status: z
+    .enum(['active', 'archived', 'pending'], {
+      message: 'Status must be one of: active, archived, pending',
+    })
+    .default('active'),
   brand_colors: brandColorsSchema.partial().optional(),
   tone_preferences: tonePreferencesSchema.partial().optional(),
   analytics_config: analyticsConfigSchema.partial().optional(),
@@ -101,15 +124,24 @@ const baseProductSchema = z.object({
  * Validates incoming data for creating a new product
  */
 export const createProductSchema = baseProductSchema.extend({
-  primaryColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
-    message: 'Primary color must be a valid hex color',
-  }).optional(),
-  secondaryColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
-    message: 'Secondary color must be a valid hex color',
-  }).optional(),
-  accentColor: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
-    message: 'Accent color must be a valid hex color',
-  }).optional(),
+  primaryColor: z
+    .string()
+    .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
+      message: 'Primary color must be a valid hex color',
+    })
+    .optional(),
+  secondaryColor: z
+    .string()
+    .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
+      message: 'Secondary color must be a valid hex color',
+    })
+    .optional(),
+  accentColor: z
+    .string()
+    .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
+      message: 'Accent color must be a valid hex color',
+    })
+    .optional(),
   tone: z.enum(['professional', 'casual', 'friendly', 'formal']).optional(),
   logoUrl: z.string().url().optional(),
   industry: z.string().optional(),
@@ -132,10 +164,16 @@ export type UpdateProductInput = z.infer<typeof updateProductSchema>;
  */
 export const productQuerySchema = z.object({
   search: z.string().optional(),
-  status: z.enum(['active', 'archived', 'pending', 'all']).optional().default('all'),
+  status: z
+    .enum(['active', 'archived', 'pending', 'all'])
+    .optional()
+    .default('all'),
   page: z.coerce.number().int().positive().optional().default(1),
   limit: z.coerce.number().int().positive().max(100).optional().default(20),
-  sort: z.enum(['name', 'created_at', 'updated_at', 'status']).optional().default('created_at'),
+  sort: z
+    .enum(['name', 'created_at', 'updated_at', 'status'])
+    .optional()
+    .default('created_at'),
   order: z.enum(['asc', 'desc']).optional().default('desc'),
 });
 

@@ -26,33 +26,39 @@ export class MockClerkAuth {
    * In production, this would use actual Clerk testing tokens
    */
   generateSessionToken(user: Partial<TestUser> = {}): string {
-    const header = btoa(JSON.stringify({
-      alg: 'RS256',
-      typ: 'JWT',
-    }));
+    const header = btoa(
+      JSON.stringify({
+        alg: 'RS256',
+        typ: 'JWT',
+      })
+    );
 
-    const payload = btoa(JSON.stringify({
-      sub: user.id || `user_${Date.now()}`,
-      iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + 3600,
-      azp: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'test-key',
-      sid: `sess_${Date.now()}`,
-      email: user.email || 'test@example.com',
-      primary_email_address_id: `email_${Date.now()}`,
-      user: {
-        id: user.id || `user_${Date.now()}`,
+    const payload = btoa(
+      JSON.stringify({
+        sub: user.id || `user_${Date.now()}`,
+        iat: Math.floor(Date.now() / 1000),
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        azp: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'test-key',
+        sid: `sess_${Date.now()}`,
+        email: user.email || 'test@example.com',
         primary_email_address_id: `email_${Date.now()}`,
-        email_addresses: [{
-          id: `email_${Date.now()}`,
-          email_address: user.email || 'test@example.com',
-          verification: { status: 'verified' as const },
-        }],
-      },
-      org: {
-        role: user.role || 'org:member',
-        orgId: user.organizationId || null,
-      },
-    }));
+        user: {
+          id: user.id || `user_${Date.now()}`,
+          primary_email_address_id: `email_${Date.now()}`,
+          email_addresses: [
+            {
+              id: `email_${Date.now()}`,
+              email_address: user.email || 'test@example.com',
+              verification: { status: 'verified' as const },
+            },
+          ],
+        },
+        org: {
+          role: user.role || 'org:member',
+          orgId: user.organizationId || null,
+        },
+      })
+    );
 
     const signature = 'mock-signature';
     return `${header}.${payload}.${signature}`;
@@ -71,7 +77,9 @@ export class MockClerkAuth {
   /**
    * Create mock cookies for authenticated state
    */
-  createAuthCookies(user: Partial<TestUser> = {}): Array<{ name: string; value: string; domain: string; path: string }> {
+  createAuthCookies(
+    user: Partial<TestUser> = {}
+  ): Array<{ name: string; value: string; domain: string; path: string }> {
     const sessionId = `sess_${Date.now()}`;
     const userId = user.id || `user_${Date.now()}`;
 
@@ -142,8 +150,14 @@ export class TestUsersFactory {
     return {
       owner: this.createOwnerUser({ organizationId: orgId, role: 'owner' }),
       admin: this.createAdminUser({ organizationId: orgId, role: 'admin' }),
-      member: this.createStandardUser({ organizationId: orgId, role: 'member' }),
-      viewer: this.createStandardUser({ organizationId: orgId, role: 'viewer' }),
+      member: this.createStandardUser({
+        organizationId: orgId,
+        role: 'member',
+      }),
+      viewer: this.createStandardUser({
+        organizationId: orgId,
+        role: 'viewer',
+      }),
     };
   }
 }

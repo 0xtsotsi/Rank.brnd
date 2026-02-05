@@ -33,7 +33,11 @@ export function PricingCard({
   // Calculate yearly savings for display
   const savings =
     interval === 'year' && plan.priceYearly > 0
-      ? Math.round(((plan.priceMonthly * 12 - plan.priceYearly) / (plan.priceMonthly * 12)) * 100)
+      ? Math.round(
+          ((plan.priceMonthly * 12 - plan.priceYearly) /
+            (plan.priceMonthly * 12)) *
+            100
+        )
       : 0;
 
   const isPopular = plan.metadata.popularity === 'most-popular';
@@ -43,23 +47,20 @@ export function PricingCard({
   const planFeatures = plan.features.map((key) => FEATURES[key]);
 
   // Group features by category
-  const featuresByCategory = planFeatures.reduce((acc, feature) => {
-    if (!acc[feature.category]) {
-      acc[feature.category] = [];
-    }
-    acc[feature.category].push(feature);
-    return acc;
-  }, {} as Record<string, typeof planFeatures>);
+  const featuresByCategory = planFeatures.reduce(
+    (acc, feature) => {
+      if (!acc[feature.category]) {
+        acc[feature.category] = [];
+      }
+      acc[feature.category].push(feature);
+      return acc;
+    },
+    {} as Record<string, typeof planFeatures>
+  );
 
-  const categoryOrder: Array<'content' | 'seo' | 'publishing' | 'api' | 'team' | 'analytics' | 'support'> = [
-    'content',
-    'seo',
-    'publishing',
-    'api',
-    'team',
-    'analytics',
-    'support',
-  ];
+  const categoryOrder: Array<
+    'content' | 'seo' | 'publishing' | 'api' | 'team' | 'analytics' | 'support'
+  > = ['content', 'seo', 'publishing', 'api', 'team', 'analytics', 'support'];
 
   return (
     <div
@@ -128,15 +129,13 @@ export function PricingCard({
           disabled:opacity-50 disabled:cursor-not-allowed
         `}
       >
-        {isLoading ? (
-          'Loading...'
-        ) : isCurrentPlan ? (
-          'Current Plan'
-        ) : price === 0 ? (
-          'Get Started'
-        ) : (
-          'Upgrade'
-        )}
+        {isLoading
+          ? 'Loading...'
+          : isCurrentPlan
+            ? 'Current Plan'
+            : price === 0
+              ? 'Get Started'
+              : 'Upgrade'}
       </button>
 
       {/* Features List */}
@@ -198,10 +197,7 @@ export function PricingCard({
             label="Keywords/month"
             value={plan.limits.keywordResearchPerMonth}
           />
-          <LimitItem
-            label="Team members"
-            value={plan.limits.teamMembers}
-          />
+          <LimitItem label="Team members" value={plan.limits.teamMembers} />
         </ul>
       </div>
     </div>

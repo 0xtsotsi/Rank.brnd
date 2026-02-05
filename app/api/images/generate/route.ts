@@ -18,7 +18,13 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { generateImage, validateApiKey, IMAGE_GENERATION_STYLES, IMAGE_SIZES, IMAGE_QUALITIES } from '@/lib/image-generation';
+import {
+  generateImage,
+  validateApiKey,
+  IMAGE_GENERATION_STYLES,
+  IMAGE_SIZES,
+  IMAGE_QUALITIES,
+} from '@/lib/image-generation';
 import type { ImageGenerationRequest } from '@/types/image-generation';
 import { ImageGenerationError } from '@/types/image-generation';
 
@@ -31,7 +37,7 @@ export const maxDuration = 60; // Max 60 seconds for image generation
 export async function POST(request: NextRequest) {
   try {
     // Parse request body
-    const body = await request.json() as Partial<ImageGenerationRequest>;
+    const body = (await request.json()) as Partial<ImageGenerationRequest>;
 
     // Validate required fields
     if (!body.prompt || typeof body.prompt !== 'string') {
@@ -50,7 +56,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate style if provided
-    if (body.style && !Object.values(IMAGE_GENERATION_STYLES).includes(body.style)) {
+    if (
+      body.style &&
+      !Object.values(IMAGE_GENERATION_STYLES).includes(body.style)
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -86,7 +95,10 @@ export async function POST(request: NextRequest) {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { success: false, error: 'Server configuration error: OpenAI API key not found' },
+        {
+          success: false,
+          error: 'Server configuration error: OpenAI API key not found',
+        },
         { status: 500 }
       );
     }
@@ -104,26 +116,28 @@ export async function POST(request: NextRequest) {
     });
 
     // Return success response
-    return NextResponse.json({
-      success: true,
-      data: result,
-    }, { status: 200 });
-
+    return NextResponse.json(
+      {
+        success: true,
+        data: result,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     // Handle ImageGenerationError
     if (error instanceof ImageGenerationError) {
       // Map error types to HTTP status codes
       const statusMap: Record<string, number> = {
-        'INVALID_PROMPT': 400,
-        'INVALID_STYLE': 400,
-        'INVALID_SIZE': 400,
-        'API_KEY_MISSING': 500,
-        'RATE_LIMIT_EXCEEDED': 429,
-        'CONTENT_POLICY_VIOLATION': 400,
-        'STORAGE_ERROR': 503,
-        'DATABASE_ERROR': 500,
-        'API_ERROR': 500,
-        'UNKNOWN_ERROR': 500,
+        INVALID_PROMPT: 400,
+        INVALID_STYLE: 400,
+        INVALID_SIZE: 400,
+        API_KEY_MISSING: 500,
+        RATE_LIMIT_EXCEEDED: 429,
+        CONTENT_POLICY_VIOLATION: 400,
+        STORAGE_ERROR: 503,
+        DATABASE_ERROR: 500,
+        API_ERROR: 500,
+        UNKNOWN_ERROR: 500,
       };
 
       const status = statusMap[error.type] || 500;

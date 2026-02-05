@@ -41,3 +41,6 @@ export * from './integrations';
 export * from './team-invitations';
 export * from './team-members';
 export * from './team-members-query';
+export * from './backlinks';
+export * from './competitor-comparisons';
+export * from './exchange-network';

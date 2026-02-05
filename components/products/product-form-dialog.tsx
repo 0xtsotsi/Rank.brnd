@@ -52,7 +52,9 @@ export function ProductFormDialog({
     metadata: {},
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [colorPreview, setColorPreview] = useState(formData.brand_colors?.primary || '#2563eb');
+  const [colorPreview, setColorPreview] = useState(
+    formData.brand_colors?.primary || '#2563eb'
+  );
 
   useEffect(() => {
     if (product) {
@@ -86,13 +88,17 @@ export function ProductFormDialog({
   }, [product, isOpen]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
 
     // Handle nested properties
     if (name.startsWith('brand_colors.')) {
-      const key = name.split('.')[1] as keyof NonNullable<ProductFormData['brand_colors']>;
+      const key = name.split('.')[1] as keyof NonNullable<
+        ProductFormData['brand_colors']
+      >;
       setFormData((prev) => ({
         ...prev,
         brand_colors: { ...prev.brand_colors, [key]: value },
@@ -101,7 +107,9 @@ export function ProductFormDialog({
         setColorPreview(value);
       }
     } else if (name.startsWith('tone_preferences.')) {
-      const key = name.split('.')[1] as keyof NonNullable<ProductFormData['tone_preferences']>;
+      const key = name.split('.')[1] as keyof NonNullable<
+        ProductFormData['tone_preferences']
+      >;
       setFormData((prev) => ({
         ...prev,
         tone_preferences: { ...prev.tone_preferences, [key]: value },
@@ -155,7 +163,11 @@ export function ProductFormDialog({
       }
     }
 
-    if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(formData.brand_colors?.primary || '')) {
+    if (
+      !/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(
+        formData.brand_colors?.primary || ''
+      )
+    ) {
       newErrors.primary = 'Invalid hex color format';
     }
 
@@ -345,7 +357,10 @@ export function ProductFormDialog({
             </label>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label htmlFor="primary" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <label
+                  htmlFor="primary"
+                  className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
+                >
                   Primary
                 </label>
                 <div className="flex items-center gap-2">
@@ -374,7 +389,10 @@ export function ProductFormDialog({
                 </div>
               </div>
               <div>
-                <label htmlFor="secondary" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <label
+                  htmlFor="secondary"
+                  className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
+                >
                   Secondary
                 </label>
                 <div className="flex items-center gap-2">
@@ -403,7 +421,10 @@ export function ProductFormDialog({
                 </div>
               </div>
               <div>
-                <label htmlFor="accent" className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <label
+                  htmlFor="accent"
+                  className="block text-xs text-gray-500 dark:text-gray-400 mb-1"
+                >
                   Accent
                 </label>
                 <div className="flex items-center gap-2">
@@ -447,7 +468,10 @@ export function ProductFormDialog({
           {/* Tone Preferences */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="tone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label
+                htmlFor="tone"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
                 Tone
               </label>
               <select
@@ -473,7 +497,10 @@ export function ProductFormDialog({
               </select>
             </div>
             <div>
-              <label htmlFor="voice" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label
+                htmlFor="voice"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
                 Voice
               </label>
               <select
@@ -503,7 +530,10 @@ export function ProductFormDialog({
           {/* Metadata */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="industry" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label
+                htmlFor="industry"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
                 Industry
               </label>
               <input
@@ -526,7 +556,10 @@ export function ProductFormDialog({
               />
             </div>
             <div>
-              <label htmlFor="target_audience" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label
+                htmlFor="target_audience"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
                 Target Audience
               </label>
               <input
@@ -552,7 +585,10 @@ export function ProductFormDialog({
 
           {/* Status */}
           <div>
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="status"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Status
             </label>
             <select
@@ -592,7 +628,11 @@ export function ProductFormDialog({
               disabled={isSaving}
               data-testid="save-product-button"
             >
-              {isSaving ? 'Saving...' : product ? 'Save Changes' : 'Add Product'}
+              {isSaving
+                ? 'Saving...'
+                : product
+                  ? 'Save Changes'
+                  : 'Add Product'}
             </button>
           </div>
         </form>

@@ -27,7 +27,13 @@ const searchQuerySchema = z.object({
   location_code: z.coerce.number().int().positive().optional(),
   language_code: z.string().optional(),
   include_suggestions: z.coerce.boolean().optional().default(false),
-  suggestion_limit: z.coerce.number().int().min(1).max(100).optional().default(20),
+  suggestion_limit: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(100)
+    .optional()
+    .default(20),
 });
 
 /**
@@ -46,7 +52,10 @@ const bulkResearchSchema = z.object({
 /**
  * Get DataForSEO credentials from environment
  */
-function getDataForSEOCredentials(): { username: string; password: string } | null {
+function getDataForSEOCredentials(): {
+  username: string;
+  password: string;
+} | null {
   const username = process.env.DATAFORSEO_USERNAME;
   const password = process.env.DATAFORSEO_PASSWORD;
 
@@ -60,7 +69,11 @@ function getDataForSEOCredentials(): { username: string; password: string } | nu
 /**
  * Transform metrics to database-compatible format
  */
-function transformMetricsToDbFormat(metrics: any, keyword: string, organizationId: string) {
+function transformMetricsToDbFormat(
+  metrics: any,
+  keyword: string,
+  organizationId: string
+) {
   return {
     organization_id: organizationId,
     keyword,
@@ -115,7 +128,8 @@ export async function GET(request: NextRequest) {
 
     // Get keyword metrics
     const metrics = await getKeywordMetrics(validatedParams.keyword, {
-      locationCode: validatedParams.location_code ?? LocationCodes.UNITED_STATES,
+      locationCode:
+        validatedParams.location_code ?? LocationCodes.UNITED_STATES,
       languageCode: validatedParams.language_code ?? LanguageCodes.ENGLISH,
     });
 
@@ -148,8 +162,10 @@ export async function GET(request: NextRequest) {
         const suggestions = await getKeywordSuggestions(
           validatedParams.keyword,
           {
-            locationCode: validatedParams.location_code ?? LocationCodes.UNITED_STATES,
-            languageCode: validatedParams.language_code ?? LanguageCodes.ENGLISH,
+            locationCode:
+              validatedParams.location_code ?? LocationCodes.UNITED_STATES,
+            languageCode:
+              validatedParams.language_code ?? LanguageCodes.ENGLISH,
           },
           validatedParams.suggestion_limit
         );
@@ -174,7 +190,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request parameters', details: error.errors },
+        { error: 'Invalid request parameters', details: error.issues },
         { status: 400 }
       );
     }
@@ -218,13 +234,10 @@ export async function POST(request: NextRequest) {
     const { researchKeywordsBatch } = await import('@/lib/dataforseo');
 
     // Research keywords in batch
-    const results = await researchKeywordsBatch(
-      validatedData.keywords,
-      {
-        locationCode: validatedData.location_code ?? LocationCodes.UNITED_STATES,
-        languageCode: validatedData.language_code ?? LanguageCodes.ENGLISH,
-      }
-    );
+    const results = await researchKeywordsBatch(validatedData.keywords, {
+      locationCode: validatedData.location_code ?? LocationCodes.UNITED_STATES,
+      languageCode: validatedData.language_code ?? LanguageCodes.ENGLISH,
+    });
 
     // Transform results
     const transformedResults = results.map((result) => ({
@@ -246,7 +259,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }

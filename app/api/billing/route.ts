@@ -7,7 +7,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireOrganizationId } from '@/lib/auth';
 import { getPlan, getAllPlans, formatPrice } from '@/lib/stripe/plans';
-import type { SubscriptionPlan, BillingInterval, SubscriptionStatus } from '@/types/subscription';
+import type {
+  SubscriptionPlan,
+  BillingInterval,
+  SubscriptionStatus,
+} from '@/types/subscription';
 
 /**
  * Mock subscription data for demonstration
@@ -86,10 +90,7 @@ export async function GET(req: NextRequest) {
     // Get plan details
     const plan = getPlan(subscription.planId);
     if (!plan) {
-      return NextResponse.json(
-        { error: 'Plan not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Plan not found' }, { status: 404 });
     }
 
     // Calculate days until next billing
@@ -227,10 +228,7 @@ export async function PATCH(req: NextRequest) {
         });
 
       default:
-        return NextResponse.json(
-          { error: 'Invalid action' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
   } catch (error: any) {
     console.error('Error updating subscription:', error);
@@ -265,7 +263,8 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
-        message: 'Subscription will be canceled at the end of the current billing period',
+        message:
+          'Subscription will be canceled at the end of the current billing period',
         cancelAtPeriodEnd: true,
       },
     });

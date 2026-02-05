@@ -13,8 +13,10 @@ import type { Database } from '@/types/database';
 import type { Json } from '@/types/database';
 
 type ActivityLog = Database['public']['Tables']['activity_logs']['Row'];
-type ActivityLogInsert = Database['public']['Tables']['activity_logs']['Insert'];
-type ActivityLogUpdate = Database['public']['Tables']['activity_logs']['Update'];
+type ActivityLogInsert =
+  Database['public']['Tables']['activity_logs']['Insert'];
+type ActivityLogUpdate =
+  Database['public']['Tables']['activity_logs']['Update'];
 
 type ActivityAction = 'create' | 'update' | 'delete' | 'publish';
 
@@ -121,7 +123,9 @@ export async function getOrganizationActivityLogs(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch activity logs',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch activity logs',
     };
   }
 }
@@ -172,7 +176,9 @@ export async function getResourceActivityLogs(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch activity logs',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch activity logs',
     };
   }
 }
@@ -193,7 +199,8 @@ export async function createActivityLog(
         action: log.action,
         resource_type: log.resource_type,
         resource_id: log.resource_id,
-        metadata: (log.metadata || DEFAULT_ACTIVITY_LOG_VALUES.metadata) as unknown as Json,
+        metadata: (log.metadata ||
+          DEFAULT_ACTIVITY_LOG_VALUES.metadata) as unknown as Json,
       })
       .select()
       .single();
@@ -206,7 +213,9 @@ export async function createActivityLog(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to create activity log',
+        error instanceof Error
+          ? error.message
+          : 'Failed to create activity log',
     };
   }
 }
@@ -242,7 +251,9 @@ export async function logActivity(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to create activity log',
+        error instanceof Error
+          ? error.message
+          : 'Failed to create activity log',
     };
   }
 }
@@ -257,7 +268,11 @@ export async function getActivityStats(
     startDate?: Date;
     endDate?: Date;
   }
-): Promise<ActivityLogResult<Array<{ action: ActivityAction; count: number; resource_type: string }>>> {
+): Promise<
+  ActivityLogResult<
+    Array<{ action: ActivityAction; count: number; resource_type: string }>
+  >
+> {
   try {
     const { data, error } = await client.rpc('get_activity_stats', {
       p_org_id: organizationId,
@@ -268,7 +283,14 @@ export async function getActivityStats(
     if (error) throw error;
     if (!data) throw new Error('Failed to get activity stats');
 
-    return { success: true, data: data as Array<{ action: ActivityAction; count: number; resource_type: string }> };
+    return {
+      success: true,
+      data: data as Array<{
+        action: ActivityAction;
+        count: number;
+        resource_type: string;
+      }>,
+    };
   } catch (error) {
     return {
       success: false,
@@ -317,7 +339,9 @@ export async function deleteOldActivityLogs(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to delete activity logs',
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete activity logs',
     };
   }
 }
@@ -342,7 +366,7 @@ export function getResourceTypeLabel(resourceType: string): string {
   // Convert snake_case or kebab-case to Title Case
   return resourceType
     .split(/[_-]/)
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
 

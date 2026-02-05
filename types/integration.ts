@@ -22,12 +22,14 @@ export type DbIntegration = Database['public']['Tables']['integrations']['Row'];
 /**
  * Integration insert type (for creating new records)
  */
-export type DbIntegrationInsert = Database['public']['Tables']['integrations']['Insert'];
+export type DbIntegrationInsert =
+  Database['public']['Tables']['integrations']['Insert'];
 
 /**
  * Integration update type (for updating existing records)
  */
-export type DbIntegrationUpdate = Database['public']['Tables']['integrations']['Update'];
+export type DbIntegrationUpdate =
+  Database['public']['Tables']['integrations']['Update'];
 
 /**
  * Integration platform enum (matches database: integration_platform)
@@ -259,7 +261,10 @@ export const PLATFORM_ICONS: Record<Platform, string> = {
 /**
  * Platform color mapping (for visual identification)
  */
-export const PLATFORM_COLORS: Record<Platform, { bg: string; text: string; border: string }> = {
+export const PLATFORM_COLORS: Record<
+  Platform,
+  { bg: string; text: string; border: string }
+> = {
   wordpress: {
     bg: 'bg-blue-50 dark:bg-blue-900/20',
     text: 'text-blue-700 dark:text-blue-300',
@@ -336,7 +341,10 @@ export const STATUS_LABELS: Record<Status, string> = {
 /**
  * Status color mapping (for Tailwind CSS)
  */
-export const STATUS_COLORS: Record<Status, { bg: string; text: string; border: string }> = {
+export const STATUS_COLORS: Record<
+  Status,
+  { bg: string; text: string; border: string }
+> = {
   active: {
     bg: 'bg-green-50 dark:bg-green-900/20',
     text: 'text-green-700 dark:text-green-300',
@@ -405,7 +413,20 @@ export const DEFAULT_INTEGRATION_METADATA: IntegrationMetadata = {
  * Validate platform type
  */
 export function isValidPlatform(platform: string): platform is Platform {
-  return ['wordpress', 'webflow', 'shopify', 'ghost', 'notion', 'squarespace', 'wix', 'contentful', 'strapi', 'google', 'google-search-console', 'custom'].includes(platform);
+  return [
+    'wordpress',
+    'webflow',
+    'shopify',
+    'ghost',
+    'notion',
+    'squarespace',
+    'wix',
+    'contentful',
+    'strapi',
+    'google',
+    'google-search-console',
+    'custom',
+  ].includes(platform);
 }
 
 /**
@@ -449,7 +470,9 @@ export function getStatusLabel(status: Status): string {
 /**
  * Convert database integration to domain integration
  */
-export function dbIntegrationToIntegration(dbIntegration: DbIntegration): Integration {
+export function dbIntegrationToIntegration(
+  dbIntegration: DbIntegration
+): Integration {
   return {
     id: dbIntegration.id,
     organization_id: dbIntegration.organization_id,
@@ -460,16 +483,23 @@ export function dbIntegrationToIntegration(dbIntegration: DbIntegration): Integr
     auth_token: dbIntegration.auth_token,
     refresh_token: dbIntegration.refresh_token,
     auth_type: (dbIntegration.auth_type ?? 'api_key') as AuthType,
-    config: (dbIntegration.config as unknown) as IntegrationConfig,
+    config: dbIntegration.config as unknown as IntegrationConfig,
     status: dbIntegration.status as Status,
-    last_synced_at: dbIntegration.last_synced_at ? new Date(dbIntegration.last_synced_at) : null,
+    last_synced_at: dbIntegration.last_synced_at
+      ? new Date(dbIntegration.last_synced_at)
+      : null,
     last_error: dbIntegration.last_error,
-    last_error_at: dbIntegration.last_error_at ? new Date(dbIntegration.last_error_at) : null,
-    sync_interval_seconds: dbIntegration.sync_interval_seconds ?? DEFAULT_SYNC_INTERVAL,
-    metadata: ((dbIntegration.metadata || {}) as unknown) as IntegrationMetadata,
+    last_error_at: dbIntegration.last_error_at
+      ? new Date(dbIntegration.last_error_at)
+      : null,
+    sync_interval_seconds:
+      dbIntegration.sync_interval_seconds ?? DEFAULT_SYNC_INTERVAL,
+    metadata: (dbIntegration.metadata || {}) as unknown as IntegrationMetadata,
     created_at: new Date(dbIntegration.created_at),
     updated_at: new Date(dbIntegration.updated_at),
-    deleted_at: dbIntegration.deleted_at ? new Date(dbIntegration.deleted_at) : null,
+    deleted_at: dbIntegration.deleted_at
+      ? new Date(dbIntegration.deleted_at)
+      : null,
   };
 }
 
@@ -477,7 +507,10 @@ export function dbIntegrationToIntegration(dbIntegration: DbIntegration): Integr
  * Convert domain integration to database insert
  */
 export function integrationToDbInsert(
-  integration: Omit<Integration, 'id' | 'created_at' | 'updated_at' | 'deleted_at'> & {
+  integration: Omit<
+    Integration,
+    'id' | 'created_at' | 'updated_at' | 'deleted_at'
+  > & {
     id?: string;
     created_at?: Date;
     updated_at?: Date;
@@ -493,38 +526,58 @@ export function integrationToDbInsert(
     auth_token: integration.auth_token || null,
     refresh_token: integration.refresh_token || null,
     auth_type: integration.auth_type,
-    config: (integration.config || DEFAULT_INTEGRATION_CONFIG) as unknown as Json,
+    config: (integration.config ||
+      DEFAULT_INTEGRATION_CONFIG) as unknown as Json,
     status: integration.status,
-    last_synced_at: integration.last_synced_at ? integration.last_synced_at.toISOString() : null,
+    last_synced_at: integration.last_synced_at
+      ? integration.last_synced_at.toISOString()
+      : null,
     last_error: integration.last_error || null,
-    last_error_at: integration.last_error_at ? integration.last_error_at.toISOString() : null,
+    last_error_at: integration.last_error_at
+      ? integration.last_error_at.toISOString()
+      : null,
     sync_interval_seconds: integration.sync_interval_seconds,
-    metadata: (integration.metadata || DEFAULT_INTEGRATION_METADATA) as unknown as Json,
+    metadata: (integration.metadata ||
+      DEFAULT_INTEGRATION_METADATA) as unknown as Json,
   };
 }
 
 /**
  * Convert domain integration to database update
  */
-export function integrationToDbUpdate(integration: Partial<Integration>): DbIntegrationUpdate {
+export function integrationToDbUpdate(
+  integration: Partial<Integration>
+): DbIntegrationUpdate {
   const update: DbIntegrationUpdate = {};
 
   if (integration.name !== undefined) update.name = integration.name;
-  if (integration.description !== undefined) update.description = integration.description;
-  if (integration.auth_token !== undefined) update.auth_token = integration.auth_token;
-  if (integration.refresh_token !== undefined) update.refresh_token = integration.refresh_token;
-  if (integration.auth_type !== undefined) update.auth_type = integration.auth_type;
-  if (integration.config !== undefined) update.config = (integration.config as unknown) as Json;
+  if (integration.description !== undefined)
+    update.description = integration.description;
+  if (integration.auth_token !== undefined)
+    update.auth_token = integration.auth_token;
+  if (integration.refresh_token !== undefined)
+    update.refresh_token = integration.refresh_token;
+  if (integration.auth_type !== undefined)
+    update.auth_type = integration.auth_type;
+  if (integration.config !== undefined)
+    update.config = integration.config as unknown as Json;
   if (integration.status !== undefined) update.status = integration.status;
   if (integration.last_synced_at !== undefined) {
-    update.last_synced_at = integration.last_synced_at ? integration.last_synced_at.toISOString() : null;
+    update.last_synced_at = integration.last_synced_at
+      ? integration.last_synced_at.toISOString()
+      : null;
   }
-  if (integration.last_error !== undefined) update.last_error = integration.last_error;
+  if (integration.last_error !== undefined)
+    update.last_error = integration.last_error;
   if (integration.last_error_at !== undefined) {
-    update.last_error_at = integration.last_error_at ? integration.last_error_at.toISOString() : null;
+    update.last_error_at = integration.last_error_at
+      ? integration.last_error_at.toISOString()
+      : null;
   }
-  if (integration.sync_interval_seconds !== undefined) update.sync_interval_seconds = integration.sync_interval_seconds;
-  if (integration.metadata !== undefined) update.metadata = (integration.metadata as unknown) as Json;
+  if (integration.sync_interval_seconds !== undefined)
+    update.sync_interval_seconds = integration.sync_interval_seconds;
+  if (integration.metadata !== undefined)
+    update.metadata = integration.metadata as unknown as Json;
 
   return update;
 }
@@ -568,7 +621,9 @@ export function formDataToIntegration(
 /**
  * Convert integration to form data
  */
-export function integrationToFormData(integration: Integration): IntegrationFormData {
+export function integrationToFormData(
+  integration: Integration
+): IntegrationFormData {
   // Validate and convert platform to Platform type
   const platform = isValidPlatform(integration.platform)
     ? integration.platform
@@ -595,7 +650,9 @@ export function needsSync(integration: Integration): boolean {
   if (integration.status !== 'active') return false;
 
   const now = new Date();
-  const elapsed = Math.floor((now.getTime() - integration.last_synced_at.getTime()) / 1000);
+  const elapsed = Math.floor(
+    (now.getTime() - integration.last_synced_at.getTime()) / 1000
+  );
   return elapsed >= integration.sync_interval_seconds;
 }
 
@@ -606,5 +663,7 @@ export function getNextSyncTime(integration: Integration): Date | null {
   if (integration.status !== 'active') return null;
 
   const lastSync = integration.last_synced_at || new Date();
-  return new Date(lastSync.getTime() + integration.sync_interval_seconds * 1000);
+  return new Date(
+    lastSync.getTime() + integration.sync_interval_seconds * 1000
+  );
 }

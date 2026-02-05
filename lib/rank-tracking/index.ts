@@ -13,10 +13,7 @@ export type {
 } from './rank-tracker-service';
 
 // Types from client
-export type {
-  TrackKeywordRequest,
-  DomainPosition,
-} from './dataforseo-client';
+export type { TrackKeywordRequest, DomainPosition } from './dataforseo-client';
 
 // Types from dataforseo-types
 export type {

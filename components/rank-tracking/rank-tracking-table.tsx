@@ -6,10 +6,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import type {
-  RankTracking,
-  RankDevice,
-} from '@/types/rank-tracking';
+import type { RankTracking, RankDevice } from '@/types/rank-tracking';
 import {
   DEVICE_LABELS,
   DEVICE_COLORS,
@@ -159,9 +156,7 @@ export function RankTrackingTable({
     const change = getPositionChange(position, previousPosition);
 
     if (change.direction === 'unknown' || change.change === null) {
-      return (
-        <span className="text-gray-400 text-xs">No data</span>
-      );
+      return <span className="text-gray-400 text-xs">No data</span>;
     }
 
     if (change.direction === 'same') {
@@ -347,7 +342,9 @@ export function RankTrackingTable({
                     {/* Volume */}
                     <div className="col-span-2">
                       <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        {row.search_volume ? formatLargeNumber(row.search_volume) : 'N/A'}
+                        {row.search_volume
+                          ? formatLargeNumber(row.search_volume)
+                          : 'N/A'}
                       </p>
                       {row.ctr !== undefined && row.ctr !== null && (
                         <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -435,26 +432,28 @@ export function RankTrackingTable({
                                 </dd>
                               </div>
                             )}
-                            {row.impressions !== undefined && row.impressions !== null && (
-                              <div className="flex justify-between">
-                                <dt className="text-gray-500 dark:text-gray-400">
-                                  Impressions
-                                </dt>
-                                <dd className="font-medium text-gray-900 dark:text-white">
-                                  {formatLargeNumber(row.impressions)}
-                                </dd>
-                              </div>
-                            )}
-                            {row.clicks !== undefined && row.clicks !== null && (
-                              <div className="flex justify-between">
-                                <dt className="text-gray-500 dark:text-gray-400">
-                                  Clicks
-                                </dt>
-                                <dd className="font-medium text-gray-900 dark:text-white">
-                                  {formatLargeNumber(row.clicks)}
-                                </dd>
-                              </div>
-                            )}
+                            {row.impressions !== undefined &&
+                              row.impressions !== null && (
+                                <div className="flex justify-between">
+                                  <dt className="text-gray-500 dark:text-gray-400">
+                                    Impressions
+                                  </dt>
+                                  <dd className="font-medium text-gray-900 dark:text-white">
+                                    {formatLargeNumber(row.impressions)}
+                                  </dd>
+                                </div>
+                              )}
+                            {row.clicks !== undefined &&
+                              row.clicks !== null && (
+                                <div className="flex justify-between">
+                                  <dt className="text-gray-500 dark:text-gray-400">
+                                    Clicks
+                                  </dt>
+                                  <dd className="font-medium text-gray-900 dark:text-white">
+                                    {formatLargeNumber(row.clicks)}
+                                  </dd>
+                                </div>
+                              )}
                             {row.ctr !== undefined && row.ctr !== null && (
                               <div className="flex justify-between">
                                 <dt className="text-gray-500 dark:text-gray-400">

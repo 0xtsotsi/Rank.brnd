@@ -11,7 +11,10 @@ import type {
   KeywordFilters,
   ImportResult,
 } from '@/types/keyword-research';
-import type { KeywordImportRow, DifficultyLevel } from '@/types/keyword-research';
+import type {
+  KeywordImportRow,
+  DifficultyLevel,
+} from '@/types/keyword-research';
 import { KeywordFilters as KeywordFiltersComponent } from '@/components/keyword-research/keyword-filters';
 import { KeywordTable } from '@/components/keyword-research/keyword-table';
 import { BulkImportDialog } from '@/components/keyword-research/bulk-import-dialog';
@@ -284,9 +287,7 @@ export default function KeywordResearchPage() {
         <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-start gap-3">
           <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
           <div className="flex-1">
-            <p className="font-medium text-red-900 dark:text-red-300">
-              Error
-            </p>
+            <p className="font-medium text-red-900 dark:text-red-300">Error</p>
             <p className="text-sm text-red-700 dark:text-red-400 mt-1">
               {error}
             </p>
@@ -304,7 +305,9 @@ export default function KeywordResearchPage() {
       {successMessage && (
         <div className="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 flex items-center gap-2">
           <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
-          <p className="text-sm text-green-700 dark:text-green-400">{successMessage}</p>
+          <p className="text-sm text-green-700 dark:text-green-400">
+            {successMessage}
+          </p>
           <button
             onClick={() => setSuccessMessage(null)}
             className="ml-auto p-1 hover:bg-green-200 dark:hover:bg-green-800 rounded"

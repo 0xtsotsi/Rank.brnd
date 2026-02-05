@@ -8,7 +8,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
-import { acceptTeamInvitation, getTeamMemberById } from '@/lib/supabase/team-members';
+import {
+  acceptTeamInvitation,
+  getTeamMemberById,
+} from '@/lib/supabase/team-members';
 import { acceptTeamInvitationSchema } from '@/lib/schemas/team-members';
 import { ZodError } from 'zod';
 
@@ -29,7 +32,10 @@ export async function POST(request: NextRequest) {
     const client = getSupabaseServerClient();
 
     // First, verify the team member exists and belongs to the user
-    const memberResult = await getTeamMemberById(client, validatedData.team_member_id);
+    const memberResult = await getTeamMemberById(
+      client,
+      validatedData.team_member_id
+    );
 
     if (!memberResult.success) {
       return NextResponse.json(
@@ -46,10 +52,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!userRecord) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     // Verify this invitation belongs to the user
@@ -76,10 +79,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }

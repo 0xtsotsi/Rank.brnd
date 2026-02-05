@@ -41,10 +41,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const result = await getTeamMemberById(client, teamMemberId);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 404 });
     }
 
     // Verify user has access to this organization
@@ -65,7 +62,8 @@ export async function GET(request: NextRequest, context: RouteContext) {
       .eq('user_id', userRecord?.id || '')
       .maybeSingle();
 
-    const isAdmin = ownTeamMembership && ['admin', 'owner'].includes(ownTeamMembership.role);
+    const isAdmin =
+      ownTeamMembership && ['admin', 'owner'].includes(ownTeamMembership.role);
 
     if (!isOwnMembership && !isAdmin) {
       return NextResponse.json(
@@ -131,7 +129,13 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     if (!result.success) {
       return NextResponse.json(
         { error: result.error },
-        { status: result.error.includes('permission') || result.error.includes('Forbidden') ? 403 : 500 }
+        {
+          status:
+            result.error.includes('permission') ||
+            result.error.includes('Forbidden')
+              ? 403
+              : 500,
+        }
       );
     }
 
@@ -139,7 +143,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }
@@ -174,7 +178,13 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     if (!result.success) {
       return NextResponse.json(
         { error: result.error },
-        { status: result.error.includes('permission') || result.error.includes('Forbidden') ? 403 : 500 }
+        {
+          status:
+            result.error.includes('permission') ||
+            result.error.includes('Forbidden')
+              ? 403
+              : 500,
+        }
       );
     }
 

@@ -176,7 +176,8 @@ export const useSetTheme = () => useUIStore((state) => state.setTheme);
 export const useToggleTheme = () => useUIStore((state) => state.toggleTheme);
 export const useSetSidebarCollapsed = () =>
   useUIStore((state) => state.setSidebarCollapsed);
-export const useToggleSidebar = () => useUIStore((state) => state.toggleSidebar);
+export const useToggleSidebar = () =>
+  useUIStore((state) => state.toggleSidebar);
 export const useSetSelectedProduct = () =>
   useUIStore((state) => state.setSelectedProduct);
 export const useSetMobileSidebarOpen = () =>

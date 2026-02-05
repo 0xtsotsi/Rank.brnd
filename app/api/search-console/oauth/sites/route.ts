@@ -22,7 +22,10 @@ export async function GET(request: NextRequest) {
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json(
-        { error: 'Unauthorized', message: 'You must be logged in to access Google Search Console' },
+        {
+          error: 'Unauthorized',
+          message: 'You must be logged in to access Google Search Console',
+        },
         { status: 401 }
       );
     }
@@ -39,7 +42,10 @@ export async function GET(request: NextRequest) {
 
     if (!orgMember) {
       return NextResponse.json(
-        { error: 'No organization found', message: 'User is not a member of any organization' },
+        {
+          error: 'No organization found',
+          message: 'User is not a member of any organization',
+        },
         { status: 404 }
       );
     }
@@ -55,17 +61,26 @@ export async function GET(request: NextRequest) {
 
     if (integrationError || !integration) {
       return NextResponse.json(
-        { error: 'Integration not found', message: 'Google Search Console is not connected' },
+        {
+          error: 'Integration not found',
+          message: 'Google Search Console is not connected',
+        },
         { status: 404 }
       );
     }
 
     // Decrypt access token
-    const accessToken = await decryptFromIntegration((integration as any).auth_token);
+    const accessToken = await decryptFromIntegration(
+      (integration as any).auth_token
+    );
     const tokens: OAuthTokens = {
       accessToken,
-      refreshToken: (integration as any).refresh_token ? await decryptFromIntegration((integration as any).refresh_token) : null,
-      obtainedAt: ((integration as any).metadata as any)?.obtained_at || new Date().toISOString(),
+      refreshToken: (integration as any).refresh_token
+        ? await decryptFromIntegration((integration as any).refresh_token)
+        : null,
+      obtainedAt:
+        ((integration as any).metadata as any)?.obtained_at ||
+        new Date().toISOString(),
     };
 
     // Create GSC client and fetch sites

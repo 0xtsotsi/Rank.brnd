@@ -224,9 +224,10 @@ export function ProductSwitcher({ className }: ProductSwitcherProps) {
 
   // Focus trap
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
-    const focusableElements = menuRef.current?.querySelectorAll<HTMLButtonElement>(
-      'button:not(:disabled)'
-    );
+    const focusableElements =
+      menuRef.current?.querySelectorAll<HTMLButtonElement>(
+        'button:not(:disabled)'
+      );
 
     if (!focusableElements || focusableElements.length === 0) return;
 
@@ -252,7 +253,8 @@ export function ProductSwitcher({ className }: ProductSwitcherProps) {
 
       const direction = event.key === 'ArrowDown' ? 1 : -1;
       const nextIndex =
-        (currentIndex + direction + focusableElements.length) % focusableElements.length;
+        (currentIndex + direction + focusableElements.length) %
+        focusableElements.length;
 
       focusableElements[nextIndex]?.focus();
     }
@@ -289,7 +291,10 @@ export function ProductSwitcher({ className }: ProductSwitcherProps) {
             className
           )}
         >
-          <Icons.Building className="h-5 w-5 text-gray-600 dark:text-gray-400" aria-hidden="true" />
+          <Icons.Building
+            className="h-5 w-5 text-gray-600 dark:text-gray-400"
+            aria-hidden="true"
+          />
         </button>
 
         {isOpen && (
@@ -340,8 +345,13 @@ export function ProductSwitcher({ className }: ProductSwitcherProps) {
                           : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                       )}
                     >
-                      <Icons.Building className="h-4 w-4 shrink-0" aria-hidden="true" />
-                      <span className="flex-1 text-left truncate">{product.name}</span>
+                      <Icons.Building
+                        className="h-4 w-4 shrink-0"
+                        aria-hidden="true"
+                      />
+                      <span className="flex-1 text-left truncate">
+                        {product.name}
+                      </span>
                       {isActive && (
                         <Icons.Check className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
                       )}
@@ -400,7 +410,10 @@ export function ProductSwitcher({ className }: ProductSwitcherProps) {
         )}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <Icons.Building className="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+          <Icons.Building
+            className="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+          />
           <span className="truncate font-medium">{displayName}</span>
         </div>
         <Icons.ChevronDown
@@ -463,7 +476,9 @@ export function ProductSwitcher({ className }: ProductSwitcherProps) {
                     <div className="h-8 w-8 rounded bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 shrink-0">
                       <Icons.Building className="h-4 w-4" aria-hidden="true" />
                     </div>
-                    <span className="flex-1 text-left truncate">{product.name}</span>
+                    <span className="flex-1 text-left truncate">
+                      {product.name}
+                    </span>
                     {isActive && (
                       <Icons.Check className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
                     )}

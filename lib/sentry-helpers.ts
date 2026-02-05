@@ -1,5 +1,5 @@
 // @ts-nocheck - Sentry Span type mismatch
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs';
 
 /**
  * Start a server-side performance span

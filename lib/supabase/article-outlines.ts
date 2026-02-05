@@ -79,7 +79,9 @@ export async function getArticleOutlineById(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch article outline',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch article outline',
     };
   }
 }
@@ -146,7 +148,9 @@ export async function getOrganizationArticleOutlines(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch article outlines',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch article outlines',
     };
   }
 }
@@ -192,7 +196,9 @@ export async function getKeywordArticleOutlines(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch article outlines',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch article outlines',
     };
   }
 }
@@ -221,7 +227,9 @@ export async function getLatestArticleOutline(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch latest article outline',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch latest article outline',
     };
   }
 }
@@ -266,7 +274,9 @@ export async function createArticleOutline(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to create article outline',
+        error instanceof Error
+          ? error.message
+          : 'Failed to create article outline',
     };
   }
 }
@@ -295,7 +305,9 @@ export async function updateArticleOutline(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to update article outline',
+        error instanceof Error
+          ? error.message
+          : 'Failed to update article outline',
     };
   }
 }
@@ -339,7 +351,9 @@ export async function deleteArticleOutline(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to delete article outline',
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete article outline',
     };
   }
 }
@@ -351,12 +365,14 @@ export async function getArticleOutlineStats(
   client: SupabaseClient,
   organizationId: string,
   productId?: string
-): Promise<ArticleOutlineResult<{
-  total: number;
-  byStatus: Record<OutlineStatus, number>;
-  byContentType: Record<string, number>;
-  avgEstimatedWordCount: number;
-}>> {
+): Promise<
+  ArticleOutlineResult<{
+    total: number;
+    byStatus: Record<OutlineStatus, number>;
+    byContentType: Record<string, number>;
+    avgEstimatedWordCount: number;
+  }>
+> {
   try {
     let query = client
       .from('article_outlines')
@@ -417,14 +433,17 @@ export async function getArticleOutlineStats(
         total: data.length,
         byStatus,
         byContentType,
-        avgEstimatedWordCount: data.length > 0 ? totalWordCount / data.length : 0,
+        avgEstimatedWordCount:
+          data.length > 0 ? totalWordCount / data.length : 0,
       },
     };
   } catch (error) {
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch article outline stats',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch article outline stats',
     };
   }
 }
@@ -488,8 +507,23 @@ export function validateArticleOutline(outline: {
   }
 
   if (outline.content_type !== undefined) {
-    const validTypes = ['blog_post', 'guide', 'tutorial', 'listicle', 'review', 'comparison', 'case_study', 'news_article', 'opinion', 'faq', 'how_to'];
-    if (typeof outline.content_type !== 'string' || !validTypes.includes(outline.content_type)) {
+    const validTypes = [
+      'blog_post',
+      'guide',
+      'tutorial',
+      'listicle',
+      'review',
+      'comparison',
+      'case_study',
+      'news_article',
+      'opinion',
+      'faq',
+      'how_to',
+    ];
+    if (
+      typeof outline.content_type !== 'string' ||
+      !validTypes.includes(outline.content_type)
+    ) {
       errors.push(`Content type must be one of: ${validTypes.join(', ')}`);
     }
   }

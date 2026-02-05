@@ -16,7 +16,10 @@ import {
   getPendingInvitations,
   hasMinTeamRole,
 } from '@/lib/supabase/team-members';
-import { teamMembersQuerySchema, teamMembersPostSchema } from '@/lib/schemas/team-members';
+import {
+  teamMembersQuerySchema,
+  teamMembersPostSchema,
+} from '@/lib/schemas/team-members';
 import { ZodError } from 'zod';
 
 /**
@@ -65,10 +68,7 @@ export async function GET(request: NextRequest) {
       const result = await getPendingInvitations(client, organizationId);
 
       if (!result.success) {
-        return NextResponse.json(
-          { error: result.error },
-          { status: 500 }
-        );
+        return NextResponse.json({ error: result.error }, { status: 500 });
       }
 
       return NextResponse.json({
@@ -83,10 +83,7 @@ export async function GET(request: NextRequest) {
       const result = await getUserTeamMemberships(client, userId);
 
       if (!result.success) {
-        return NextResponse.json(
-          { error: result.error },
-          { status: 500 }
-        );
+        return NextResponse.json({ error: result.error }, { status: 500 });
       }
 
       return NextResponse.json({
@@ -99,8 +96,18 @@ export async function GET(request: NextRequest) {
     const queryParams = {
       organization_id: searchParams.get('organization_id') || undefined,
       include_pending: searchParams.get('include_pending') === 'true',
-      role: searchParams.get('role') as 'owner' | 'admin' | 'editor' | 'viewer' | null,
-      sort: (searchParams.get('sort') as 'invited_at' | 'accepted_at' | 'role' | 'name') || 'invited_at',
+      role: searchParams.get('role') as
+        | 'owner'
+        | 'admin'
+        | 'editor'
+        | 'viewer'
+        | null,
+      sort:
+        (searchParams.get('sort') as
+          | 'invited_at'
+          | 'accepted_at'
+          | 'role'
+          | 'name') || 'invited_at',
       order: (searchParams.get('order') as 'asc' | 'desc') || 'desc',
     };
 
@@ -129,16 +136,15 @@ export async function GET(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     // Filter by role if specified
     let filteredData = result.data;
     if (validatedParams.role) {
-      filteredData = filteredData.filter((tm) => tm.role === validatedParams.role);
+      filteredData = filteredData.filter(
+        (tm) => tm.role === validatedParams.role
+      );
     }
 
     // Sort the data
@@ -161,7 +167,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid query parameters', details: error.errors },
+        { error: 'Invalid query parameters', details: error.issues },
         { status: 400 }
       );
     }
@@ -218,8 +224,14 @@ export async function POST(request: NextRequest) {
         )
       );
 
-      const successful = results.filter((r) => r.status === 'fulfilled' && r.value.success).length;
-      const failed = results.filter((r) => r.status === 'rejected' || (r.status === 'fulfilled' && !r.value.success)).length;
+      const successful = results.filter(
+        (r) => r.status === 'fulfilled' && r.value.success
+      ).length;
+      const failed = results.filter(
+        (r) =>
+          r.status === 'rejected' ||
+          (r.status === 'fulfilled' && !r.value.success)
+      ).length;
 
       return NextResponse.json({
         total: validatedData.members.length,
@@ -237,17 +249,14 @@ export async function POST(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data, { status: 201 });
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }
@@ -287,10 +296,7 @@ export async function DELETE(request: NextRequest) {
     const result = await removeTeamMember(client, teamMemberId, userId);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });

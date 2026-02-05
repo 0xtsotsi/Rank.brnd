@@ -61,7 +61,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get or generate slug
-    let finalSlug = slug?.trim().toLowerCase().replace(/[^a-z0-9-]/g, '') || '';
+    let finalSlug =
+      slug
+        ?.trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, '') || '';
     if (!finalSlug) {
       // Generate slug from name
       finalSlug = trimmedName
@@ -79,11 +83,13 @@ export async function POST(request: NextRequest) {
     finalSlug = await generateUniqueSlug(supabase, finalSlug);
 
     // Get user from Clerk to sync to our database
-    const clerkUser = await (await fetch(`https://api.clerk.com/v1/users/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
-      },
-    })).json();
+    const clerkUser = await (
+      await fetch(`https://api.clerk.com/v1/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
+        },
+      })
+    ).json();
 
     // Create or update user in our database
     const { data: userData, error: userError } = await supabase
@@ -92,7 +98,10 @@ export async function POST(request: NextRequest) {
         {
           clerk_id: userId,
           email: clerkUser.email_addresses?.[0]?.email_address || '',
-          name: `${clerkUser.first_name || ''} ${clerkUser.last_name || ''}`.trim() || clerkUser.username || 'User',
+          name:
+            `${clerkUser.first_name || ''} ${clerkUser.last_name || ''}`.trim() ||
+            clerkUser.username ||
+            'User',
           avatar_url: clerkUser.image_url || null,
           role: 'member',
           is_active: true,

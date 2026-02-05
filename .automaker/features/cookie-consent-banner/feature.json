@@ -3,10 +3,10 @@
   "category": "Compliance",
   "title": "Implement cookie consent banner",
   "description": "Create cookie consent banner with essential/optional categories, store preferences in cookies, load non-essential scripts based on consent.",
-  "status": "backlog",
+  "status": "verified",
   "priority": 2,
   "complexity": "simple",
   "createdAt": "2026-01-02T09:30:07.967Z",
-  "updatedAt": "2026-01-02T09:30:07.967Z",
+  "updatedAt": "2026-02-05T18:55:55.890Z",
   "descriptionHistory": []
 }

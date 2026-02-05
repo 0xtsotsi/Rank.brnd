@@ -16,7 +16,13 @@ type Article = Database['public']['Tables']['articles']['Row'];
 /**
  * Schedule status types
  */
-export type ScheduleStatus = 'pending' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'cancelled';
+export type ScheduleStatus =
+  | 'pending'
+  | 'scheduled'
+  | 'publishing'
+  | 'published'
+  | 'failed'
+  | 'cancelled';
 
 /**
  * Recurrence types for recurring schedules
@@ -122,7 +128,9 @@ export async function getScheduledArticles(
 
     // Search in title and content
     if (options.search) {
-      query = query.or(`title.ilike.%${options.search}%,content.ilike.%${options.search}%,slug.ilike.%${options.search}%`);
+      query = query.or(
+        `title.ilike.%${options.search}%,content.ilike.%${options.search}%,slug.ilike.%${options.search}%`
+      );
     }
 
     // Apply sorting
@@ -135,7 +143,10 @@ export async function getScheduledArticles(
       query = query.limit(options.limit);
     }
     if (options.offset) {
-      query = query.range(options.offset, (options.offset || 0) + (options.limit || 50) - 1);
+      query = query.range(
+        options.offset,
+        (options.offset || 0) + (options.limit || 50) - 1
+      );
     }
 
     const { data, error } = await query;
@@ -171,7 +182,9 @@ export async function getScheduledArticles(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch scheduled articles',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch scheduled articles',
     };
   }
 }
@@ -224,7 +237,9 @@ export async function getScheduledArticleById(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch scheduled article',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch scheduled article',
     };
   }
 }
@@ -258,7 +273,7 @@ export async function scheduleArticle(
 
     // Update the article with scheduled_at and store schedule metadata
     const metadata = {
-      ...(article.metadata as Record<string, unknown> || {}),
+      ...((article.metadata as Record<string, unknown>) || {}),
       schedule: {
         recurrence: options.recurrence || 'none',
         recurrence_end_date: options.recurrenceEndDate || null,
@@ -338,9 +353,10 @@ export async function updateScheduledArticle(
     }
 
     // Merge metadata
-    const existingMetadata = current.metadata as Record<string, unknown> || {};
+    const existingMetadata =
+      (current.metadata as Record<string, unknown>) || {};
     const scheduleMetadata = {
-      ...(existingMetadata.schedule as Record<string, unknown> || {}),
+      ...((existingMetadata.schedule as Record<string, unknown>) || {}),
       recurrence: updates.recurrence,
       recurrence_end_date: updates.recurrenceEndDate,
       notes: updates.notes,
@@ -402,7 +418,9 @@ export async function updateScheduledArticle(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to update scheduled article',
+        error instanceof Error
+          ? error.message
+          : 'Failed to update scheduled article',
     };
   }
 }
@@ -430,9 +448,10 @@ export async function cancelScheduledArticle(
     }
 
     // Update metadata to mark as cancelled
-    const existingMetadata = current.metadata as Record<string, unknown> || {};
+    const existingMetadata =
+      (current.metadata as Record<string, unknown>) || {};
     const scheduleMetadata = {
-      ...(existingMetadata.schedule as Record<string, unknown> || {}),
+      ...((existingMetadata.schedule as Record<string, unknown>) || {}),
       status: 'cancelled',
       cancelled_at: new Date().toISOString(),
       cancel_reason: reason || null,
@@ -460,7 +479,9 @@ export async function cancelScheduledArticle(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to cancel scheduled article',
+        error instanceof Error
+          ? error.message
+          : 'Failed to cancel scheduled article',
     };
   }
 }
@@ -487,7 +508,8 @@ export async function removeSchedule(
     }
 
     // Remove schedule metadata
-    const existingMetadata = current.metadata as Record<string, unknown> || {};
+    const existingMetadata =
+      (current.metadata as Record<string, unknown>) || {};
     const newMetadata = { ...existingMetadata };
     delete (newMetadata as Record<string, unknown>).schedule;
 
@@ -525,16 +547,23 @@ export async function bulkUpdateSchedules(
     status?: ScheduleStatus;
     notes?: string;
   }
-): Promise<ScheduleResult<{
-  successful: string[];
-  failed: Array<{ id: string; error: string }>;
-}>> {
+): Promise<
+  ScheduleResult<{
+    successful: string[];
+    failed: Array<{ id: string; error: string }>;
+  }>
+> {
   const successful: string[] = [];
   const failed: Array<{ id: string; error: string }> = [];
 
   for (const scheduleId of scheduleIds) {
     try {
-      const result = await updateScheduledArticle(client, scheduleId, organizationId, updates);
+      const result = await updateScheduledArticle(
+        client,
+        scheduleId,
+        organizationId,
+        updates
+      );
       if (result.success) {
         successful.push(scheduleId);
       } else {
@@ -561,16 +590,18 @@ export async function getScheduleStats(
   client: SupabaseClient<Database>,
   organizationId: string,
   productId?: string
-): Promise<ScheduleResult<{
-  total: number;
-  pending: number;
-  scheduled: number;
-  published: number;
-  failed: number;
-  cancelled: number;
-  thisMonth: number;
-  nextWeek: number;
-}>> {
+): Promise<
+  ScheduleResult<{
+    total: number;
+    pending: number;
+    scheduled: number;
+    published: number;
+    failed: number;
+    cancelled: number;
+    thisMonth: number;
+    nextWeek: number;
+  }>
+> {
   try {
     let query = client
       .from('articles')
@@ -651,7 +682,9 @@ export async function getScheduleStats(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch schedule stats',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch schedule stats',
     };
   }
 }
@@ -675,9 +708,8 @@ function getScheduleStatus(article: Article): ScheduleStatus {
     return article.status === 'published' ? 'published' : 'failed';
   }
 
-  const scheduleMetadata = (article.metadata as Record<string, unknown>)?.schedule as
-    | Record<string, unknown>
-    | undefined;
+  const scheduleMetadata = (article.metadata as Record<string, unknown>)
+    ?.schedule as Record<string, unknown> | undefined;
 
   if (scheduleMetadata?.status === 'cancelled') {
     return 'cancelled';
@@ -695,10 +727,13 @@ export async function canUserAccessSchedule(
   userId: string
 ): Promise<boolean> {
   try {
-    const result = await client.rpc('can_access_article' as any, {
-      p_article_id: scheduleId,
-      p_user_id: userId,
-    } as any);
+    const result = await client.rpc(
+      'can_access_article' as any,
+      {
+        p_article_id: scheduleId,
+        p_user_id: userId,
+      } as any
+    );
 
     return result.data === true;
   } catch {
@@ -773,7 +808,9 @@ export async function getUpcomingSchedules(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch upcoming schedules',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch upcoming schedules',
     };
   }
 }

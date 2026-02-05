@@ -72,7 +72,11 @@ export class DataForSEOKeywordClient {
    */
   private parseError(response: Response, data?: unknown): DataForSEOError {
     if (data && typeof data === 'object' && 'message' in data) {
-      const errorData = data as { code?: number; message: string; errors?: unknown };
+      const errorData = data as {
+        code?: number;
+        message: string;
+        errors?: unknown;
+      };
       return {
         code: errorData.code ?? response.status,
         message: errorData.message,
@@ -175,10 +179,9 @@ export class DataForSEOKeywordClient {
     };
 
     try {
-      const response = await this.post<DataForSEOResponse<KeywordDataTaskResult>>(
-        '/keyword_data/google_ads/search_volume/live',
-        [request]
-      );
+      const response = await this.post<
+        DataForSEOResponse<KeywordDataTaskResult>
+      >('/keyword_data/google_ads/search_volume/live', [request]);
 
       const task = response.tasks?.[0];
       const result = task?.result?.[0];
@@ -204,10 +207,9 @@ export class DataForSEOKeywordClient {
     requests: KeywordDataTaskRequest[]
   ): Promise<KeywordDataTaskResult[]> {
     try {
-      const response = await this.post<DataForSEOResponse<KeywordDataTaskResult>>(
-        '/keyword_data/google_ads/search_volume/live',
-        requests
-      );
+      const response = await this.post<
+        DataForSEOResponse<KeywordDataTaskResult>
+      >('/keyword_data/google_ads/search_volume/live', requests);
 
       const results: KeywordDataTaskResult[] = [];
 
@@ -252,15 +254,17 @@ export class DataForSEOKeywordClient {
         include_cpc: true,
       };
 
-      const response = await this.post<DataForSEOResponse<KeywordSuggestionsResponse>>(
-        '/keyword_data/google_ads/keyword_suggestions/live',
-        [request]
-      );
+      const response = await this.post<
+        DataForSEOResponse<KeywordSuggestionsResponse>
+      >('/keyword_data/google_ads/keyword_suggestions/live', [request]);
 
       const task = response.tasks?.[0];
       return task?.result?.[0] || null;
     } catch (error) {
-      console.error(`Error getting keyword suggestions for "${seedKeyword}":`, error);
+      console.error(
+        `Error getting keyword suggestions for "${seedKeyword}":`,
+        error
+      );
       throw error;
     }
   }
@@ -322,17 +326,50 @@ export class DataForSEOKeywordClient {
   determineSearchIntent(keyword: string): SearchIntent {
     const lowerKeyword = keyword.toLowerCase();
 
-    const transactionalWords = ['buy', 'purchase', 'order', 'cheap', 'discount', 'sale', 'price', 'deal', 'coupon'];
-    const commercialWords = ['best', 'top', 'review', 'comparison', 'compare', 'vs', 'rating', 'recommended'];
-    const navigationalPatterns = ['.com', '.org', '.net', 'www', 'login', 'signin', 'facebook', 'google', 'amazon', 'youtube', 'twitter'];
+    const transactionalWords = [
+      'buy',
+      'purchase',
+      'order',
+      'cheap',
+      'discount',
+      'sale',
+      'price',
+      'deal',
+      'coupon',
+    ];
+    const commercialWords = [
+      'best',
+      'top',
+      'review',
+      'comparison',
+      'compare',
+      'vs',
+      'rating',
+      'recommended',
+    ];
+    const navigationalPatterns = [
+      '.com',
+      '.org',
+      '.net',
+      'www',
+      'login',
+      'signin',
+      'facebook',
+      'google',
+      'amazon',
+      'youtube',
+      'twitter',
+    ];
 
-    if (transactionalWords.some(word => lowerKeyword.includes(word))) {
+    if (transactionalWords.some((word) => lowerKeyword.includes(word))) {
       return 'transactional';
     }
-    if (commercialWords.some(word => lowerKeyword.includes(word))) {
+    if (commercialWords.some((word) => lowerKeyword.includes(word))) {
       return 'commercial';
     }
-    if (navigationalPatterns.some(pattern => lowerKeyword.includes(pattern))) {
+    if (
+      navigationalPatterns.some((pattern) => lowerKeyword.includes(pattern))
+    ) {
       return 'navigational';
     }
 
@@ -356,7 +393,10 @@ export class DataForSEOKeywordClient {
   /**
    * Create a keyword data request from options
    */
-  createRequest(keyword: string, options: KeywordDataOptions = {}): KeywordDataTaskRequest {
+  createRequest(
+    keyword: string,
+    options: KeywordDataOptions = {}
+  ): KeywordDataTaskRequest {
     return {
       keyword,
       location_code: options.locationCode ?? 2840,
@@ -381,10 +421,7 @@ export function createDataForSEOKeywordClient(
     return null;
   }
 
-  return new DataForSEOKeywordClient(
-    { username, password },
-    options
-  );
+  return new DataForSEOKeywordClient({ username, password }, options);
 }
 
 /**
@@ -394,13 +431,9 @@ export function createKeywordClientFromEnv(): DataForSEOKeywordClient | null {
   const username = process.env.DATAFORSEO_USERNAME;
   const password = process.env.DATAFORSEO_PASSWORD;
 
-  return createDataForSEOKeywordClient(
-    username,
-    password,
-    {
-      apiBaseUrl: process.env.DATAFORSEO_API_BASE_URL,
-      apiVersion: process.env.DATAFORSEO_API_VERSION,
-      timeout: parseInt(process.env.DATAFORSEO_TIMEOUT || '60000', 10),
-    }
-  );
+  return createDataForSEOKeywordClient(username, password, {
+    apiBaseUrl: process.env.DATAFORSEO_API_BASE_URL,
+    apiVersion: process.env.DATAFORSEO_API_VERSION,
+    timeout: parseInt(process.env.DATAFORSEO_TIMEOUT || '60000', 10),
+  });
 }

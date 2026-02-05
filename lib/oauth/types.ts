@@ -130,7 +130,12 @@ export interface OAuthStateData {
 /**
  * Connection status
  */
-export type ConnectionStatus = 'connected' | 'disconnected' | 'error' | 'pending' | 'expired';
+export type ConnectionStatus =
+  | 'connected'
+  | 'disconnected'
+  | 'error'
+  | 'pending'
+  | 'expired';
 
 /**
  * Connection validation result

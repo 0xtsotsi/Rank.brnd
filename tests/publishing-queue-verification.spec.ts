@@ -8,21 +8,30 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Publishing Queue Feature', () => {
-  test('verify database migration file exists', async ({ }) => {
+  test('verify database migration file exists', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
-    const migrationPath = path.join(process.cwd(), 'supabase/migrations/20260204_create_publishing_queue_table.sql');
-    const exists = await fs.access(migrationPath).then(() => true).catch(() => false);
+    const migrationPath = path.join(
+      process.cwd(),
+      'supabase/migrations/20260204_create_publishing_queue_table.sql'
+    );
+    const exists = await fs
+      .access(migrationPath)
+      .then(() => true)
+      .catch(() => false);
 
     expect(exists).toBe(true);
   });
 
-  test('verify database migration has required elements', async ({ }) => {
+  test('verify database migration has required elements', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
-    const migrationPath = path.join(process.cwd(), 'supabase/migrations/20260204_create_publishing_queue_table.sql');
+    const migrationPath = path.join(
+      process.cwd(),
+      'supabase/migrations/20260204_create_publishing_queue_table.sql'
+    );
     const content = await fs.readFile(migrationPath, 'utf-8');
 
     // Check for key elements
@@ -37,17 +46,20 @@ test.describe('Publishing Queue Feature', () => {
     expect(content).toContain('last_error');
   });
 
-  test('verify TypeScript types file exists', async ({ }) => {
+  test('verify TypeScript types file exists', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
     const typesPath = path.join(process.cwd(), 'types/publishing-queue.ts');
-    const exists = await fs.access(typesPath).then(() => true).catch(() => false);
+    const exists = await fs
+      .access(typesPath)
+      .then(() => true)
+      .catch(() => false);
 
     expect(exists).toBe(true);
   });
 
-  test('verify TypeScript types have required exports', async ({ }) => {
+  test('verify TypeScript types have required exports', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
@@ -62,21 +74,30 @@ test.describe('Publishing Queue Feature', () => {
     expect(content).toContain('PUBLISHING_PLATFORM_LABELS');
   });
 
-  test('verify Supabase utility functions file exists', async ({ }) => {
+  test('verify Supabase utility functions file exists', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
-    const utilPath = path.join(process.cwd(), 'lib/supabase/publishing-queue.ts');
-    const exists = await fs.access(utilPath).then(() => true).catch(() => false);
+    const utilPath = path.join(
+      process.cwd(),
+      'lib/supabase/publishing-queue.ts'
+    );
+    const exists = await fs
+      .access(utilPath)
+      .then(() => true)
+      .catch(() => false);
 
     expect(exists).toBe(true);
   });
 
-  test('verify Supabase utility functions have required exports', async ({ }) => {
+  test('verify Supabase utility functions have required exports', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
-    const utilPath = path.join(process.cwd(), 'lib/supabase/publishing-queue.ts');
+    const utilPath = path.join(
+      process.cwd(),
+      'lib/supabase/publishing-queue.ts'
+    );
     const content = await fs.readFile(utilPath, 'utf-8');
 
     // Check for key functions
@@ -90,21 +111,30 @@ test.describe('Publishing Queue Feature', () => {
     expect(content).toContain('retryPublishingItem');
   });
 
-  test('verify Zod schemas file exists', async ({ }) => {
+  test('verify Zod schemas file exists', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
-    const schemaPath = path.join(process.cwd(), 'lib/schemas/publishing-queue.ts');
-    const exists = await fs.access(schemaPath).then(() => true).catch(() => false);
+    const schemaPath = path.join(
+      process.cwd(),
+      'lib/schemas/publishing-queue.ts'
+    );
+    const exists = await fs
+      .access(schemaPath)
+      .then(() => true)
+      .catch(() => false);
 
     expect(exists).toBe(true);
   });
 
-  test('verify Zod schemas have required exports', async ({ }) => {
+  test('verify Zod schemas have required exports', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
-    const schemaPath = path.join(process.cwd(), 'lib/schemas/publishing-queue.ts');
+    const schemaPath = path.join(
+      process.cwd(),
+      'lib/schemas/publishing-queue.ts'
+    );
     const content = await fs.readFile(schemaPath, 'utf-8');
 
     // Check for key schemas
@@ -116,7 +146,7 @@ test.describe('Publishing Queue Feature', () => {
     expect(content).toContain('retryPublishingQueueItemSchema');
   });
 
-  test('verify API route files exist', async ({ }) => {
+  test('verify API route files exist', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
@@ -132,22 +162,31 @@ test.describe('Publishing Queue Feature', () => {
 
     for (const file of files) {
       const filePath = path.join(process.cwd(), file);
-      const exists = await fs.access(filePath).then(() => true).catch(() => false);
+      const exists = await fs
+        .access(filePath)
+        .then(() => true)
+        .catch(() => false);
       expect(exists).toBe(true);
     }
   });
 
-  test('verify UI component file exists', async ({ }) => {
+  test('verify UI component file exists', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
-    const componentPath = path.join(process.cwd(), 'components/articles/publishing-queue-table.tsx');
-    const exists = await fs.access(componentPath).then(() => true).catch(() => false);
+    const componentPath = path.join(
+      process.cwd(),
+      'components/articles/publishing-queue-table.tsx'
+    );
+    const exists = await fs
+      .access(componentPath)
+      .then(() => true)
+      .catch(() => false);
 
     expect(exists).toBe(true);
   });
 
-  test('verify database types include publishing_queue', async ({ }) => {
+  test('verify database types include publishing_queue', async ({}) => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
@@ -157,7 +196,9 @@ test.describe('Publishing Queue Feature', () => {
     // Check for publishing_queue in database types
     expect(content).toContain('publishing_queue');
     expect(content).toContain('Publishing Queue table');
-    expect(content).toContain("'pending' | 'queued' | 'publishing' | 'published' | 'failed' | 'cancelled'");
+    expect(content).toContain(
+      "'pending' | 'queued' | 'publishing' | 'published' | 'failed' | 'cancelled'"
+    );
     expect(content).toContain('publishing_queue_status');
     expect(content).toContain('publishing_platform');
   });

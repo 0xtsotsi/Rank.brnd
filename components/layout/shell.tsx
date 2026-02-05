@@ -12,6 +12,7 @@
 import { useEffect } from 'react';
 import { SidebarNavigation } from '@/components/navigation/sidebar-navigation';
 import { TopHeaderBar } from '@/components/navigation/top-header-bar';
+import { SectionErrorBoundary } from '@/components/error-boundaries';
 import { cn } from '@/lib/utils';
 import {
   useSidebarCollapsed,
@@ -74,7 +75,11 @@ export function Shell({ children, title, breadcrumbs }: ShellProps) {
 
         {/* Page Content */}
         <main id="main-content" className="p-4 sm:p-6 lg:p-8" tabIndex={-1}>
-          <div className="max-w-7xl mx-auto">{children}</div>
+          <div className="max-w-7xl mx-auto">
+            <SectionErrorBoundary title="Page Content">
+              {children}
+            </SectionErrorBoundary>
+          </div>
         </main>
       </div>
     </div>

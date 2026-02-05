@@ -15,13 +15,14 @@ function extractHeadings(html: string): Array<{
   wordCount: number;
 }> {
   const headingRegex = /<h([1-6])[^>]*>(.*?)<\/h\1>/gi;
-  const headings: Array<{ level: number; text: string; wordCount: number }> = [];
+  const headings: Array<{ level: number; text: string; wordCount: number }> =
+    [];
   let match;
 
   while ((match = headingRegex.exec(html)) !== null) {
     const level = parseInt(match[1], 10);
     const text = match[2].replace(/<[^>]+>/g, '').trim();
-    const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
+    const wordCount = text.split(/\s+/).filter((w) => w.length > 0).length;
 
     if (text) {
       headings.push({ level, text, wordCount });
@@ -66,7 +67,9 @@ function checkHeadingHierarchy(headings: Array<{ level: number }>): {
 /**
  * Count headings by level
  */
-function countHeadingsByLevel(headings: Array<{ level: number }>): Record<number, number> {
+function countHeadingsByLevel(
+  headings: Array<{ level: number }>
+): Record<number, number> {
   const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
 
   for (const heading of headings) {
@@ -120,8 +123,8 @@ export function calculateHeadingScore(structure: HeadingStructure): number {
   }
 
   // Has subheadings (30 points)
-  const hasH2 = structure.headings.some(h => h.level === 2);
-  const hasH3 = structure.headings.some(h => h.level === 3);
+  const hasH2 = structure.headings.some((h) => h.level === 2);
+  const hasH3 = structure.headings.some((h) => h.level === 3);
 
   if (hasH2 && hasH3) {
     score += 30;
@@ -137,13 +140,19 @@ export function calculateHeadingScore(structure: HeadingStructure): number {
 /**
  * Get heading structure issues/recommendations
  */
-export function getHeadingRecommendations(structure: HeadingStructure): string[] {
+export function getHeadingRecommendations(
+  structure: HeadingStructure
+): string[] {
   const recommendations: string[] = [];
 
   if (!structure.hasH1) {
-    recommendations.push('Add an H1 heading to your content. This is the most important heading for SEO.');
+    recommendations.push(
+      'Add an H1 heading to your content. This is the most important heading for SEO.'
+    );
   } else if (structure.h1Count > 1) {
-    recommendations.push('You have multiple H1 headings. Use only one H1 per page and use H2-H6 for subheadings.');
+    recommendations.push(
+      'You have multiple H1 headings. Use only one H1 per page and use H2-H6 for subheadings.'
+    );
   }
 
   if (!structure.headingHierarchy) {
@@ -153,18 +162,24 @@ export function getHeadingRecommendations(structure: HeadingStructure): string[]
     );
   }
 
-  const hasH2 = structure.headings.some(h => h.level === 2);
+  const hasH2 = structure.headings.some((h) => h.level === 2);
   if (!hasH2 && structure.hasH1) {
-    recommendations.push('Add H2 subheadings to break up your content and improve readability.');
+    recommendations.push(
+      'Add H2 subheadings to break up your content and improve readability.'
+    );
   }
 
-  const emptyHeadings = structure.headings.filter(h => h.wordCount === 0);
+  const emptyHeadings = structure.headings.filter((h) => h.wordCount === 0);
   if (emptyHeadings.length > 0) {
-    recommendations.push('Some headings appear to be empty. Add descriptive text to all headings.');
+    recommendations.push(
+      'Some headings appear to be empty. Add descriptive text to all headings.'
+    );
   }
 
   if (structure.headings.length === 0) {
-    recommendations.push('Add headings to structure your content. This helps both readers and search engines understand your content.');
+    recommendations.push(
+      'Add headings to structure your content. This helps both readers and search engines understand your content.'
+    );
   }
 
   return recommendations;

@@ -21,8 +21,14 @@ import { z } from 'zod';
 const syncRequestSchema = z.object({
   siteUrl: z.string().min(1),
   productId: z.string().uuid(),
-  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  startDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
+  endDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
   daysBack: z.number().int().min(1).max(365).default(30),
   syncByQuery: z.boolean().default(true),
   syncByPage: z.boolean().default(false),
@@ -41,7 +47,10 @@ export async function POST(request: NextRequest) {
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json(
-        { error: 'Unauthorized', message: 'You must be logged in to sync Google Search Console data' },
+        {
+          error: 'Unauthorized',
+          message: 'You must be logged in to sync Google Search Console data',
+        },
         { status: 401 }
       );
     }
@@ -85,7 +94,10 @@ export async function POST(request: NextRequest) {
 
     if (!orgMember) {
       return NextResponse.json(
-        { error: 'No organization found', message: 'User is not a member of any organization' },
+        {
+          error: 'No organization found',
+          message: 'User is not a member of any organization',
+        },
         { status: 404 }
       );
     }
@@ -97,9 +109,16 @@ export async function POST(request: NextRequest) {
       .eq('id', productId)
       .single();
 
-    if (!product || (product as any).organization_id !== (orgMember as any).organization_id) {
+    if (
+      !product ||
+      (product as any).organization_id !== (orgMember as any).organization_id
+    ) {
       return NextResponse.json(
-        { error: 'Product not found', message: 'The specified product does not exist or you do not have access to it' },
+        {
+          error: 'Product not found',
+          message:
+            'The specified product does not exist or you do not have access to it',
+        },
         { status: 404 }
       );
     }
@@ -115,17 +134,26 @@ export async function POST(request: NextRequest) {
 
     if (!integration) {
       return NextResponse.json(
-        { error: 'Integration not found', message: 'Google Search Console is not connected' },
+        {
+          error: 'Integration not found',
+          message: 'Google Search Console is not connected',
+        },
         { status: 404 }
       );
     }
 
     // Decrypt access token
-    const accessToken = await decryptFromIntegration((integration as any).auth_token);
+    const accessToken = await decryptFromIntegration(
+      (integration as any).auth_token
+    );
     const tokens: OAuthTokens = {
       accessToken,
-      refreshToken: (integration as any).refresh_token ? await decryptFromIntegration((integration as any).refresh_token) : null,
-      obtainedAt: ((integration as any).metadata as any)?.obtained_at || new Date().toISOString(),
+      refreshToken: (integration as any).refresh_token
+        ? await decryptFromIntegration((integration as any).refresh_token)
+        : null,
+      obtainedAt:
+        ((integration as any).metadata as any)?.obtained_at ||
+        new Date().toISOString(),
     };
 
     // Calculate date range
@@ -166,7 +194,7 @@ export async function POST(request: NextRequest) {
           { rowLimit: queryRowLimit, minImpressions }
         );
 
-        const formattedData = queryData.map(item => ({
+        const formattedData = queryData.map((item) => ({
           keyword: item.query,
           impressions: item.impressions,
           clicks: item.clicks,
@@ -192,7 +220,9 @@ export async function POST(request: NextRequest) {
           syncResults.totalRecords += formattedData.length;
         }
       } catch (error) {
-        syncResults.errors.push(`Query sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        syncResults.errors.push(
+          `Query sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 
@@ -206,7 +236,7 @@ export async function POST(request: NextRequest) {
           500
         );
 
-        const formattedData = pageData.map(item => ({
+        const formattedData = pageData.map((item) => ({
           keyword: `page:${item.page}`, // Prefix with page: to distinguish from queries
           impressions: item.impressions,
           clicks: item.clicks,
@@ -233,7 +263,9 @@ export async function POST(request: NextRequest) {
           syncResults.totalRecords += formattedData.length;
         }
       } catch (error) {
-        syncResults.errors.push(`Page sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        syncResults.errors.push(
+          `Page sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 
@@ -247,7 +279,7 @@ export async function POST(request: NextRequest) {
           500
         );
 
-        const formattedData = countryData.map(item => ({
+        const formattedData = countryData.map((item) => ({
           keyword: `country:${item.country}`,
           impressions: item.impressions,
           clicks: item.clicks,
@@ -274,7 +306,9 @@ export async function POST(request: NextRequest) {
           syncResults.totalRecords += formattedData.length;
         }
       } catch (error) {
-        syncResults.errors.push(`Country sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        syncResults.errors.push(
+          `Country sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 
@@ -287,7 +321,7 @@ export async function POST(request: NextRequest) {
           endDate
         );
 
-        const formattedData = deviceData.map(item => ({
+        const formattedData = deviceData.map((item) => ({
           keyword: `device:${item.device}`,
           impressions: item.impressions,
           clicks: item.clicks,
@@ -314,7 +348,9 @@ export async function POST(request: NextRequest) {
           syncResults.totalRecords += formattedData.length;
         }
       } catch (error) {
-        syncResults.errors.push(`Device sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        syncResults.errors.push(
+          `Device sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 
@@ -331,9 +367,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: syncResults.errors.length === 0,
-      message: syncResults.errors.length === 0
-        ? 'Data synced successfully'
-        : 'Data synced with some errors',
+      message:
+        syncResults.errors.length === 0
+          ? 'Data synced successfully'
+          : 'Data synced with some errors',
       results: syncResults,
       dateRange: { startDate, endDate },
     });

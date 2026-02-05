@@ -67,7 +67,10 @@ export class RankTrackerService {
   private client: SupabaseClient<Database>;
   private tracker: DataForSEORankTracker | null;
 
-  constructor(client: SupabaseClient<Database>, tracker?: DataForSEORankTracker) {
+  constructor(
+    client: SupabaseClient<Database>,
+    tracker?: DataForSEORankTracker
+  ) {
     this.client = client;
     this.tracker = tracker || this.createTrackerFromEnv();
   }
@@ -96,7 +99,7 @@ export class RankTrackerService {
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   private normalizeDomain(url: string): string {
@@ -118,7 +121,9 @@ export class RankTrackerService {
    * @param options - Tracking options including keywords to track
    * @returns Promise with tracking results
    */
-  async trackKeywords(options: TrackKeywordsOptions): Promise<RankTrackingJobResult> {
+  async trackKeywords(
+    options: TrackKeywordsOptions
+  ): Promise<RankTrackingJobResult> {
     const startTime = Date.now();
     const result: RankTrackingJobResult = {
       total: options.keywords.length,
@@ -165,7 +170,13 @@ export class RankTrackerService {
 
         // Process results and store in database
         const recordsToInsert = trackingResult.results
-          .filter((r) => r.success && r.result && r.result.positions.length > 0 && r.keyword_id)
+          .filter(
+            (r) =>
+              r.success &&
+              r.result &&
+              r.result.positions.length > 0 &&
+              r.keyword_id
+          )
           .map((r) => {
             const topPosition = r.result!.positions[0];
             return {
@@ -193,7 +204,10 @@ export class RankTrackerService {
           });
 
         if (recordsToInsert.length > 0) {
-          const insertResult = await bulkInsertRankTracking(this.client, recordsToInsert);
+          const insertResult = await bulkInsertRankTracking(
+            this.client,
+            recordsToInsert
+          );
 
           if (!insertResult.success) {
             logger.error('Failed to insert rank tracking records', {
@@ -286,9 +300,17 @@ export class RankTrackerService {
       location?: string;
       device?: 'desktop' | 'mobile' | 'tablet';
     } = {}
-  ): Promise<{ success: boolean; position?: number; url?: string; error?: string }> {
+  ): Promise<{
+    success: boolean;
+    position?: number;
+    url?: string;
+    error?: string;
+  }> {
     if (!this.tracker) {
-      return { success: false, error: 'DataForSEO rank tracker not configured' };
+      return {
+        success: false,
+        error: 'DataForSEO rank tracker not configured',
+      };
     }
 
     try {
@@ -412,7 +434,9 @@ export class RankTrackerService {
   /**
    * Get organization's default domain for rank tracking
    */
-  private async getOrganizationDomain(organizationId?: string): Promise<string> {
+  private async getOrganizationDomain(
+    organizationId?: string
+  ): Promise<string> {
     if (!organizationId) {
       return 'example.com';
     }

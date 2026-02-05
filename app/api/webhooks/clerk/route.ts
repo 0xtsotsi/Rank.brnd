@@ -135,7 +135,8 @@ export async function POST(req: NextRequest) {
  * This ensures we have a local user record for organization membership.
  */
 async function handleUserCreated(data: any) {
-  const { id, email_addresses, first_name, last_name, image_url, username } = data;
+  const { id, email_addresses, first_name, last_name, image_url, username } =
+    data;
   const primaryEmail = email_addresses.find(
     (e: any) => e.id === data.primary_email_address_id
   )?.email_address;
@@ -172,7 +173,8 @@ async function handleUserCreated(data: any) {
  * Syncs user profile updates from Clerk to our Supabase database.
  */
 async function handleUserUpdated(data: any) {
-  const { id, email_addresses, first_name, last_name, image_url, username } = data;
+  const { id, email_addresses, first_name, last_name, image_url, username } =
+    data;
   const primaryEmail = email_addresses.find(
     (e: any) => e.id === data.primary_email_address_id
   )?.email_address;
@@ -191,7 +193,8 @@ async function handleUserUpdated(data: any) {
     .from('users')
     .update({
       email: primaryEmail || '',
-      name: `${first_name || ''} ${last_name || ''}`.trim() || username || 'User',
+      name:
+        `${first_name || ''} ${last_name || ''}`.trim() || username || 'User',
       avatar_url: image_url || null,
       updated_at: new Date().toISOString(),
     })

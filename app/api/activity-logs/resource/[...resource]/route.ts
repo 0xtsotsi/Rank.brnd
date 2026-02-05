@@ -44,7 +44,11 @@ export async function GET(
 
     // If organization_id is provided, verify user is a member
     if (organizationId) {
-      const isMember = await isOrganizationMember(client, organizationId, userId);
+      const isMember = await isOrganizationMember(
+        client,
+        organizationId,
+        userId
+      );
 
       if (!isMember) {
         return NextResponse.json(
@@ -96,7 +100,7 @@ export async function GET(
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request', details: error.errors },
+        { error: 'Invalid request', details: error.issues },
         { status: 400 }
       );
     }

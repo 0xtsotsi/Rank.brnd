@@ -57,14 +57,21 @@ export async function GET() {
         (sessionClaims?.metadata as any)?.lastName ||
         sessionClaims?.family_name
           ? `${(sessionClaims?.metadata as any)?.firstName || sessionClaims?.given_name || ''} ${
-              (sessionClaims?.metadata as any)?.lastName || sessionClaims?.family_name || ''
+              (sessionClaims?.metadata as any)?.lastName ||
+              sessionClaims?.family_name ||
+              ''
             }`.trim()
           : null,
     });
   } catch (error) {
     console.error('Error fetching session:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch session', userId: null, orgId: null, organizations: [] },
+      {
+        error: 'Failed to fetch session',
+        userId: null,
+        orgId: null,
+        organizations: [],
+      },
       { status: 500 }
     );
   }

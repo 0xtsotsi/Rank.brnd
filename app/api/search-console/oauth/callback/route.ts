@@ -36,7 +36,10 @@ export async function GET(request: NextRequest) {
     if (error) {
       console.error('Google OAuth error:', error, errorDescription);
       return NextResponse.redirect(
-        new URL(`/dashboard/integrations?error=${error}&message=${encodeURIComponent(errorDescription || error)}`, request.url)
+        new URL(
+          `/dashboard/integrations?error=${error}&message=${encodeURIComponent(errorDescription || error)}`,
+          request.url
+        )
       );
     }
 
@@ -54,21 +57,32 @@ export async function GET(request: NextRequest) {
     }
 
     // Get OAuth credentials from environment
-    const clientId = process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_OAUTH_CLIENT_ID;
-    const clientSecret = process.env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_OAUTH_CLIENT_SECRET;
-    const redirectUri = process.env.GOOGLE_REDIRECT_URI || process.env.GOOGLE_OAUTH_REDIRECT_URI
-      || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/search-console/oauth/callback`;
+    const clientId =
+      process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_OAUTH_CLIENT_ID;
+    const clientSecret =
+      process.env.GOOGLE_CLIENT_SECRET ||
+      process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+    const redirectUri =
+      process.env.GOOGLE_REDIRECT_URI ||
+      process.env.GOOGLE_OAUTH_REDIRECT_URI ||
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/search-console/oauth/callback`;
 
     // Validate credentials
     if (!clientId) {
       return NextResponse.redirect(
-        new URL('/dashboard/integrations?error=config_missing&field=client_id', request.url)
+        new URL(
+          '/dashboard/integrations?error=config_missing&field=client_id',
+          request.url
+        )
       );
     }
 
     if (!clientSecret) {
       return NextResponse.redirect(
-        new URL('/dashboard/integrations?error=config_missing&field=client_secret', request.url)
+        new URL(
+          '/dashboard/integrations?error=config_missing&field=client_secret',
+          request.url
+        )
       );
     }
 
@@ -109,7 +123,9 @@ export async function GET(request: NextRequest) {
       .single();
 
     // Encrypt tokens for storage
-    const encryptedAccessToken = await encryptForIntegration(tokens.accessToken);
+    const encryptedAccessToken = await encryptForIntegration(
+      tokens.accessToken
+    );
     const encryptedRefreshToken = tokens.refreshToken
       ? await encryptForIntegration(tokens.refreshToken)
       : null;
@@ -132,33 +148,37 @@ export async function GET(request: NextRequest) {
         .eq('id', (existingIntegration as any).id);
     } else {
       // Create new integration
-      await client
-        .from('integrations')
-        .insert({
-          organization_id: (orgMember as any).organization_id,
-          platform: 'google-search-console',
-          name: 'Google Search Console',
-          description: 'Connect to Google Search Console for search analytics',
-          auth_token: encryptedAccessToken,
-          refresh_token: encryptedRefreshToken,
-          auth_type: 'oauth',
-          status: 'active',
-          config: {},
-          metadata: {
-            ...tokens,
-            obtained_at: tokens.obtainedAt,
-          },
-        } as any);
+      await client.from('integrations').insert({
+        organization_id: (orgMember as any).organization_id,
+        platform: 'google-search-console',
+        name: 'Google Search Console',
+        description: 'Connect to Google Search Console for search analytics',
+        auth_token: encryptedAccessToken,
+        refresh_token: encryptedRefreshToken,
+        auth_type: 'oauth',
+        status: 'active',
+        config: {},
+        metadata: {
+          ...tokens,
+          obtained_at: tokens.obtainedAt,
+        },
+      } as any);
     }
 
     // Redirect to integrations page with success
     return NextResponse.redirect(
-      new URL('/dashboard/integrations?success=google_search_console_connected', request.url)
+      new URL(
+        '/dashboard/integrations?success=google_search_console_connected',
+        request.url
+      )
     );
   } catch (error) {
     console.error('Google OAuth callback error:', error);
     return NextResponse.redirect(
-      new URL(`/dashboard/integrations?error=oauth_failed&message=${encodeURIComponent(error instanceof Error ? error.message : 'Unknown error')}`, request.url)
+      new URL(
+        `/dashboard/integrations?error=oauth_failed&message=${encodeURIComponent(error instanceof Error ? error.message : 'Unknown error')}`,
+        request.url
+      )
     );
   }
 }

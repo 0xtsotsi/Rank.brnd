@@ -56,7 +56,9 @@ export async function getCorrelationId(): Promise<string> {
 /**
  * Extract correlation ID from a Request object
  */
-export function extractCorrelationIdFromRequest(request: Request): string | undefined {
+export function extractCorrelationIdFromRequest(
+  request: Request
+): string | undefined {
   return request.headers.get(CORRELATION_HEADER) ?? undefined;
 }
 
@@ -86,7 +88,10 @@ export function withCorrelationId(
  * Create a child correlation ID for nested operations
  * Appends a suffix to track sub-operations
  */
-export function createChildCorrelationId(parentId: string, operation: string): string {
+export function createChildCorrelationId(
+  parentId: string,
+  operation: string
+): string {
   const shortHash = Math.random().toString(36).substring(2, 6);
   return `${parentId}/${operation}:${shortHash}`;
 }

@@ -18,7 +18,11 @@ const DropdownMenuContext = React.createContext<{
   setOpen: () => {},
 });
 
-const DropdownMenu = ({ children, open: controlledOpen, onOpenChange }: DropdownMenuProps) => {
+const DropdownMenu = ({
+  children,
+  open: controlledOpen,
+  onOpenChange,
+}: DropdownMenuProps) => {
   const [internalOpen, setInternalOpen] = React.useState(false);
   const open = controlledOpen ?? internalOpen;
   const setOpen = onOpenChange ?? setInternalOpen;
@@ -65,7 +69,10 @@ const DropdownMenuContent = React.forwardRef<
     if (!open) return;
 
     const handleClickOutside = (e: MouseEvent) => {
-      if (contentRef.current && !contentRef.current.contains(e.target as Node)) {
+      if (
+        contentRef.current &&
+        !contentRef.current.contains(e.target as Node)
+      ) {
         // Will be handled by parent setOpen
       }
     };

@@ -18,9 +18,11 @@ const hexColorSchema = z
 /**
  * Required hex color validation schema
  */
-const requiredHexColorSchema = z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
-  message: 'Invalid hex color format (e.g., #2563eb)',
-});
+const requiredHexColorSchema = z
+  .string()
+  .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
+    message: 'Invalid hex color format (e.g., #2563eb)',
+  });
 
 /**
  * Brand tone validation schema

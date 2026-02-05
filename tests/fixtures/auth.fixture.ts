@@ -30,7 +30,10 @@ export const test = base.extend<AuthFixtures>({
   },
 
   login: async ({ page }, use) => {
-    const loginFunc = async (email = 'test@example.com', password = 'password') => {
+    const loginFunc = async (
+      email = 'test@example.com',
+      password = 'password'
+    ) => {
       await page.goto('/sign-in');
 
       // Clerk handles the login form

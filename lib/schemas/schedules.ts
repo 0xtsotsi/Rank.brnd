@@ -22,7 +22,13 @@ const scheduleStatusSchema = z.enum([
 /**
  * Recurrence types for recurring schedules
  */
-const recurrenceTypeSchema = z.enum(['none', 'daily', 'weekly', 'monthly', 'yearly']);
+const recurrenceTypeSchema = z.enum([
+  'none',
+  'daily',
+  'weekly',
+  'monthly',
+  'yearly',
+]);
 
 /**
  * Create Schedule Schema
@@ -35,7 +41,10 @@ export const createScheduleSchema = z.object({
   scheduled_at: z.string().datetime('Invalid scheduled date'),
   status: scheduleStatusSchema.optional().default('pending'),
   recurrence: recurrenceTypeSchema.optional().default('none'),
-  recurrence_end_date: z.string().datetime('Invalid recurrence end date').optional(),
+  recurrence_end_date: z
+    .string()
+    .datetime('Invalid recurrence end date')
+    .optional(),
   notes: z.string().max(2000, 'Notes are too long').optional(),
   metadata: z.record(z.unknown()).optional(),
 });
@@ -50,7 +59,11 @@ export const updateScheduleSchema = z.object({
   scheduled_at: z.string().datetime('Invalid scheduled date').optional(),
   status: scheduleStatusSchema.optional(),
   recurrence: recurrenceTypeSchema.optional(),
-  recurrence_end_date: z.string().datetime('Invalid recurrence end date').optional().nullable(),
+  recurrence_end_date: z
+    .string()
+    .datetime('Invalid recurrence end date')
+    .optional()
+    .nullable(),
   notes: z.string().max(2000, 'Notes are too long').optional(),
   metadata: z.record(z.unknown()).optional(),
 });
@@ -69,7 +82,10 @@ export const schedulesQuerySchema = z.object({
   search: z.string().optional(),
   limit: z.coerce.number().int().positive().max(100).optional().default(50),
   offset: z.coerce.number().int().nonnegative().optional().default(0),
-  sort: z.enum(['scheduled_at', 'created_at', 'title', 'status']).optional().default('scheduled_at'),
+  sort: z
+    .enum(['scheduled_at', 'created_at', 'title', 'status'])
+    .optional()
+    .default('scheduled_at'),
   order: z.enum(['asc', 'desc']).optional().default('asc'),
 });
 

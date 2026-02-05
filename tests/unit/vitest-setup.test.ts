@@ -39,7 +39,8 @@ describe('Vitest Configuration', () => {
 
 describe('Test Utilities', () => {
   it('should import test helpers', async () => {
-    const { createMockFn, delay, createMockResponse } = await import('./vitest-helpers');
+    const { createMockFn, delay, createMockResponse } =
+      await import('./vitest-helpers');
 
     const mock = createMockFn((x: number) => x * 2);
     expect(mock(5)).toBe(10);

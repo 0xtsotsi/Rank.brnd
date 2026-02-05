@@ -33,12 +33,7 @@ const CONTENT_PATTERNS: Record<ContentType, RegExp[]> = {
     /\/news\//i,
     /\/\d{4}\/\d{2}\//, // Date-based URLs
   ],
-  product_page: [
-    /\/product\//i,
-    /\/item\//i,
-    /\/p\//i,
-    /\/buy/i,
-  ],
+  product_page: [/\/product\//i, /\/item\//i, /\/p\//i, /\/buy/i],
   category_page: [
     /\/category\//i,
     /\/cat\//i,
@@ -46,14 +41,8 @@ const CONTENT_PATTERNS: Record<ContentType, RegExp[]> = {
     /\/shop\//i,
     /\/products?$/i,
   ],
-  homepage: [
-    /^https?:\/\/[^\/]+\/?$/,
-  ],
-  landing_page: [
-    /\/lp\//i,
-    /\/landing\//i,
-    /\/campaign\//i,
-  ],
+  homepage: [/^https?:\/\/[^\/]+\/?$/],
+  landing_page: [/\/lp\//i, /\/landing\//i, /\/campaign\//i],
   documentation: [
     /\/docs?\//i,
     /\/documentation/i,
@@ -61,17 +50,8 @@ const CONTENT_PATTERNS: Record<ContentType, RegExp[]> = {
     /\/guide\//i,
     /\/tutorial\//i,
   ],
-  news_article: [
-    /\/news\//i,
-    /\/press\//i,
-    /\/story\//i,
-  ],
-  video: [
-    /youtube\.com/i,
-    /vimeo\.com/i,
-    /\/video\//i,
-    /watch\?v=/i,
-  ],
+  news_article: [/\/news\//i, /\/press\//i, /\/story\//i],
+  video: [/youtube\.com/i, /vimeo\.com/i, /\/video\//i, /watch\?v=/i],
   forum: [
     /reddit\.com/i,
     /\/forum\//i,
@@ -80,25 +60,10 @@ const CONTENT_PATTERNS: Record<ContentType, RegExp[]> = {
     /stackexchange\.com/i,
     /stackoverflow\.com/i,
   ],
-  comparison: [
-    /vs\.?$/i,
-    /compare/i,
-    /alternative/i,
-    /review/i,
-  ],
-  review: [
-    /\/review/i,
-    /\/rating/i,
-    /\/test/i,
-  ],
-  how_to: [
-    /how[- ]to/i,
-    /guide[- ]to/i,
-    /step[- ]by[- ]step/i,
-  ],
-  listicle: [
-    /\d+\s+(ways?|tips?|ideas?|examples?|best)/i,
-  ],
+  comparison: [/vs\.?$/i, /compare/i, /alternative/i, /review/i],
+  review: [/\/review/i, /\/rating/i, /\/test/i],
+  how_to: [/how[- ]to/i, /guide[- ]to/i, /step[- ]by[- ]step/i],
+  listicle: [/\d+\s+(ways?|tips?|ideas?|examples?|best)/i],
   unknown: [],
 };
 
@@ -128,7 +93,9 @@ export function classifyContentType(result: OrganicResult): ContentType {
 /**
  * Determine URL structure type
  */
-function getUrlStructure(url: URL): 'clean' | 'parameterized' | 'dated' | 'mixed' {
+function getUrlStructure(
+  url: URL
+): 'clean' | 'parameterized' | 'dated' | 'mixed' {
   const hasParams = url.search.length > 0;
   const hasDate = /\d{4}\/\d{2}\/\d{2}/.test(url.pathname);
 
@@ -141,7 +108,9 @@ function getUrlStructure(url: URL): 'clean' | 'parameterized' | 'dated' | 'mixed
 /**
  * Estimate domain authority tier based on domain patterns
  */
-function estimateAuthorityTier(domain: string): 'high' | 'medium' | 'low' | 'unknown' {
+function estimateAuthorityTier(
+  domain: string
+): 'high' | 'medium' | 'low' | 'unknown' {
   const highAuthorityDomains = [
     'wikipedia.org',
     'youtube.com',
@@ -217,8 +186,12 @@ export function extractSeoIndicators(
   const snippetWords = snippetLower.split(/\s+/);
   const keywords = keywordLower.split(/\s+/);
 
-  const titleContainsKeyword = keywords.some(k => titleWords.some(w => w.includes(k)));
-  const snippetContainsKeyword = keywords.some(k => snippetWords.some(w => w.includes(k)));
+  const titleContainsKeyword = keywords.some((k) =>
+    titleWords.some((w) => w.includes(k))
+  );
+  const snippetContainsKeyword = keywords.some((k) =>
+    snippetWords.some((w) => w.includes(k))
+  );
 
   return {
     titleContainsKeyword,
@@ -240,7 +213,9 @@ export function extractSeoIndicators(
 /**
  * Estimate content length from snippet
  */
-function estimateContentLength(result: OrganicResult): 'short' | 'medium' | 'long' {
+function estimateContentLength(
+  result: OrganicResult
+): 'short' | 'medium' | 'long' {
   const snippetLength = result.snippet.length;
   const titleLength = result.title.length;
   const hasRichSnippet = !!result.richSnippet;
@@ -285,7 +260,7 @@ export function analyzeCompetitors(
   targetKeyword?: string
 ): CompetitorContentStructure[] {
   const keyword = targetKeyword || response.searchParameters.q;
-  return response.organicResults.map(result =>
+  return response.organicResults.map((result) =>
     analyzeCompetitor(result, keyword)
   );
 }
@@ -297,39 +272,35 @@ export function analyzeCompetitors(
 /**
  * Calculate SERP difficulty score (0-100)
  */
-function calculateSerpDifficulty(competitors: CompetitorContentStructure[]): number {
+function calculateSerpDifficulty(
+  competitors: CompetitorContentStructure[]
+): number {
   if (competitors.length === 0) return 0;
 
   let score = 0;
 
   // High authority domains increase difficulty
   const highAuthorityCount = competitors.filter(
-    c => c.seoIndicators.estimatedAuthorityTier === 'high'
+    (c) => c.seoIndicators.estimatedAuthorityTier === 'high'
   ).length;
   score += (highAuthorityCount / competitors.length) * 30;
 
   // Keyword optimization in titles increases difficulty
   const keywordOptimizedCount = competitors.filter(
-    c => c.seoIndicators.titleContainsKeyword
+    (c) => c.seoIndicators.titleContainsKeyword
   ).length;
   score += (keywordOptimizedCount / competitors.length) * 25;
 
   // HTTPS adoption (sign of mature SEO)
-  const httpsCount = competitors.filter(
-    c => c.seoIndicators.hasHttps
-  ).length;
+  const httpsCount = competitors.filter((c) => c.seoIndicators.hasHttps).length;
   score += (httpsCount / competitors.length) * 10;
 
   // Rich snippets indicate structured content (harder to compete)
-  const richSnippetCount = competitors.filter(
-    c => c.hasRichSnippets
-  ).length;
+  const richSnippetCount = competitors.filter((c) => c.hasRichSnippets).length;
   score += (richSnippetCount / competitors.length) * 15;
 
   // Sitelinks indicate brand authority
-  const sitelinksCount = competitors.filter(
-    c => c.hasSitelinks
-  ).length;
+  const sitelinksCount = competitors.filter((c) => c.hasSitelinks).length;
   score += (sitelinksCount / competitors.length) * 20;
 
   return Math.min(100, Math.round(score));
@@ -344,8 +315,14 @@ export function identifyContentGaps(
   const gaps: ContentGap[] = [];
 
   // Check for missing content formats
-  const contentTypes = new Set(competitors.map(c => c.contentType));
-  const commonTypes: ContentType[] = ['blog_post', 'product_page', 'how_to', 'comparison', 'review'];
+  const contentTypes = new Set(competitors.map((c) => c.contentType));
+  const commonTypes: ContentType[] = [
+    'blog_post',
+    'product_page',
+    'how_to',
+    'comparison',
+    'review',
+  ];
 
   for (const type of commonTypes) {
     if (!contentTypes.has(type)) {
@@ -359,20 +336,21 @@ export function identifyContentGaps(
 
   // Check for depth gaps
   const longContentCount = competitors.filter(
-    c => c.estimatedContentLength === 'long'
+    (c) => c.estimatedContentLength === 'long'
   ).length;
 
   if (longContentCount < 3) {
     gaps.push({
       type: 'missing_depth',
-      description: 'Few comprehensive content pieces - opportunity for long-form content',
+      description:
+        'Few comprehensive content pieces - opportunity for long-form content',
       opportunityScore: 75,
     });
   }
 
   // Check for freshness
   const datedContentCount = competitors.filter(
-    c => c.seoIndicators.hasDate
+    (c) => c.seoIndicators.hasDate
   ).length;
 
   if (datedContentCount === 0) {
@@ -384,11 +362,12 @@ export function identifyContentGaps(
   }
 
   // Check for missing topics (based on rich snippets)
-  const richSnippetTopics = competitors.filter(c => c.hasRichSnippets);
+  const richSnippetTopics = competitors.filter((c) => c.hasRichSnippets);
   if (richSnippetTopics.length < 2) {
     gaps.push({
       type: 'missing_structure',
-      description: 'Few structured data implementations - schema markup opportunity',
+      description:
+        'Few structured data implementations - schema markup opportunity',
       opportunityScore: 65,
     });
   }
@@ -409,24 +388,25 @@ export function generateRecommendations(
   if (serpDifficulty > 70) {
     recommendations.push({
       type: 'content_format',
-      recommendation: 'Target long-tail keywords and create comprehensive guides',
+      recommendation:
+        'Target long-tail keywords and create comprehensive guides',
       priority: 'high',
       basedOn: `High SERP difficulty (${serpDifficulty}/100)`,
     });
   } else if (serpDifficulty > 40) {
     recommendations.push({
       type: 'content_format',
-      recommendation: 'Create detailed, well-structured content with unique insights',
+      recommendation:
+        'Create detailed, well-structured content with unique insights',
       priority: 'medium',
       basedOn: `Moderate SERP difficulty (${serpDifficulty}/100)`,
     });
   }
 
   // Title length analysis
-  const avgTitleLength = competitors.reduce(
-    (sum, c) => sum + c.seoIndicators.titleLength,
-    0
-  ) / competitors.length;
+  const avgTitleLength =
+    competitors.reduce((sum, c) => sum + c.seoIndicators.titleLength, 0) /
+    competitors.length;
 
   if (avgTitleLength < 50) {
     recommendations.push({
@@ -438,11 +418,12 @@ export function generateRecommendations(
   }
 
   // Content type diversity
-  const contentTypes = new Set(competitors.map(c => c.contentType));
+  const contentTypes = new Set(competitors.map((c) => c.contentType));
   if (contentTypes.size < 3) {
     recommendations.push({
       type: 'content_format',
-      recommendation: 'Diversify content formats to capture different search intents',
+      recommendation:
+        'Diversify content formats to capture different search intents',
       priority: 'medium',
       basedOn: `Only ${contentTypes.size} content type(s) found in top results`,
     });
@@ -450,13 +431,14 @@ export function generateRecommendations(
 
   // Word count recommendations
   const longContentCount = competitors.filter(
-    c => c.estimatedContentLength === 'long'
+    (c) => c.estimatedContentLength === 'long'
   ).length;
 
   if (longContentCount >= 5) {
     recommendations.push({
       type: 'word_count',
-      recommendation: 'Create comprehensive content (2000+ words) to match competitors',
+      recommendation:
+        'Create comprehensive content (2000+ words) to match competitors',
       priority: 'high',
       basedOn: `${longContentCount} competitors have long-form content`,
     });
@@ -470,7 +452,7 @@ export function generateRecommendations(
   }
 
   // Schema markup recommendation
-  const withRichSnippets = competitors.filter(c => c.hasRichSnippets).length;
+  const withRichSnippets = competitors.filter((c) => c.hasRichSnippets).length;
   if (withRichSnippets > 0) {
     recommendations.push({
       type: 'schema',
@@ -482,7 +464,7 @@ export function generateRecommendations(
 
   // URL structure recommendations
   const cleanUrls = competitors.filter(
-    c => c.seoIndicators.urlStructure === 'clean'
+    (c) => c.seoIndicators.urlStructure === 'clean'
   ).length;
 
   if (cleanUrls >= 7) {
@@ -582,20 +564,18 @@ export function getCommonSeoPatterns(
 } {
   const total = competitors.length;
 
-  const avgTitleLength = competitors.reduce(
-    (sum, c) => sum + c.seoIndicators.titleLength,
-    0
-  ) / total;
+  const avgTitleLength =
+    competitors.reduce((sum, c) => sum + c.seoIndicators.titleLength, 0) /
+    total;
 
-  const avgSnippetLength = competitors.reduce(
-    (sum, c) => sum + c.seoIndicators.snippetLength,
-    0
-  ) / total;
+  const avgSnippetLength =
+    competitors.reduce((sum, c) => sum + c.seoIndicators.snippetLength, 0) /
+    total;
 
-  const httpsCount = competitors.filter(c => c.seoIndicators.hasHttps).length;
+  const httpsCount = competitors.filter((c) => c.seoIndicators.hasHttps).length;
 
   const keywordInTitleCount = competitors.filter(
-    c => c.seoIndicators.titleContainsKeyword
+    (c) => c.seoIndicators.titleContainsKeyword
   ).length;
 
   const typeDistribution = getContentTypeDistribution(competitors);

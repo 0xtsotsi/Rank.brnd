@@ -13,7 +13,9 @@ test.describe('Image Generation Dialog', () => {
     await page.goto('/dashboard/articles/new');
   });
 
-  test('should display the AI generation button in featured image section', async ({ page }) => {
+  test('should display the AI generation button in featured image section', async ({
+    page,
+  }) => {
     // Wait for the page to load
     await page.waitForLoadState('networkidle');
 
@@ -22,7 +24,9 @@ test.describe('Image Generation Dialog', () => {
     await expect(aiButton).toBeVisible();
   });
 
-  test('should open the image generation dialog when clicking the button', async ({ page }) => {
+  test('should open the image generation dialog when clicking the button', async ({
+    page,
+  }) => {
     await page.waitForLoadState('networkidle');
 
     // Click the AI generation button
@@ -88,7 +92,9 @@ test.describe('Image Generation Dialog', () => {
     await expect(page.getByText('Generate Image with AI')).not.toBeVisible();
   });
 
-  test('should have brand color toggle when brand settings exist', async ({ page }) => {
+  test('should have brand color toggle when brand settings exist', async ({
+    page,
+  }) => {
     await page.waitForLoadState('networkidle');
 
     await page.getByText('Generate with AI').click();
@@ -100,17 +106,23 @@ test.describe('Image Generation Dialog', () => {
     expect(elementCount).toBeGreaterThanOrEqual(0);
   });
 
-  test('should disable generate button when prompt is empty', async ({ page }) => {
+  test('should disable generate button when prompt is empty', async ({
+    page,
+  }) => {
     await page.waitForLoadState('networkidle');
 
     await page.getByText('Generate with AI').click();
 
     // Verify generate button is disabled when no prompt
-    const generateButton = page.getByRole('button', { name: /Generate Images/i });
+    const generateButton = page.getByRole('button', {
+      name: /Generate Images/i,
+    });
     await expect(generateButton).toBeDisabled();
   });
 
-  test('should enable generate button when prompt is entered', async ({ page }) => {
+  test('should enable generate button when prompt is entered', async ({
+    page,
+  }) => {
     await page.waitForLoadState('networkidle');
 
     await page.getByText('Generate with AI').click();
@@ -121,7 +133,9 @@ test.describe('Image Generation Dialog', () => {
       .fill('A beautiful mountain landscape at sunset');
 
     // Verify generate button is enabled
-    const generateButton = page.getByRole('button', { name: /Generate Images/i });
+    const generateButton = page.getByRole('button', {
+      name: /Generate Images/i,
+    });
     await expect(generateButton).not.toBeDisabled();
   });
 });
@@ -132,7 +146,10 @@ test.describe('Image Generation Dialog Component Structure', () => {
     const fs = await import('fs');
     const path = await import('path');
 
-    const componentPath = path.join(process.cwd(), 'components/articles/image-generation-dialog.tsx');
+    const componentPath = path.join(
+      process.cwd(),
+      'components/articles/image-generation-dialog.tsx'
+    );
     const exists = fs.existsSync(componentPath);
 
     expect(exists).toBe(true);

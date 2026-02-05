@@ -47,10 +47,15 @@ describe('Feature name', () => {
 Import helper functions from the test utilities file:
 
 ```typescript
-import { createMockFn, createMockResponse, spyOnConsole } from './vitest-helpers';
+import {
+  createMockFn,
+  createMockResponse,
+  spyOnConsole,
+} from './vitest-helpers';
 ```
 
 Available helpers:
+
 - `createMockFn()` - Create a mock function
 - `delay(ms)` - Create a delayed promise
 - `createMockResponse(data, status)` - Create a mock Response object

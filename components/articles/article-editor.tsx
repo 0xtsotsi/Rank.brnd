@@ -37,6 +37,7 @@ import {
 import { TiptapEditor, calculateReadabilityScore } from './tiptap-editor';
 import { ImageGenerationDialog } from './image-generation-dialog';
 import { SEOSidebar } from './seo-sidebar';
+import { ArticlePreviewModal } from './article-preview-modal';
 import { cn } from '@/lib/utils';
 import type { ImageGenerationResponse } from '@/types/image-generation';
 
@@ -85,6 +86,8 @@ interface ArticleEditorProps {
   organizationId: string;
   userId?: string;
   brandSettings?: import('@/types/brand-settings').BrandSettings | null;
+  siteUrl?: string;
+  siteName?: string;
   onSave?: (article: Partial<Article>) => Promise<void>;
   onPublish?: (articleId: string) => Promise<void>;
   onUnpublish?: (articleId: string) => Promise<void>;
@@ -97,6 +100,8 @@ export function ArticleEditor({
   organizationId,
   userId,
   brandSettings,
+  siteUrl = 'https://example.com',
+  siteName = 'My Blog',
   onSave,
   onPublish,
   onUnpublish,
@@ -108,22 +113,46 @@ export function ArticleEditor({
   const articleId = params?.id as string | undefined;
 
   // Form state - prioritize generated article, then existing article, then empty
-  const [title, setTitle] = useState(generatedArticle?.title || article?.title || '');
-  const [slug, setSlug] = useState(generatedArticle?.slug || article?.slug || '');
-  const [content, setContent] = useState(generatedArticle?.content || article?.content || '');
-  const [excerpt, setExcerpt] = useState(generatedArticle?.excerpt || article?.excerpt || '');
-  const [featuredImageUrl, setFeaturedImageUrl] = useState(article?.featured_image_url || '');
-  const [status, setStatus] = useState<'draft' | 'published' | 'archived'>(article?.status || 'draft');
+  const [title, setTitle] = useState(
+    generatedArticle?.title || article?.title || ''
+  );
+  const [slug, setSlug] = useState(
+    generatedArticle?.slug || article?.slug || ''
+  );
+  const [content, setContent] = useState(
+    generatedArticle?.content || article?.content || ''
+  );
+  const [excerpt, setExcerpt] = useState(
+    generatedArticle?.excerpt || article?.excerpt || ''
+  );
+  const [featuredImageUrl, setFeaturedImageUrl] = useState(
+    article?.featured_image_url || ''
+  );
+  const [status, setStatus] = useState<'draft' | 'published' | 'archived'>(
+    article?.status || 'draft'
+  );
   const [category, setCategory] = useState(article?.category || '');
   const [tags, setTags] = useState<string[]>(article?.tags || []);
   const [tagInput, setTagInput] = useState('');
-  const [metaTitle, setMetaTitle] = useState(generatedArticle?.metaTitle || article?.meta_title || '');
-  const [metaDescription, setMetaDescription] = useState(generatedArticle?.metaDescription || article?.meta_description || '');
-  const [metaKeywords, setMetaKeywords] = useState(generatedArticle?.metaKeywords?.join(', ') || article?.meta_keywords?.join(', ') || '');
-  const [canonicalUrl, setCanonicalUrl] = useState(article?.canonical_url || '');
+  const [metaTitle, setMetaTitle] = useState(
+    generatedArticle?.metaTitle || article?.meta_title || ''
+  );
+  const [metaDescription, setMetaDescription] = useState(
+    generatedArticle?.metaDescription || article?.meta_description || ''
+  );
+  const [metaKeywords, setMetaKeywords] = useState(
+    generatedArticle?.metaKeywords?.join(', ') ||
+      article?.meta_keywords?.join(', ') ||
+      ''
+  );
+  const [canonicalUrl, setCanonicalUrl] = useState(
+    article?.canonical_url || ''
+  );
 
   // UI state
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [saveStatus, setSaveStatus] = useState<
+    'idle' | 'saving' | 'saved' | 'error'
+  >('idle');
   const [wordCount, setWordCount] = useState(article?.word_count || 0);
   const [characterCount, setCharacterCount] = useState(0);
   const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
@@ -138,7 +167,9 @@ export function ArticleEditor({
   const hasUnsavedChangesRef = useRef(false);
 
   // Calculate readability metrics
-  const readabilityScore = content ? calculateReadabilityScore(content) : { score: 0, level: 'N/A', description: 'No content' };
+  const readabilityScore = content
+    ? calculateReadabilityScore(content)
+    : { score: 0, level: 'N/A', description: 'No content' };
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
   // Auto-save with debouncing
@@ -162,7 +193,12 @@ export function ArticleEditor({
         reading_time_minutes: readingTime,
         meta_title: metaTitle || null,
         meta_description: metaDescription || null,
-        meta_keywords: metaKeywords ? metaKeywords.split(',').map(k => k.trim()).filter(k => k) : [],
+        meta_keywords: metaKeywords
+          ? metaKeywords
+              .split(',')
+              .map((k) => k.trim())
+              .filter((k) => k)
+          : [],
         canonical_url: canonicalUrl || null,
       };
 
@@ -177,7 +213,9 @@ export function ArticleEditor({
       setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (error) {
       setSaveStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'Failed to save');
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Failed to save'
+      );
     }
   }, [
     title,
@@ -199,22 +237,25 @@ export function ArticleEditor({
   ]);
 
   // Handle content changes from Tiptap editor
-  const handleContentChange = useCallback((newContent: string, words: number, chars: number) => {
-    setContent(newContent);
-    setWordCount(words);
-    setCharacterCount(chars);
-    hasUnsavedChangesRef.current = true;
+  const handleContentChange = useCallback(
+    (newContent: string, words: number, chars: number) => {
+      setContent(newContent);
+      setWordCount(words);
+      setCharacterCount(chars);
+      hasUnsavedChangesRef.current = true;
 
-    // Clear existing timeout and set new one
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current);
-    }
+      // Clear existing timeout and set new one
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
 
-    // Auto-save after 30 seconds of inactivity
-    saveTimeoutRef.current = setTimeout(() => {
-      debouncedSave();
-    }, 30000);
-  }, [debouncedSave]);
+      // Auto-save after 30 seconds of inactivity
+      saveTimeoutRef.current = setTimeout(() => {
+        debouncedSave();
+      }, 30000);
+    },
+    [debouncedSave]
+  );
 
   // Manual save
   const handleSave = useCallback(async () => {
@@ -236,21 +277,24 @@ export function ArticleEditor({
   }, []);
 
   // Handle title change with slug generation
-  const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setTitle(newTitle);
-    hasUnsavedChangesRef.current = true;
+  const handleTitleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newTitle = e.target.value;
+      setTitle(newTitle);
+      hasUnsavedChangesRef.current = true;
 
-    // Auto-generate slug if it hasn't been manually edited
-    if (!slug || slug === generateSlug(article?.title || '')) {
-      setSlug(generateSlug(newTitle));
-    }
+      // Auto-generate slug if it hasn't been manually edited
+      if (!slug || slug === generateSlug(article?.title || '')) {
+        setSlug(generateSlug(newTitle));
+      }
 
-    // Update meta title if not set
-    if (!metaTitle) {
-      setMetaTitle(newTitle);
-    }
-  }, [slug, article?.title, metaTitle, generateSlug]);
+      // Update meta title if not set
+      if (!metaTitle) {
+        setMetaTitle(newTitle);
+      }
+    },
+    [slug, article?.title, metaTitle, generateSlug]
+  );
 
   // Add tag
   const addTag = useCallback(() => {
@@ -263,10 +307,13 @@ export function ArticleEditor({
   }, [tagInput, tags]);
 
   // Remove tag
-  const removeTag = useCallback((tagToRemove: string) => {
-    setTags(tags.filter(t => t !== tagToRemove));
-    hasUnsavedChangesRef.current = true;
-  }, [tags]);
+  const removeTag = useCallback(
+    (tagToRemove: string) => {
+      setTags(tags.filter((t) => t !== tagToRemove));
+      hasUnsavedChangesRef.current = true;
+    },
+    [tags]
+  );
 
   // Handle publish/unpublish
   const handlePublish = useCallback(async () => {
@@ -285,7 +332,9 @@ export function ArticleEditor({
         setSaveStatus('saved');
       } catch (error) {
         setSaveStatus('error');
-        setErrorMessage(error instanceof Error ? error.message : 'Failed to publish');
+        setErrorMessage(
+          error instanceof Error ? error.message : 'Failed to publish'
+        );
       }
     }
   }, [article?.id, onPublish, handleSave]);
@@ -299,16 +348,21 @@ export function ArticleEditor({
         setSaveStatus('saved');
       } catch (error) {
         setSaveStatus('error');
-        setErrorMessage(error instanceof Error ? error.message : 'Failed to unpublish');
+        setErrorMessage(
+          error instanceof Error ? error.message : 'Failed to unpublish'
+        );
       }
     }
   }, [article?.id, onUnpublish]);
 
   // Handle image selection from AI generation dialog
-  const handleSelectImage = useCallback((imageUrl: string, imageData?: ImageGenerationResponse) => {
-    setFeaturedImageUrl(imageUrl);
-    hasUnsavedChangesRef.current = true;
-  }, []);
+  const handleSelectImage = useCallback(
+    (imageUrl: string, imageData?: ImageGenerationResponse) => {
+      setFeaturedImageUrl(imageUrl);
+      hasUnsavedChangesRef.current = true;
+    },
+    []
+  );
 
   // Cleanup on unmount
   useEffect(() => {
@@ -345,9 +399,12 @@ export function ArticleEditor({
             <span
               className={cn(
                 'px-2 py-1 text-xs font-medium rounded-full',
-                status === 'published' && 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-                status === 'draft' && 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-                status === 'archived' && 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                status === 'published' &&
+                  'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+                status === 'draft' &&
+                  'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+                status === 'archived' &&
+                  'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
               )}
             >
               {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -431,7 +488,8 @@ export function ArticleEditor({
             className={cn(
               'flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm font-medium',
               'hover:bg-gray-100 dark:hover:bg-gray-700',
-              showSEOSidebar && 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'
+              showSEOSidebar &&
+                'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'
             )}
           >
             <Search className="w-4 h-4" />
@@ -445,7 +503,10 @@ export function ArticleEditor({
         <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <div className="flex items-center gap-2 text-sm text-blue-800 dark:text-blue-300">
             <Clock className="w-4 h-4" />
-            <span>Auto-save is enabled. Changes are saved automatically after 30 seconds.</span>
+            <span>
+              Auto-save is enabled. Changes are saved automatically after 30
+              seconds.
+            </span>
           </div>
           <button
             onClick={() => setAutoSaveEnabled(false)}
@@ -456,15 +517,19 @@ export function ArticleEditor({
         </div>
       )}
 
-      <div className={cn(
-        'grid gap-6',
-        showSEOSidebar ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
-      )}>
+      <div
+        className={cn(
+          'grid gap-6',
+          showSEOSidebar ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
+        )}
+      >
         {/* Main Editor */}
-        <div className={cn(
-          'space-y-4',
-          showSEOSidebar ? 'lg:col-span-2' : 'lg:col-span-1'
-        )}>
+        <div
+          className={cn(
+            'space-y-4',
+            showSEOSidebar ? 'lg:col-span-2' : 'lg:col-span-1'
+          )}
+        >
           {/* Title Input */}
           <input
             type="text"
@@ -525,21 +590,37 @@ export function ArticleEditor({
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Words</span>
-                <span className="font-medium text-gray-900 dark:text-white">{wordCount}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Words
+                </span>
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {wordCount}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Characters</span>
-                <span className="font-medium text-gray-900 dark:text-white">{characterCount}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Characters
+                </span>
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {characterCount}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Reading time</span>
-                <span className="font-medium text-gray-900 dark:text-white">{readingTime} min</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Reading time
+                </span>
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {readingTime} min
+                </span>
               </div>
               <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Readability</span>
-                  <span className="font-medium text-gray-900 dark:text-white">{readabilityScore.level}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Readability
+                  </span>
+                  <span className="font-medium text-gray-900 dark:text-white">
+                    {readabilityScore.level}
+                  </span>
                 </div>
                 <div className="mt-2">
                   <div className="flex justify-between text-xs text-gray-500 mb-1">
@@ -586,6 +667,7 @@ export function ArticleEditor({
             />
             {featuredImageUrl && (
               <div className="mt-3 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={featuredImageUrl}
                   alt="Featured"
@@ -776,32 +858,26 @@ export function ArticleEditor({
       )}
 
       {/* Preview Modal */}
-      {showPreview && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setShowPreview(false)}
-          />
-          <div className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Article Preview
-              </h3>
-              <button
-                onClick={() => setShowPreview(false)}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-6 overflow-y-auto max-h-[calc(90vh-60px)] prose dark:prose-invert max-w-none">
-              {title && <h1>{title}</h1>}
-              {excerpt && <p className="text-xl text-gray-600 dark:text-gray-400">{excerpt}</p>}
-              <div dangerouslySetInnerHTML={{ __html: content }} />
-            </div>
-          </div>
-        </div>
-      )}
+      <ArticlePreviewModal
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        article={{
+          title,
+          slug,
+          content,
+          excerpt,
+          featuredImageUrl: featuredImageUrl || null,
+          metaTitle,
+          metaDescription,
+          author: userId ? undefined : article?.author_id || undefined,
+          publishedAt: article?.published_at,
+          tags,
+          category,
+          readingTime,
+        }}
+        siteUrl={siteUrl}
+        siteName={siteName}
+      />
 
       {/* Image Generation Dialog */}
       {userId && (

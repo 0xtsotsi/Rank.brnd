@@ -17,17 +17,20 @@ import type { Json } from './database';
 /**
  * Brand voice learning database row type
  */
-export type DbBrandVoiceLearning = Database['public']['Tables']['brand_voice_learning']['Row'];
+export type DbBrandVoiceLearning =
+  Database['public']['Tables']['brand_voice_learning']['Row'];
 
 /**
  * Brand voice learning insert type (for creating new records)
  */
-export type DbBrandVoiceLearningInsert = Database['public']['Tables']['brand_voice_learning']['Insert'];
+export type DbBrandVoiceLearningInsert =
+  Database['public']['Tables']['brand_voice_learning']['Insert'];
 
 /**
  * Brand voice learning update type (for updating existing records)
  */
-export type DbBrandVoiceLearningUpdate = Database['public']['Tables']['brand_voice_learning']['Update'];
+export type DbBrandVoiceLearningUpdate =
+  Database['public']['Tables']['brand_voice_learning']['Update'];
 
 /**
  * Brand voice analysis status enum (matches database: brand_voice_analysis_status)
@@ -84,7 +87,12 @@ export interface BrandVoiceAnalysis {
   sentiment?: 'positive' | 'neutral' | 'negative';
   formality_level?: 'formal' | 'informal' | 'neutral';
   keywords?: string[];
-  [key: string]: Json | string[] | VocabularyAnalysis | StyleAnalysis | undefined;
+  [key: string]:
+    | Json
+    | string[]
+    | VocabularyAnalysis
+    | StyleAnalysis
+    | undefined;
 }
 
 /**
@@ -122,7 +130,10 @@ export interface BrandVoiceLearning {
 /**
  * Brand voice learning with optional ID (for creation)
  */
-export type BrandVoiceLearningInput = Omit<BrandVoiceLearning, 'id' | 'created_at' | 'updated_at'> & {
+export type BrandVoiceLearningInput = Omit<
+  BrandVoiceLearning,
+  'id' | 'created_at' | 'updated_at'
+> & {
   id?: string;
   created_at?: Date;
   updated_at?: Date;
@@ -182,12 +193,13 @@ export interface AggregatedBrandVoiceAnalysis {
 /**
  * Brand voice analysis status label mapping
  */
-export const ANALYSIS_STATUS_LABELS: Record<BrandVoiceAnalysisStatus, string> = {
-  pending: 'Pending',
-  analyzing: 'Analyzing',
-  completed: 'Completed',
-  failed: 'Failed',
-} as const;
+export const ANALYSIS_STATUS_LABELS: Record<BrandVoiceAnalysisStatus, string> =
+  {
+    pending: 'Pending',
+    analyzing: 'Analyzing',
+    completed: 'Completed',
+    failed: 'Failed',
+  } as const;
 
 /**
  * Brand voice analysis status color mapping (for Tailwind CSS)
@@ -259,11 +271,11 @@ export function dbBrandVoiceLearningToBrandVoiceLearning(
     product_id: dbBrandVoice.product_id,
     sample_text: dbBrandVoice.sample_text,
     source_type: dbBrandVoice.source_type,
-    analysis: (dbBrandVoice.analysis as unknown) as BrandVoiceAnalysis,
+    analysis: dbBrandVoice.analysis as unknown as BrandVoiceAnalysis,
     analysis_status: dbBrandVoice.analysis_status,
     analysis_error: dbBrandVoice.analysis_error,
     confidence_score: dbBrandVoice.confidence_score,
-    metadata: ((dbBrandVoice.metadata || {}) as unknown) as BrandVoiceMetadata,
+    metadata: (dbBrandVoice.metadata || {}) as unknown as BrandVoiceMetadata,
     created_at: new Date(dbBrandVoice.created_at),
     updated_at: new Date(dbBrandVoice.updated_at),
   };
@@ -281,11 +293,13 @@ export function brandVoiceLearningToDbInsert(
     product_id: brandVoice.product_id || null,
     sample_text: brandVoice.sample_text,
     source_type: brandVoice.source_type || 'manual',
-    analysis: ((brandVoice.analysis || DEFAULT_BRAND_VOICE_ANALYSIS) as unknown) as Json,
+    analysis: (brandVoice.analysis ||
+      DEFAULT_BRAND_VOICE_ANALYSIS) as unknown as Json,
     analysis_status: brandVoice.analysis_status || 'pending',
     analysis_error: brandVoice.analysis_error || null,
     confidence_score: brandVoice.confidence_score || null,
-    metadata: ((brandVoice.metadata || DEFAULT_BRAND_VOICE_METADATA) as unknown) as Json,
+    metadata: (brandVoice.metadata ||
+      DEFAULT_BRAND_VOICE_METADATA) as unknown as Json,
   };
 }
 
@@ -297,14 +311,20 @@ export function brandVoiceLearningToDbUpdate(
 ): DbBrandVoiceLearningUpdate {
   const update: DbBrandVoiceLearningUpdate = {};
 
-  if (brandVoice.sample_text !== undefined) update.sample_text = brandVoice.sample_text;
-  if (brandVoice.source_type !== undefined) update.source_type = brandVoice.source_type;
+  if (brandVoice.sample_text !== undefined)
+    update.sample_text = brandVoice.sample_text;
+  if (brandVoice.source_type !== undefined)
+    update.source_type = brandVoice.source_type;
   if (brandVoice.analysis !== undefined)
-    update.analysis = (brandVoice.analysis as unknown) as Json;
-  if (brandVoice.analysis_status !== undefined) update.analysis_status = brandVoice.analysis_status;
-  if (brandVoice.analysis_error !== undefined) update.analysis_error = brandVoice.analysis_error;
-  if (brandVoice.confidence_score !== undefined) update.confidence_score = brandVoice.confidence_score;
-  if (brandVoice.metadata !== undefined) update.metadata = (brandVoice.metadata as unknown) as Json;
+    update.analysis = brandVoice.analysis as unknown as Json;
+  if (brandVoice.analysis_status !== undefined)
+    update.analysis_status = brandVoice.analysis_status;
+  if (brandVoice.analysis_error !== undefined)
+    update.analysis_error = brandVoice.analysis_error;
+  if (brandVoice.confidence_score !== undefined)
+    update.confidence_score = brandVoice.confidence_score;
+  if (brandVoice.metadata !== undefined)
+    update.metadata = brandVoice.metadata as unknown as Json;
 
   return update;
 }
@@ -351,19 +371,21 @@ export function truncateText(text: string, maxLength: number = 200): string {
 /**
  * Check if analysis is complete and successful
  */
-export function isAnalysisComplete(
-  brandVoice: BrandVoiceLearning
-): boolean {
-  return brandVoice.analysis_status === 'completed' && brandVoice.confidence_score !== null;
+export function isAnalysisComplete(brandVoice: BrandVoiceLearning): boolean {
+  return (
+    brandVoice.analysis_status === 'completed' &&
+    brandVoice.confidence_score !== null
+  );
 }
 
 /**
  * Check if analysis is pending or in progress
  */
-export function isAnalysisPending(
-  brandVoice: BrandVoiceLearning
-): boolean {
-  return brandVoice.analysis_status === 'pending' || brandVoice.analysis_status === 'analyzing';
+export function isAnalysisPending(brandVoice: BrandVoiceLearning): boolean {
+  return (
+    brandVoice.analysis_status === 'pending' ||
+    brandVoice.analysis_status === 'analyzing'
+  );
 }
 
 /**

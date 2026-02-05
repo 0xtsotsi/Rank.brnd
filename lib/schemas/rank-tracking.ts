@@ -28,7 +28,11 @@ export const createRankTrackingSchema = z.object({
     .int()
     .positive('Position must be a positive integer'),
   device: rankDeviceSchema.optional().default('desktop'),
-  location: z.string().max(10, 'Location code too long').optional().default('us'),
+  location: z
+    .string()
+    .max(10, 'Location code too long')
+    .optional()
+    .default('us'),
   url: z.string().url('Invalid URL').optional().or(z.literal('')),
   date: z.coerce.date().optional(),
   search_volume: z.coerce.number().int().nonnegative().optional(),
@@ -79,7 +83,11 @@ const singleRankTrackingWithBulk = z.object({
     .int()
     .positive('Position must be a positive integer'),
   device: rankDeviceSchema.optional().default('desktop'),
-  location: z.string().max(10, 'Location code too long').optional().default('us'),
+  location: z
+    .string()
+    .max(10, 'Location code too long')
+    .optional()
+    .default('us'),
   url: z.string().url('Invalid URL').optional().or(z.literal('')),
   date: z.coerce.date().optional(),
   search_volume: z.coerce.number().int().nonnegative().optional(),

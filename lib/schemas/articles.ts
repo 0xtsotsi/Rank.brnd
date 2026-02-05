@@ -21,19 +21,36 @@ export const createArticleSchema = z.object({
   product_id: z.string().uuid('Invalid product ID').optional(),
   keyword_id: z.string().uuid('Invalid keyword ID').optional(),
   title: z.string().min(1, 'Title is required').max(500, 'Title is too long'),
-  slug: z.string().min(1, 'Slug is required').max(500, 'Slug is too long')
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+  slug: z
+    .string()
+    .min(1, 'Slug is required')
+    .max(500, 'Slug is too long')
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      'Slug must contain only lowercase letters, numbers, and hyphens'
+    ),
   content: z.string().optional().default(''),
   excerpt: z.string().max(1000, 'Excerpt is too long').optional(),
-  featured_image_url: z.string().url('Invalid featured image URL').optional().or(z.literal('')),
+  featured_image_url: z
+    .string()
+    .url('Invalid featured image URL')
+    .optional()
+    .or(z.literal('')),
   status: articleStatusSchema.optional().default('draft'),
   seo_score: z.coerce.number().int().min(0).max(100).optional(),
   word_count: z.coerce.number().int().nonnegative().optional(),
   reading_time_minutes: z.coerce.number().int().positive().optional(),
   meta_title: z.string().max(200, 'Meta title is too long').optional(),
-  meta_description: z.string().max(500, 'Meta description is too long').optional(),
+  meta_description: z
+    .string()
+    .max(500, 'Meta description is too long')
+    .optional(),
   meta_keywords: z.array(z.string()).optional().default([]),
-  canonical_url: z.string().url('Invalid canonical URL').optional().or(z.literal('')),
+  canonical_url: z
+    .string()
+    .url('Invalid canonical URL')
+    .optional()
+    .or(z.literal('')),
   schema_type: z.string().optional(),
   schema_data: z.record(z.unknown()).optional(),
   scheduled_at: z.string().datetime('Invalid scheduled date').optional(),
@@ -56,8 +73,13 @@ export const bulkImportArticlesSchema = z.object({
     .array(
       z.object({
         title: z.string().min(1, 'Title is required'),
-        slug: z.string().min(1, 'Slug is required')
-          .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+        slug: z
+          .string()
+          .min(1, 'Slug is required')
+          .regex(
+            /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+            'Slug must contain only lowercase letters, numbers, and hyphens'
+          ),
         content: z.string().optional(),
         excerpt: z.string().optional(),
         featured_image_url: z.string().optional(),
@@ -80,19 +102,36 @@ const singleArticleWithBulk = z.object({
   product_id: z.string().uuid('Invalid product ID').optional(),
   keyword_id: z.string().uuid('Invalid keyword ID').optional(),
   title: z.string().min(1, 'Title is required').max(500, 'Title is too long'),
-  slug: z.string().min(1, 'Slug is required').max(500, 'Slug is too long')
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+  slug: z
+    .string()
+    .min(1, 'Slug is required')
+    .max(500, 'Slug is too long')
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      'Slug must contain only lowercase letters, numbers, and hyphens'
+    ),
   content: z.string().optional().default(''),
   excerpt: z.string().max(1000, 'Excerpt is too long').optional(),
-  featured_image_url: z.string().url('Invalid featured image URL').optional().or(z.literal('')),
+  featured_image_url: z
+    .string()
+    .url('Invalid featured image URL')
+    .optional()
+    .or(z.literal('')),
   status: articleStatusSchema.optional().default('draft'),
   seo_score: z.coerce.number().int().min(0).max(100).optional(),
   word_count: z.coerce.number().int().nonnegative().optional(),
   reading_time_minutes: z.coerce.number().int().positive().optional(),
   meta_title: z.string().max(200, 'Meta title is too long').optional(),
-  meta_description: z.string().max(500, 'Meta description is too long').optional(),
+  meta_description: z
+    .string()
+    .max(500, 'Meta description is too long')
+    .optional(),
   meta_keywords: z.array(z.string()).optional().default([]),
-  canonical_url: z.string().url('Invalid canonical URL').optional().or(z.literal('')),
+  canonical_url: z
+    .string()
+    .url('Invalid canonical URL')
+    .optional()
+    .or(z.literal('')),
   schema_type: z.string().optional(),
   schema_data: z.record(z.unknown()).optional(),
   scheduled_at: z.string().datetime('Invalid scheduled date').optional(),
@@ -151,20 +190,42 @@ export const articlesQuerySchema = z.object({
  */
 export const updateArticleSchema = z.object({
   id: z.string().uuid('Invalid article ID'),
-  title: z.string().min(1, 'Title is required').max(500, 'Title is too long').optional(),
-  slug: z.string().min(1, 'Slug is required').max(500, 'Slug is too long')
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must contain only lowercase letters, numbers, and hyphens').optional(),
+  title: z
+    .string()
+    .min(1, 'Title is required')
+    .max(500, 'Title is too long')
+    .optional(),
+  slug: z
+    .string()
+    .min(1, 'Slug is required')
+    .max(500, 'Slug is too long')
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      'Slug must contain only lowercase letters, numbers, and hyphens'
+    )
+    .optional(),
   content: z.string().optional(),
   excerpt: z.string().max(1000, 'Excerpt is too long').optional(),
-  featured_image_url: z.string().url('Invalid featured image URL').optional().or(z.literal('')),
+  featured_image_url: z
+    .string()
+    .url('Invalid featured image URL')
+    .optional()
+    .or(z.literal('')),
   status: articleStatusSchema.optional(),
   seo_score: z.coerce.number().int().min(0).max(100).optional(),
   word_count: z.coerce.number().int().nonnegative().optional(),
   reading_time_minutes: z.coerce.number().int().positive().optional(),
   meta_title: z.string().max(200, 'Meta title is too long').optional(),
-  meta_description: z.string().max(500, 'Meta description is too long').optional(),
+  meta_description: z
+    .string()
+    .max(500, 'Meta description is too long')
+    .optional(),
   meta_keywords: z.array(z.string()).optional(),
-  canonical_url: z.string().url('Invalid canonical URL').optional().or(z.literal('')),
+  canonical_url: z
+    .string()
+    .url('Invalid canonical URL')
+    .optional()
+    .or(z.literal('')),
   schema_type: z.string().optional(),
   schema_data: z.record(z.unknown()).optional(),
   scheduled_at: z.string().datetime('Invalid scheduled date').optional(),

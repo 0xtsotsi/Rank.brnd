@@ -8,7 +8,7 @@
  * Displays pending team invitations with options to cancel or resend.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Table,
   TableBody,
@@ -59,7 +59,7 @@ export function PendingInvitationsList({
   const [isLoading, setIsLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
 
-  const fetchInvitations = async () => {
+  const fetchInvitations = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(
@@ -75,11 +75,11 @@ export function PendingInvitationsList({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [organizationId]);
 
   useEffect(() => {
     fetchInvitations();
-  }, [organizationId]);
+  }, [fetchInvitations]);
 
   const handleCancel = async (invitationId: string) => {
     setCancellingId(invitationId);
@@ -131,7 +131,9 @@ export function PendingInvitationsList({
       <Card>
         <CardHeader>
           <CardTitle>Pending Invitations</CardTitle>
-          <CardDescription>Invitations that have been sent but not yet accepted.</CardDescription>
+          <CardDescription>
+            Invitations that have been sent but not yet accepted.
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-8">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -158,7 +160,9 @@ export function PendingInvitationsList({
             onClick={fetchInvitations}
             disabled={isLoading}
           >
-            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
+            />
           </Button>
         </div>
       </CardHeader>
@@ -178,7 +182,9 @@ export function PendingInvitationsList({
             <TableBody>
               {invitations.map((invitation) => (
                 <TableRow key={invitation.id}>
-                  <TableCell className="font-medium">{invitation.email}</TableCell>
+                  <TableCell className="font-medium">
+                    {invitation.email}
+                  </TableCell>
                   <TableCell>
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getRoleBadgeColor(

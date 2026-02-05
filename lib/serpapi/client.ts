@@ -10,7 +10,12 @@ import type {
   SerpSearchParams,
   SerpApiError,
 } from '@/types/serpapi';
-import { getSerpApiConfig, buildApiUrl, SERPAPI_ENDPOINTS, RATE_LIMIT_CONFIG } from './config';
+import {
+  getSerpApiConfig,
+  buildApiUrl,
+  SERPAPI_ENDPOINTS,
+  RATE_LIMIT_CONFIG,
+} from './config';
 
 // ============================================================================
 // Request State Management
@@ -67,7 +72,7 @@ function generateCacheKey(params: SerpSearchParams): string {
  */
 function isCacheEntryValid(entry: CacheEntry, ttl: number): boolean {
   const now = Date.now();
-  return (now - entry.timestamp) < ttl * 1000;
+  return now - entry.timestamp < ttl * 1000;
 }
 
 /**
@@ -85,14 +90,16 @@ async function waitForRateLimit(): Promise<void> {
 
   // Wait if at limit
   while (rateLimiter.requestCount >= RATE_LIMIT_CONFIG.maxRequestsPerSecond) {
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
     rateLimiter.requestCount = 0;
     rateLimiter.windowStart = Date.now();
   }
 
   // Wait for available concurrent slot
-  while (rateLimiter.activeRequests >= RATE_LIMIT_CONFIG.maxConcurrentRequests) {
-    await new Promise(resolve => setTimeout(resolve, 50));
+  while (
+    rateLimiter.activeRequests >= RATE_LIMIT_CONFIG.maxConcurrentRequests
+  ) {
+    await new Promise((resolve) => setTimeout(resolve, 50));
   }
 }
 
@@ -148,7 +155,7 @@ function isRetryableError(error: SerpApiError): boolean {
 
   // Retry on specific error codes
   const retryableCodes = ['RATE_LIMIT', 'TIMEOUT', 'SERVER_ERROR'];
-  return retryableCodes.some(code => error.code.includes(code));
+  return retryableCodes.some((code) => error.code.includes(code));
 }
 
 // ============================================================================
@@ -199,7 +206,8 @@ export async function search(
   const queryParams: Record<string, string | number | boolean> = {
     engine: 'google',
     q: params.query,
-    google_domain: params.googleDomain || config.defaultSearchParams.googleDomain,
+    google_domain:
+      params.googleDomain || config.defaultSearchParams.googleDomain,
     hl: params.language || config.defaultSearchParams.language,
     gl: params.country || config.defaultSearchParams.country,
     num: params.num || config.defaultSearchParams.num,
@@ -229,7 +237,7 @@ export async function search(
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
         signal: controller.signal,
       });
@@ -244,7 +252,7 @@ export async function search(
 
         if (isRetryableError(error) && attempt < maxRetries) {
           lastError = error;
-          await new Promise(resolve => setTimeout(resolve, retryDelay));
+          await new Promise((resolve) => setTimeout(resolve, retryDelay));
           retryDelay *= RATE_LIMIT_CONFIG.backoffMultiplier;
           continue;
         }
@@ -258,7 +266,7 @@ export async function search(
 
         if (isRetryableError(error) && attempt < maxRetries) {
           lastError = error;
-          await new Promise(resolve => setTimeout(resolve, retryDelay));
+          await new Promise((resolve) => setTimeout(resolve, retryDelay));
           retryDelay *= RATE_LIMIT_CONFIG.backoffMultiplier;
           continue;
         }
@@ -279,7 +287,6 @@ export async function search(
       }
 
       return data as SerpApiResponse;
-
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         lastError = {
@@ -288,7 +295,7 @@ export async function search(
         };
 
         if (attempt < maxRetries) {
-          await new Promise(resolve => setTimeout(resolve, retryDelay));
+          await new Promise((resolve) => setTimeout(resolve, retryDelay));
           retryDelay *= RATE_LIMIT_CONFIG.backoffMultiplier;
           continue;
         }
@@ -296,14 +303,15 @@ export async function search(
         lastError = error as SerpApiError;
 
         if (isRetryableError(lastError) && attempt < maxRetries) {
-          await new Promise(resolve => setTimeout(resolve, retryDelay));
+          await new Promise((resolve) => setTimeout(resolve, retryDelay));
           retryDelay *= RATE_LIMIT_CONFIG.backoffMultiplier;
           continue;
         }
       } else {
         lastError = {
           code: 'FETCH_ERROR',
-          message: error instanceof Error ? error.message : 'Unknown fetch error',
+          message:
+            error instanceof Error ? error.message : 'Unknown fetch error',
         };
       }
 
@@ -388,7 +396,7 @@ function cleanCache(): void {
   const ttl = config.cacheTtl * 1000;
 
   for (const [key, entry] of Array.from(searchCache.entries())) {
-    if ((now - entry.timestamp) > ttl) {
+    if (now - entry.timestamp > ttl) {
       searchCache.delete(key);
     }
   }

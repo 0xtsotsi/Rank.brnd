@@ -6,9 +6,7 @@
   "status": "verified",
   "priority": 2,
   "complexity": "complex",
-  "dependencies": [
-    "cms-abstract-interface"
-  ],
+  "dependencies": ["cms-abstract-interface"],
   "createdAt": "2026-01-02T09:30:07.965Z",
   "updatedAt": "2026-02-03T18:51:28.444Z",
   "branchName": "master",

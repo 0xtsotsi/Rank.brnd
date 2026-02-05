@@ -70,10 +70,7 @@ export type {
   SerpApiError,
 };
 
-export {
-  SerpSearchParamsSchema,
-  SerpApiException,
-} from '@/types/serpapi';
+export { SerpSearchParamsSchema, SerpApiException } from '@/types/serpapi';
 
 // ============================================================================
 // Configuration

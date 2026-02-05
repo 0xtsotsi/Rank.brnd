@@ -9,19 +9,34 @@
  */
 
 import { createState, validateState } from './state-manager';
-import { encryptToken, decryptToken, storeTokens, getTokens, deleteTokens } from './token-storage';
+import {
+  encryptToken,
+  decryptToken,
+  storeTokens,
+  getTokens,
+  deleteTokens,
+} from './token-storage';
 import { refreshAccessToken } from './token-refresher';
-import type { OAuthConfig, OAuthTokens, OAuthCallbackParams, AuthorizationUrlParams } from './types';
+import type {
+  OAuthConfig,
+  OAuthTokens,
+  OAuthCallbackParams,
+  AuthorizationUrlParams,
+} from './types';
 
 /**
  * Generate OAuth authorization URL
  */
-export async function generateAuthorizationUrl(params: AuthorizationUrlParams): Promise<string> {
+export async function generateAuthorizationUrl(
+  params: AuthorizationUrlParams
+): Promise<string> {
   const { platform, redirectUri, clientId, scopes, state } = params;
 
   // Validate required parameters
   if (!platform || !redirectUri || !clientId) {
-    throw new Error('Missing required OAuth parameters: platform, redirectUri, clientId');
+    throw new Error(
+      'Missing required OAuth parameters: platform, redirectUri, clientId'
+    );
   }
 
   // Generate state if not provided
@@ -43,7 +58,9 @@ export async function generateAuthorizationUrl(params: AuthorizationUrlParams): 
 
   const authUrl = authEndpoints[platform];
   if (!authUrl) {
-    throw new Error(`OAuth authorization not supported for platform: ${platform}`);
+    throw new Error(
+      `OAuth authorization not supported for platform: ${platform}`
+    );
   }
 
   // Build authorization URL
@@ -59,7 +76,10 @@ export async function generateAuthorizationUrl(params: AuthorizationUrlParams): 
 
   // Platform-specific parameters
   if (platform === 'shopify') {
-    url.searchParams.set('scope', scopes?.join(',') || 'read_products,write_products');
+    url.searchParams.set(
+      'scope',
+      scopes?.join(',') || 'read_products,write_products'
+    );
   }
 
   // Google specific parameters
@@ -75,8 +95,18 @@ export async function generateAuthorizationUrl(params: AuthorizationUrlParams): 
  * Handle OAuth callback
  * Exchanges authorization code for access tokens
  */
-export async function handleOAuthCallback(params: OAuthCallbackParams): Promise<OAuthTokens> {
-  const { platform, code, state, redirectUri, clientId, clientSecret, shopDomain } = params;
+export async function handleOAuthCallback(
+  params: OAuthCallbackParams
+): Promise<OAuthTokens> {
+  const {
+    platform,
+    code,
+    state,
+    redirectUri,
+    clientId,
+    clientSecret,
+    shopDomain,
+  } = params;
 
   // Validate state parameter to prevent CSRF attacks
   const stateValidation = await validateState(state);
@@ -191,7 +221,8 @@ async function exchangeCodeForTokens(
         code: config.code,
         redirect_uri: config.redirectUri,
       };
-      headers['Authorization'] = `Basic ${Buffer.from(`${config.clientId}:${config.clientSecret}`).toString('base64')}`;
+      headers['Authorization'] =
+        `Basic ${Buffer.from(`${config.clientId}:${config.clientSecret}`).toString('base64')}`;
       break;
 
     case 'squarespace':
@@ -237,7 +268,9 @@ async function exchangeCodeForTokens(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Token exchange failed: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(
+      `Token exchange failed: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 
   const data = await response.json();
@@ -254,7 +287,8 @@ function parseTokenResponse(platform: string, data: any): OAuthTokens {
     accessToken: data.access_token,
     refreshToken: data.refresh_token || null,
     tokenType: data.token_type || 'Bearer',
-    expiresIn: data.expires_in || data.expires_in ? Number(data.expires_in) : null,
+    expiresIn:
+      data.expires_in || data.expires_in ? Number(data.expires_in) : null,
     scope: data.scope || null,
     obtainedAt: new Date().toISOString(),
   };
@@ -319,14 +353,20 @@ function needsRefresh(tokens: OAuthTokens): boolean {
 /**
  * Revoke OAuth tokens (logout/disconnect)
  */
-export async function revokeTokens(platform: string, integrationId: string): Promise<void> {
+export async function revokeTokens(
+  platform: string,
+  integrationId: string
+): Promise<void> {
   await deleteTokens(platform, integrationId);
 }
 
 /**
  * Validate OAuth configuration
  */
-export function validateOAuthConfig(config: OAuthConfig): { valid: boolean; errors: string[] } {
+export function validateOAuthConfig(config: OAuthConfig): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   if (!config.platform) {
@@ -364,7 +404,10 @@ export const OAUTH_SCOPES = {
   ghost: [],
   strapi: [],
   google: ['openid', 'https://www.googleapis.com/auth/webmasters.readonly'],
-  'google-search-console': ['openid', 'https://www.googleapis.com/auth/webmasters.readonly'],
+  'google-search-console': [
+    'openid',
+    'https://www.googleapis.com/auth/webmasters.readonly',
+  ],
 } as const;
 
 /**

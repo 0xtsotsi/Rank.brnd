@@ -9,11 +9,18 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database';
 
 type TeamInvitation = Database['public']['Tables']['team_invitations']['Row'];
-type TeamInvitationInsert = Database['public']['Tables']['team_invitations']['Insert'];
-type TeamInvitationUpdate = Database['public']['Tables']['team_invitations']['Update'];
+type TeamInvitationInsert =
+  Database['public']['Tables']['team_invitations']['Insert'];
+type TeamInvitationUpdate =
+  Database['public']['Tables']['team_invitations']['Update'];
 
 export type TeamMemberRole = 'owner' | 'admin' | 'editor' | 'viewer';
-export type TeamInvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired' | 'cancelled';
+export type TeamInvitationStatus =
+  | 'pending'
+  | 'accepted'
+  | 'declined'
+  | 'expired'
+  | 'cancelled';
 
 /**
  * Result type for team invitation operations
@@ -104,12 +111,12 @@ export async function validateInvitationToken(
   token: string
 ): Promise<TeamInvitationResult<InvitationValidationResult>> {
   try {
-    const { data, error } = await client.rpc(
+    const { data, error } = (await client.rpc(
       'validate_invitation_token' as never,
       {
         p_token: token,
       } as never
-    ) as { data: InvitationValidationResult[] | null; error: any };
+    )) as { data: InvitationValidationResult[] | null; error: any };
 
     if (error) throw error;
     if (!data || data.length === 0) {
@@ -155,9 +162,7 @@ export async function acceptInvitationByToken(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to accept invitation',
+        error instanceof Error ? error.message : 'Failed to accept invitation',
     };
   }
 }
@@ -187,9 +192,7 @@ export async function cancelTeamInvitation(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to cancel invitation',
+        error instanceof Error ? error.message : 'Failed to cancel invitation',
     };
   }
 }
@@ -261,7 +264,8 @@ export async function getInvitationByToken(
   try {
     const { data, error } = await client
       .from('team_invitations')
-      .select(`
+      .select(
+        `
         *,
         organization:organization_id (
           id,
@@ -273,7 +277,8 @@ export async function getInvitationByToken(
           name,
           email
         )
-      `)
+      `
+      )
       .eq('token', token)
       .single();
 
@@ -285,9 +290,7 @@ export async function getInvitationByToken(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to fetch invitation',
+        error instanceof Error ? error.message : 'Failed to fetch invitation',
     };
   }
 }
@@ -302,7 +305,8 @@ export async function getPendingInvitationsByEmail(
   try {
     const { data, error } = await client
       .from('team_invitations')
-      .select(`
+      .select(
+        `
         *,
         organization:organization_id (
           id,
@@ -314,7 +318,8 @@ export async function getPendingInvitationsByEmail(
           name,
           email
         )
-      `)
+      `
+      )
       .eq('email', email)
       .eq('status', 'pending')
       .gt('expires_at', new Date().toISOString())
@@ -328,9 +333,7 @@ export async function getPendingInvitationsByEmail(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to fetch invitations',
+        error instanceof Error ? error.message : 'Failed to fetch invitations',
     };
   }
 }
@@ -342,9 +345,7 @@ export async function expireOldInvitations(
   client: SupabaseClient<Database>
 ): Promise<TeamInvitationResult<number>> {
   try {
-    const { data, error } = await client.rpc(
-      'expire_old_invitations' as never
-    );
+    const { data, error } = await client.rpc('expire_old_invitations' as never);
 
     if (error) throw error;
 

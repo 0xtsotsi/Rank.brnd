@@ -70,7 +70,11 @@ export default function CheckoutPage() {
   // Create payment intent on mount
   useEffect(() => {
     if (!plan || price === 0) {
-      setState((prev) => ({ ...prev, isLoading: false, error: 'Invalid plan selected' }));
+      setState((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: 'Invalid plan selected',
+      }));
       return;
     }
 
@@ -104,13 +108,15 @@ export default function CheckoutPage() {
           paymentIntentId,
           isLoading: false,
         }));
-
       } catch (err) {
         if (!isMounted) return;
         setState((prev) => ({
           ...prev,
           isLoading: false,
-          error: err instanceof Error ? err.message : 'Failed to initialize checkout',
+          error:
+            err instanceof Error
+              ? err.message
+              : 'Failed to initialize checkout',
         }));
       }
     }
@@ -132,7 +138,9 @@ export default function CheckoutPage() {
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
           <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600 dark:border-indigo-700 dark:border-t-indigo-400" />
-          <p className="text-gray-600 dark:text-gray-400">Setting up checkout...</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            Setting up checkout...
+          </p>
         </div>
       </div>
     );
@@ -147,9 +155,7 @@ export default function CheckoutPage() {
           <h2 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
             Checkout Error
           </h2>
-          <p className="mb-6 text-gray-600 dark:text-gray-400">
-            {state.error}
-          </p>
+          <p className="mb-6 text-gray-600 dark:text-gray-400">{state.error}</p>
           <button
             onClick={handleCancel}
             className="rounded-lg bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-700"
@@ -257,7 +263,9 @@ export default function CheckoutPage() {
 
             <div className="border-t border-gray-200 pt-4 dark:border-gray-700">
               <div className="mb-2 flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Subtotal
+                </span>
                 <span className="font-medium text-gray-900 dark:text-white">
                   {formattedPrice}
                 </span>
@@ -269,7 +277,9 @@ export default function CheckoutPage() {
                 </span>
               </div>
               <div className="mt-4 flex justify-between">
-                <span className="font-semibold text-gray-900 dark:text-white">Total</span>
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  Total
+                </span>
                 <span className="text-xl font-bold text-gray-900 dark:text-white">
                   {formattedPrice}
                 </span>
@@ -284,7 +294,9 @@ export default function CheckoutPage() {
               <ul className="space-y-2 text-sm">
                 {plan && plan.limits.articlesPerMonth !== -1 && (
                   <li className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Articles/month</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Articles/month
+                    </span>
                     <span className="font-medium text-gray-900 dark:text-white">
                       {plan.limits.articlesPerMonth.toLocaleString()}
                     </span>
@@ -292,7 +304,9 @@ export default function CheckoutPage() {
                 )}
                 {plan && plan.limits.aiWordsPerMonth !== -1 && (
                   <li className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">AI words/month</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      AI words/month
+                    </span>
                     <span className="font-medium text-gray-900 dark:text-white">
                       {plan.limits.aiWordsPerMonth.toLocaleString()}
                     </span>
@@ -300,20 +314,26 @@ export default function CheckoutPage() {
                 )}
                 {plan && plan.limits.keywordResearchPerMonth !== -1 && (
                   <li className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Keywords/month</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Keywords/month
+                    </span>
                     <span className="font-medium text-gray-900 dark:text-white">
                       {plan.limits.keywordResearchPerMonth.toLocaleString()}
                     </span>
                   </li>
                 )}
-                {plan && plan.limits.teamMembers && plan.limits.teamMembers > 0 && (
-                  <li className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Team members</span>
-                    <span className="font-medium text-gray-900 dark:text-white">
-                      {plan.limits.teamMembers}
-                    </span>
-                  </li>
-                )}
+                {plan &&
+                  plan.limits.teamMembers &&
+                  plan.limits.teamMembers > 0 && (
+                    <li className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Team members
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {plan.limits.teamMembers}
+                      </span>
+                    </li>
+                  )}
               </ul>
             </div>
           </div>

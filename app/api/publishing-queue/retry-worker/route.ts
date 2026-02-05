@@ -96,9 +96,16 @@ export async function POST(request: NextRequest) {
     );
 
     // Get items ready for retry
-    const itemsResult = await getItemsReadyForRetry(client, { platform: platform as any, limit });
+    const itemsResult = await getItemsReadyForRetry(client, {
+      platform: platform as any,
+      limit,
+    });
 
-    if (!itemsResult.success || !itemsResult.data || itemsResult.data.length === 0) {
+    if (
+      !itemsResult.success ||
+      !itemsResult.data ||
+      itemsResult.data.length === 0
+    ) {
       return NextResponse.json({
         success: true,
         result: {
@@ -181,7 +188,7 @@ async function processRetryItem(
     // In production, replace this with actual CMS integration calls
 
     // Simulate some work
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     // Mark as completed (with placeholder data)
     await markPublishingItemCompleted(client, itemId, {
@@ -196,7 +203,12 @@ async function processRetryItem(
     const errorMessage = error instanceof Error ? error.message : String(error);
     const classification = classifyError(error);
 
-    await markPublishingItemFailed(client, itemId, errorMessage, classification.type);
+    await markPublishingItemFailed(
+      client,
+      itemId,
+      errorMessage,
+      classification.type
+    );
 
     throw error;
   }
@@ -222,13 +234,13 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50', 10);
 
     // Get items ready for retry
-    const itemsResult = await getItemsReadyForRetry(client, { platform: platform as any, limit });
+    const itemsResult = await getItemsReadyForRetry(client, {
+      platform: platform as any,
+      limit,
+    });
 
     if (!itemsResult.success) {
-      return NextResponse.json(
-        { error: itemsResult.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: itemsResult.error }, { status: 500 });
     }
 
     return NextResponse.json({

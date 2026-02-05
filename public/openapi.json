@@ -119,7 +119,7 @@
         "summary": "List products",
         "description": "Fetch all products with optional filtering",
         "operationId": "listProducts",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "search",
@@ -169,7 +169,7 @@
         "summary": "Create product",
         "description": "Create a new product",
         "operationId": "createProduct",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -204,7 +204,7 @@
         "summary": "Update product",
         "description": "Update an existing product",
         "operationId": "updateProduct",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -242,7 +242,7 @@
         "summary": "Delete product",
         "description": "Delete a product",
         "operationId": "deleteProduct",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "id",
@@ -280,7 +280,7 @@
         "summary": "Generate keywords",
         "description": "Generate keyword suggestions for a given topic",
         "operationId": "generateKeywords",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -314,7 +314,7 @@
         "summary": "List Medium publications",
         "description": "Get user's publications from Medium",
         "operationId": "listMediumPublications",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "token",
@@ -347,7 +347,7 @@
         "summary": "Publish to Medium",
         "description": "Publish an article to Medium",
         "operationId": "publishToMedium",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -381,7 +381,7 @@
         "summary": "Get Shopify shop info",
         "description": "Get shop information and blogs from Shopify",
         "operationId": "getShopifyInfo",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "shopDomain",
@@ -421,17 +421,17 @@
         "summary": "Publish to Shopify",
         "description": "Publish content to Shopify (article, product, collection, or images)",
         "operationId": "publishToShopify",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "oneOf": [
-                  {"$ref": "#/components/schemas/ShopifyArticleRequest"},
-                  {"$ref": "#/components/schemas/ShopifyProductRequest"},
-                  {"$ref": "#/components/schemas/ShopifyCollectionRequest"},
-                  {"$ref": "#/components/schemas/ShopifyImageUploadRequest"}
+                  { "$ref": "#/components/schemas/ShopifyArticleRequest" },
+                  { "$ref": "#/components/schemas/ShopifyProductRequest" },
+                  { "$ref": "#/components/schemas/ShopifyCollectionRequest" },
+                  { "$ref": "#/components/schemas/ShopifyImageUploadRequest" }
                 ]
               }
             }
@@ -461,7 +461,7 @@
         "summary": "Update Shopify content",
         "description": "Update existing content in Shopify",
         "operationId": "updateShopifyContent",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -480,10 +480,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": {"type": "boolean"},
-                    "type": {"type": "string"},
-                    "id": {"type": "string"},
-                    "data": {"type": "object"}
+                    "success": { "type": "boolean" },
+                    "type": { "type": "string" },
+                    "id": { "type": "string" },
+                    "data": { "type": "object" }
                   }
                 }
               }
@@ -502,7 +502,7 @@
         "summary": "Delete Shopify content",
         "description": "Delete content from Shopify",
         "operationId": "deleteShopifyContent",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "type",
@@ -551,7 +551,7 @@
         "summary": "List prices",
         "description": "Get available subscription prices",
         "operationId": "listPrices",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
             "description": "Prices retrieved successfully",
@@ -575,7 +575,7 @@
         "summary": "Get subscription",
         "description": "Get user's current subscription",
         "operationId": "getSubscription",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
             "description": "Subscription retrieved successfully",
@@ -597,7 +597,7 @@
         "summary": "Create subscription",
         "description": "Create a new subscription",
         "operationId": "createSubscription",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -632,7 +632,7 @@
         "summary": "Cancel subscription",
         "description": "Cancel user's subscription",
         "operationId": "cancelSubscription",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
             "description": "Subscription cancelled successfully",
@@ -656,7 +656,7 @@
         "summary": "Create checkout session",
         "description": "Create a Stripe checkout session for subscription",
         "operationId": "createCheckoutSession",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -749,7 +749,7 @@
         "summary": "Get domain authority",
         "description": "Fetch domain authority metrics for a single domain",
         "operationId": "getDomainAuthority",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "domain",
@@ -797,7 +797,7 @@
         "summary": "Batch domain authority check",
         "description": "Fetch domain authority for multiple domains (max 50)",
         "operationId": "batchDomainAuthority",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -837,7 +837,7 @@
         "summary": "Get usage stats",
         "description": "Get all usage quotas for the current organization",
         "operationId": "getUsageStats",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "planId",
@@ -870,7 +870,7 @@
         "summary": "Check usage limit",
         "description": "Check if a specific usage is allowed",
         "operationId": "checkUsageLimit",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -907,7 +907,7 @@
         "summary": "Upload file",
         "description": "Upload a file to storage",
         "operationId": "uploadFile",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -948,7 +948,7 @@
         "summary": "Get dashboard metrics",
         "description": "Get aggregated metrics for the dashboard",
         "operationId": "getDashboardMetrics",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
             "description": "Metrics retrieved successfully",
@@ -972,15 +972,15 @@
         "summary": "Complete onboarding",
         "description": "Complete user onboarding process",
         "operationId": "completeOnboarding",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "step": {"type": "string"},
-                  "data": {"type": "object"}
+                  "step": { "type": "string" },
+                  "data": { "type": "object" }
                 }
               }
             }
@@ -1009,7 +1009,7 @@
         "summary": "Get deletion status",
         "description": "Get current deletion status and summary",
         "operationId": "getDeletionStatus",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
             "description": "Deletion status retrieved",
@@ -1031,7 +1031,7 @@
         "summary": "Request account deletion",
         "description": "Request or confirm account deletion",
         "operationId": "requestAccountDeletion",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1049,9 +1049,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": {"type": "boolean"},
-                    "message": {"type": "string"},
-                    "confirmationToken": {"type": "string"}
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "confirmationToken": { "type": "string" }
                   }
                 }
               }
@@ -1067,14 +1067,14 @@
         "summary": "Cancel deletion request",
         "description": "Cancel a pending deletion request",
         "operationId": "cancelDeletionRequest",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "reason": {"type": "string"}
+                  "reason": { "type": "string" }
                 }
               }
             }
@@ -1104,8 +1104,8 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {"type": "string"},
-                    "note": {"type": "string"}
+                    "message": { "type": "string" },
+                    "note": { "type": "string" }
                   }
                 }
               }
@@ -1152,7 +1152,7 @@
         "summary": "Protected example endpoint",
         "description": "Example of authenticated-only endpoint",
         "operationId": "protectedExample",
-        "security": [{"bearerAuth": []}],
+        "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
             "description": "Protected data retrieved successfully",
@@ -1184,20 +1184,28 @@
       "HealthResponse": {
         "type": "object",
         "properties": {
-          "status": {"type": "string"},
-          "timestamp": {"type": "string", "format": "date-time"}
+          "status": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" }
         }
       },
       "CsrfTokenResponse": {
         "type": "object",
         "properties": {
-          "csrfToken": {"type": "string"},
-          "expiresAt": {"type": "string", "format": "date-time"}
+          "csrfToken": { "type": "string" },
+          "expiresAt": { "type": "string", "format": "date-time" }
         }
       },
       "BrandTone": {
         "type": "string",
-        "enum": ["professional", "casual", "friendly", "formal", "playful", "authoritative", "minimalist"]
+        "enum": [
+          "professional",
+          "casual",
+          "friendly",
+          "formal",
+          "playful",
+          "authoritative",
+          "minimalist"
+        ]
       },
       "ProductStatus": {
         "type": "string",
@@ -1206,62 +1214,62 @@
       "BrandColors": {
         "type": "object",
         "properties": {
-          "primary": {"type": "string"},
-          "secondary": {"type": "string"},
-          "accent": {"type": "string"}
+          "primary": { "type": "string" },
+          "secondary": { "type": "string" },
+          "accent": { "type": "string" }
         },
         "required": ["primary"]
       },
       "Product": {
         "type": "object",
         "properties": {
-          "id": {"type": "string"},
-          "name": {"type": "string"},
-          "url": {"type": "string"},
-          "brandColors": {"$ref": "#/components/schemas/BrandColors"},
-          "tone": {"$ref": "#/components/schemas/BrandTone"},
-          "status": {"$ref": "#/components/schemas/ProductStatus"},
-          "description": {"type": "string"},
-          "logoUrl": {"type": "string"},
-          "industry": {"type": "string"},
-          "targetAudience": {"type": "string"},
-          "createdAt": {"type": "string", "format": "date-time"},
-          "updatedAt": {"type": "string", "format": "date-time"}
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "url": { "type": "string" },
+          "brandColors": { "$ref": "#/components/schemas/BrandColors" },
+          "tone": { "$ref": "#/components/schemas/BrandTone" },
+          "status": { "$ref": "#/components/schemas/ProductStatus" },
+          "description": { "type": "string" },
+          "logoUrl": { "type": "string" },
+          "industry": { "type": "string" },
+          "targetAudience": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
         },
         "required": ["id", "name", "url", "brandColors", "tone", "status"]
       },
       "CreateProductRequest": {
         "type": "object",
         "properties": {
-          "name": {"type": "string"},
-          "url": {"type": "string"},
-          "primaryColor": {"type": "string"},
-          "secondaryColor": {"type": "string"},
-          "accentColor": {"type": "string"},
-          "tone": {"$ref": "#/components/schemas/BrandTone"},
-          "status": {"$ref": "#/components/schemas/ProductStatus"},
-          "description": {"type": "string"},
-          "logoUrl": {"type": "string"},
-          "industry": {"type": "string"},
-          "targetAudience": {"type": "string"}
+          "name": { "type": "string" },
+          "url": { "type": "string" },
+          "primaryColor": { "type": "string" },
+          "secondaryColor": { "type": "string" },
+          "accentColor": { "type": "string" },
+          "tone": { "$ref": "#/components/schemas/BrandTone" },
+          "status": { "$ref": "#/components/schemas/ProductStatus" },
+          "description": { "type": "string" },
+          "logoUrl": { "type": "string" },
+          "industry": { "type": "string" },
+          "targetAudience": { "type": "string" }
         },
         "required": ["name", "url", "primaryColor", "tone"]
       },
       "UpdateProductRequest": {
         "type": "object",
         "properties": {
-          "id": {"type": "string"},
-          "name": {"type": "string"},
-          "url": {"type": "string"},
-          "primaryColor": {"type": "string"},
-          "secondaryColor": {"type": "string"},
-          "accentColor": {"type": "string"},
-          "tone": {"$ref": "#/components/schemas/BrandTone"},
-          "status": {"$ref": "#/components/schemas/ProductStatus"},
-          "description": {"type": "string"},
-          "logoUrl": {"type": "string"},
-          "industry": {"type": "string"},
-          "targetAudience": {"type": "string"}
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "url": { "type": "string" },
+          "primaryColor": { "type": "string" },
+          "secondaryColor": { "type": "string" },
+          "accentColor": { "type": "string" },
+          "tone": { "$ref": "#/components/schemas/BrandTone" },
+          "status": { "$ref": "#/components/schemas/ProductStatus" },
+          "description": { "type": "string" },
+          "logoUrl": { "type": "string" },
+          "industry": { "type": "string" },
+          "targetAudience": { "type": "string" }
         }
       },
       "ProductsListResponse": {
@@ -1269,29 +1277,29 @@
         "properties": {
           "products": {
             "type": "array",
-            "items": {"$ref": "#/components/schemas/Product"}
+            "items": { "$ref": "#/components/schemas/Product" }
           },
-          "total": {"type": "integer"}
+          "total": { "type": "integer" }
         }
       },
       "SuccessResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"}
+          "success": { "type": "boolean" }
         }
       },
       "ErrorResponse": {
         "type": "object",
         "properties": {
-          "error": {"type": "string"},
-          "message": {"type": "string"}
+          "error": { "type": "string" },
+          "message": { "type": "string" }
         }
       },
       "KeywordsRequest": {
         "type": "object",
         "properties": {
-          "topic": {"type": "string"},
-          "count": {"type": "integer", "default": 10}
+          "topic": { "type": "string" },
+          "count": { "type": "integer", "default": 10 }
         },
         "required": ["topic"]
       },
@@ -1303,9 +1311,9 @@
             "items": {
               "type": "object",
               "properties": {
-                "keyword": {"type": "string"},
-                "volume": {"type": "integer"},
-                "difficulty": {"type": "number"}
+                "keyword": { "type": "string" },
+                "volume": { "type": "integer" },
+                "difficulty": { "type": "number" }
               }
             }
           }
@@ -1314,34 +1322,37 @@
       "MediumPublishRequest": {
         "type": "object",
         "properties": {
-          "token": {"type": "string"},
-          "title": {"type": "string"},
-          "content": {"type": "string"},
-          "tags": {"type": "array", "items": {"type": "string"}},
-          "publishStatus": {"type": "string", "enum": ["draft", "public", "unlisted"]}
+          "token": { "type": "string" },
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "publishStatus": {
+            "type": "string",
+            "enum": ["draft", "public", "unlisted"]
+          }
         },
         "required": ["token", "title", "content"]
       },
       "MediumPublishResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
-          "url": {"type": "string"},
-          "id": {"type": "string"}
+          "success": { "type": "boolean" },
+          "url": { "type": "string" },
+          "id": { "type": "string" }
         }
       },
       "MediumPublicationsResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
+          "success": { "type": "boolean" },
           "publications": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "id": {"type": "string"},
-                "name": {"type": "string"},
-                "description": {"type": "string"}
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "description": { "type": "string" }
               }
             }
           }
@@ -1350,54 +1361,60 @@
       "ShopifyArticleRequest": {
         "type": "object",
         "properties": {
-          "type": {"type": "string", "enum": ["article"]},
-          "title": {"type": "string"},
-          "content": {"type": "string"},
-          "contentHtml": {"type": "string"},
-          "tags": {"type": "array", "items": {"type": "string"}},
-          "publishStatus": {"type": "string", "enum": ["draft", "public", "unlisted"]},
-          "canonicalUrl": {"type": "string"},
-          "blogId": {"type": "number"},
-          "author": {"type": "string"}
+          "type": { "type": "string", "enum": ["article"] },
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "contentHtml": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "publishStatus": {
+            "type": "string",
+            "enum": ["draft", "public", "unlisted"]
+          },
+          "canonicalUrl": { "type": "string" },
+          "blogId": { "type": "number" },
+          "author": { "type": "string" }
         },
         "required": ["type", "title", "content"]
       },
       "ShopifyProductRequest": {
         "type": "object",
         "properties": {
-          "type": {"type": "string", "enum": ["product"]},
-          "title": {"type": "string"},
-          "body_html": {"type": "string"},
-          "product_type": {"type": "string"},
-          "vendor": {"type": "string"},
-          "tags": {"type": "array", "items": {"type": "string"}},
-          "status": {"type": "string", "enum": ["active", "archived", "draft"]},
-          "variants": {"type": "array", "items": {"type": "object"}},
-          "images": {"type": "array", "items": {"type": "object"}},
-          "options": {"type": "array", "items": {"type": "object"}}
+          "type": { "type": "string", "enum": ["product"] },
+          "title": { "type": "string" },
+          "body_html": { "type": "string" },
+          "product_type": { "type": "string" },
+          "vendor": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "status": {
+            "type": "string",
+            "enum": ["active", "archived", "draft"]
+          },
+          "variants": { "type": "array", "items": { "type": "object" } },
+          "images": { "type": "array", "items": { "type": "object" } },
+          "options": { "type": "array", "items": { "type": "object" } }
         },
         "required": ["type", "title"]
       },
       "ShopifyCollectionRequest": {
         "type": "object",
         "properties": {
-          "type": {"type": "string", "enum": ["collection"]},
-          "title": {"type": "string"},
-          "body_html": {"type": "string"},
-          "handle": {"type": "string"},
-          "published": {"type": "boolean"},
-          "image": {"type": "object"}
+          "type": { "type": "string", "enum": ["collection"] },
+          "title": { "type": "string" },
+          "body_html": { "type": "string" },
+          "handle": { "type": "string" },
+          "published": { "type": "boolean" },
+          "image": { "type": "object" }
         },
         "required": ["type", "title"]
       },
       "ShopifyImageUploadRequest": {
         "type": "object",
         "properties": {
-          "type": {"type": "string", "enum": ["image-upload"]},
-          "productId": {"type": "number"},
+          "type": { "type": "string", "enum": ["image-upload"] },
+          "productId": { "type": "number" },
           "images": {
             "type": "array",
-            "items": {"type": "object"}
+            "items": { "type": "object" }
           }
         },
         "required": ["type", "productId", "images"]
@@ -1405,28 +1422,28 @@
       "ShopifyPublishResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
-          "type": {"type": "string"},
-          "postId": {"type": "string"},
-          "url": {"type": "string"},
-          "metadata": {"type": "object"}
+          "success": { "type": "boolean" },
+          "type": { "type": "string" },
+          "postId": { "type": "string" },
+          "url": { "type": "string" },
+          "metadata": { "type": "object" }
         }
       },
       "ShopifyUpdateRequest": {
         "type": "object",
         "properties": {
-          "type": {"type": "string"},
-          "id": {"type": "string"},
-          "shopDomain": {"type": "string"},
-          "accessToken": {"type": "string"}
+          "type": { "type": "string" },
+          "id": { "type": "string" },
+          "shopDomain": { "type": "string" },
+          "accessToken": { "type": "string" }
         }
       },
       "ShopifyInfoResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
-          "shop": {"type": "object"},
-          "blogs": {"type": "array", "items": {"type": "object"}}
+          "success": { "type": "boolean" },
+          "shop": { "type": "object" },
+          "blogs": { "type": "array", "items": { "type": "object" } }
         }
       },
       "PricesResponse": {
@@ -1437,11 +1454,11 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": {"type": "string"},
-                "nickname": {"type": "string"},
-                "currency": {"type": "string"},
-                "unit_amount": {"type": "integer"},
-                "recurring": {"type": "object"}
+                "id": { "type": "string" },
+                "nickname": { "type": "string" },
+                "currency": { "type": "string" },
+                "unit_amount": { "type": "integer" },
+                "recurring": { "type": "object" }
               }
             }
           }
@@ -1453,9 +1470,9 @@
           "subscription": {
             "type": "object",
             "properties": {
-              "id": {"type": "string"},
-              "status": {"type": "string"},
-              "current_period_end": {"type": "integer"}
+              "id": { "type": "string" },
+              "status": { "type": "string" },
+              "current_period_end": { "type": "integer" }
             }
           }
         }
@@ -1463,42 +1480,42 @@
       "CreateSubscriptionRequest": {
         "type": "object",
         "properties": {
-          "priceId": {"type": "string"}
+          "priceId": { "type": "string" }
         },
         "required": ["priceId"]
       },
       "CheckoutSessionRequest": {
         "type": "object",
         "properties": {
-          "priceId": {"type": "string"},
-          "successUrl": {"type": "string"},
-          "cancelUrl": {"type": "string"}
+          "priceId": { "type": "string" },
+          "successUrl": { "type": "string" },
+          "cancelUrl": { "type": "string" }
         },
         "required": ["priceId"]
       },
       "CheckoutSessionResponse": {
         "type": "object",
         "properties": {
-          "url": {"type": "string"}
+          "url": { "type": "string" }
         }
       },
       "DomainAuthorityMetrics": {
         "type": "object",
         "properties": {
-          "domain": {"type": "string"},
-          "domainAuthority": {"type": "integer"},
-          "spamScore": {"type": "integer"},
-          "pageAuthority": {"type": "integer"},
-          "links": {"type": "integer"},
-          "cached": {"type": "boolean"},
-          "createdAt": {"type": "string", "format": "date-time"}
+          "domain": { "type": "string" },
+          "domainAuthority": { "type": "integer" },
+          "spamScore": { "type": "integer" },
+          "pageAuthority": { "type": "integer" },
+          "links": { "type": "integer" },
+          "cached": { "type": "boolean" },
+          "createdAt": { "type": "string", "format": "date-time" }
         }
       },
       "BatchDomainAuthorityRequest": {
         "type": "object",
         "properties": {
-          "domains": {"type": "array", "items": {"type": "string"}},
-          "bypassCache": {"type": "boolean"}
+          "domains": { "type": "array", "items": { "type": "string" } },
+          "bypassCache": { "type": "boolean" }
         },
         "required": ["domains"]
       },
@@ -1507,22 +1524,22 @@
         "properties": {
           "results": {
             "type": "array",
-            "items": {"$ref": "#/components/schemas/DomainAuthorityMetrics"}
+            "items": { "$ref": "#/components/schemas/DomainAuthorityMetrics" }
           },
-          "total": {"type": "integer"},
-          "cached": {"type": "integer"},
-          "fetched": {"type": "integer"}
+          "total": { "type": "integer" },
+          "cached": { "type": "integer" },
+          "fetched": { "type": "integer" }
         }
       },
       "UsageStatsResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
+          "success": { "type": "boolean" },
           "data": {
             "type": "object",
             "properties": {
-              "quotas": {"type": "object"},
-              "usage": {"type": "object"}
+              "quotas": { "type": "object" },
+              "usage": { "type": "object" }
             }
           }
         }
@@ -1530,23 +1547,23 @@
       "CheckUsageRequest": {
         "type": "object",
         "properties": {
-          "metric": {"type": "string"},
-          "quantity": {"type": "integer"},
-          "planId": {"type": "string"},
-          "organizationId": {"type": "string"}
+          "metric": { "type": "string" },
+          "quantity": { "type": "integer" },
+          "planId": { "type": "string" },
+          "organizationId": { "type": "string" }
         },
         "required": ["metric", "quantity"]
       },
       "CheckUsageResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
+          "success": { "type": "boolean" },
           "data": {
             "type": "object",
             "properties": {
-              "allowed": {"type": "boolean"},
-              "remaining": {"type": "integer"},
-              "limit": {"type": "integer"}
+              "allowed": { "type": "boolean" },
+              "remaining": { "type": "integer" },
+              "limit": { "type": "integer" }
             }
           }
         }
@@ -1554,36 +1571,36 @@
       "UploadResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
-          "url": {"type": "string"},
-          "filename": {"type": "string"}
+          "success": { "type": "boolean" },
+          "url": { "type": "string" },
+          "filename": { "type": "string" }
         }
       },
       "DashboardMetricsResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
-          "data": {"type": "object"}
+          "success": { "type": "boolean" },
+          "data": { "type": "object" }
         }
       },
       "OnboardingResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
-          "nextStep": {"type": "string"}
+          "success": { "type": "boolean" },
+          "nextStep": { "type": "string" }
         }
       },
       "DeletionStatusResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
+          "success": { "type": "boolean" },
           "data": {
             "type": "object",
             "properties": {
-              "hasPendingRequest": {"type": "boolean"},
-              "pendingRequest": {"type": "object"},
-              "summary": {"type": "object"},
-              "activeSubscriptions": {"type": "array"}
+              "hasPendingRequest": { "type": "boolean" },
+              "pendingRequest": { "type": "object" },
+              "summary": { "type": "object" },
+              "activeSubscriptions": { "type": "array" }
             }
           }
         }
@@ -1591,21 +1608,21 @@
       "AccountDeletionRequest": {
         "type": "object",
         "properties": {
-          "confirmationToken": {"type": "string"},
-          "confirmed": {"type": "boolean"}
+          "confirmationToken": { "type": "string" },
+          "confirmed": { "type": "boolean" }
         }
       },
       "ProtectedDataResponse": {
         "type": "object",
         "properties": {
-          "success": {"type": "boolean"},
+          "success": { "type": "boolean" },
           "data": {
             "type": "object",
             "properties": {
-              "userId": {"type": "string"},
-              "organizationId": {"type": "string"},
-              "message": {"type": "string"},
-              "timestamp": {"type": "string"}
+              "userId": { "type": "string" },
+              "organizationId": { "type": "string" },
+              "message": { "type": "string" },
+              "timestamp": { "type": "string" }
             }
           }
         }

@@ -38,7 +38,12 @@ import {
   getUserIdFromCustomer,
   type StripeWebhookEvent,
 } from '@/lib/stripe';
-import { createRequestLogger, withLoggingHeaders, getCorrelationId, type ILogger } from '@/lib/logger';
+import {
+  createRequestLogger,
+  withLoggingHeaders,
+  getCorrelationId,
+  type ILogger,
+} from '@/lib/logger';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 import { upsertInvoiceFromStripe } from '@/lib/supabase/subscriptions';
 import { getOrganizationByStripeCustomerId } from '@/lib/supabase/organizations';
@@ -74,7 +79,9 @@ export async function POST(req: NextRequest) {
     log.info('Webhook signature verified', { eventType: event.type });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
-    log.error('Error verifying webhook', err, { signaturePresent: !!signature });
+    log.error('Error verifying webhook', err, {
+      signaturePresent: !!signature,
+    });
     return withLoggingHeaders(
       new NextResponse('Error: Invalid signature', { status: 403 }),
       correlationId
@@ -134,7 +141,9 @@ export async function POST(req: NextRequest) {
       correlationId
     );
   } catch (error) {
-    log.error(`Error processing webhook ${event.type}`, error, { eventType: event.type });
+    log.error(`Error processing webhook ${event.type}`, error, {
+      eventType: event.type,
+    });
     return withLoggingHeaders(
       new NextResponse('Error processing webhook', { status: 500 }),
       correlationId
@@ -146,7 +155,10 @@ export async function POST(req: NextRequest) {
  * Handle checkout.session.completed
  * Called when a user completes the Stripe checkout flow
  */
-async function handleCheckoutSessionCompleted(event: Stripe.Event, log: ILogger) {
+async function handleCheckoutSessionCompleted(
+  event: Stripe.Event,
+  log: ILogger
+) {
   if (!isEventType(event, 'checkout.session.completed')) return;
 
   const sessionData = extractCheckoutSessionCompleted(event);
@@ -333,8 +345,12 @@ async function handleInvoicePaid(event: Stripe.Event, log: ILogger) {
     status: invoiceData.status,
     invoicePdf: invoiceData.invoicePdf,
     hostedInvoiceUrl: invoiceData.hostedInvoiceUrl,
-    dueDate: invoiceData.dueDate ? new Date(invoiceData.dueDate * 1000) : undefined,
-    paidAt: invoiceData.paidAt ? new Date(invoiceData.paidAt * 1000) : new Date(),
+    dueDate: invoiceData.dueDate
+      ? new Date(invoiceData.dueDate * 1000)
+      : undefined,
+    paidAt: invoiceData.paidAt
+      ? new Date(invoiceData.paidAt * 1000)
+      : new Date(),
     metadata: invoiceData.metadata,
   });
 
@@ -406,7 +422,9 @@ async function handleInvoicePaymentFailed(event: Stripe.Event, log: ILogger) {
     status: 'open',
     invoicePdf: invoiceData.invoicePdf,
     hostedInvoiceUrl: invoiceData.hostedInvoiceUrl,
-    dueDate: invoiceData.dueDate ? new Date(invoiceData.dueDate * 1000) : undefined,
+    dueDate: invoiceData.dueDate
+      ? new Date(invoiceData.dueDate * 1000)
+      : undefined,
     paidAt: undefined,
     metadata: invoiceData.metadata,
   });

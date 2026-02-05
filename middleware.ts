@@ -37,9 +37,9 @@ const isPublicRoute = createRouteMatcher([
 
 // Routes that should be excluded from CSRF validation
 const isCSRFExemptRoute = createRouteMatcher([
-  '/api/webhooks(.*)',      // Webhooks from external services
-  '/api/health(.*)',        // Health check endpoints
-  '/api/csrf-token(.*)',    // CSRF token endpoint
+  '/api/webhooks(.*)', // Webhooks from external services
+  '/api/health(.*)', // Health check endpoints
+  '/api/csrf-token(.*)', // CSRF token endpoint
 ]);
 
 // State-changing methods that require CSRF protection

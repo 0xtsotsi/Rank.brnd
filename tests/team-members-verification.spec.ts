@@ -21,10 +21,12 @@ test.describe('Team Members Feature Verification', () => {
     const migrationContent = await fs.readFile(migrationPath, 'utf-8');
 
     // Verify key elements of the migration
-    expect(migrationContent).toContain('CREATE TABLE IF NOT EXISTS team_members');
+    expect(migrationContent).toContain(
+      'CREATE TABLE IF NOT EXISTS team_members'
+    );
     expect(migrationContent).toContain('organization_id UUID');
     expect(migrationContent).toContain('user_id UUID');
-    expect(migrationContent).toContain("role team_member_role");
+    expect(migrationContent).toContain('role team_member_role');
     expect(migrationContent).toContain('invited_at TIMESTAMPTZ');
     expect(migrationContent).toContain('accepted_at TIMESTAMPTZ');
     expect(migrationContent).toContain('UNIQUE(organization_id, user_id)');
@@ -41,7 +43,7 @@ test.describe('Team Members Feature Verification', () => {
     const typesContent = await fs.readFile(typesPath, 'utf-8');
 
     // Verify team_members table types exist
-    expect(typesContent).toContain("team_members: {");
+    expect(typesContent).toContain('team_members: {');
     expect(typesContent).toContain("'owner' | 'admin' | 'editor' | 'viewer'");
     expect(typesContent).toContain('invited_at: string');
     expect(typesContent).toContain('accepted_at: string | null');
@@ -82,7 +84,10 @@ test.describe('Team Members Feature Verification', () => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
-    const routePath = path.join(process.cwd(), 'app/api/team-members/[id]/route.ts');
+    const routePath = path.join(
+      process.cwd(),
+      'app/api/team-members/[id]/route.ts'
+    );
     const routeContent = await fs.readFile(routePath, 'utf-8');
 
     // Verify individual team member operations
@@ -95,7 +100,10 @@ test.describe('Team Members Feature Verification', () => {
     const fs = await import('fs/promises');
     const path = await import('path');
 
-    const routePath = path.join(process.cwd(), 'app/api/team-members/accept/route.ts');
+    const routePath = path.join(
+      process.cwd(),
+      'app/api/team-members/accept/route.ts'
+    );
     const routeContent = await fs.readFile(routePath, 'utf-8');
 
     // Verify accept invitation endpoint
@@ -165,10 +173,18 @@ test.describe('Team Members Database Functions Verification', () => {
     const migrationContent = await fs.readFile(migrationPath, 'utf-8');
 
     // Verify RLS policies exist
-    expect(migrationContent).toContain('ALTER TABLE team_members ENABLE ROW LEVEL SECURITY');
-    expect(migrationContent).toContain('CREATE POLICY "Service role has full access to team_members"');
-    expect(migrationContent).toContain('CREATE POLICY "Team owners can manage all team members"');
-    expect(migrationContent).toContain('CREATE POLICY "Team admins can manage non-owner team members"');
+    expect(migrationContent).toContain(
+      'ALTER TABLE team_members ENABLE ROW LEVEL SECURITY'
+    );
+    expect(migrationContent).toContain(
+      'CREATE POLICY "Service role has full access to team_members"'
+    );
+    expect(migrationContent).toContain(
+      'CREATE POLICY "Team owners can manage all team members"'
+    );
+    expect(migrationContent).toContain(
+      'CREATE POLICY "Team admins can manage non-owner team members"'
+    );
   });
 
   test('migration should have proper indexes', async () => {
@@ -183,10 +199,20 @@ test.describe('Team Members Database Functions Verification', () => {
     const migrationContent = await fs.readFile(migrationPath, 'utf-8');
 
     // Verify indexes exist
-    expect(migrationContent).toContain('CREATE INDEX IF NOT EXISTS idx_team_members_org_id');
-    expect(migrationContent).toContain('CREATE INDEX IF NOT EXISTS idx_team_members_user_id');
-    expect(migrationContent).toContain('CREATE INDEX IF NOT EXISTS idx_team_members_role');
-    expect(migrationContent).toContain('CREATE INDEX IF NOT EXISTS idx_team_members_invited_at');
-    expect(migrationContent).toContain('CREATE INDEX IF NOT EXISTS idx_team_members_accepted_at');
+    expect(migrationContent).toContain(
+      'CREATE INDEX IF NOT EXISTS idx_team_members_org_id'
+    );
+    expect(migrationContent).toContain(
+      'CREATE INDEX IF NOT EXISTS idx_team_members_user_id'
+    );
+    expect(migrationContent).toContain(
+      'CREATE INDEX IF NOT EXISTS idx_team_members_role'
+    );
+    expect(migrationContent).toContain(
+      'CREATE INDEX IF NOT EXISTS idx_team_members_invited_at'
+    );
+    expect(migrationContent).toContain(
+      'CREATE INDEX IF NOT EXISTS idx_team_members_accepted_at'
+    );
   });
 });

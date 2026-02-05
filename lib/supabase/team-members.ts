@@ -47,7 +47,8 @@ export async function getTeamMembersByOrganization(
   try {
     const { data, error } = await client
       .from('team_members')
-      .select(`
+      .select(
+        `
         *,
         user:user_id (
           id,
@@ -56,7 +57,8 @@ export async function getTeamMembersByOrganization(
           name,
           avatar_url
         )
-      `)
+      `
+      )
       .eq('organization_id', organizationId)
       .order('invited_at', { ascending: false });
 
@@ -74,9 +76,7 @@ export async function getTeamMembersByOrganization(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to fetch team members',
+        error instanceof Error ? error.message : 'Failed to fetch team members',
     };
   }
 }
@@ -133,9 +133,7 @@ export async function getOrganizationTeamMembers(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to fetch team members',
+        error instanceof Error ? error.message : 'Failed to fetch team members',
     };
   }
 }
@@ -162,9 +160,7 @@ export async function getTeamMemberById(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to fetch team member',
+        error instanceof Error ? error.message : 'Failed to fetch team member',
     };
   }
 }
@@ -193,9 +189,7 @@ export async function getTeamMemberByOrgAndUser(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to fetch team member',
+        error instanceof Error ? error.message : 'Failed to fetch team member',
     };
   }
 }
@@ -238,9 +232,7 @@ export async function addTeamMember(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to add team member',
+        error instanceof Error ? error.message : 'Failed to add team member',
     };
   }
 }
@@ -348,9 +340,7 @@ export async function removeTeamMember(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to remove team member',
+        error instanceof Error ? error.message : 'Failed to remove team member',
     };
   }
 }
@@ -483,7 +473,8 @@ export async function getPendingInvitations(
   try {
     const { data, error } = await client
       .from('team_members')
-      .select(`
+      .select(
+        `
         *,
         user:user_id (
           id,
@@ -492,7 +483,8 @@ export async function getPendingInvitations(
           name,
           avatar_url
         )
-      `)
+      `
+      )
       .eq('organization_id', organizationId)
       .is('accepted_at', null)
       .order('invited_at', { ascending: false });
@@ -539,9 +531,7 @@ export async function countTeamMembers(
     return {
       success: false,
       error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to count team members',
+        error instanceof Error ? error.message : 'Failed to count team members',
     };
   }
 }

@@ -69,7 +69,10 @@ export function CurrentPlanCard({
   const [showDetails, setShowDetails] = useState(true);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
-  const statusColors: Record<string, { bg: string; text: string; icon: string }> = {
+  const statusColors: Record<
+    string,
+    { bg: string; text: string; icon: string }
+  > = {
     active: {
       bg: 'bg-green-100 dark:bg-green-900/30',
       text: 'text-green-800 dark:text-green-400',
@@ -92,8 +95,7 @@ export function CurrentPlanCard({
     },
   };
 
-  const statusInfo =
-    statusColors[subscription.status] || statusColors.active;
+  const statusInfo = statusColors[subscription.status] || statusColors.active;
 
   const formattedPrice =
     subscription.interval === 'year'
@@ -101,27 +103,26 @@ export function CurrentPlanCard({
       : subscription.priceMonthly;
 
   // Get features for this plan
-  const planFeatures = plan.features.map((key) => FEATURES[key as keyof typeof FEATURES]);
+  const planFeatures = plan.features.map(
+    (key) => FEATURES[key as keyof typeof FEATURES]
+  );
 
   // Group features by category
-  const featuresByCategory = planFeatures.reduce((acc, feature) => {
-    if (!feature) return acc;
-    if (!acc[feature.category]) {
-      acc[feature.category] = [];
-    }
-    acc[feature.category].push(feature);
-    return acc;
-  }, {} as Record<string, typeof planFeatures>);
+  const featuresByCategory = planFeatures.reduce(
+    (acc, feature) => {
+      if (!feature) return acc;
+      if (!acc[feature.category]) {
+        acc[feature.category] = [];
+      }
+      acc[feature.category].push(feature);
+      return acc;
+    },
+    {} as Record<string, typeof planFeatures>
+  );
 
-  const categoryOrder: Array<'content' | 'seo' | 'publishing' | 'api' | 'team' | 'analytics' | 'support'> = [
-    'content',
-    'seo',
-    'publishing',
-    'api',
-    'team',
-    'analytics',
-    'support',
-  ];
+  const categoryOrder: Array<
+    'content' | 'seo' | 'publishing' | 'api' | 'team' | 'analytics' | 'support'
+  > = ['content', 'seo', 'publishing', 'api', 'team', 'analytics', 'support'];
 
   const handleCancel = async () => {
     if (onCancelSubscription) {
@@ -131,10 +132,7 @@ export function CurrentPlanCard({
   };
 
   return (
-    <div
-      className="card overflow-hidden"
-      data-testid="current-plan-card"
-    >
+    <div className="card overflow-hidden" data-testid="current-plan-card">
       {/* Header */}
       <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -183,11 +181,13 @@ export function CurrentPlanCard({
                         statusInfo.text
                       )}
                     >
-                      {subscription.status === 'active' && !subscription.willCancelAtPeriodEnd
+                      {subscription.status === 'active' &&
+                      !subscription.willCancelAtPeriodEnd
                         ? 'Active'
                         : subscription.willCancelAtPeriodEnd
                           ? 'Canceling'
-                          : subscription.status.charAt(0).toUpperCase() + subscription.status.slice(1)}
+                          : subscription.status.charAt(0).toUpperCase() +
+                            subscription.status.slice(1)}
                     </span>
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -197,16 +197,17 @@ export function CurrentPlanCard({
               </div>
 
               <div className="flex items-center gap-3">
-                {subscription.isTrial && subscription.trialDaysRemaining !== null && (
-                  <div className="rounded-lg bg-blue-50 dark:bg-blue-900/20 px-4 py-2">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                      <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
-                        {subscription.trialDaysRemaining} days left in trial
-                      </span>
+                {subscription.isTrial &&
+                  subscription.trialDaysRemaining !== null && (
+                    <div className="rounded-lg bg-blue-50 dark:bg-blue-900/20 px-4 py-2">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
+                          {subscription.trialDaysRemaining} days left in trial
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 {!subscription.isTrial && (
                   <div className="rounded-lg bg-gray-100 dark:bg-gray-800 px-4 py-2">
@@ -240,7 +241,9 @@ export function CurrentPlanCard({
                   </h4>
                   <p className="mt-1 text-sm text-amber-800 dark:text-amber-400">
                     Your subscription will be canceled on{' '}
-                    {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
+                    {new Date(
+                      subscription.currentPeriodEnd
+                    ).toLocaleDateString()}
                     . You will continue to have access until then.
                   </p>
                 </div>
@@ -259,7 +262,8 @@ export function CurrentPlanCard({
               </span>
               {plan.priceMonthly > 0 && (
                 <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
-                  Billed {subscription.interval === 'year' ? 'annually' : 'monthly'}
+                  Billed{' '}
+                  {subscription.interval === 'year' ? 'annually' : 'monthly'}
                 </span>
               )}
             </div>
@@ -278,7 +282,8 @@ export function CurrentPlanCard({
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {categoryOrder.map((category) => {
                 const categoryFeatures = featuresByCategory[category];
-                if (!categoryFeatures || categoryFeatures.length === 0) return null;
+                if (!categoryFeatures || categoryFeatures.length === 0)
+                  return null;
 
                 const categoryTitles: Record<string, string> = {
                   content: 'Content',
@@ -332,10 +337,7 @@ export function CurrentPlanCard({
                 label="Keywords/month"
                 value={plan.limits.keywordResearchPerMonth}
               />
-              <LimitItem
-                label="Team members"
-                value={plan.limits.teamMembers}
-              />
+              <LimitItem label="Team members" value={plan.limits.teamMembers} />
             </div>
           </div>
 
@@ -351,7 +353,9 @@ export function CurrentPlanCard({
                     href="/dashboard/pricing"
                     className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
                   >
-                    {plan.priceMonthly > 0 ? 'Upgrade or Downgrade' : 'View Plans'}
+                    {plan.priceMonthly > 0
+                      ? 'Upgrade or Downgrade'
+                      : 'View Plans'}
                   </Link>
                   {!showCancelConfirm ? (
                     <button
@@ -395,8 +399,8 @@ export function CurrentPlanCard({
                     Want to keep your subscription?
                   </h4>
                   <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    You can undo the cancellation and continue enjoying your plan
-                    benefits.
+                    You can undo the cancellation and continue enjoying your
+                    plan benefits.
                   </p>
                 </div>
                 <button

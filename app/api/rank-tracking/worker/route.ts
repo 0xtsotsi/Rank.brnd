@@ -142,7 +142,10 @@ export async function POST(request: NextRequest) {
       // Process each organization
       for (const org of organizations as any[]) {
         // Check time limit
-        if (Date.now() - startTime > RANK_TRACKING_WORKER_CONFIG.MAX_PROCESSING_TIME_MS) {
+        if (
+          Date.now() - startTime >
+          RANK_TRACKING_WORKER_CONFIG.MAX_PROCESSING_TIME_MS
+        ) {
           logger.info('Rank tracking worker reached time limit', {
             processed: result.organizations,
             remaining: organizations.length - result.organizations,

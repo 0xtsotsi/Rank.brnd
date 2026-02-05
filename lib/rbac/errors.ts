@@ -97,13 +97,10 @@ export function insufficientRoleResponse(
 export function notMemberResponse(
   resource?: Resource
 ): NextResponse<RBACErrorResponse> {
-  return forbiddenResponse(
-    'You are not a member of this organization',
-    {
-      error_type: RBACErrorType.NOT_MEMBER,
-      resource,
-    }
-  );
+  return forbiddenResponse('You are not a member of this organization', {
+    error_type: RBACErrorType.NOT_MEMBER,
+    resource,
+  });
 }
 
 /**
@@ -157,10 +154,7 @@ export function resourceNotFoundResponse(
  * Format error for logging
  */
 export function formatRBACError(error: RBACErrorResponse): string {
-  const parts = [
-    `[${error.error_type}]`,
-    error.message,
-  ];
+  const parts = [`[${error.error_type}]`, error.message];
 
   if (error.required_role) {
     parts.push(`(Required: ${error.required_role})`);
@@ -171,7 +165,9 @@ export function formatRBACError(error: RBACErrorResponse): string {
   }
 
   if (error.resource && error.permission) {
-    parts.push(`(Resource: ${error.resource}, Permission: ${error.permission})`);
+    parts.push(
+      `(Resource: ${error.resource}, Permission: ${error.permission})`
+    );
   }
 
   return parts.join(' ');
@@ -184,9 +180,7 @@ export function isRBACErrorResponse(
   error: unknown
 ): error is NextResponse<RBACErrorResponse> {
   return (
-    error instanceof NextResponse &&
-    error.status >= 400 &&
-    error.status < 500
+    error instanceof NextResponse && error.status >= 400 && error.status < 500
   );
 }
 
@@ -194,7 +188,7 @@ export function isRBACErrorResponse(
  * Wrap a handler with standardized error handling
  */
 export function withRBACErrorHandling<
-  T extends (...args: any[]) => Promise<NextResponse>
+  T extends (...args: any[]) => Promise<NextResponse>,
 >(handler: T): T {
   return (async (...args: any[]) => {
     try {
@@ -260,8 +254,8 @@ export function logRBACDenial(
 ): void {
   console.warn(
     `[RBAC DENIAL] User: ${userId}, Org: ${organizationId}, ` +
-    `Resource: ${resource}, Permission: ${category}, ` +
-    `Role: ${currentRole}, Reason: ${reason}`
+      `Resource: ${resource}, Permission: ${category}, ` +
+      `Role: ${currentRole}, Reason: ${reason}`
   );
 }
 
@@ -307,7 +301,8 @@ export function createDenialInfo(
     // Try to extract IP and user agent
     try {
       const forwarded = request.headers.get('x-forwarded-for');
-      denialInfo.ipAddress = forwarded?.split(',')[0]?.trim() ||
+      denialInfo.ipAddress =
+        forwarded?.split(',')[0]?.trim() ||
         request.headers.get('x-real-ip') ||
         'unknown';
       denialInfo.userAgent = request.headers.get('user-agent') || 'unknown';

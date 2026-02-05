@@ -10,27 +10,25 @@ import type { BrandSettingsFormData, BrandTone } from '@/types/brand-settings';
 import { cn } from '@/lib/utils';
 
 // Tone options with descriptions
-const TONE_OPTIONS: Record<
-  BrandTone,
-  { label: string; description: string }
-> = {
-  professional: {
-    label: 'Professional',
-    description: 'Formal and business-focused communication',
-  },
-  casual: {
-    label: 'Casual',
-    description: 'Relaxed and friendly communication',
-  },
-  friendly: {
-    label: 'Friendly',
-    description: 'Warm and approachable communication',
-  },
-  formal: {
-    label: 'Formal',
-    description: 'Respectful and dignified communication',
-  },
-};
+const TONE_OPTIONS: Record<BrandTone, { label: string; description: string }> =
+  {
+    professional: {
+      label: 'Professional',
+      description: 'Formal and business-focused communication',
+    },
+    casual: {
+      label: 'Casual',
+      description: 'Relaxed and friendly communication',
+    },
+    friendly: {
+      label: 'Friendly',
+      description: 'Warm and approachable communication',
+    },
+    formal: {
+      label: 'Formal',
+      description: 'Respectful and dignified communication',
+    },
+  };
 
 interface BrandSettingsFormProps {
   initialData?: BrandSettingsFormData;
@@ -396,6 +394,7 @@ export function BrandSettingsForm({
           <div className="mt-1 flex items-center gap-4">
             {logoPreview ? (
               <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={logoPreview}
                   alt="Logo preview"

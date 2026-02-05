@@ -30,7 +30,8 @@ export default function NewArticlePage() {
 
   const [organizationId, setOrganizationId] = useState<string>('');
   const [createdArticleId, setCreatedArticleId] = useState<string | null>(null);
-  const [generatedArticle, setGeneratedArticle] = useState<GeneratedArticle | null>(null);
+  const [generatedArticle, setGeneratedArticle] =
+    useState<GeneratedArticle | null>(null);
 
   useEffect(() => {
     // Get organization ID from user session

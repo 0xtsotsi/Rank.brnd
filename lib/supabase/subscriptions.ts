@@ -305,9 +305,7 @@ export async function cancelSubscriptionAtPeriodEnd(
 /**
  * Get subscription status for display
  */
-export function getSubscriptionStatus(
-  status: SubscriptionStatus
-): {
+export function getSubscriptionStatus(status: SubscriptionStatus): {
   label: string;
   color: string;
   description: string;
@@ -335,8 +333,7 @@ export function getSubscriptionStatus(
     canceled: {
       label: 'Canceled',
       color: 'gray',
-      description:
-        'Your subscription has been canceled and will expire soon.',
+      description: 'Your subscription has been canceled and will expire soon.',
     },
     unpaid: {
       label: 'Unpaid',
@@ -369,7 +366,9 @@ export function isInTrial(subscription: Subscription): boolean {
 /**
  * Get days remaining in trial
  */
-export function getTrialDaysRemaining(subscription: Subscription): number | null {
+export function getTrialDaysRemaining(
+  subscription: Subscription
+): number | null {
   if (!subscription.trial_end) return null;
 
   const trialEnd = new Date(subscription.trial_end);
@@ -528,7 +527,8 @@ export async function createInvoice(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to create invoice',
+      error:
+        error instanceof Error ? error.message : 'Failed to create invoice',
     };
   }
 }
@@ -556,7 +556,8 @@ export async function updateInvoice(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to update invoice',
+      error:
+        error instanceof Error ? error.message : 'Failed to update invoice',
     };
   }
 }
@@ -584,7 +585,8 @@ export async function updateInvoiceByStripeId(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to update invoice',
+      error:
+        error instanceof Error ? error.message : 'Failed to update invoice',
     };
   }
 }
@@ -592,9 +594,7 @@ export async function updateInvoiceByStripeId(
 /**
  * Get invoice status for display
  */
-export function getInvoiceStatus(
-  status: InvoiceStatus
-): {
+export function getInvoiceStatus(status: InvoiceStatus): {
   label: string;
   color: string;
   description: string;
@@ -672,22 +672,25 @@ export async function upsertSubscriptionFromStripe(
   }
 ): Promise<SubscriptionResult<Subscription>> {
   try {
-    const { data, error } = await client.rpc('upsert_subscription_from_stripe', {
-      p_organization_id: params.organizationId,
-      p_stripe_subscription_id: params.stripeSubscriptionId,
-      p_stripe_customer_id: params.stripeCustomerId,
-      p_stripe_price_id: params.stripePriceId,
-      p_stripe_product_id: params.stripeProductId,
-      p_status: params.status,
-      p_plan_id: params.planId,
-      p_current_period_start: params.currentPeriodStart.toISOString(),
-      p_current_period_end: params.currentPeriodEnd.toISOString(),
-      p_cancel_at_period_end: params.cancelAtPeriodEnd ?? false,
-      p_canceled_at: params.canceledAt?.toISOString() || null,
-      p_trial_start: params.trialStart?.toISOString() || null,
-      p_trial_end: params.trialEnd?.toISOString() || null,
-      p_metadata: params.metadata || {},
-    });
+    const { data, error } = await client.rpc(
+      'upsert_subscription_from_stripe',
+      {
+        p_organization_id: params.organizationId,
+        p_stripe_subscription_id: params.stripeSubscriptionId,
+        p_stripe_customer_id: params.stripeCustomerId,
+        p_stripe_price_id: params.stripePriceId,
+        p_stripe_product_id: params.stripeProductId,
+        p_status: params.status,
+        p_plan_id: params.planId,
+        p_current_period_start: params.currentPeriodStart.toISOString(),
+        p_current_period_end: params.currentPeriodEnd.toISOString(),
+        p_cancel_at_period_end: params.cancelAtPeriodEnd ?? false,
+        p_canceled_at: params.canceledAt?.toISOString() || null,
+        p_trial_start: params.trialStart?.toISOString() || null,
+        p_trial_end: params.trialEnd?.toISOString() || null,
+        p_metadata: params.metadata || {},
+      }
+    );
 
     if (error) throw error;
     if (!data) throw new Error('Failed to upsert subscription');
@@ -755,7 +758,8 @@ export async function upsertInvoiceFromStripe(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to upsert invoice',
+      error:
+        error instanceof Error ? error.message : 'Failed to upsert invoice',
     };
   }
 }

@@ -107,7 +107,9 @@ export function createMockStripeClient() {
       },
     },
     webhooks: {
-      constructEvent: vi.fn((payload, signature, secret) => JSON.parse(payload)),
+      constructEvent: vi.fn((payload, signature, secret) =>
+        JSON.parse(payload)
+      ),
     },
   };
 }

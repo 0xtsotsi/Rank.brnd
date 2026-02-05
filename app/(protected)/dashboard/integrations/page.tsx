@@ -5,10 +5,18 @@
  * Main page for managing CMS platform connections
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Integration, IntegrationFormData, Platform } from '@/types/integration';
-import { IntegrationCard, IntegrationDialog, PlatformCard } from '@/components/integrations';
+import type {
+  Integration,
+  IntegrationFormData,
+  Platform,
+} from '@/types/integration';
+import {
+  IntegrationCard,
+  IntegrationDialog,
+  PlatformCard,
+} from '@/components/integrations';
 import { cn } from '@/lib/utils';
 
 const AVAILABLE_PLATFORMS: Platform[] = [
@@ -30,16 +38,16 @@ export default function IntegrationsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [platformFilter, setPlatformFilter] = useState<'all' | Platform>('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'error'>('all');
+  const [statusFilter, setStatusFilter] = useState<
+    'all' | 'active' | 'inactive' | 'error'
+  >('all');
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingIntegration, setEditingIntegration] = useState<Integration | undefined>();
+  const [editingIntegration, setEditingIntegration] = useState<
+    Integration | undefined
+  >();
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchIntegrations();
-  }, []);
-
-  const fetchIntegrations = async () => {
+  const fetchIntegrations = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       if (search) params.append('search', search);
@@ -56,14 +64,18 @@ export default function IntegrationsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search, platformFilter, statusFilter]);
+
+  useEffect(() => {
+    fetchIntegrations();
+  }, [fetchIntegrations]);
 
   useEffect(() => {
     const delayedSearch = setTimeout(() => {
       fetchIntegrations();
     }, 300);
     return () => clearTimeout(delayedSearch);
-  }, [search, platformFilter, statusFilter]);
+  }, [search, platformFilter, statusFilter, fetchIntegrations]);
 
   const handleConnect = (platform: Platform) => {
     const existing = integrations.find((i) => i.platform === platform);
@@ -139,7 +151,9 @@ export default function IntegrationsPage() {
     }
   };
 
-  const handleTestConnection = async (integration: Integration): Promise<boolean> => {
+  const handleTestConnection = async (
+    integration: Integration
+  ): Promise<boolean> => {
     // Simulate connection test
     await new Promise((resolve) => setTimeout(resolve, 1500));
     // Random success/failure for demo
@@ -176,8 +190,18 @@ export default function IntegrationsPage() {
           )}
           data-testid="add-integration-button"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4v16m8-8H4"
+            />
           </svg>
           Add Integration
         </button>
@@ -241,7 +265,9 @@ export default function IntegrationsPage() {
           </div>
           <select
             value={platformFilter}
-            onChange={(e) => setPlatformFilter(e.target.value as typeof platformFilter)}
+            onChange={(e) =>
+              setPlatformFilter(e.target.value as typeof platformFilter)
+            }
             className={cn(
               'px-4 py-2 rounded-lg border',
               'bg-white dark:bg-gray-800',
@@ -259,7 +285,9 @@ export default function IntegrationsPage() {
           </select>
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
+            onChange={(e) =>
+              setStatusFilter(e.target.value as typeof statusFilter)
+            }
             className={cn(
               'px-4 py-2 rounded-lg border',
               'bg-white dark:bg-gray-800',

@@ -4,10 +4,12 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Blog - Rank.brnd',
-  description: 'SEO tips, strategies, and best practices from the Rank.brnd team.',
+  description:
+    'SEO tips, strategies, and best practices from the Rank.brnd team.',
   openGraph: {
     title: 'Blog - Rank.brnd',
-    description: 'SEO tips, strategies, and best practices from the Rank.brnd team.',
+    description:
+      'SEO tips, strategies, and best practices from the Rank.brnd team.',
     type: 'website',
   },
 };
@@ -16,7 +18,8 @@ const blogPosts = [
   {
     slug: 'seo-tips-for-2025',
     title: '10 Essential SEO Tips for 2025',
-    excerpt: 'Discover the top SEO strategies for 2025, including AI-powered optimization and technical SEO best practices.',
+    excerpt:
+      'Discover the top SEO strategies for 2025, including AI-powered optimization and technical SEO best practices.',
     date: '2025-01-15',
     author: 'Sarah Johnson',
     readTime: '8 min',
@@ -24,7 +27,8 @@ const blogPosts = [
   {
     slug: 'ai-content-optimization',
     title: 'How AI is Transforming Content Optimization',
-    excerpt: 'Learn how artificial intelligence is revolutionizing the way we create and optimize content for search engines.',
+    excerpt:
+      'Learn how artificial intelligence is revolutionizing the way we create and optimize content for search engines.',
     date: '2025-01-10',
     author: 'Michael Chen',
     readTime: '6 min',
@@ -32,16 +36,15 @@ const blogPosts = [
   {
     slug: 'technical-seo-audit',
     title: 'Complete Technical SEO Audit Checklist',
-    excerpt: 'A comprehensive guide to conducting technical SEO audits that improve your site&apos;s performance and rankings.',
+    excerpt:
+      'A comprehensive guide to conducting technical SEO audits that improve your site&apos;s performance and rankings.',
     date: '2025-01-05',
     author: 'Sarah Johnson',
     readTime: '12 min',
   },
 ];
 
-const breadcrumbs = [
-  { name: 'Blog', url: '' },
-];
+const breadcrumbs = [{ name: 'Blog', url: '' }];
 
 export default function BlogPage() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rank.brnd';
@@ -56,11 +59,16 @@ export default function BlogPage() {
         <div className="max-w-4xl mx-auto">
           {/* Breadcrumb Navigation */}
           <nav className="flex mb-8 text-sm text-gray-600 dark:text-gray-400">
-            <Link href="/" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+            <Link
+              href="/"
+              className="hover:text-indigo-600 dark:hover:text-indigo-400"
+            >
               Home
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-gray-900 dark:text-white font-medium">Blog</span>
+            <span className="text-gray-900 dark:text-white font-medium">
+              Blog
+            </span>
           </nav>
 
           {/* Header */}
@@ -82,11 +90,13 @@ export default function BlogPage() {
               >
                 <Link href={`/blog/${post.slug}`} className="block p-6">
                   <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                    <time>{new Date(post.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}</time>
+                    <time>
+                      {new Date(post.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </time>
                     <span>•</span>
                     <span>{post.author}</span>
                     <span>•</span>

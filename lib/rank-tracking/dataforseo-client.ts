@@ -53,7 +53,10 @@ export class DataForSEORankTracker {
   private readonly apiVersion: string;
   private readonly timeout: number;
 
-  constructor(auth: DataForSEOAuthConfig, options: DataForSEORankTrackerOptions = {}) {
+  constructor(
+    auth: DataForSEOAuthConfig,
+    options: DataForSEORankTrackerOptions = {}
+  ) {
     this.username = auth.username;
     this.password = auth.password;
     this.apiBaseUrl = options.apiBaseUrl ?? 'https://api.dataforseo.com';
@@ -83,9 +86,16 @@ export class DataForSEORankTracker {
   /**
    * Parse API error response
    */
-  private parseError(response: Response, data?: unknown): DataForSEORankTrackerError {
+  private parseError(
+    response: Response,
+    data?: unknown
+  ): DataForSEORankTrackerError {
     if (data && typeof data === 'object' && 'message' in data) {
-      const errorData = data as { code?: number; message: string; errors?: unknown };
+      const errorData = data as {
+        code?: number;
+        message: string;
+        errors?: unknown;
+      };
       return {
         code: errorData.code ?? response.status,
         message: errorData.message,
@@ -147,7 +157,7 @@ export class DataForSEORankTracker {
             code: 408,
             message: `Request timeout after ${this.timeout}ms`,
           } as DataForSEORankTrackerError;
-          }
+        }
         // Re-throw if it's already a DataForSEO error
         if ('code' in error && 'message' in error) {
           throw error;
@@ -176,15 +186,22 @@ export class DataForSEORankTracker {
     }
 
     // Normalize the target domain for comparison
-    const normalizedTargetDomain = targetDomain.toLowerCase().replace(/^www\./, '');
+    const normalizedTargetDomain = targetDomain
+      .toLowerCase()
+      .replace(/^www\./, '');
 
     for (const item of task.items) {
       if (item.type === 'organic') {
         const organicItem = item as OrganicItem;
-        const itemDomain = organicItem.domain.toLowerCase().replace(/^www\./, '');
+        const itemDomain = organicItem.domain
+          .toLowerCase()
+          .replace(/^www\./, '');
 
         // Check if this is our target domain
-        if (itemDomain === normalizedTargetDomain || itemDomain.endsWith(`.${normalizedTargetDomain}`)) {
+        if (
+          itemDomain === normalizedTargetDomain ||
+          itemDomain.endsWith(`.${normalizedTargetDomain}`)
+        ) {
           positions.push({
             position: item.rank_absolute,
             url: organicItem.url,
@@ -209,13 +226,16 @@ export class DataForSEORankTracker {
    * @param request - Keyword tracking request
    * @returns Promise with rank tracking result
    */
-  async trackKeyword(request: TrackKeywordRequest): Promise<RankTrackingResult> {
+  async trackKeyword(
+    request: TrackKeywordRequest
+  ): Promise<RankTrackingResult> {
     const startTime = Date.now();
 
     // Build SERP task request
     const taskRequest: GoogleOrganicSerpTaskRequest = {
       keyword: request.keyword,
-      location_code: request.location_code || this.getDefaultLocationCode(request.location),
+      location_code:
+        request.location_code || this.getDefaultLocationCode(request.location),
       language_code: request.language || 'en',
       device: (request.device || 'desktop') as SERPDevice,
       depth: request.depth || 100,
@@ -247,7 +267,9 @@ export class DataForSEORankTracker {
       positions,
       device: taskRequest.device as SERPDevice,
       location_code: taskRequest.location_code,
-      location_name: result.location_code ? String(result.location_code) : 'Unknown',
+      location_name: result.location_code
+        ? String(result.location_code)
+        : 'Unknown',
       language_code: taskRequest.language_code,
       total_results: result.total_results_count,
       searched_at: new Date().toISOString(),
@@ -261,17 +283,22 @@ export class DataForSEORankTracker {
    * @param requests - Array of keyword tracking requests
    * @returns Promise with bulk rank tracking results
    */
-  async trackKeywords(requests: TrackKeywordRequest[]): Promise<BulkRankTrackingResult> {
+  async trackKeywords(
+    requests: TrackKeywordRequest[]
+  ): Promise<BulkRankTrackingResult> {
     const startTime = Date.now();
 
     // Build SERP task requests
-    const taskRequests: GoogleOrganicSerpTaskRequest[] = requests.map((req) => ({
-      keyword: req.keyword,
-      location_code: req.location_code || this.getDefaultLocationCode(req.location),
-      language_code: req.language || 'en',
-      device: (req.device || 'desktop') as SERPDevice,
-      depth: req.depth || 100,
-    }));
+    const taskRequests: GoogleOrganicSerpTaskRequest[] = requests.map(
+      (req) => ({
+        keyword: req.keyword,
+        location_code:
+          req.location_code || this.getDefaultLocationCode(req.location),
+        language_code: req.language || 'en',
+        device: (req.device || 'desktop') as SERPDevice,
+        depth: req.depth || 100,
+      })
+    );
 
     // Make the API request
     const response = await this.post<SERPResponse>(
@@ -311,7 +338,9 @@ export class DataForSEORankTracker {
               positions,
               device: taskRequests[i].device as SERPDevice,
               location_code: taskRequests[i].location_code,
-              location_name: result.location_code ? String(result.location_code) : 'Unknown',
+              location_name: result.location_code
+                ? String(result.location_code)
+                : 'Unknown',
               language_code: taskRequests[i].language_code,
               total_results: result.total_results_count,
               searched_at: new Date().toISOString(),
@@ -356,16 +385,19 @@ export class DataForSEORankTracker {
     location: string | number = 'us',
     device: SERPDevice = 'desktop',
     limit: number = 10
-  ): Promise<Array<{
-    position: number;
-    title: string;
-    url: string;
-    domain: string;
-    description: string;
-  }>> {
-    const locationCode = typeof location === 'number'
-      ? location
-      : this.getDefaultLocationCode(location);
+  ): Promise<
+    Array<{
+      position: number;
+      title: string;
+      url: string;
+      domain: string;
+      description: string;
+    }>
+  > {
+    const locationCode =
+      typeof location === 'number'
+        ? location
+        : this.getDefaultLocationCode(location);
 
     const taskRequest: GoogleOrganicSerpTaskRequest = {
       keyword,
@@ -464,10 +496,7 @@ export function createDataForSEORankTracker(
     return null;
   }
 
-  return new DataForSEORankTracker(
-    { username, password },
-    options
-  );
+  return new DataForSEORankTracker({ username, password }, options);
 }
 
 /**
@@ -477,13 +506,9 @@ export function createRankTrackerFromEnv(): DataForSEORankTracker | null {
   const username = process.env.DATAFORSEO_USERNAME;
   const password = process.env.DATAFORSEO_PASSWORD;
 
-  return createDataForSEORankTracker(
-    username,
-    password,
-    {
-      apiBaseUrl: process.env.DATAFORSEO_API_BASE_URL,
-      apiVersion: process.env.DATAFORSEO_API_VERSION,
-      timeout: parseInt(process.env.DATAFORSEO_TIMEOUT || '60000', 10),
-    }
-  );
+  return createDataForSEORankTracker(username, password, {
+    apiBaseUrl: process.env.DATAFORSEO_API_BASE_URL,
+    apiVersion: process.env.DATAFORSEO_API_VERSION,
+    timeout: parseInt(process.env.DATAFORSEO_TIMEOUT || '60000', 10),
+  });
 }

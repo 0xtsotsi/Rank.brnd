@@ -36,7 +36,9 @@ test.describe('Security Headers', () => {
     expect(hstsHeader).toContain('includeSubDomains');
   });
 
-  test('should have X-Frame-Options header set to DENY', async ({ request }) => {
+  test('should have X-Frame-Options header set to DENY', async ({
+    request,
+  }) => {
     const response = await request.get('/');
     const frameOptionsHeader = response.headers()['x-frame-options'];
 

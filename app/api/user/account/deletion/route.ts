@@ -82,9 +82,8 @@ export async function POST(req: NextRequest) {
 
     // Check if confirming with token
     if (body.confirmationToken) {
-      const { confirmDeletionRequest } = await import(
-        '@/lib/supabase/account-deletion'
-      );
+      const { confirmDeletionRequest } =
+        await import('@/lib/supabase/account-deletion');
 
       const result = await confirmDeletionRequest(body.confirmationToken);
 
@@ -108,9 +107,8 @@ export async function POST(req: NextRequest) {
 
     // Check if auto-confirming (user already confirmed in UI)
     if (body.confirmed === true) {
-      const { confirmDeletionRequest } = await import(
-        '@/lib/supabase/account-deletion'
-      );
+      const { confirmDeletionRequest } =
+        await import('@/lib/supabase/account-deletion');
 
       // First create a request, then confirm it
       const createResult = await createDeletionRequest(userId);
@@ -122,7 +120,9 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      const result = await confirmDeletionRequest(createResult.confirmationToken);
+      const result = await confirmDeletionRequest(
+        createResult.confirmationToken
+      );
 
       if (!result.success) {
         return NextResponse.json(
@@ -164,7 +164,12 @@ export async function POST(req: NextRequest) {
         success: false,
         error: error instanceof Error ? error.message : 'Request failed',
       },
-      { status: error instanceof Error && error.message.includes('Unauthorized') ? 401 : 500 }
+      {
+        status:
+          error instanceof Error && error.message.includes('Unauthorized')
+            ? 401
+            : 500,
+      }
     );
   }
 }

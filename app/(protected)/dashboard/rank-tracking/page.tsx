@@ -8,7 +8,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { RankDevice } from '@/types/rank-tracking';
 import type { RankTrackingTableRow } from '@/components/rank-tracking/rank-tracking-table';
-import { RankTrackingFilters, type RankTrackingFilters as FiltersType } from '@/components/rank-tracking/rank-tracking-filters';
+import {
+  RankTrackingFilters,
+  type RankTrackingFilters as FiltersType,
+} from '@/components/rank-tracking/rank-tracking-filters';
 import { RankTrackingTable } from '@/components/rank-tracking/rank-tracking-table';
 import { cn } from '@/lib/utils';
 import {
@@ -30,7 +33,9 @@ const defaultFilters: FiltersType = {
 
 export default function RankTrackingPage() {
   const [rankData, setRankData] = useState<RankTrackingTableRow[]>([]);
-  const [filteredRankData, setFilteredRankData] = useState<RankTrackingTableRow[]>([]);
+  const [filteredRankData, setFilteredRankData] = useState<
+    RankTrackingTableRow[]
+  >([]);
   const [filters, setFilters] = useState<FiltersType>(defaultFilters);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,9 +49,15 @@ export default function RankTrackingPage() {
       const params = new URLSearchParams();
       if (filters.search) params.append('search', filters.search);
       if (filters.device !== 'all') params.append('device', filters.device);
-      if (filters.location !== 'all') params.append('location', filters.location);
+      if (filters.location !== 'all')
+        params.append('location', filters.location);
       if (filters.dateRange !== 'all') {
-        const days = filters.dateRange === '7d' ? 7 : filters.dateRange === '30d' ? 30 : 90;
+        const days =
+          filters.dateRange === '7d'
+            ? 7
+            : filters.dateRange === '30d'
+              ? 30
+              : 90;
         params.append('days', days.toString());
       }
 
@@ -61,7 +72,9 @@ export default function RankTrackingPage() {
       setFilteredRankData(data.rankings || []);
     } catch (err) {
       console.error('Error fetching rank data:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load rank tracking data');
+      setError(
+        err instanceof Error ? err.message : 'Failed to load rank tracking data'
+      );
       setRankData([]);
       setFilteredRankData([]);
     } finally {
@@ -178,7 +191,9 @@ export default function RankTrackingPage() {
           value={stats.improved}
           icon={ArrowUp}
           color="green"
-          sublabel={stats.declined > 0 ? `${stats.declined} declined` : undefined}
+          sublabel={
+            stats.declined > 0 ? `${stats.declined} declined` : undefined
+          }
         />
         <StatCard
           label="Avg Position"
@@ -213,7 +228,13 @@ interface StatCardProps {
   sublabel?: string;
 }
 
-function StatCard({ label, value, icon: Icon, color, sublabel }: StatCardProps) {
+function StatCard({
+  label,
+  value,
+  icon: Icon,
+  color,
+  sublabel,
+}: StatCardProps) {
   const colorClasses = {
     indigo: {
       bg: 'bg-indigo-50 dark:bg-indigo-900/20',

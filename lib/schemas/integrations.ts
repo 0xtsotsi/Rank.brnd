@@ -65,37 +65,41 @@ const fieldMappingSchema = z.record(z.string());
 /**
  * Integration config schema
  */
-const integrationConfigSchema = z.object({
-  // WordPress specific
-  siteUrl: z.string().url().optional(),
-  apiVersion: z.string().optional(),
-  // Webflow specific
-  siteId: z.string().optional(),
-  collectionId: z.string().optional(),
-  // Shopify specific
-  shopDomain: z.string().optional(),
-  // Ghost specific
-  adminUrl: z.string().url().optional(),
-  // Notion specific
-  workspaceId: z.string().optional(),
-  databaseId: z.string().optional(),
-  // Common fields
-  webhookUrl: z.string().url().optional(),
-  webhookSecret: z.string().optional(),
-  syncSettings: syncSettingsSchema.optional(),
-  mapping: fieldMappingSchema.optional(),
-}).passthrough();
+const integrationConfigSchema = z
+  .object({
+    // WordPress specific
+    siteUrl: z.string().url().optional(),
+    apiVersion: z.string().optional(),
+    // Webflow specific
+    siteId: z.string().optional(),
+    collectionId: z.string().optional(),
+    // Shopify specific
+    shopDomain: z.string().optional(),
+    // Ghost specific
+    adminUrl: z.string().url().optional(),
+    // Notion specific
+    workspaceId: z.string().optional(),
+    databaseId: z.string().optional(),
+    // Common fields
+    webhookUrl: z.string().url().optional(),
+    webhookSecret: z.string().optional(),
+    syncSettings: syncSettingsSchema.optional(),
+    mapping: fieldMappingSchema.optional(),
+  })
+  .passthrough();
 
 /**
  * Integration metadata schema
  */
-const integrationMetadataSchema = z.object({
-  version: z.string().optional(),
-  connectedBy: z.string().optional(),
-  lastVerifiedAt: z.string().datetime().optional(),
-  webhookCount: z.coerce.number().int().nonnegative().optional(),
-  totalSyncs: z.coerce.number().int().nonnegative().optional(),
-}).passthrough();
+const integrationMetadataSchema = z
+  .object({
+    version: z.string().optional(),
+    connectedBy: z.string().optional(),
+    lastVerifiedAt: z.string().datetime().optional(),
+    webhookCount: z.coerce.number().int().nonnegative().optional(),
+    totalSyncs: z.coerce.number().int().nonnegative().optional(),
+  })
+  .passthrough();
 
 /**
  * Create Integration Schema
@@ -103,8 +107,14 @@ const integrationMetadataSchema = z.object({
  * POST /api/integrations
  */
 export const createIntegrationSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(255, 'Name must be less than 255 characters'),
-  description: z.string().max(1000, 'Description must be less than 1000 characters').optional(),
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .max(255, 'Name must be less than 255 characters'),
+  description: z
+    .string()
+    .max(1000, 'Description must be less than 1000 characters')
+    .optional(),
   platform: integrationPlatformSchema,
   product_id: z.string().uuid('Invalid product ID').optional(),
   auth_token: z.string().max(5000, 'Auth token is too long').optional(),
@@ -156,8 +166,14 @@ export const updateIntegrationStatusSchema = z.object({
  */
 export const integrationsQuerySchema = z.object({
   search: z.string().optional(),
-  platform: integrationPlatformSchema.or(z.literal('all')).optional().default('all'),
-  status: integrationStatusSchema.or(z.literal('all')).optional().default('all'),
+  platform: integrationPlatformSchema
+    .or(z.literal('all'))
+    .optional()
+    .default('all'),
+  status: integrationStatusSchema
+    .or(z.literal('all'))
+    .optional()
+    .default('all'),
   product_id: z.string().uuid().optional(),
   page: z.coerce.number().int().positive().optional().default(1),
   pageSize: z.coerce.number().int().positive().max(100).optional().default(20),
@@ -178,7 +194,10 @@ export const deleteIntegrationSchema = z.object({
  * POST /api/integrations/:id/test
  */
 export const testIntegrationSchema = z.object({
-  testType: z.enum(['connection', 'sync', 'webhook']).optional().default('connection'),
+  testType: z
+    .enum(['connection', 'sync', 'webhook'])
+    .optional()
+    .default('connection'),
 });
 
 /**

@@ -29,9 +29,7 @@ interface CSRFProviderProps {
 export function CSRFProvider({ children }: CSRFProviderProps) {
   const csrf = useCSRFHook();
 
-  return (
-    <CSRFContext.Provider value={csrf}>{children}</CSRFContext.Provider>
-  );
+  return <CSRFContext.Provider value={csrf}>{children}</CSRFContext.Provider>;
 }
 
 /**

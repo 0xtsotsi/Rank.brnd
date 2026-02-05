@@ -35,7 +35,13 @@ export async function POST(req: NextRequest) {
 
     // Parse request body
     const body = await req.json();
-    const { amount, currency = 'usd', planId, interval = 'month', metadata = {} } = body;
+    const {
+      amount,
+      currency = 'usd',
+      planId,
+      interval = 'month',
+      metadata = {},
+    } = body;
 
     // Validate required fields
     if (typeof amount !== 'number' || amount <= 0) {

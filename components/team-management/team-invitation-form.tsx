@@ -48,11 +48,23 @@ interface TeamInvitationFormProps {
   currentUserRole?: TeamMemberRole;
 }
 
-const roleOptions: { value: TeamMemberRole; label: string; description: string }[] = [
+const roleOptions: {
+  value: TeamMemberRole;
+  label: string;
+  description: string;
+}[] = [
   { value: 'viewer', label: 'Viewer', description: 'Read-only access' },
-  { value: 'editor', label: 'Editor', description: 'Can create and edit content' },
+  {
+    value: 'editor',
+    label: 'Editor',
+    description: 'Can create and edit content',
+  },
   { value: 'admin', label: 'Admin', description: 'Can manage team members' },
-  { value: 'owner', label: 'Owner', description: 'Full access to all settings' },
+  {
+    value: 'owner',
+    label: 'Owner',
+    description: 'Full access to all settings',
+  },
 ];
 
 export function TeamInvitationForm({
@@ -160,12 +172,14 @@ export function TeamInvitationForm({
     }
   };
 
-  const canManageRoles = currentUserRole === 'owner' || currentUserRole === 'admin';
+  const canManageRoles =
+    currentUserRole === 'owner' || currentUserRole === 'admin';
   const maxRole = canManageRoles ? 'admin' : 'editor';
 
   const availableRoles = roleOptions.filter(
-    (r) => roleOptions.findIndex((opt) => opt.value === maxRole) >=
-             roleOptions.findIndex((opt) => opt.value === r.value)
+    (r) =>
+      roleOptions.findIndex((opt) => opt.value === maxRole) >=
+      roleOptions.findIndex((opt) => opt.value === r.value)
   );
 
   return (
@@ -173,7 +187,8 @@ export function TeamInvitationForm({
       <CardHeader>
         <CardTitle>Invite Team Members</CardTitle>
         <CardDescription>
-          Send email invitations to join your team. Invitations expire after 7 days.
+          Send email invitations to join your team. Invitations expire after 7
+          days.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -190,7 +205,9 @@ export function TeamInvitationForm({
                     type="email"
                     placeholder="colleague@example.com"
                     value={recipient.email}
-                    onChange={(e) => updateRecipient(index, 'email', e.target.value)}
+                    onChange={(e) =>
+                      updateRecipient(index, 'email', e.target.value)
+                    }
                     disabled={isSending}
                   />
                 </div>
@@ -200,7 +217,9 @@ export function TeamInvitationForm({
                   </Label>
                   <Select
                     value={recipient.role}
-                    onValueChange={(value) => updateRecipient(index, 'role', value)}
+                    onValueChange={(value) =>
+                      updateRecipient(index, 'role', value)
+                    }
                     disabled={isSending}
                   >
                     <SelectTrigger id={`role-${index}`}>

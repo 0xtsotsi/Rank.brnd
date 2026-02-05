@@ -5,13 +5,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import {
-  retryPublishingQueueItemSchema,
-  validateRequest,
-} from '@/lib/schemas';
-import {
-  retryPublishingItem,
-} from '@/lib/supabase/publishing-queue';
+import { retryPublishingQueueItemSchema, validateRequest } from '@/lib/schemas';
+import { retryPublishingItem } from '@/lib/supabase/publishing-queue';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 import { handleAPIError } from '@/lib/api-error-handler';
 
@@ -27,7 +22,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validationResult = validateRequest(body, retryPublishingQueueItemSchema);
+    const validationResult = validateRequest(
+      body,
+      retryPublishingQueueItemSchema
+    );
 
     if (!validationResult.success) {
       return NextResponse.json(validationResult.error, { status: 400 });
@@ -47,7 +45,10 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!queueItem) {
-      return NextResponse.json({ error: 'Queue item not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Queue item not found' },
+        { status: 404 }
+      );
     }
 
     const { data: member } = await client
@@ -64,10 +65,7 @@ export async function POST(request: NextRequest) {
     const result = await retryPublishingItem(client, validationResult.data.id);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     if (result.data === false) {

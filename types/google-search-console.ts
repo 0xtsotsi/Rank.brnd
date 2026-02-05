@@ -91,7 +91,13 @@ export interface AnalyticsFilters {
 /**
  * Sort options for GSC data table
  */
-export type GscSortField = 'keyword' | 'impressions' | 'clicks' | 'ctr' | 'avg_position' | 'date';
+export type GscSortField =
+  | 'keyword'
+  | 'impressions'
+  | 'clicks'
+  | 'ctr'
+  | 'avg_position'
+  | 'date';
 export type GscSortOrder = 'asc' | 'desc';
 
 /**

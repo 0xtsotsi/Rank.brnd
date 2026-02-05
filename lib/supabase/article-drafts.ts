@@ -71,7 +71,9 @@ export async function getArticleDraftById(
   client: SupabaseClient<Database>,
   draftId: string,
   organizationId: string
-): Promise<ArticleDraftResult<Article & { draft_metadata?: ArticleDraftMetadata }>> {
+): Promise<
+  ArticleDraftResult<Article & { draft_metadata?: ArticleDraftMetadata }>
+> {
   try {
     const { data, error } = await (client as any)
       .from('articles')
@@ -87,10 +89,13 @@ export async function getArticleDraftById(
 
     // Extract draft metadata if present
     const metadata = data.metadata as Record<string, unknown> | null;
-    const draftData = data as Article & { draft_metadata?: ArticleDraftMetadata };
+    const draftData = data as Article & {
+      draft_metadata?: ArticleDraftMetadata;
+    };
 
     if (metadata?.draft_generation) {
-      draftData.draft_metadata = metadata.draft_generation as ArticleDraftMetadata;
+      draftData.draft_metadata =
+        metadata.draft_generation as ArticleDraftMetadata;
     }
 
     return { success: true, data: draftData };
@@ -98,7 +103,9 @@ export async function getArticleDraftById(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch article draft',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch article draft',
     };
   }
 }
@@ -164,7 +171,9 @@ export async function listArticleDrafts(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch article drafts',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch article drafts',
     };
   }
 }
@@ -196,7 +205,8 @@ export async function createArticleDraft(
       reading_time_minutes: response.metadata.reading_time_minutes,
       meta_title: response.seo.meta_title,
       meta_description: response.seo.meta_description,
-      meta_keywords: response.seo.meta_keywords as unknown as Database['public']['Tables']['articles']['Insert']['meta_keywords'],
+      meta_keywords: response.seo
+        .meta_keywords as unknown as Database['public']['Tables']['articles']['Insert']['meta_keywords'],
       metadata: {
         draft_generation: {
           original_request: request,
@@ -228,7 +238,9 @@ export async function createArticleDraft(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to create article draft',
+        error instanceof Error
+          ? error.message
+          : 'Failed to create article draft',
     };
   }
 }
@@ -253,7 +265,11 @@ export async function updateArticleDraft(
 ): Promise<ArticleDraftResult<Article>> {
   try {
     // Get existing draft to preserve metadata
-    const existingResult = await getArticleDraftById(client, draftId, organizationId);
+    const existingResult = await getArticleDraftById(
+      client,
+      draftId,
+      organizationId
+    );
     if (!existingResult.success) {
       return { success: false, error: existingResult.error };
     }
@@ -267,30 +283,39 @@ export async function updateArticleDraft(
     if (updates.title !== undefined) dbUpdates.title = updates.title;
     if (updates.content !== undefined) dbUpdates.content = updates.content;
     if (updates.excerpt !== undefined) dbUpdates.excerpt = updates.excerpt;
-    if (updates.meta_title !== undefined) dbUpdates.meta_title = updates.meta_title;
-    if (updates.meta_description !== undefined) dbUpdates.meta_description = updates.meta_description;
+    if (updates.meta_title !== undefined)
+      dbUpdates.meta_title = updates.meta_title;
+    if (updates.meta_description !== undefined)
+      dbUpdates.meta_description = updates.meta_description;
 
     if (updates.word_count !== undefined) {
       dbUpdates.word_count = updates.word_count;
-      dbUpdates.reading_time_minutes = Math.max(1, Math.ceil(updates.word_count / 200));
+      dbUpdates.reading_time_minutes = Math.max(
+        1,
+        Math.ceil(updates.word_count / 200)
+      );
     }
 
     // Update metadata
     if (updates.internal_links !== undefined) {
-      (metadata.draft_generation as ArticleDraftMetadata).internal_link_placeholders = updates.internal_links.map(
-        link => ({
-          anchor_text: link.anchor_text,
-          target_keyword: link.target_keyword,
-          placement_hint: 'manual',
-        })
-      );
+      (
+        metadata.draft_generation as ArticleDraftMetadata
+      ).internal_link_placeholders = updates.internal_links.map((link) => ({
+        anchor_text: link.anchor_text,
+        target_keyword: link.target_keyword,
+        placement_hint: 'manual',
+      }));
     }
 
     if (updates.regenerate_metadata !== undefined) {
-      Object.assign(metadata.draft_generation || {}, updates.regenerate_metadata);
+      Object.assign(
+        metadata.draft_generation || {},
+        updates.regenerate_metadata
+      );
     }
 
-    dbUpdates.metadata = metadata as unknown as Database['public']['Tables']['articles']['Update']['metadata'];
+    dbUpdates.metadata =
+      metadata as unknown as Database['public']['Tables']['articles']['Update']['metadata'];
     dbUpdates.updated_at = new Date().toISOString();
 
     const { data, error } = await (client as any)
@@ -309,7 +334,9 @@ export async function updateArticleDraft(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to update article draft',
+        error instanceof Error
+          ? error.message
+          : 'Failed to update article draft',
     };
   }
 }
@@ -336,7 +363,9 @@ export async function deleteArticleDraft(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to delete article draft',
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete article draft',
     };
   }
 }
@@ -363,7 +392,9 @@ export async function permanentDeleteArticleDraft(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to permanently delete article draft',
+        error instanceof Error
+          ? error.message
+          : 'Failed to permanently delete article draft',
     };
   }
 }
@@ -375,13 +406,15 @@ export async function getDraftStats(
   client: SupabaseClient<Database>,
   organizationId: string,
   productId?: string
-): Promise<ArticleDraftResult<{
-  total: number;
-  total_words: number;
-  avg_word_count: number;
-  avg_keyword_density: number;
-  by_keyword: Array<{ keyword: string; count: number }>;
-}>> {
+): Promise<
+  ArticleDraftResult<{
+    total: number;
+    total_words: number;
+    avg_word_count: number;
+    avg_keyword_density: number;
+    by_keyword: Array<{ keyword: string; count: number }>;
+  }>
+> {
   try {
     let query = (client as any)
       .from('articles')
@@ -408,7 +441,9 @@ export async function getDraftStats(
       totalWords += draft.word_count || 0;
 
       const metadata = draft.metadata as Record<string, unknown> | null;
-      const draftGen = metadata?.draft_generation as ArticleDraftMetadata | undefined;
+      const draftGen = metadata?.draft_generation as
+        | ArticleDraftMetadata
+        | undefined;
 
       if (draftGen?.seo?.keyword_density) {
         totalDensity += draftGen.seo.keyword_density;
@@ -426,7 +461,8 @@ export async function getDraftStats(
       data: {
         total: data.length,
         total_words: totalWords,
-        avg_word_count: data.length > 0 ? Math.round(totalWords / data.length) : 0,
+        avg_word_count:
+          data.length > 0 ? Math.round(totalWords / data.length) : 0,
         avg_keyword_density: densityCount > 0 ? totalDensity / densityCount : 0,
         by_keyword: Object.entries(keywordCounts)
           .map(([keyword, count]) => ({ keyword, count }))
@@ -437,7 +473,9 @@ export async function getDraftStats(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch draft statistics',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch draft statistics',
     };
   }
 }

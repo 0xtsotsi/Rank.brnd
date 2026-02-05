@@ -8,14 +8,17 @@ import { test as base } from '@playwright/test';
 
 export interface SupabaseFixtures {
   supabase: {
-    createTestUser: (email: string, password: string) => Promise<{ id: string; email: string }>;
+    createTestUser: (
+      email: string,
+      password: string
+    ) => Promise<{ id: string; email: string }>;
     deleteTestUser: (userId: string) => Promise<void>;
     cleanTestData: (userId: string) => Promise<void>;
   };
 }
 
 export const test = base.extend<SupabaseFixtures>({
-  supabase: async ({ }, use) => {
+  supabase: async ({}, use) => {
     // Import Supabase client dynamically
     const { createClient } = await import('@supabase/supabase-js');
 
@@ -42,7 +45,12 @@ export const test = base.extend<SupabaseFixtures>({
 
       async cleanTestData(userId: string) {
         // Clean up test data from all tables
-        const tables = ['articles', 'keywords', 'organizations', 'onboarding_progress'];
+        const tables = [
+          'articles',
+          'keywords',
+          'organizations',
+          'onboarding_progress',
+        ];
 
         for (const table of tables) {
           await client.from(table).delete().eq('user_id', userId);

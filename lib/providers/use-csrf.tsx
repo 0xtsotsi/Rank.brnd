@@ -48,7 +48,9 @@ export function useCSRF(): UseCSRFReturn {
       const newToken = await fetchCSRFToken();
       setToken(newToken);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch CSRF token');
+      setError(
+        err instanceof Error ? err.message : 'Failed to fetch CSRF token'
+      );
     } finally {
       setLoading(false);
     }

@@ -82,15 +82,18 @@ export const activityStatsQuerySchema = z.object({
  */
 export const bulkCreateActivityLogsSchema = z.object({
   organization_id: z.string().min(1, 'Organization ID is required'),
-  logs: z.array(
-    z.object({
-      user_id: z.string().min(1, 'User ID is required'),
-      action: activityActionSchema,
-      resource_type: z.string().min(1, 'Resource type is required'),
-      resource_id: z.string().min(1, 'Resource ID is required'),
-      metadata: z.record(z.any()).optional().default({}),
-    })
-  ).min(1, 'At least one activity log is required').max(100, 'Cannot create more than 100 logs at once'),
+  logs: z
+    .array(
+      z.object({
+        user_id: z.string().min(1, 'User ID is required'),
+        action: activityActionSchema,
+        resource_type: z.string().min(1, 'Resource type is required'),
+        resource_id: z.string().min(1, 'Resource ID is required'),
+        metadata: z.record(z.any()).optional().default({}),
+      })
+    )
+    .min(1, 'At least one activity log is required')
+    .max(100, 'Cannot create more than 100 logs at once'),
 });
 
 /**
@@ -114,5 +117,11 @@ export const logActivitySchema = z.object({
  */
 export const cleanupActivityLogsSchema = z.object({
   organization_id: z.string().min(1, 'Organization ID is required'),
-  older_than_days: z.coerce.number().int().min(1).max(365).optional().default(90),
+  older_than_days: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(365)
+    .optional()
+    .default(90),
 });

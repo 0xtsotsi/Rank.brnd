@@ -41,7 +41,9 @@ test.describe('CSRF Protection', () => {
     expect(data.error).toContain('CSRF');
   });
 
-  test('should reject POST request with invalid CSRF token', async ({ request }) => {
+  test('should reject POST request with invalid CSRF token', async ({
+    request,
+  }) => {
     const response = await request.post(`${BASE_URL}/api/example-protected`, {
       headers: {
         'x-csrf-token': 'invalid-token-12345',
@@ -55,7 +57,9 @@ test.describe('CSRF Protection', () => {
     expect(data).toHaveProperty('error');
   });
 
-  test('should accept POST request with valid CSRF token', async ({ request }) => {
+  test('should accept POST request with valid CSRF token', async ({
+    request,
+  }) => {
     // First, fetch a fresh token
     const tokenResponse = await request.get(`${BASE_URL}/api/csrf-token`);
     const tokenData = await tokenResponse.json();
@@ -85,7 +89,9 @@ test.describe('CSRF Protection', () => {
     expect(data).toHaveProperty('message');
   });
 
-  test('should reject requests with invalid origin header', async ({ request }) => {
+  test('should reject requests with invalid origin header', async ({
+    request,
+  }) => {
     // First, fetch a token
     const tokenResponse = await request.get(`${BASE_URL}/api/csrf-token`);
     const tokenData = await tokenResponse.json();
@@ -97,7 +103,7 @@ test.describe('CSRF Protection', () => {
     const response = await request.post(`${BASE_URL}/api/example-protected`, {
       headers: {
         'x-csrf-token': csrfToken,
-        'Origin': 'https://evil-site.com',
+        Origin: 'https://evil-site.com',
       },
       data: { test: 'data' },
     });
@@ -114,7 +120,9 @@ test.describe('CSRF Protection', () => {
 });
 
 test.describe('CSRF Token Cache', () => {
-  test('should return different tokens on each request', async ({ request }) => {
+  test('should return different tokens on each request', async ({
+    request,
+  }) => {
     const response1 = await request.get(`${BASE_URL}/api/csrf-token`);
     const data1 = await response1.json();
     const token1 = data1.token;

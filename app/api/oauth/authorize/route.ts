@@ -8,7 +8,11 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { generateAuthorizationUrl, supportsOAuth, getDefaultScopes } from '@/lib/oauth';
+import {
+  generateAuthorizationUrl,
+  supportsOAuth,
+  getDefaultScopes,
+} from '@/lib/oauth';
 import { z } from 'zod';
 
 /**
@@ -31,7 +35,10 @@ export async function POST(request: NextRequest) {
 
     if (!userId) {
       return NextResponse.json(
-        { error: 'Unauthorized', message: 'You must be logged in to connect an integration' },
+        {
+          error: 'Unauthorized',
+          message: 'You must be logged in to connect an integration',
+        },
         { status: 401 }
       );
     }
@@ -49,7 +56,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { platform, redirectUri, scopes, state, shopDomain } = validationResult.data;
+    const { platform, redirectUri, scopes, state, shopDomain } =
+      validationResult.data;
 
     // Check if platform supports OAuth
     if (!supportsOAuth(platform)) {
@@ -57,7 +65,16 @@ export async function POST(request: NextRequest) {
         {
           error: 'Unsupported platform',
           message: `OAuth is not supported for ${platform}. Please use API key authentication.`,
-          supportedPlatforms: ['wordpress', 'webflow', 'shopify', 'notion', 'squarespace', 'contentful', 'google', 'google-search-console'],
+          supportedPlatforms: [
+            'wordpress',
+            'webflow',
+            'shopify',
+            'notion',
+            'squarespace',
+            'contentful',
+            'google',
+            'google-search-console',
+          ],
         },
         { status: 400 }
       );
@@ -65,7 +82,9 @@ export async function POST(request: NextRequest) {
 
     // Get OAuth client ID from environment
     const envPrefix = platform.toUpperCase();
-    const clientId = process.env[`${envPrefix}_CLIENT_ID`] || process.env[`${envPrefix}_OAUTH_CLIENT_ID`];
+    const clientId =
+      process.env[`${envPrefix}_CLIENT_ID`] ||
+      process.env[`${envPrefix}_OAUTH_CLIENT_ID`];
 
     if (!clientId) {
       return NextResponse.json(
@@ -78,13 +97,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Build redirect URI
-    const finalRedirectUri = redirectUri
-      || process.env[`${envPrefix}_REDIRECT_URI`]
-      || process.env[`${envPrefix}_OAUTH_REDIRECT_URI`]
-      || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/oauth/callback/${platform}`;
+    const finalRedirectUri =
+      redirectUri ||
+      process.env[`${envPrefix}_REDIRECT_URI`] ||
+      process.env[`${envPrefix}_OAUTH_REDIRECT_URI`] ||
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/oauth/callback/${platform}`;
 
     // Get default scopes if not provided
-    const finalScopes = scopes && scopes.length > 0 ? scopes : getDefaultScopes(platform);
+    const finalScopes =
+      scopes && scopes.length > 0 ? scopes : getDefaultScopes(platform);
 
     // Generate authorization URL
     const authUrl = await generateAuthorizationUrl({
@@ -134,7 +155,8 @@ export async function GET(request: NextRequest) {
     const hasOAuth = supportsOAuth(platform);
     const envPrefix = platform.toUpperCase();
     const isConfigured = !!(
-      process.env[`${envPrefix}_CLIENT_ID`] || process.env[`${envPrefix}_OAUTH_CLIENT_ID`]
+      process.env[`${envPrefix}_CLIENT_ID`] ||
+      process.env[`${envPrefix}_OAUTH_CLIENT_ID`]
     );
 
     return NextResponse.json({
@@ -142,8 +164,9 @@ export async function GET(request: NextRequest) {
       supportsOAuth: hasOAuth,
       isConfigured,
       scopes: getDefaultScopes(platform),
-      redirectUri: process.env[`${envPrefix}_REDIRECT_URI`]
-        || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/oauth/callback/${platform}`,
+      redirectUri:
+        process.env[`${envPrefix}_REDIRECT_URI`] ||
+        `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/oauth/callback/${platform}`,
     });
   } catch (error) {
     return NextResponse.json(

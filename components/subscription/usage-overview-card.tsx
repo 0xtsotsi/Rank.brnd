@@ -25,10 +25,14 @@ export function UsageOverviewCard({
 }: UsageOverviewCardProps) {
   // Group quotas by category for better organization
   const contentQuotas = quotas.filter((q) =>
-    ['articles_created', 'ai_words_generated', 'images_generated'].includes(q.metric)
+    ['articles_created', 'ai_words_generated', 'images_generated'].includes(
+      q.metric
+    )
   );
   const seoQuotas = quotas.filter((q) =>
-    ['keyword_research_queries', 'serp_analyses', 'backlink_requests'].includes(q.metric)
+    ['keyword_research_queries', 'serp_analyses', 'backlink_requests'].includes(
+      q.metric
+    )
   );
   const publishingQuotas = quotas.filter((q) =>
     ['articles_published', 'scheduled_articles'].includes(q.metric)
@@ -44,10 +48,7 @@ export function UsageOverviewCard({
   const hasExceeded = quotas.some((q) => q.warningLevel === 'exceeded');
 
   return (
-    <div
-      className="card"
-      data-testid="usage-overview-card"
-    >
+    <div className="card" data-testid="usage-overview-card">
       {/* Header */}
       <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -78,12 +79,15 @@ export function UsageOverviewCard({
           <span className="text-gray-600 dark:text-gray-400">
             Current period:{' '}
             <span className="font-medium text-gray-900 dark:text-white">
-              {new Date(periodStart).toLocaleDateString()} - {new Date(periodEnd).toLocaleDateString()}
+              {new Date(periodStart).toLocaleDateString()} -{' '}
+              {new Date(periodEnd).toLocaleDateString()}
             </span>
           </span>
           <span className="text-gray-600 dark:text-gray-400">
-            <span className="font-medium text-gray-900 dark:text-white">{daysRemaining}</span> days
-            remaining
+            <span className="font-medium text-gray-900 dark:text-white">
+              {daysRemaining}
+            </span>{' '}
+            days remaining
           </span>
         </div>
       </div>
@@ -191,12 +195,7 @@ function UsageSection({ title, icon, quotas, className }: UsageSectionProps) {
             key={quota.metric}
             className="rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800"
           >
-            <UsageProgressBar
-              quota={quota}
-              size="md"
-              showLabel
-              showRemaining
-            />
+            <UsageProgressBar quota={quota} size="md" showLabel showRemaining />
           </div>
         ))}
       </div>

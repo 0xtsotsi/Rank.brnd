@@ -58,10 +58,7 @@ export function classifyError(error: unknown): ErrorClassification {
   }
 
   // Timeout errors
-  if (
-    errorLower.includes('timeout') ||
-    errorLower.includes('timed out')
-  ) {
+  if (errorLower.includes('timeout') || errorLower.includes('timed out')) {
     return {
       type: 'timeout',
       retriable: true,
@@ -207,7 +204,7 @@ export async function withRetry<T>(
 
         options.onRetry?.(attempt + 1, error);
 
-        await new Promise(resolve => setTimeout(resolve, delayMs));
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
       } else {
         throw error;
       }
@@ -232,7 +229,8 @@ export async function getRetryState(
 
   if (error || !data) return null;
 
-  const canRetry = (data.retry_count ?? 0) < (data.max_retries ?? RETRY_CONFIG.MAX_RETRIES);
+  const canRetry =
+    (data.retry_count ?? 0) < (data.max_retries ?? RETRY_CONFIG.MAX_RETRIES);
   const nextRetryIn = getTimeUntilRetry(data.retry_after);
 
   return {
@@ -295,5 +293,11 @@ export const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
   strategy: 'exponential',
   baseDelayMs: 1000,
   maxDelayMs: 60000,
-  retriableErrors: ['network', 'timeout', 'rate_limit', 'server_error', 'unknown'],
+  retriableErrors: [
+    'network',
+    'timeout',
+    'rate_limit',
+    'server_error',
+    'unknown',
+  ],
 };

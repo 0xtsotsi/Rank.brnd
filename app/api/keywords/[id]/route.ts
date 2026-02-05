@@ -47,14 +47,15 @@ export async function GET(
       .single();
 
     if (error || !keyword) {
-      return NextResponse.json(
-        { error: 'Keyword not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Keyword not found' }, { status: 404 });
     }
 
     // Check organization membership
-    const isMember = await isOrganizationMember(client, keyword.organization_id, userId);
+    const isMember = await isOrganizationMember(
+      client,
+      keyword.organization_id,
+      userId
+    );
     if (!isMember) {
       return NextResponse.json(
         { error: 'Forbidden - Access denied' },
@@ -112,14 +113,15 @@ export async function PUT(
       .single();
 
     if (!keyword) {
-      return NextResponse.json(
-        { error: 'Keyword not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Keyword not found' }, { status: 404 });
     }
 
     // Check organization membership
-    const isMember = await isOrganizationMember(client, keyword.organization_id, userId);
+    const isMember = await isOrganizationMember(
+      client,
+      keyword.organization_id,
+      userId
+    );
     if (!isMember) {
       return NextResponse.json(
         { error: 'Forbidden - Access denied' },
@@ -129,20 +131,32 @@ export async function PUT(
 
     // Build the update object, only including fields that were provided
     // Map camelCase from schema to snake_case for database
-    const updates: Partial<Database['public']['Tables']['keywords']['Update']> = {};
-    if (validatedData.keyword !== undefined) updates.keyword = validatedData.keyword;
-    if (validatedData.searchVolume !== undefined) updates.search_volume = validatedData.searchVolume;
-    if (validatedData.difficulty !== undefined) updates.difficulty = validatedData.difficulty;
-    if (validatedData.intent !== undefined) updates.intent = validatedData.intent;
-    if (validatedData.opportunityScore !== undefined) updates.opportunity_score = validatedData.opportunityScore;
-    if (validatedData.status !== undefined) updates.status = validatedData.status;
-    if (validatedData.currentRank !== undefined) updates.current_rank = validatedData.currentRank;
-    if (validatedData.targetUrl !== undefined) updates.target_url = validatedData.targetUrl || null;
+    const updates: Partial<Database['public']['Tables']['keywords']['Update']> =
+      {};
+    if (validatedData.keyword !== undefined)
+      updates.keyword = validatedData.keyword;
+    if (validatedData.searchVolume !== undefined)
+      updates.search_volume = validatedData.searchVolume;
+    if (validatedData.difficulty !== undefined)
+      updates.difficulty = validatedData.difficulty;
+    if (validatedData.intent !== undefined)
+      updates.intent = validatedData.intent;
+    if (validatedData.opportunityScore !== undefined)
+      updates.opportunity_score = validatedData.opportunityScore;
+    if (validatedData.status !== undefined)
+      updates.status = validatedData.status;
+    if (validatedData.currentRank !== undefined)
+      updates.current_rank = validatedData.currentRank;
+    if (validatedData.targetUrl !== undefined)
+      updates.target_url = validatedData.targetUrl || null;
     if (validatedData.cpc !== undefined) updates.cpc = validatedData.cpc;
-    if (validatedData.competition !== undefined) updates.competition = validatedData.competition;
+    if (validatedData.competition !== undefined)
+      updates.competition = validatedData.competition;
     if (validatedData.notes !== undefined) updates.notes = validatedData.notes;
     if (validatedData.tags !== undefined) updates.tags = validatedData.tags;
-    if (validatedData.metadata !== undefined) updates.metadata = validatedData.metadata as Database['public']['Tables']['keywords']['Update']['metadata'];
+    if (validatedData.metadata !== undefined)
+      updates.metadata =
+        validatedData.metadata as Database['public']['Tables']['keywords']['Update']['metadata'];
 
     // Always update updated_at
     updates.updated_at = new Date().toISOString();
@@ -166,7 +180,7 @@ export async function PUT(
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }
@@ -225,14 +239,15 @@ export async function DELETE(
       .single();
 
     if (!keyword) {
-      return NextResponse.json(
-        { error: 'Keyword not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Keyword not found' }, { status: 404 });
     }
 
     // Check organization membership
-    const isMember = await isOrganizationMember(client, keyword.organization_id, userId);
+    const isMember = await isOrganizationMember(
+      client,
+      keyword.organization_id,
+      userId
+    );
     if (!isMember) {
       return NextResponse.json(
         { error: 'Forbidden - Access denied' },

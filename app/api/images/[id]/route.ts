@@ -9,7 +9,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getImage, deleteImage as deleteImageService } from '@/lib/image-generation';
+import {
+  getImage,
+  deleteImage as deleteImageService,
+} from '@/lib/image-generation';
 import { ImageGenerationError } from '@/types/image-generation';
 
 export const runtime = 'nodejs';
@@ -49,7 +52,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
       success: true,
       data: image,
     });
-
   } catch (error) {
     console.error('Error getting image:', error);
 
@@ -98,7 +100,6 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       success: true,
       message: 'Image deleted successfully',
     });
-
   } catch (error) {
     console.error('Error deleting image:', error);
 

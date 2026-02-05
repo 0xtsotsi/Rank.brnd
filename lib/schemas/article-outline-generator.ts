@@ -18,7 +18,10 @@ export const outlineHeadingSchema = z.object({
   level: headingLevelSchema,
   text: z.string().min(1, 'Heading text is required'),
   description: z.string().min(1, 'Description is required'),
-  estimatedWordCount: z.number().int().nonnegative('Word count must be non-negative'),
+  estimatedWordCount: z
+    .number()
+    .int()
+    .nonnegative('Word count must be non-negative'),
   suggestedKeywords: z.array(z.string()).default([]),
   optional: z.boolean().default(false),
 });
@@ -36,7 +39,9 @@ export const outlineSectionSchema = z.object({
  */
 export const articleOutlineSchema = z.object({
   h1: outlineHeadingSchema,
-  sections: z.array(outlineSectionSchema).min(1, 'At least one section is required'),
+  sections: z
+    .array(outlineSectionSchema)
+    .min(1, 'At least one section is required'),
 });
 
 /**
@@ -64,20 +69,24 @@ const contentTypeSchema = z.enum([
 /**
  * SERP integration options schema
  */
-export const serpIntegrationOptionsSchema = z.object({
-  enabled: z.boolean().default(true),
-  weight: z.number().min(0).max(1).default(0.5),
-  includeContentGaps: z.boolean().default(true),
-}).optional();
+export const serpIntegrationOptionsSchema = z
+  .object({
+    enabled: z.boolean().default(true),
+    weight: z.number().min(0).max(1).default(0.5),
+    includeContentGaps: z.boolean().default(true),
+  })
+  .optional();
 
 /**
  * Brand voice options schema
  */
-export const brandVoiceOptionsSchema = z.object({
-  enabled: z.boolean().default(true),
-  sampleId: z.string().uuid('Invalid brand voice sample ID').optional(),
-  toneOverride: z.array(z.string()).optional(),
-}).optional();
+export const brandVoiceOptionsSchema = z
+  .object({
+    enabled: z.boolean().default(true),
+    sampleId: z.string().uuid('Invalid brand voice sample ID').optional(),
+    toneOverride: z.array(z.string()).optional(),
+  })
+  .optional();
 
 /**
  * Generate Article Outline Schema
@@ -88,16 +97,25 @@ export const generateArticleOutlineSchema = z.object({
   organization_id: z.string().uuid('Invalid organization ID'),
   product_id: z.string().uuid('Invalid product ID').optional(),
   keyword_id: z.string().uuid('Invalid keyword ID').optional(),
-  keyword: z.string().min(2, 'Keyword must be at least 2 characters').max(200, 'Keyword too long'),
+  keyword: z
+    .string()
+    .min(2, 'Keyword must be at least 2 characters')
+    .max(200, 'Keyword too long'),
   content_type: contentTypeSchema.optional().default('blog_post'),
-  target_audience: z.string().max(500, 'Target audience description too long').optional(),
+  target_audience: z
+    .string()
+    .max(500, 'Target audience description too long')
+    .optional(),
   detail_level: detailLevelSchema.optional().default('standard'),
   target_word_count: z.coerce.number().int().min(100).max(10000).optional(),
   section_count: z.coerce.number().int().min(2).max(15).optional(),
   serp_integration: serpIntegrationOptionsSchema,
   brand_voice: brandVoiceOptionsSchema,
   user_id: z.string().optional(),
-  additional_context: z.string().max(2000, 'Additional context too long').optional(),
+  additional_context: z
+    .string()
+    .max(2000, 'Additional context too long')
+    .optional(),
 });
 
 /**
@@ -122,7 +140,10 @@ export const listOutlinesQuerySchema = z.object({
   keyword: z.string().optional(),
   content_type: contentTypeSchema.optional(),
   status: z.enum(['pending', 'generating', 'completed', 'failed']).optional(),
-  sort: z.enum(['created_at', 'updated_at', 'keyword']).optional().default('created_at'),
+  sort: z
+    .enum(['created_at', 'updated_at', 'keyword'])
+    .optional()
+    .default('created_at'),
   order: z.enum(['asc', 'desc']).optional().default('desc'),
   limit: z.coerce.number().int().positive().max(100).optional().default(50),
   offset: z.coerce.number().int().nonnegative().optional().default(0),
@@ -159,8 +180,17 @@ export const deleteOutlineSchema = z.object({
 export const generateArticleFromOutlineSchema = z.object({
   outline_id: z.string().uuid('Invalid outline ID'),
   organization_id: z.string().uuid('Invalid organization ID'),
-  article_title: z.string().min(1, 'Article title is required').max(500, 'Title too long'),
-  article_slug: z.string().min(1, 'Slug is required').max(500, 'Slug too long')
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must contain only lowercase letters, numbers, and hyphens'),
+  article_title: z
+    .string()
+    .min(1, 'Article title is required')
+    .max(500, 'Title too long'),
+  article_slug: z
+    .string()
+    .min(1, 'Slug is required')
+    .max(500, 'Slug too long')
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      'Slug must contain only lowercase letters, numbers, and hyphens'
+    ),
   expand_to_full: z.boolean().optional().default(false),
 });

@@ -7,10 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import {
-  bulkPublishArticlesSchema,
-  validateRequest,
-} from '@/lib/schemas';
+import { bulkPublishArticlesSchema, validateRequest } from '@/lib/schemas';
 import {
   getArticleById,
   bulkPublishArticlesToCMS,
@@ -131,7 +128,10 @@ export async function POST(request: NextRequest) {
 
       if (!integration) {
         return NextResponse.json(
-          { error: 'Integration not found or does not belong to your organization' },
+          {
+            error:
+              'Integration not found or does not belong to your organization',
+          },
           { status: 404 }
         );
       }
@@ -159,23 +159,28 @@ export async function POST(request: NextRequest) {
       if (integrationsResult.success && integrationsResult.data.length > 0) {
         // Use the first active integration
         bulkPublishOptions.integrationId = integrationsResult.data[0].id;
-        bulkPublishOptions.platform = integrationsResult.data[0].platform as any;
+        bulkPublishOptions.platform = integrationsResult.data[0]
+          .platform as any;
       } else {
         return NextResponse.json(
-          { error: 'No active CMS integration found. Please connect a CMS platform first.' },
+          {
+            error:
+              'No active CMS integration found. Please connect a CMS platform first.',
+          },
           { status: 400 }
         );
       }
     }
 
     // Bulk publish the articles to CMS (adds to publishing queue)
-    const result = await bulkPublishArticlesToCMS(client, article_ids, bulkPublishOptions);
+    const result = await bulkPublishArticlesToCMS(
+      client,
+      article_ids,
+      bulkPublishOptions
+    );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({

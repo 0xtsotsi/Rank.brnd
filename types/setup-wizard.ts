@@ -48,7 +48,12 @@ export interface BrandConfig {
 /**
  * CMS integration options
  */
-export type CMSProvider = 'wordpress' | 'webflow' | 'shopify' | 'contentful' | 'custom';
+export type CMSProvider =
+  | 'wordpress'
+  | 'webflow'
+  | 'shopify'
+  | 'contentful'
+  | 'custom';
 
 export interface CMSIntegration {
   provider: CMSProvider;

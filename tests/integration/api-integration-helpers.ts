@@ -31,14 +31,14 @@ export interface TestUser {
  */
 export class ApiIntegrationHelpers {
   constructor(
-    private readonly request: APIRequestContext,
-    private readonly baseURL: string = 'http://localhost:3000'
+    protected readonly request: APIRequestContext,
+    protected readonly baseURL: string = 'http://localhost:3000'
   ) {}
 
   /**
    * Make an authenticated API request
    */
-  private async authenticatedRequest(
+  protected async authenticatedRequest(
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
     endpoint: string,
     tokens: AuthTokens,
@@ -85,8 +85,7 @@ export class ApiIntegrationHelpers {
   assertStatus(response: APIResponse, expectedStatus: number): void {
     if (response.status() !== expectedStatus) {
       throw new Error(
-        `Expected status ${expectedStatus} but got ${response.status()}. ` +
-        `Response: ${await response.text()}`
+        `Expected status ${expectedStatus} but got ${response.status()}`
       );
     }
   }
@@ -94,7 +93,9 @@ export class ApiIntegrationHelpers {
   /**
    * Create a test user with authentication
    */
-  async createTestUser(overrides: Partial<TestUser> = {}): Promise<TestUser & { tokens: AuthTokens }> {
+  async createTestUser(
+    overrides: Partial<TestUser> = {}
+  ): Promise<TestUser & { tokens: AuthTokens }> {
     return {
       id: overrides.id || `test-user-${Date.now()}`,
       email: overrides.email || `test-${Date.now()}@example.com`,
@@ -109,7 +110,9 @@ export class ApiIntegrationHelpers {
   /**
    * Create a test organization
    */
-  async createTestOrganization(overrides: Partial<TestOrganization> = {}): Promise<TestOrganization> {
+  async createTestOrganization(
+    overrides: Partial<TestOrganization> = {}
+  ): Promise<TestOrganization> {
     return {
       id: overrides.id || `test-org-${Date.now()}`,
       name: overrides.name || `Test Organization ${Date.now()}`,

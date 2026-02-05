@@ -6,12 +6,7 @@
  * Supports multiple log levels and works in both Node.js and Edge runtime environments.
  */
 
-import type {
-  LogEntry,
-  LogLevel,
-  LoggerOptions,
-  ILogger,
-} from './types';
+import type { LogEntry, LogLevel, LoggerOptions, ILogger } from './types';
 import { LOG_LEVEL_VALUES } from './types';
 
 /**
@@ -19,7 +14,10 @@ import { LOG_LEVEL_VALUES } from './types';
  */
 function getDefaultLogLevel(): LogLevel {
   const envLevel = process.env.LOG_LEVEL?.toLowerCase();
-  if (envLevel && ['debug', 'info', 'warn', 'error', 'critical'].includes(envLevel)) {
+  if (
+    envLevel &&
+    ['debug', 'info', 'warn', 'error', 'critical'].includes(envLevel)
+  ) {
     return envLevel as LogLevel;
   }
   return 'info';
@@ -86,7 +84,9 @@ function formatLogEntry(entry: LogEntry, pretty: boolean): string {
     }[entry.level];
 
     const reset = '\x1b[0m';
-    const correlation = entry.correlationId ? ` [${entry.correlationId.slice(0, 8)}]` : '';
+    const correlation = entry.correlationId
+      ? ` [${entry.correlationId.slice(0, 8)}]`
+      : '';
     const context = entry.context ? ` [${entry.context}]` : '';
     const dataStr = entry.data ? ` ${JSON.stringify(entry.data)}` : '';
     const errorStr = entry.error ? ` Error: ${entry.error.message}` : '';
@@ -200,11 +200,19 @@ export class StructuredLogger implements ILogger {
     this.log('warn', message, undefined, data);
   }
 
-  error(message: string, error?: Error | unknown, data?: Record<string, unknown>): void {
+  error(
+    message: string,
+    error?: Error | unknown,
+    data?: Record<string, unknown>
+  ): void {
     this.log('error', message, error, data);
   }
 
-  critical(message: string, error?: Error | unknown, data?: Record<string, unknown>): void {
+  critical(
+    message: string,
+    error?: Error | unknown,
+    data?: Record<string, unknown>
+  ): void {
     this.log('critical', message, error, data);
   }
 
@@ -223,9 +231,7 @@ export class StructuredLogger implements ILogger {
   }
 
   withUser(userId: string, organizationId?: string): ILogger {
-    return new StructuredLogger(
-      this.withDefaults({ userId, organizationId })
-    );
+    return new StructuredLogger(this.withDefaults({ userId, organizationId }));
   }
 }
 

@@ -19,9 +19,7 @@ import { getCorrelationId } from './correlation';
  * - Organization ID (from Clerk org)
  * - Request metadata (method, path, user agent, IP)
  */
-export async function createRequestLogger(
-  context?: string
-): Promise<ILogger> {
+export async function createRequestLogger(context?: string): Promise<ILogger> {
   // Get correlation ID
   const correlationId = await getCorrelationId();
 
@@ -42,9 +40,11 @@ export async function createRequestLogger(
     method: headerList.get('x-method') || 'UNKNOWN',
     path: headerList.get('x-path') || headerList.get('next-url') || 'unknown',
     userAgent: headerList.get('user-agent') || undefined,
-    ip: headerList.get('x-forwarded-for') ||
-        headerList.get('x-real-ip') ||
-        headerList.get('cf-connecting-ip') || undefined,
+    ip:
+      headerList.get('x-forwarded-for') ||
+      headerList.get('x-real-ip') ||
+      headerList.get('cf-connecting-ip') ||
+      undefined,
   };
 
   // Create logger with all context
@@ -60,15 +60,19 @@ export async function createRequestLogger(
 /**
  * Extract request metadata from a Request object
  */
-export function extractRequestMetadata(request: Request): Record<string, unknown> {
+export function extractRequestMetadata(
+  request: Request
+): Record<string, unknown> {
   return {
     method: request.method,
     url: request.url,
     path: new URL(request.url).pathname,
     userAgent: request.headers.get('user-agent') || undefined,
-    ip: request.headers.get('x-forwarded-for') ||
-        request.headers.get('x-real-ip') ||
-        request.headers.get('cf-connecting-ip') || undefined,
+    ip:
+      request.headers.get('x-forwarded-for') ||
+      request.headers.get('x-real-ip') ||
+      request.headers.get('cf-connecting-ip') ||
+      undefined,
   };
 }
 
@@ -81,8 +85,7 @@ export function createRequestLoggerFromRequest(
   context?: string
 ): ILogger {
   // Get correlation ID from headers
-  const correlationId =
-    request.headers.get('x-correlation-id') ?? undefined;
+  const correlationId = request.headers.get('x-correlation-id') ?? undefined;
 
   const metadata = extractRequestMetadata(request);
 

@@ -41,12 +41,14 @@ export default function GlobalError({
             </h1>
 
             <p className="text-gray-600 dark:text-gray-400 mb-2">
-              A critical error occurred. The error has been logged and our team will look into it.
+              A critical error occurred. The error has been logged and our team
+              will look into it.
             </p>
 
             {error.digest && (
               <p className="text-xs text-gray-500 dark:text-gray-500 mb-6">
-                Error ID: <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                Error ID:{' '}
+                <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
                   {error.digest}
                 </code>
               </p>

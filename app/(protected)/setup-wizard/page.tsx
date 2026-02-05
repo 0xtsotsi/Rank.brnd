@@ -48,7 +48,8 @@ export default function SetupWizardPage() {
   const router = useRouter();
   const { user, isLoaded } = useUser();
   const [isPending, startTransition] = useTransition();
-  const [currentStep, setCurrentStep] = useState<SetupWizardStepId>('brand-setup');
+  const [currentStep, setCurrentStep] =
+    useState<SetupWizardStepId>('brand-setup');
   const [achievements, setAchievements] = useState({
     brandSetupComplete: false,
     cmsConnected: false,
@@ -200,7 +201,9 @@ export default function SetupWizardPage() {
       <div className="fixed top-1 left-0 right-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="font-semibold text-gray-900 dark:text-white">Setup Wizard</div>
+            <div className="font-semibold text-gray-900 dark:text-white">
+              Setup Wizard
+            </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
               Step {currentStepIndex + 1} of {WIZARD_STEPS.length - 1}
             </div>
@@ -263,7 +266,8 @@ export default function SetupWizardPage() {
           <div className="mt-4 text-center">
             {currentStep === 'brand-setup' && (
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                This takes about 3 minutes. You can always update this later in Settings.
+                This takes about 3 minutes. You can always update this later in
+                Settings.
               </p>
             )}
             {currentStep === 'cms-connection' && (

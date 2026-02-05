@@ -9,7 +9,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 import { isOrganizationMember } from '@/lib/supabase/organizations';
-import { keywordsQuerySchema, keywordsPostSchema } from '@/lib/schemas/keywords';
+import {
+  keywordsQuerySchema,
+  keywordsPostSchema,
+} from '@/lib/schemas/keywords';
 import { ZodError } from 'zod';
 import type { Database } from '@/types/database';
 
@@ -109,11 +112,17 @@ export async function GET(request: NextRequest) {
     }
 
     if (validatedParams.min_opportunity_score !== undefined) {
-      query = query.gte('opportunity_score', validatedParams.min_opportunity_score);
+      query = query.gte(
+        'opportunity_score',
+        validatedParams.min_opportunity_score
+      );
     }
 
     if (validatedParams.max_opportunity_score !== undefined) {
-      query = query.lte('opportunity_score', validatedParams.max_opportunity_score);
+      query = query.lte(
+        'opportunity_score',
+        validatedParams.max_opportunity_score
+      );
     }
 
     if (validatedParams.min_search_volume !== undefined) {
@@ -129,7 +138,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (validatedParams.tags) {
-      const tagArray = validatedParams.tags.split(',').map(t => t.trim());
+      const tagArray = validatedParams.tags.split(',').map((t) => t.trim());
       query = query.contains('tags', tagArray);
     }
 
@@ -165,7 +174,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid query parameters', details: error.errors },
+        { error: 'Invalid query parameters', details: error.issues },
         { status: 400 }
       );
     }
@@ -243,7 +252,7 @@ export async function POST(request: NextRequest) {
       const { data, error } = await client
         .from('keywords')
         .insert(
-          keywords.map(kw => ({
+          keywords.map((kw) => ({
             organization_id: organizationId,
             product_id: validatedData.data.product_id || null,
             keyword: kw.keyword,
@@ -251,7 +260,7 @@ export async function POST(request: NextRequest) {
             difficulty: kw.difficulty || 'medium',
             intent: kw.intent || 'informational',
             cpc: kw.cpc || null,
-            tags: kw.tags ? kw.tags.split(',').map(t => t.trim()) : [],
+            tags: kw.tags ? kw.tags.split(',').map((t) => t.trim()) : [],
             target_url: kw.targetUrl || null,
             notes: kw.notes || null,
             status: 'tracking' as const,
@@ -278,7 +287,7 @@ export async function POST(request: NextRequest) {
     // For single keyword creation, use standard schema
     if (!isBulk) {
       // Bulk import
-      const keywordsToInsert = validatedData.keywords.map(kw => ({
+      const keywordsToInsert = validatedData.keywords.map((kw) => ({
         organization_id: validatedData.organization_id,
         product_id: validatedData.product_id || null,
         keyword: kw.keyword,
@@ -286,7 +295,7 @@ export async function POST(request: NextRequest) {
         difficulty: kw.difficulty || 'medium',
         intent: kw.intent || 'informational',
         cpc: kw.cpc || null,
-        tags: kw.tags ? kw.tags.split(',').map(t => t.trim()) : [],
+        tags: kw.tags ? kw.tags.split(',').map((t) => t.trim()) : [],
         target_url: kw.targetUrl || null,
         notes: kw.notes || null,
         status: 'tracking' as const,
@@ -314,23 +323,25 @@ export async function POST(request: NextRequest) {
     }
 
     // Single keyword creation
-    const keywordToInsert: Database['public']['Tables']['keywords']['Insert'] = {
-      organization_id: validatedData.organization_id,
-      product_id: validatedData.product_id || null,
-      keyword: validatedData.keyword,
-      search_volume: validatedData.searchVolume || null,
-      difficulty: validatedData.difficulty || 'medium',
-      intent: validatedData.intent || 'informational',
-      cpc: validatedData.cpc || null,
-      competition: validatedData.competition || null,
-      opportunity_score: validatedData.opportunityScore || null,
-      status: validatedData.status || 'tracking',
-      current_rank: validatedData.currentRank || null,
-      target_url: validatedData.targetUrl || null,
-      notes: validatedData.notes || null,
-      tags: validatedData.tags || [],
-      metadata: validatedData.metadata as Database['public']['Tables']['keywords']['Insert']['metadata'],
-    };
+    const keywordToInsert: Database['public']['Tables']['keywords']['Insert'] =
+      {
+        organization_id: validatedData.organization_id,
+        product_id: validatedData.product_id || null,
+        keyword: validatedData.keyword,
+        search_volume: validatedData.searchVolume || null,
+        difficulty: validatedData.difficulty || 'medium',
+        intent: validatedData.intent || 'informational',
+        cpc: validatedData.cpc || null,
+        competition: validatedData.competition || null,
+        opportunity_score: validatedData.opportunityScore || null,
+        status: validatedData.status || 'tracking',
+        current_rank: validatedData.currentRank || null,
+        target_url: validatedData.targetUrl || null,
+        notes: validatedData.notes || null,
+        tags: validatedData.tags || [],
+        metadata:
+          validatedData.metadata as Database['public']['Tables']['keywords']['Insert']['metadata'],
+      };
 
     const { data, error } = await client
       .from('keywords')
@@ -350,7 +361,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }
@@ -394,14 +405,15 @@ export async function DELETE(request: NextRequest) {
       .single();
 
     if (!keyword) {
-      return NextResponse.json(
-        { error: 'Keyword not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Keyword not found' }, { status: 404 });
     }
 
     // Check organization membership
-    const isMember = await isOrganizationMember(client, keyword.organization_id, userId);
+    const isMember = await isOrganizationMember(
+      client,
+      keyword.organization_id,
+      userId
+    );
     if (!isMember) {
       return NextResponse.json(
         { error: 'Forbidden - Access denied' },

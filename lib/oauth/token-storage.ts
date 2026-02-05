@@ -12,7 +12,9 @@ const ENCRYPTION_KEY = process.env.OAUTH_TOKEN_ENCRYPTION_KEY || '';
 
 // Ensure encryption key is available
 if (!ENCRYPTION_KEY) {
-  console.warn('WARNING: OAUTH_TOKEN_ENCRYPTION_KEY not set. Tokens will not be encrypted.');
+  console.warn(
+    'WARNING: OAUTH_TOKEN_ENCRYPTION_KEY not set. Tokens will not be encrypted.'
+  );
 }
 
 /**
@@ -169,7 +171,10 @@ export async function getTokens(
 /**
  * Delete stored tokens
  */
-export async function deleteTokens(platform: string, integrationId: string): Promise<void> {
+export async function deleteTokens(
+  platform: string,
+  integrationId: string
+): Promise<void> {
   await deleteTokensFromDatabase(integrationId);
 }
 
@@ -178,7 +183,10 @@ export async function deleteTokens(platform: string, integrationId: string): Pro
 // ============================================================================
 
 // Mock in-memory storage (replace with actual database calls)
-const tokenDatabase = new Map<string, StoredOAuthTokens & { organizationId?: string; productId?: string }>();
+const tokenDatabase = new Map<
+  string,
+  StoredOAuthTokens & { organizationId?: string; productId?: string }
+>();
 
 async function storeTokensInDatabase(
   tokens: StoredOAuthTokens,
@@ -194,9 +202,14 @@ async function storeTokensInDatabase(
 
 async function getTokensFromDatabase(
   integrationId: string
-): Promise<(StoredOAuthTokens & { organizationId?: string; productId?: string }) | null> {
+): Promise<
+  (StoredOAuthTokens & { organizationId?: string; productId?: string }) | null
+> {
   for (const [key, value] of Array.from(tokenDatabase.entries())) {
-    if (key.endsWith(`:${integrationId}`) || value.integrationId === integrationId) {
+    if (
+      key.endsWith(`:${integrationId}`) ||
+      value.integrationId === integrationId
+    ) {
       return value;
     }
   }
@@ -205,7 +218,10 @@ async function getTokensFromDatabase(
 
 async function deleteTokensFromDatabase(integrationId: string): Promise<void> {
   for (const [key, value] of Array.from(tokenDatabase.entries())) {
-    if (key.endsWith(`:${integrationId}`) || value.integrationId === integrationId) {
+    if (
+      key.endsWith(`:${integrationId}`) ||
+      value.integrationId === integrationId
+    ) {
       tokenDatabase.delete(key);
       return;
     }
@@ -235,7 +251,9 @@ export async function getTokensByOrganization(
 /**
  * Revoke all tokens for an organization
  */
-export async function revokeAllOrganizationTokens(organizationId: string): Promise<void> {
+export async function revokeAllOrganizationTokens(
+  organizationId: string
+): Promise<void> {
   const keysToDelete: string[] = [];
 
   for (const [key, value] of Array.from(tokenDatabase.entries())) {
@@ -259,6 +277,8 @@ export async function encryptForIntegration(token: string): Promise<string> {
 /**
  * Decrypt data from integrations table
  */
-export async function decryptFromIntegration(encryptedToken: string): Promise<string> {
+export async function decryptFromIntegration(
+  encryptedToken: string
+): Promise<string> {
   return decryptToken(encryptedToken);
 }

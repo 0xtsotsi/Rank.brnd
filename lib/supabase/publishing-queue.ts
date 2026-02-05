@@ -21,9 +21,12 @@ import type {
 } from '@/types/publishing-queue';
 import { classifyError } from '@/lib/publishing/retry-service';
 
-type PublishingQueueRow = Database['public']['Tables']['publishing_queue']['Row'];
-type PublishingQueueInsert = Database['public']['Tables']['publishing_queue']['Insert'];
-type PublishingQueueUpdate = Database['public']['Tables']['publishing_queue']['Update'];
+type PublishingQueueRow =
+  Database['public']['Tables']['publishing_queue']['Row'];
+type PublishingQueueInsert =
+  Database['public']['Tables']['publishing_queue']['Insert'];
+type PublishingQueueUpdate =
+  Database['public']['Tables']['publishing_queue']['Update'];
 
 /**
  * Result type for publishing queue operations
@@ -67,7 +70,9 @@ export async function getPublishingQueueItemById(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch publishing queue item',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch publishing queue item',
     };
   }
 }
@@ -87,7 +92,14 @@ export async function getOrganizationPublishingQueue(
     search?: string;
     limit?: number;
     offset?: number;
-    sortBy?: 'created_at' | 'updated_at' | 'status' | 'platform' | 'priority' | 'scheduled_for' | 'completed_at';
+    sortBy?:
+      | 'created_at'
+      | 'updated_at'
+      | 'status'
+      | 'platform'
+      | 'priority'
+      | 'scheduled_for'
+      | 'completed_at';
     sortOrder?: 'asc' | 'desc';
   } = {}
 ): Promise<PublishingQueueResult<PublishingQueueRow[]>> {
@@ -118,7 +130,9 @@ export async function getOrganizationPublishingQueue(
     }
 
     if (options.search) {
-      query = query.or(`last_error.ilike.%${options.search}%,published_url.ilike.%${options.search}%`);
+      query = query.or(
+        `last_error.ilike.%${options.search}%,published_url.ilike.%${options.search}%`
+      );
     }
 
     // Apply sorting
@@ -131,7 +145,10 @@ export async function getOrganizationPublishingQueue(
       query = query.limit(options.limit);
     }
     if (options.offset) {
-      query = query.range(options.offset, (options.offset || 0) + (options.limit || 50) - 1);
+      query = query.range(
+        options.offset,
+        (options.offset || 0) + (options.limit || 50) - 1
+      );
     }
 
     const { data, error } = await query;
@@ -144,7 +161,9 @@ export async function getOrganizationPublishingQueue(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch publishing queue items',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch publishing queue items',
     };
   }
 }
@@ -191,7 +210,9 @@ export async function getArticlePublishingQueue(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch article publishing queue',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch article publishing queue',
     };
   }
 }
@@ -219,7 +240,9 @@ export async function getPendingPublishingItems(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch pending publishing items',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch pending publishing items',
     };
   }
 }
@@ -241,11 +264,14 @@ export async function createPublishingQueueItem(
         integration_id: item.integration_id || null,
         platform: item.platform,
         status: item.status || DEFAULT_PUBLISHING_QUEUE_VALUES.status,
-        retry_count: item.retry_count ?? DEFAULT_PUBLISHING_QUEUE_VALUES.retry_count,
-        max_retries: item.max_retries ?? DEFAULT_PUBLISHING_QUEUE_VALUES.max_retries,
+        retry_count:
+          item.retry_count ?? DEFAULT_PUBLISHING_QUEUE_VALUES.retry_count,
+        max_retries:
+          item.max_retries ?? DEFAULT_PUBLISHING_QUEUE_VALUES.max_retries,
         priority: item.priority ?? DEFAULT_PUBLISHING_QUEUE_VALUES.priority,
         scheduled_for: item.scheduled_for || null,
-        metadata: (item.metadata || DEFAULT_PUBLISHING_QUEUE_VALUES.metadata) as unknown as Json,
+        metadata: (item.metadata ||
+          DEFAULT_PUBLISHING_QUEUE_VALUES.metadata) as unknown as Json,
       })
       .select()
       .single();
@@ -258,7 +284,9 @@ export async function createPublishingQueueItem(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to create publishing queue item',
+        error instanceof Error
+          ? error.message
+          : 'Failed to create publishing queue item',
     };
   }
 }
@@ -291,13 +319,18 @@ export async function queueArticleForPublishing(
     if (result.error) throw result.error;
 
     // Fetch the created item
-    const newItem = await getPublishingQueueItemById(client, result.data as string);
+    const newItem = await getPublishingQueueItemById(
+      client,
+      result.data as string
+    );
     return newItem;
   } catch (error) {
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to queue article for publishing',
+        error instanceof Error
+          ? error.message
+          : 'Failed to queue article for publishing',
     };
   }
 }
@@ -327,7 +360,9 @@ export async function updatePublishingQueueItem(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to update publishing queue item',
+        error instanceof Error
+          ? error.message
+          : 'Failed to update publishing queue item',
     };
   }
 }
@@ -351,7 +386,9 @@ export async function markPublishingItemStarted(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to mark publishing item as started',
+        error instanceof Error
+          ? error.message
+          : 'Failed to mark publishing item as started',
     };
   }
 }
@@ -383,7 +420,9 @@ export async function markPublishingItemCompleted(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to mark publishing item as completed',
+        error instanceof Error
+          ? error.message
+          : 'Failed to mark publishing item as completed',
     };
   }
 }
@@ -416,7 +455,9 @@ export async function markPublishingItemFailed(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to mark publishing item as failed',
+        error instanceof Error
+          ? error.message
+          : 'Failed to mark publishing item as failed',
     };
   }
 }
@@ -444,7 +485,9 @@ export async function getItemsReadyForRetry(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to get items ready for retry',
+        error instanceof Error
+          ? error.message
+          : 'Failed to get items ready for retry',
     };
   }
 }
@@ -468,7 +511,9 @@ export async function cancelPublishingItem(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to cancel publishing item',
+        error instanceof Error
+          ? error.message
+          : 'Failed to cancel publishing item',
     };
   }
 }
@@ -492,7 +537,9 @@ export async function retryPublishingItem(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to retry publishing item',
+        error instanceof Error
+          ? error.message
+          : 'Failed to retry publishing item',
     };
   }
 }
@@ -517,7 +564,9 @@ export async function softDeletePublishingQueueItem(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to delete publishing queue item',
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete publishing queue item',
     };
   }
 }
@@ -542,7 +591,9 @@ export async function deletePublishingQueueItem(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to delete publishing queue item',
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete publishing queue item',
     };
   }
 }
@@ -616,7 +667,9 @@ export async function getPublishingQueueStats(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch publishing queue stats',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch publishing queue stats',
     };
   }
 }
@@ -646,15 +699,26 @@ export function validatePublishingQueueItem(item: {
     'custom',
   ];
 
-  if (item.platform !== undefined && !validPlatforms.includes(item.platform as PublishingPlatform)) {
+  if (
+    item.platform !== undefined &&
+    !validPlatforms.includes(item.platform as PublishingPlatform)
+  ) {
     errors.push('Invalid platform');
   }
 
-  if (item.priority !== undefined && (typeof item.priority !== 'number' || item.priority < 0 || item.priority > 100)) {
+  if (
+    item.priority !== undefined &&
+    (typeof item.priority !== 'number' ||
+      item.priority < 0 ||
+      item.priority > 100)
+  ) {
     errors.push('Priority must be a number between 0 and 100');
   }
 
-  if (item.max_retries !== undefined && (typeof item.max_retries !== 'number' || item.max_retries < 0)) {
+  if (
+    item.max_retries !== undefined &&
+    (typeof item.max_retries !== 'number' || item.max_retries < 0)
+  ) {
     errors.push('Max retries must be a non-negative number');
   }
 

@@ -52,7 +52,10 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (orgError || !userOrg) {
-      return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Organization not found' },
+        { status: 404 }
+      );
     }
 
     const organizationId = (userOrg as any).organization_id;
@@ -60,14 +63,20 @@ export async function POST(request: NextRequest) {
     // Handle different analysis actions
     if (action === 'analyze_sample') {
       // Validate request
-      const validationResult = validateRequest(requestData, requestBrandVoiceAnalysisSchema);
+      const validationResult = validateRequest(
+        requestData,
+        requestBrandVoiceAnalysisSchema
+      );
       if (!validationResult.success) {
         return NextResponse.json(validationResult.error, { status: 400 });
       }
 
       // Type guard for successful validation
       if (!validationResult.data) {
-        return NextResponse.json({ error: 'Validation failed' }, { status: 400 });
+        return NextResponse.json(
+          { error: 'Validation failed' },
+          { status: 400 }
+        );
       }
 
       const { sample_id, force_refresh = false } = validationResult.data;
@@ -81,7 +90,10 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (!sample) {
-        return NextResponse.json({ error: 'Sample not found' }, { status: 404 });
+        return NextResponse.json(
+          { error: 'Sample not found' },
+          { status: 404 }
+        );
       }
 
       try {
@@ -111,13 +123,19 @@ export async function POST(request: NextRequest) {
 
     if (action === 'batch_analyze') {
       // Validate request
-      const validationResult = validateRequest(requestData, batchRequestBrandVoiceAnalysisSchema);
+      const validationResult = validateRequest(
+        requestData,
+        batchRequestBrandVoiceAnalysisSchema
+      );
       if (!validationResult.success) {
         return NextResponse.json(validationResult.error, { status: 400 });
       }
 
       if (!validationResult.data) {
-        return NextResponse.json({ error: 'Validation failed' }, { status: 400 });
+        return NextResponse.json(
+          { error: 'Validation failed' },
+          { status: 400 }
+        );
       }
 
       const { sample_ids } = validationResult.data;
@@ -146,14 +164,23 @@ export async function POST(request: NextRequest) {
 
     if (action === 'generate_style_guide') {
       // Validate request (only organization_id is required, product_id is optional)
-      const dataToValidate = { organization_id: organizationId, ...requestData };
-      const validationResult = validateRequest(dataToValidate, getAggregatedBrandVoiceAnalysisSchema);
+      const dataToValidate = {
+        organization_id: organizationId,
+        ...requestData,
+      };
+      const validationResult = validateRequest(
+        dataToValidate,
+        getAggregatedBrandVoiceAnalysisSchema
+      );
       if (!validationResult.success) {
         return NextResponse.json(validationResult.error, { status: 400 });
       }
 
       if (!validationResult.data) {
-        return NextResponse.json({ error: 'Validation failed' }, { status: 400 });
+        return NextResponse.json(
+          { error: 'Validation failed' },
+          { status: 400 }
+        );
       }
 
       const { product_id } = validationResult.data;
@@ -180,12 +207,18 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Invalid action. Use: analyze_sample, batch_analyze, or generate_style_guide' },
+      {
+        error:
+          'Invalid action. Use: analyze_sample, batch_analyze, or generate_style_guide',
+      },
       { status: 400 }
     );
   } catch (error) {
     console.error('Error in brand voice analysis POST:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
@@ -215,7 +248,10 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (orgError || !userOrg) {
-      return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Organization not found' },
+        { status: 404 }
+      );
     }
 
     const organizationId = (userOrg as any).organization_id;
@@ -242,6 +278,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error in brand voice analysis GET:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }

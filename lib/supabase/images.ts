@@ -63,8 +63,7 @@ export async function getImageById(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to fetch image',
+      error: error instanceof Error ? error.message : 'Failed to fetch image',
     };
   }
 }
@@ -109,7 +108,10 @@ export async function getOrganizationImages(
     query = query.order('created_at', { ascending: false });
 
     if (options.limit) {
-      query = query.range(options.offset || 0, (options.offset || 0) + options.limit - 1);
+      query = query.range(
+        options.offset || 0,
+        (options.offset || 0) + options.limit - 1
+      );
     }
 
     const { data, error } = await query;
@@ -121,8 +123,7 @@ export async function getOrganizationImages(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to fetch images',
+      error: error instanceof Error ? error.message : 'Failed to fetch images',
     };
   }
 }
@@ -150,7 +151,9 @@ export async function getArticleImages(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch article images',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch article images',
     };
   }
 }
@@ -178,7 +181,9 @@ export async function getProductImages(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch product images',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch product images',
     };
   }
 }
@@ -222,8 +227,7 @@ export async function createImage(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to create image',
+      error: error instanceof Error ? error.message : 'Failed to create image',
     };
   }
 }
@@ -268,8 +272,7 @@ export async function createImages(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to create images',
+      error: error instanceof Error ? error.message : 'Failed to create images',
     };
   }
 }
@@ -298,8 +301,7 @@ export async function updateImage(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to update image',
+      error: error instanceof Error ? error.message : 'Failed to update image',
     };
   }
 }
@@ -323,8 +325,7 @@ export async function softDeleteImage(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to delete image',
+      error: error instanceof Error ? error.message : 'Failed to delete image',
     };
   }
 }
@@ -337,10 +338,7 @@ export async function deleteImage(
   imageId: string
 ): Promise<ImageResult<void>> {
   try {
-    const { error } = await client
-      .from('images')
-      .delete()
-      .eq('id', imageId);
+    const { error } = await client.from('images').delete().eq('id', imageId);
 
     if (error) throw error;
 
@@ -348,8 +346,7 @@ export async function deleteImage(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to delete image',
+      error: error instanceof Error ? error.message : 'Failed to delete image',
     };
   }
 }
@@ -458,8 +455,7 @@ export async function getOrganizationImageCount(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to count images',
+      error: error instanceof Error ? error.message : 'Failed to count images',
     };
   }
 }

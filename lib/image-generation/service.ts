@@ -26,7 +26,8 @@ import {
 } from '@/types/image-generation';
 import type { BrandSettings } from '@/types/brand-settings';
 
-type GeneratedImage = Database['public']['Tables']['generated_images']['Insert'];
+type GeneratedImage =
+  Database['public']['Tables']['generated_images']['Insert'];
 
 /**
  * Default configuration for image generation
@@ -53,7 +54,10 @@ function validateRequest(request: ImageGenerationRequest): void {
     );
   }
 
-  if (request.style && !Object.values(IMAGE_GENERATION_STYLES).includes(request.style)) {
+  if (
+    request.style &&
+    !Object.values(IMAGE_GENERATION_STYLES).includes(request.style)
+  ) {
     throw new ImageGenerationError(
       'INVALID_STYLE',
       `Invalid style. Must be one of: ${Object.values(IMAGE_GENERATION_STYLES).join(', ')}`
@@ -78,28 +82,45 @@ function validateRequest(request: ImageGenerationRequest): void {
 /**
  * Parses an OpenAI API error response
  */
-function parseApiError(error: unknown): { type: ImageGenerationErrorType; message: string } {
+function parseApiError(error: unknown): {
+  type: ImageGenerationErrorType;
+  message: string;
+} {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
 
-    if (message.includes('api key') || message.includes('authentication') || message.includes('unauthorized')) {
+    if (
+      message.includes('api key') ||
+      message.includes('authentication') ||
+      message.includes('unauthorized')
+    ) {
       return {
         type: 'API_KEY_MISSING',
-        message: 'Invalid or missing OpenAI API key. Please check your environment variables.',
+        message:
+          'Invalid or missing OpenAI API key. Please check your environment variables.',
       };
     }
 
-    if (message.includes('rate limit') || message.includes('quota') || message.includes('429')) {
+    if (
+      message.includes('rate limit') ||
+      message.includes('quota') ||
+      message.includes('429')
+    ) {
       return {
         type: 'RATE_LIMIT_EXCEEDED',
         message: 'Rate limit exceeded. Please try again later.',
       };
     }
 
-    if (message.includes('content policy') || message.includes('safety') || message.includes('violates')) {
+    if (
+      message.includes('content policy') ||
+      message.includes('safety') ||
+      message.includes('violates')
+    ) {
       return {
         type: 'CONTENT_POLICY_VIOLATION',
-        message: 'The prompt violates OpenAI content policy. Please modify your prompt.',
+        message:
+          'The prompt violates OpenAI content policy. Please modify your prompt.',
       };
     }
 
@@ -157,7 +178,9 @@ function applyBrandColorsToPrompt(
   };
 
   const primaryDesc = getColorDescription(primary);
-  const secondaryDesc = secondary ? getColorDescription(secondary) : primaryDesc;
+  const secondaryDesc = secondary
+    ? getColorDescription(secondary)
+    : primaryDesc;
 
   const intensityModifiers = {
     subtle: 'with subtle accents of',
@@ -177,7 +200,10 @@ function applyBrandColorsToPrompt(
 
   // Check if prompt already has color descriptions to avoid duplication
   const lowerPrompt = prompt.toLowerCase();
-  if (lowerPrompt.includes('color palette') || lowerPrompt.includes('color scheme')) {
+  if (
+    lowerPrompt.includes('color palette') ||
+    lowerPrompt.includes('color scheme')
+  ) {
     return prompt;
   }
 
@@ -271,7 +297,11 @@ export async function generateImage(
   const stylePrompt = STYLE_PROMPTS[style];
 
   // Check if style is already in prompt
-  if (!finalPrompt.toLowerCase().includes(stylePrompt.toLowerCase().substring(0, 20))) {
+  if (
+    !finalPrompt
+      .toLowerCase()
+      .includes(stylePrompt.toLowerCase().substring(0, 20))
+  ) {
     finalPrompt = finalPrompt + stylePrompt;
   }
 
@@ -286,14 +316,17 @@ export async function generateImage(
 
   try {
     // Make the API request
-    const response = await fetch('https://api.openai.com/v1/images/generations', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
+    const response = await fetch(
+      'https://api.openai.com/v1/images/generations',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
 
     // Handle non-OK responses
     if (!response.ok) {
@@ -307,13 +340,19 @@ export async function generateImage(
     const data = await response.json();
 
     if (!data.data || data.data.length === 0) {
-      throw new ImageGenerationError('API_ERROR', 'No image data returned from API');
+      throw new ImageGenerationError(
+        'API_ERROR',
+        'No image data returned from API'
+      );
     }
 
     const firstImage = data.data[0];
 
     if (!firstImage?.url) {
-      throw new ImageGenerationError('API_ERROR', 'No image URL returned from API');
+      throw new ImageGenerationError(
+        'API_ERROR',
+        'No image URL returned from API'
+      );
     }
 
     const generationTime = Date.now() - startTime;
@@ -423,7 +462,11 @@ export async function listOrganizationImages(
     .range(offset, offset + limit - 1);
 
   if (error) {
-    throw new ImageGenerationError('DATABASE_ERROR', `Failed to list images: ${error.message}`, error);
+    throw new ImageGenerationError(
+      'DATABASE_ERROR',
+      `Failed to list images: ${error.message}`,
+      error
+    );
   }
 
   return data || [];
@@ -449,7 +492,11 @@ export async function getImage(
     if (error.code === 'PGRST116') {
       return null; // Not found
     }
-    throw new ImageGenerationError('DATABASE_ERROR', `Failed to get image: ${error.message}`, error);
+    throw new ImageGenerationError(
+      'DATABASE_ERROR',
+      `Failed to get image: ${error.message}`,
+      error
+    );
   }
 
   return data;
@@ -475,8 +522,12 @@ export async function deleteImage(
   // Delete from storage if it exists
   if ((imageData as any)?.storage_path) {
     try {
-      const { deleteImage: deleteFromStorage } = await import('../supabase/storage');
-      await deleteFromStorage((imageData as any).storage_path, 'generated-images');
+      const { deleteImage: deleteFromStorage } =
+        await import('../supabase/storage');
+      await deleteFromStorage(
+        (imageData as any).storage_path,
+        'generated-images'
+      );
     } catch (error) {
       console.error('Failed to delete from storage:', error);
     }
@@ -490,7 +541,11 @@ export async function deleteImage(
     .eq('organization_id', organizationId);
 
   if (error) {
-    throw new ImageGenerationError('DATABASE_ERROR', `Failed to delete image: ${error.message}`, error);
+    throw new ImageGenerationError(
+      'DATABASE_ERROR',
+      `Failed to delete image: ${error.message}`,
+      error
+    );
   }
 }
 

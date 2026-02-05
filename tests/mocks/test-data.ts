@@ -40,7 +40,8 @@ export const MockArticles = {
   },
   withMarkdown: {
     title: 'Article with Markdown',
-    content: '# Heading\n\n**Bold text** and *italic text*\n\n- List item 1\n- List item 2',
+    content:
+      '# Heading\n\n**Bold text** and *italic text*\n\n- List item 1\n- List item 2',
     slug: 'article-with-markdown',
     status: 'draft',
   },
@@ -81,7 +82,13 @@ export const MockOrganizations = {
 };
 
 export const MockOnboarding = {
-  completedSteps: ['welcome', 'organization-setup', 'product-tour', 'first-article', 'integrations'],
+  completedSteps: [
+    'welcome',
+    'organization-setup',
+    'product-tour',
+    'first-article',
+    'integrations',
+  ],
   partialSteps: ['welcome', 'organization-setup'],
   currentStep: 'integrations',
 };

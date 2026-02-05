@@ -26,6 +26,7 @@ figma-files/
 ### File Naming Convention
 
 Use **kebab-case** for directory and file names:
+
 - `components/buttons/primary-button.fig`
 - `pages/dashboard/main-dashboard.fig`
 - `screens/dashboard/dashboard-overview.fig`
@@ -34,6 +35,7 @@ Use **kebab-case** for directory and file names:
 ### Brand Colors
 
 Use Rank.brnd brand colors:
+
 - Primary: Indigo-600
 - Secondary: Purple-500
 - Accent: Pink-500
@@ -49,13 +51,17 @@ Use Rank.brnd brand colors:
 ## 🎯 Recommended Next Steps
 
 ### Option 1: Set Up Figma Integration
+
 If you have Figma API access, configure it to sync automatically:
+
 - Set up API key in Rank.brnd
 - Enable webhook for file changes
 - Map Figma components to React components
 
 ### Option 2: Create Component Library
+
 Start with common components needed across Rank.brnd:
+
 - Buttons (primary, secondary, outline, icon)
 - Cards (article, keyword, product, user)
 - Forms (invitation, article, settings)
@@ -63,7 +69,9 @@ Start with common components needed across Rank.brnd:
 - Modals (confirmation, delete, edit)
 
 ### Option 3: Design System First
+
 Before designing individual pages, create a design system:
+
 1. **Color Palette** - Document all colors and their usage
 2. **Typography Scale** - Headings, body, captions, code
 3. **Spacing System** - xs, sm, md, lg, xl, 2xl
@@ -89,6 +97,7 @@ Before designing individual pages, create a design system:
 ## 🚀 Ready for Development
 
 Once you have the Figma files ready, they can be used by:
+
 - **Frontend developers** - To implement the UI
 - **UI agents** - To analyze and improve designs
 - **Vision agents** - To verify layouts and accessibility

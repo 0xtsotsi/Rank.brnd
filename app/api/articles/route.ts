@@ -44,22 +44,29 @@ export async function GET(request: NextRequest) {
       articlesQuerySchema
     );
 
-    const params = validationResult.success ? validationResult.data : {
-      organization_id: request.nextUrl.searchParams.get('organization_id') || undefined,
-      product_id: request.nextUrl.searchParams.get('product_id') || undefined,
-      keyword_id: request.nextUrl.searchParams.get('keyword_id') || undefined,
-      search: request.nextUrl.searchParams.get('search') || undefined,
-      status: request.nextUrl.searchParams.get('status') || undefined,
-      category: request.nextUrl.searchParams.get('category') || undefined,
-      min_seo_score: request.nextUrl.searchParams.get('min_seo_score') || undefined,
-      max_seo_score: request.nextUrl.searchParams.get('max_seo_score') || undefined,
-      tags: request.nextUrl.searchParams.get('tags') || undefined,
-      author_id: request.nextUrl.searchParams.get('author_id') || undefined,
-      sort: request.nextUrl.searchParams.get('sort') || 'created_at',
-      order: request.nextUrl.searchParams.get('order') || 'desc',
-      limit: request.nextUrl.searchParams.get('limit') || '50',
-      offset: request.nextUrl.searchParams.get('offset') || '0',
-    };
+    const params = validationResult.success
+      ? validationResult.data
+      : {
+          organization_id:
+            request.nextUrl.searchParams.get('organization_id') || undefined,
+          product_id:
+            request.nextUrl.searchParams.get('product_id') || undefined,
+          keyword_id:
+            request.nextUrl.searchParams.get('keyword_id') || undefined,
+          search: request.nextUrl.searchParams.get('search') || undefined,
+          status: request.nextUrl.searchParams.get('status') || undefined,
+          category: request.nextUrl.searchParams.get('category') || undefined,
+          min_seo_score:
+            request.nextUrl.searchParams.get('min_seo_score') || undefined,
+          max_seo_score:
+            request.nextUrl.searchParams.get('max_seo_score') || undefined,
+          tags: request.nextUrl.searchParams.get('tags') || undefined,
+          author_id: request.nextUrl.searchParams.get('author_id') || undefined,
+          sort: request.nextUrl.searchParams.get('sort') || 'created_at',
+          order: request.nextUrl.searchParams.get('order') || 'desc',
+          limit: request.nextUrl.searchParams.get('limit') || '50',
+          offset: request.nextUrl.searchParams.get('offset') || '0',
+        };
 
     if (!params || !params.organization_id) {
       return NextResponse.json(
@@ -71,29 +78,36 @@ export async function GET(request: NextRequest) {
     const client = getSupabaseServerClient();
 
     // Parse tags if provided
-    const tags = params!.tags ? params!.tags.split(',').map(t => t.trim()) : undefined;
+    const tags = params!.tags
+      ? params!.tags.split(',').map((t) => t.trim())
+      : undefined;
 
-    const result = await getOrganizationArticles(client, params!.organization_id!, {
-      productId: params!.product_id,
-      keywordId: params!.keyword_id,
-      search: params!.search,
-      status: params!.status as any,
-      category: params!.category,
-      minSeoScore: params!.min_seo_score ? Number(params!.min_seo_score) : undefined,
-      maxSeoScore: params!.max_seo_score ? Number(params!.max_seo_score) : undefined,
-      tags,
-      authorId: params!.author_id,
-      sortBy: params!.sort as any,
-      sortOrder: params!.order as any,
-      limit: params!.limit ? Number(params!.limit) : 50,
-      offset: params!.offset ? Number(params!.offset) : 0,
-    });
+    const result = await getOrganizationArticles(
+      client,
+      params!.organization_id!,
+      {
+        productId: params!.product_id,
+        keywordId: params!.keyword_id,
+        search: params!.search,
+        status: params!.status as any,
+        category: params!.category,
+        minSeoScore: params!.min_seo_score
+          ? Number(params!.min_seo_score)
+          : undefined,
+        maxSeoScore: params!.max_seo_score
+          ? Number(params!.max_seo_score)
+          : undefined,
+        tags,
+        authorId: params!.author_id,
+        sortBy: params!.sort as any,
+        sortOrder: params!.order as any,
+        limit: params!.limit ? Number(params!.limit) : 50,
+        offset: params!.offset ? Number(params!.offset) : 0,
+      }
+    );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -131,22 +145,26 @@ export async function POST(request: NextRequest) {
 
     // Handle bulk import
     if (body.bulk) {
-      const data = validationResult.data as { bulk: true; organization_id: string; product_id?: string; articles: Array<any> };
+      const data = validationResult.data as {
+        bulk: true;
+        organization_id: string;
+        product_id?: string;
+        articles: Array<any>;
+      };
       const results = await bulkCreateArticles(
         client,
         data.organization_id,
         data.product_id || null,
         data.articles.map((article: any) => ({
           ...article,
-          tags: article.tags ? article.tags.split(',').map((t: string) => t.trim()) : [],
+          tags: article.tags
+            ? article.tags.split(',').map((t: string) => t.trim())
+            : [],
         }))
       );
 
       if (!results.success) {
-        return NextResponse.json(
-          { error: results.error },
-          { status: 500 }
-        );
+        return NextResponse.json({ error: results.error }, { status: 500 });
       }
 
       return NextResponse.json(results.data, { status: 201 });
@@ -188,10 +206,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data, { status: 201 });
@@ -227,10 +242,13 @@ export async function PATCH(request: NextRequest) {
     const client = getSupabaseServerClient();
 
     // Check if user has access to the article
-    const hasAccess = await client.rpc('can_access_article' as any, {
-      p_article_id: id,
-      p_user_id: userId,
-    } as any);
+    const hasAccess = await client.rpc(
+      'can_access_article' as any,
+      {
+        p_article_id: id,
+        p_user_id: userId,
+      } as any
+    );
 
     if (!hasAccess.data) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -239,10 +257,7 @@ export async function PATCH(request: NextRequest) {
     const result = await updateArticleRecord(client, id, updates as any);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data);
@@ -308,10 +323,7 @@ export async function DELETE(request: NextRequest) {
     const result = await softDeleteArticle(client, id);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });

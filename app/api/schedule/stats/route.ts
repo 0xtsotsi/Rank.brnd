@@ -8,9 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { z } from 'zod';
-import {
-  getScheduleStats,
-} from '@/lib/supabase/schedules';
+import { getScheduleStats } from '@/lib/supabase/schedules';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 import { handleAPIError } from '@/lib/api-error-handler';
 
@@ -39,7 +37,7 @@ export async function GET(request: NextRequest) {
 
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: validationResult.error.errors },
+        { error: validationResult.error.issues },
         { status: 400 }
       );
     }
@@ -68,10 +66,7 @@ export async function GET(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data);

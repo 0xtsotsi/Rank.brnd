@@ -6,11 +6,7 @@
  */
 
 import type { Product } from '@/types/product';
-import {
-  STATUS_LABELS,
-  STATUS_COLORS,
-  TONE_LABELS,
-} from '@/types/product';
+import { STATUS_LABELS, STATUS_COLORS, TONE_LABELS } from '@/types/product';
 import { cn } from '@/lib/utils';
 
 interface ProductCardProps {

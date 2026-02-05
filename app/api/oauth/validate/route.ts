@@ -22,12 +22,14 @@ const validateRequestSchema = z.object({
   platform: z.string().min(1),
   authToken: z.string().min(1),
   integrationId: z.string().optional(),
-  config: z.object({
-    baseUrl: z.string().optional(),
-    shopDomain: z.string().optional(),
-    adminUrl: z.string().optional(),
-    siteUrl: z.string().optional(),
-  }).optional(),
+  config: z
+    .object({
+      baseUrl: z.string().optional(),
+      shopDomain: z.string().optional(),
+      adminUrl: z.string().optional(),
+      siteUrl: z.string().optional(),
+    })
+    .optional(),
 });
 
 /**
@@ -39,7 +41,10 @@ export async function POST(request: NextRequest) {
 
     if (!userId) {
       return NextResponse.json(
-        { error: 'Unauthorized', message: 'You must be logged in to validate connections' },
+        {
+          error: 'Unauthorized',
+          message: 'You must be logged in to validate connections',
+        },
         { status: 401 }
       );
     }
@@ -57,7 +62,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { platform, authToken, integrationId, config } = validationResult.data;
+    const { platform, authToken, integrationId, config } =
+      validationResult.data;
 
     let result;
 

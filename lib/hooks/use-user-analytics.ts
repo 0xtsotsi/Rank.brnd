@@ -61,7 +61,8 @@ export function useUserAnalytics() {
         // Clerk-specific fields
         clerk_user_id: userId,
         has_image: !!imageUrl,
-        email_verified: user.primaryEmailAddress?.verification?.status === 'verified',
+        email_verified:
+          user.primaryEmailAddress?.verification?.status === 'verified',
       };
 
       // Identify user in PostHog
@@ -87,7 +88,10 @@ export function useUserAnalytics() {
  *
  * Use this in individual page components to track page-specific events
  */
-export function usePageTracking(pageName: string, properties?: Record<string, unknown>) {
+export function usePageTracking(
+  pageName: string,
+  properties?: Record<string, unknown>
+) {
   const { userId } = useAuth();
   const { user } = useUser();
 
@@ -128,7 +132,8 @@ export function useUserProperties() {
     last_name: user.lastName,
     username: user.username,
     avatar_url: user.imageUrl,
-    email_verified: user.primaryEmailAddress?.verification?.status === 'verified',
+    email_verified:
+      user.primaryEmailAddress?.verification?.status === 'verified',
     has_image: !!user.imageUrl,
   };
 }

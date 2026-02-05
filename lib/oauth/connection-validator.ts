@@ -146,7 +146,7 @@ async function validateWithApi(
     const response = await fetch(endpoint, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${tokens.accessToken}`,
+        Authorization: `Bearer ${tokens.accessToken}`,
         'Content-Type': 'application/json',
       },
     });
@@ -156,19 +156,32 @@ async function validateWithApi(
     }
 
     if (response.status === 401) {
-      return { valid: false, error: 'UNAUTHORIZED', message: 'Invalid or expired token' };
+      return {
+        valid: false,
+        error: 'UNAUTHORIZED',
+        message: 'Invalid or expired token',
+      };
     }
 
     if (response.status === 403) {
-      return { valid: false, error: 'FORBIDDEN', message: 'Insufficient permissions' };
+      return {
+        valid: false,
+        error: 'FORBIDDEN',
+        message: 'Insufficient permissions',
+      };
     }
 
-    return { valid: false, error: `HTTP_${response.status}`, message: response.statusText };
+    return {
+      valid: false,
+      error: `HTTP_${response.status}`,
+      message: response.statusText,
+    };
   } catch (error) {
     return {
       valid: false,
       error: 'NETWORK_ERROR',
-      message: error instanceof Error ? error.message : 'Network request failed',
+      message:
+        error instanceof Error ? error.message : 'Network request failed',
     };
   }
 }
@@ -292,9 +305,7 @@ export async function validateMultipleConnections(
 /**
  * Get connection status summary
  */
-export async function getConnectionSummary(
-  organizationId: string
-): Promise<{
+export async function getConnectionSummary(organizationId: string): Promise<{
   total: number;
   connected: number;
   disconnected: number;
@@ -353,7 +364,8 @@ export async function revokeConnection(
   } catch (error) {
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Failed to revoke connection',
+      message:
+        error instanceof Error ? error.message : 'Failed to revoke connection',
     };
   }
 }
@@ -413,7 +425,8 @@ export async function handleCallback(
     shopDomain?: string;
   }
 ): Promise<OAuthTokens> {
-  const { handleOAuthCallback: handleCallback } = await import('./oauth-manager');
+  const { handleOAuthCallback: handleCallback } =
+    await import('./oauth-manager');
 
   return handleCallback({
     platform,

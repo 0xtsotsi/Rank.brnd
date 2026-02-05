@@ -19,7 +19,9 @@ export const brandVoiceAnalysisStatusSchema = z.enum([
   'failed',
 ]);
 
-export type BrandVoiceAnalysisStatus = z.infer<typeof brandVoiceAnalysisStatusSchema>;
+export type BrandVoiceAnalysisStatus = z.infer<
+  typeof brandVoiceAnalysisStatusSchema
+>;
 
 /**
  * Brand voice source type enum
@@ -47,7 +49,12 @@ const formalityLevelSchema = z.enum(['formal', 'informal', 'neutral']);
 /**
  * Sentence structure enum
  */
-const sentenceStructureSchema = z.enum(['simple', 'compound', 'complex', 'varied']);
+const sentenceStructureSchema = z.enum([
+  'simple',
+  'compound',
+  'complex',
+  'varied',
+]);
 
 /**
  * Paragraph length enum
@@ -57,7 +64,12 @@ const paragraphLengthSchema = z.enum(['short', 'medium', 'long', 'varied']);
 /**
  * Vocabulary complexity level enum
  */
-const vocabularyComplexitySchema = z.enum(['simple', 'moderate', 'complex', 'academic']);
+const vocabularyComplexitySchema = z.enum([
+  'simple',
+  'moderate',
+  'complex',
+  'academic',
+]);
 
 // ============================================================================
 // Analysis Schemas
@@ -122,7 +134,11 @@ export const createBrandVoiceSampleSchema = z.object({
     .min(10, 'Sample text must be at least 10 characters')
     .max(50000, 'Sample text cannot exceed 50000 characters'),
   source_type: brandVoiceSourceTypeSchema.optional(),
-  product_id: z.string().uuid('Invalid product ID').optional().or(z.literal('')),
+  product_id: z
+    .string()
+    .uuid('Invalid product ID')
+    .optional()
+    .or(z.literal('')),
   metadata: brandVoiceMetadataSchema.partial().optional(),
 });
 
@@ -167,7 +183,9 @@ export const brandVoiceSamplesQuerySchema = z.object({
   source_type: brandVoiceSourceTypeSchema.optional().or(z.literal('all')),
   product_id: z.string().uuid().optional().or(z.literal('all')),
   search: z.string().max(200).default(''),
-  sort_by: z.enum(['created_at', 'updated_at', 'confidence_score']).default('created_at'),
+  sort_by: z
+    .enum(['created_at', 'updated_at', 'confidence_score'])
+    .default('created_at'),
   sort_order: z.enum(['asc', 'desc']).default('desc'),
 });
 
@@ -241,12 +259,30 @@ export const getAggregatedBrandVoiceAnalysisSchema = z.object({
 // Type Exports
 // ============================================================================
 
-export type CreateBrandVoiceSampleInput = z.infer<typeof createBrandVoiceSampleSchema>;
-export type UpdateBrandVoiceSampleInput = z.infer<typeof updateBrandVoiceSampleSchema>;
-export type UpdateBrandVoiceAnalysisInput = z.infer<typeof updateBrandVoiceAnalysisSchema>;
-export type BrandVoiceSamplesQueryInput = z.infer<typeof brandVoiceSamplesQuerySchema>;
-export type BatchCreateBrandVoiceSamplesInput = z.infer<typeof batchCreateBrandVoiceSamplesSchema>;
-export type BatchDeleteBrandVoiceSamplesInput = z.infer<typeof batchDeleteBrandVoiceSamplesSchema>;
-export type RequestBrandVoiceAnalysisInput = z.infer<typeof requestBrandVoiceAnalysisSchema>;
-export type BatchRequestBrandVoiceAnalysisInput = z.infer<typeof batchRequestBrandVoiceAnalysisSchema>;
-export type GetAggregatedBrandVoiceAnalysisInput = z.infer<typeof getAggregatedBrandVoiceAnalysisSchema>;
+export type CreateBrandVoiceSampleInput = z.infer<
+  typeof createBrandVoiceSampleSchema
+>;
+export type UpdateBrandVoiceSampleInput = z.infer<
+  typeof updateBrandVoiceSampleSchema
+>;
+export type UpdateBrandVoiceAnalysisInput = z.infer<
+  typeof updateBrandVoiceAnalysisSchema
+>;
+export type BrandVoiceSamplesQueryInput = z.infer<
+  typeof brandVoiceSamplesQuerySchema
+>;
+export type BatchCreateBrandVoiceSamplesInput = z.infer<
+  typeof batchCreateBrandVoiceSamplesSchema
+>;
+export type BatchDeleteBrandVoiceSamplesInput = z.infer<
+  typeof batchDeleteBrandVoiceSamplesSchema
+>;
+export type RequestBrandVoiceAnalysisInput = z.infer<
+  typeof requestBrandVoiceAnalysisSchema
+>;
+export type BatchRequestBrandVoiceAnalysisInput = z.infer<
+  typeof batchRequestBrandVoiceAnalysisSchema
+>;
+export type GetAggregatedBrandVoiceAnalysisInput = z.infer<
+  typeof getAggregatedBrandVoiceAnalysisSchema
+>;

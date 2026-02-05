@@ -54,20 +54,20 @@ export async function POST(req: NextRequest) {
     // Get plan details
     const plan = getPlan(planId);
     if (!plan) {
-      return NextResponse.json(
-        { error: 'Invalid plan ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid plan ID' }, { status: 400 });
     }
 
     // Get the Stripe price ID based on plan and interval
-    const priceId = interval === 'year'
-      ? plan.stripePriceIdYearly
-      : plan.stripePriceIdMonthly;
+    const priceId =
+      interval === 'year'
+        ? plan.stripePriceIdYearly
+        : plan.stripePriceIdMonthly;
 
     if (!priceId) {
       return NextResponse.json(
-        { error: `No Stripe price ID configured for ${planId} plan (${interval}ly)` },
+        {
+          error: `No Stripe price ID configured for ${planId} plan (${interval}ly)`,
+        },
         { status: 400 }
       );
     }
@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
       subscriptionParams.trial_period_days = plan.metadata.trialDays;
     }
 
-    const subscription = await stripe.subscriptions.create(subscriptionParams);
+    const subscription = await stripe.subscriptions.create(subscriptionParams) as Stripe.Subscription;
 
     // TODO: Save subscription to database
     // await db.insert(subscriptions).values({

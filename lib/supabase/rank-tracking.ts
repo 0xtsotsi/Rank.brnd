@@ -12,8 +12,10 @@ import type { Database } from '@/types/database';
 import type { Json } from '@/types/database';
 
 type RankTracking = Database['public']['Tables']['rank_tracking']['Row'];
-type RankTrackingInsert = Database['public']['Tables']['rank_tracking']['Insert'];
-type RankTrackingUpdate = Database['public']['Tables']['rank_tracking']['Update'];
+type RankTrackingInsert =
+  Database['public']['Tables']['rank_tracking']['Insert'];
+type RankTrackingUpdate =
+  Database['public']['Tables']['rank_tracking']['Update'];
 
 type RankDevice = 'desktop' | 'mobile' | 'tablet';
 
@@ -58,7 +60,9 @@ export async function getRankTrackingById(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch rank tracking record',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch rank tracking record',
     };
   }
 }
@@ -132,7 +136,10 @@ export async function getOrganizationRankTracking(
       query = query.limit(options.limit);
     }
     if (options.offset) {
-      query = query.range(options.offset, (options.offset || 0) + (options.limit || 50) - 1);
+      query = query.range(
+        options.offset,
+        (options.offset || 0) + (options.limit || 50) - 1
+      );
     }
 
     const { data, error } = await query;
@@ -145,7 +152,9 @@ export async function getOrganizationRankTracking(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch rank tracking records',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch rank tracking records',
     };
   }
 }
@@ -169,7 +178,9 @@ export async function getKeywordRankHistory(
       p_device: options.device || DEFAULT_RANK_TRACKING_VALUES.device,
       p_location: options.location || DEFAULT_RANK_TRACKING_VALUES.location,
       p_days: options.days || 30,
-      p_end_date: options.endDate?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
+      p_end_date:
+        options.endDate?.toISOString().split('T')[0] ||
+        new Date().toISOString().split('T')[0],
     });
 
     if (error) throw error;
@@ -195,7 +206,14 @@ export async function getKeywordCurrentRank(
     device?: RankDevice;
     location?: string;
   } = {}
-): Promise<RankTrackingResult<{ keyword_id: string; position: number; url: string | null; date: string } | null>> {
+): Promise<
+  RankTrackingResult<{
+    keyword_id: string;
+    position: number;
+    url: string | null;
+    date: string;
+  } | null>
+> {
   try {
     const { data, error } = await client.rpc('get_keyword_current_rank', {
       p_keyword_id: keywordId,
@@ -205,7 +223,15 @@ export async function getKeywordCurrentRank(
 
     if (error) throw error;
 
-    return { success: true, data: data as { keyword_id: string; position: number; url: string | null; date: string } | null };
+    return {
+      success: true,
+      data: data as {
+        keyword_id: string;
+        position: number;
+        url: string | null;
+        date: string;
+      } | null,
+    };
   } catch (error) {
     return {
       success: false,
@@ -226,16 +252,18 @@ export async function getKeywordRankStats(
     location?: string;
     days?: number;
   } = {}
-): Promise<RankTrackingResult<{
-  avg_position: number;
-  min_position: number;
-  max_position: number;
-  current_position: number | null;
-  position_change: number | null;
-  total_records: number;
-  first_tracked: string;
-  last_tracked: string;
-}>> {
+): Promise<
+  RankTrackingResult<{
+    avg_position: number;
+    min_position: number;
+    max_position: number;
+    current_position: number | null;
+    position_change: number | null;
+    total_records: number;
+    first_tracked: string;
+    last_tracked: string;
+  }>
+> {
   try {
     const { data, error } = await client.rpc('get_keyword_rank_stats', {
       p_keyword_id: keywordId,
@@ -262,7 +290,9 @@ export async function getKeywordRankStats(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch rank statistics',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch rank statistics',
     };
   }
 }
@@ -283,14 +313,19 @@ export async function createRankTracking(
         keyword_id: rankTracking.keyword_id,
         position: rankTracking.position,
         device: rankTracking.device || DEFAULT_RANK_TRACKING_VALUES.device,
-        location: rankTracking.location || DEFAULT_RANK_TRACKING_VALUES.location,
+        location:
+          rankTracking.location || DEFAULT_RANK_TRACKING_VALUES.location,
         url: rankTracking.url || null,
         date: rankTracking.date || new Date().toISOString().split('T')[0],
-        search_volume: rankTracking.search_volume ?? DEFAULT_RANK_TRACKING_VALUES.search_volume,
+        search_volume:
+          rankTracking.search_volume ??
+          DEFAULT_RANK_TRACKING_VALUES.search_volume,
         ctr: rankTracking.ctr || null,
-        impressions: rankTracking.impressions ?? DEFAULT_RANK_TRACKING_VALUES.impressions,
+        impressions:
+          rankTracking.impressions ?? DEFAULT_RANK_TRACKING_VALUES.impressions,
         clicks: rankTracking.clicks ?? DEFAULT_RANK_TRACKING_VALUES.clicks,
-        metadata: (rankTracking.metadata || DEFAULT_RANK_TRACKING_VALUES.metadata) as unknown as Json,
+        metadata: (rankTracking.metadata ||
+          DEFAULT_RANK_TRACKING_VALUES.metadata) as unknown as Json,
       })
       .select()
       .single();
@@ -303,7 +338,9 @@ export async function createRankTracking(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to create rank tracking record',
+        error instanceof Error
+          ? error.message
+          : 'Failed to create rank tracking record',
     };
   }
 }
@@ -338,12 +375,17 @@ export async function upsertRankTracking(
       p_device: record.device || DEFAULT_RANK_TRACKING_VALUES.device,
       p_location: record.location || DEFAULT_RANK_TRACKING_VALUES.location,
       p_url: record.url || null,
-      p_date: record.date?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
-      p_search_volume: record.search_volume ?? DEFAULT_RANK_TRACKING_VALUES.search_volume,
+      p_date:
+        record.date?.toISOString().split('T')[0] ||
+        new Date().toISOString().split('T')[0],
+      p_search_volume:
+        record.search_volume ?? DEFAULT_RANK_TRACKING_VALUES.search_volume,
       p_ctr: record.ctr || null,
-      p_impressions: record.impressions ?? DEFAULT_RANK_TRACKING_VALUES.impressions,
+      p_impressions:
+        record.impressions ?? DEFAULT_RANK_TRACKING_VALUES.impressions,
       p_clicks: record.clicks ?? DEFAULT_RANK_TRACKING_VALUES.clicks,
-      p_metadata: (record.metadata || DEFAULT_RANK_TRACKING_VALUES.metadata) as unknown as Json,
+      p_metadata: (record.metadata ||
+        DEFAULT_RANK_TRACKING_VALUES.metadata) as unknown as Json,
     });
 
     if (error) throw error;
@@ -354,7 +396,9 @@ export async function upsertRankTracking(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to upsert rank tracking record',
+        error instanceof Error
+          ? error.message
+          : 'Failed to upsert rank tracking record',
     };
   }
 }
@@ -379,7 +423,9 @@ export async function bulkInsertRankTracking(
     clicks?: number;
     metadata?: Record<string, unknown>;
   }>
-): Promise<RankTrackingResult<{ successful: number; failed: number; errors: string[] }>> {
+): Promise<
+  RankTrackingResult<{ successful: number; failed: number; errors: string[] }>
+> {
   try {
     const formattedRecords = records.map((r) => ({
       organization_id: r.organization_id,
@@ -390,11 +436,13 @@ export async function bulkInsertRankTracking(
       location: r.location || DEFAULT_RANK_TRACKING_VALUES.location,
       url: r.url || null,
       date: r.date || new Date().toISOString().split('T')[0],
-      search_volume: r.search_volume ?? DEFAULT_RANK_TRACKING_VALUES.search_volume,
+      search_volume:
+        r.search_volume ?? DEFAULT_RANK_TRACKING_VALUES.search_volume,
       ctr: r.ctr || null,
       impressions: r.impressions ?? DEFAULT_RANK_TRACKING_VALUES.impressions,
       clicks: r.clicks ?? DEFAULT_RANK_TRACKING_VALUES.clicks,
-      metadata: (r.metadata || DEFAULT_RANK_TRACKING_VALUES.metadata) as unknown as Json,
+      metadata: (r.metadata ||
+        DEFAULT_RANK_TRACKING_VALUES.metadata) as unknown as Json,
     }));
 
     const { data, error } = await client.rpc('bulk_insert_rank_tracking', {
@@ -403,7 +451,11 @@ export async function bulkInsertRankTracking(
 
     if (error) throw error;
 
-    const results = data as unknown as Array<{ success: boolean; id: string | null; error_message: string | null }>;
+    const results = data as unknown as Array<{
+      success: boolean;
+      id: string | null;
+      error_message: string | null;
+    }>;
     const successful = results.filter((r) => r.success).length;
     const failed = results.filter((r) => !r.success).length;
     const errors = results
@@ -422,7 +474,9 @@ export async function bulkInsertRankTracking(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to bulk insert rank tracking records',
+        error instanceof Error
+          ? error.message
+          : 'Failed to bulk insert rank tracking records',
     };
   }
 }
@@ -451,7 +505,9 @@ export async function updateRankTracking(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to update rank tracking record',
+        error instanceof Error
+          ? error.message
+          : 'Failed to update rank tracking record',
     };
   }
 }
@@ -476,7 +532,9 @@ export async function deleteRankTracking(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to delete rank tracking record',
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete rank tracking record',
     };
   }
 }
@@ -512,17 +570,27 @@ export async function getKeywordsRankSummary(
     location?: string;
     days?: number;
   } = {}
-): Promise<RankTrackingResult<Map<string, {
-  current_position: number | null;
-  avg_position: number;
-  position_change: number | null;
-}>>> {
+): Promise<
+  RankTrackingResult<
+    Map<
+      string,
+      {
+        current_position: number | null;
+        avg_position: number;
+        position_change: number | null;
+      }
+    >
+  >
+> {
   try {
-    const summary = new Map<string, {
-      current_position: number | null;
-      avg_position: number;
-      position_change: number | null;
-    }>();
+    const summary = new Map<
+      string,
+      {
+        current_position: number | null;
+        avg_position: number;
+        position_change: number | null;
+      }
+    >();
 
     for (const keywordId of keywordIds) {
       const statsResult = await getKeywordRankStats(client, keywordId, options);
@@ -541,7 +609,9 @@ export async function getKeywordsRankSummary(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch keywords rank summary',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch keywords rank summary',
     };
   }
 }

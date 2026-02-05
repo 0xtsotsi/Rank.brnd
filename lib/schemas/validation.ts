@@ -98,18 +98,18 @@ export function validateQueryParams<T extends ZodSchema>(
  * @param error - The ZodError to format
  * @returns Object with field names as keys and error messages as values
  */
-export function formatZodError(error: ZodError): Record<
-  string,
-  string | string[] | undefined
-> {
+export function formatZodError(
+  error: ZodError
+): Record<string, string | string[] | undefined> {
   const flattened = error.flatten();
   const fieldErrors: Record<string, string | string[] | undefined> = {};
 
   for (const [field, issues] of Object.entries(flattened.fieldErrors)) {
-    if (issues && issues.length > 0) {
+    const issueList = issues as { message: string }[];
+    if (issueList && issueList.length > 0) {
       // If there's only one issue, return it as a string
       // If there are multiple issues, return them as an array
-      fieldErrors[field] = issues.length === 1 ? issues[0] : issues;
+      fieldErrors[field] = issueList.length === 1 ? issueList[0].message : issueList.map(i => i.message);
     }
   }
 
@@ -170,7 +170,10 @@ export class ValidationException extends Error {
   public readonly details: Record<string, string | string[] | undefined>;
   public readonly statusCode = 400;
 
-  constructor(message: string, public readonly zodError: ZodError) {
+  constructor(
+    message: string,
+    public readonly zodError: ZodError
+  ) {
     super(message);
     this.name = 'ValidationException';
     this.details = formatZodError(zodError);

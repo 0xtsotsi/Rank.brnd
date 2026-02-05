@@ -48,24 +48,167 @@ export interface KeywordDensityResult {
  * Common stop words to exclude from keyword analysis
  */
 const STOP_WORDS = new Set([
-  'a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
-  'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'were', 'been',
-  'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would',
-  'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'this',
-  'that', 'these', 'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they',
-  'what', 'which', 'who', 'whom', 'when', 'where', 'why', 'how', 'all',
-  'each', 'every', 'both', 'few', 'more', 'most', 'other', 'some', 'such',
-  'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very',
-  'just', 'also', 'now', 'here', 'there', 'then', 'once', 'if', 'because',
-  'until', 'while', 'about', 'into', 'through', 'during', 'before', 'after',
-  'above', 'below', 'between', 'under', 'again', 'their', 'your', 'our',
-  'its', 'his', 'her', 'my', 'any', 'being', 'get', 'got', 'getting',
-  'going', 'go', 'goes', 'went', 'comes', 'came', 'make', 'makes', 'made',
-  'take', 'takes', 'took', 'see', 'seen', 'saw', 'know', 'knows', 'knew',
-  'think', 'thinks', 'thought', 'want', 'wants', 'wanted', 'use', 'uses',
-  'used', 'say', 'says', 'said', 'tell', 'tells', 'told', 'ask', 'asks',
-  'asked', 'need', 'needs', 'needed', 'feel', 'feels', 'felt', 'try',
-  'tries', 'tried', 'leave', 'leaves', 'left', 'call', 'calls', 'called'
+  'a',
+  'an',
+  'the',
+  'and',
+  'or',
+  'but',
+  'in',
+  'on',
+  'at',
+  'to',
+  'for',
+  'of',
+  'with',
+  'by',
+  'from',
+  'as',
+  'is',
+  'was',
+  'are',
+  'were',
+  'been',
+  'be',
+  'have',
+  'has',
+  'had',
+  'do',
+  'does',
+  'did',
+  'will',
+  'would',
+  'could',
+  'should',
+  'may',
+  'might',
+  'must',
+  'shall',
+  'can',
+  'this',
+  'that',
+  'these',
+  'those',
+  'i',
+  'you',
+  'he',
+  'she',
+  'it',
+  'we',
+  'they',
+  'what',
+  'which',
+  'who',
+  'whom',
+  'when',
+  'where',
+  'why',
+  'how',
+  'all',
+  'each',
+  'every',
+  'both',
+  'few',
+  'more',
+  'most',
+  'other',
+  'some',
+  'such',
+  'no',
+  'nor',
+  'not',
+  'only',
+  'own',
+  'same',
+  'so',
+  'than',
+  'too',
+  'very',
+  'just',
+  'also',
+  'now',
+  'here',
+  'there',
+  'then',
+  'once',
+  'if',
+  'because',
+  'until',
+  'while',
+  'about',
+  'into',
+  'through',
+  'during',
+  'before',
+  'after',
+  'above',
+  'below',
+  'between',
+  'under',
+  'again',
+  'their',
+  'your',
+  'our',
+  'its',
+  'his',
+  'her',
+  'my',
+  'any',
+  'being',
+  'get',
+  'got',
+  'getting',
+  'going',
+  'go',
+  'goes',
+  'went',
+  'comes',
+  'came',
+  'make',
+  'makes',
+  'made',
+  'take',
+  'takes',
+  'took',
+  'see',
+  'seen',
+  'saw',
+  'know',
+  'knows',
+  'knew',
+  'think',
+  'thinks',
+  'thought',
+  'want',
+  'wants',
+  'wanted',
+  'use',
+  'uses',
+  'used',
+  'say',
+  'says',
+  'said',
+  'tell',
+  'tells',
+  'told',
+  'ask',
+  'asks',
+  'asked',
+  'need',
+  'needs',
+  'needed',
+  'feel',
+  'feels',
+  'felt',
+  'try',
+  'tries',
+  'tried',
+  'leave',
+  'leaves',
+  'left',
+  'call',
+  'calls',
+  'called',
 ]);
 
 /**
@@ -100,26 +243,40 @@ function countSyllables(word: string): number {
  * Calculate Flesch Reading Ease score
  */
 function calculateReadabilityScore(text: string): number {
-  const words = text.trim().split(/\s+/).filter(w => w.length > 0);
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  const words = text
+    .trim()
+    .split(/\s+/)
+    .filter((w) => w.length > 0);
+  const sentences = text.split(/[.!?]+/).filter((s) => s.trim().length > 0);
   const syllables = words.reduce((acc, word) => acc + countSyllables(word), 0);
 
   if (words.length === 0 || sentences.length === 0) return 0;
 
-  return Math.max(0, Math.min(100,
-    206.835 - 1.015 * (words.length / sentences.length) - 84.6 * (syllables / words.length)
-  ));
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      206.835 -
+        1.015 * (words.length / sentences.length) -
+        84.6 * (syllables / words.length)
+    )
+  );
 }
 
 /**
  * Calculate keyword density from text
  */
-export function calculateKeywordDensity(text: string, topN = 10): KeywordDensityResult {
+export function calculateKeywordDensity(
+  text: string,
+  topN = 10
+): KeywordDensityResult {
   const plainText = extractTextFromHTML(text).toLowerCase();
-  const words = plainText.split(/\s+/).filter(w => w.length > 2 && !STOP_WORDS.has(w));
+  const words = plainText
+    .split(/\s+/)
+    .filter((w) => w.length > 2 && !STOP_WORDS.has(w));
 
   const keywordMap: Record<string, number> = {};
-  words.forEach(word => {
+  words.forEach((word) => {
     keywordMap[word] = (keywordMap[word] || 0) + 1;
   });
 
@@ -128,7 +285,7 @@ export function calculateKeywordDensity(text: string, topN = 10): KeywordDensity
     .map(([word, count]) => ({
       word,
       count,
-      density: totalWords > 0 ? (count / totalWords) * 100 : 0
+      density: totalWords > 0 ? (count / totalWords) * 100 : 0,
     }))
     .sort((a, b) => b.count - a.count)
     .slice(0, topN);
@@ -136,61 +293,98 @@ export function calculateKeywordDensity(text: string, topN = 10): KeywordDensity
   return {
     keywords: keywordMap,
     topKeywords,
-    totalWords
+    totalWords,
   };
 }
 
 /**
  * Check if title length is optimal
  */
-function checkTitleLength(title: string): { passed: boolean; suggestion?: string } {
+function checkTitleLength(title: string): {
+  passed: boolean;
+  suggestion?: string;
+} {
   const length = title.trim().length;
   if (length >= 30 && length <= 60) {
     return { passed: true };
   }
   if (length === 0) {
-    return { passed: false, suggestion: 'Add a title to your article (30-60 characters recommended)' };
+    return {
+      passed: false,
+      suggestion: 'Add a title to your article (30-60 characters recommended)',
+    };
   }
   if (length < 30) {
-    return { passed: false, suggestion: `Title is too short (${length} chars). Aim for 30-60 characters for better SEO` };
+    return {
+      passed: false,
+      suggestion: `Title is too short (${length} chars). Aim for 30-60 characters for better SEO`,
+    };
   }
-  return { passed: false, suggestion: `Title is too long (${length} chars). Aim for 30-60 characters to avoid truncation in search results` };
+  return {
+    passed: false,
+    suggestion: `Title is too long (${length} chars). Aim for 30-60 characters to avoid truncation in search results`,
+  };
 }
 
 /**
  * Check if meta description is optimal
  */
-function checkMetaDescription(description: string): { passed: boolean; suggestion?: string } {
+function checkMetaDescription(description: string): {
+  passed: boolean;
+  suggestion?: string;
+} {
   const length = description.trim().length;
   if (length >= 120 && length <= 160) {
     return { passed: true };
   }
   if (length === 0) {
-    return { passed: false, suggestion: 'Add a meta description (120-160 characters recommended)' };
+    return {
+      passed: false,
+      suggestion: 'Add a meta description (120-160 characters recommended)',
+    };
   }
   if (length < 120) {
-    return { passed: false, suggestion: `Meta description is too short (${length} chars). Aim for 120-160 characters` };
+    return {
+      passed: false,
+      suggestion: `Meta description is too short (${length} chars). Aim for 120-160 characters`,
+    };
   }
-  return { passed: false, suggestion: `Meta description is too long (${length} chars). Aim for 120-160 characters to avoid truncation` };
+  return {
+    passed: false,
+    suggestion: `Meta description is too long (${length} chars). Aim for 120-160 characters to avoid truncation`,
+  };
 }
 
 /**
  * Check word count
  */
-function checkWordCount(wordCount: number): { passed: boolean; suggestion?: string } {
+function checkWordCount(wordCount: number): {
+  passed: boolean;
+  suggestion?: string;
+} {
   if (wordCount >= 300) {
     return { passed: true };
   }
   if (wordCount === 0) {
-    return { passed: false, suggestion: 'Add content to your article (minimum 300 words recommended for SEO)' };
+    return {
+      passed: false,
+      suggestion:
+        'Add content to your article (minimum 300 words recommended for SEO)',
+    };
   }
-  return { passed: false, suggestion: `Article is too short (${wordCount} words). Aim for at least 300 words for better SEO performance` };
+  return {
+    passed: false,
+    suggestion: `Article is too short (${wordCount} words). Aim for at least 300 words for better SEO performance`,
+  };
 }
 
 /**
  * Check for heading structure
  */
-function checkHeadingStructure(content: string): { passed: boolean; suggestion?: string } {
+function checkHeadingStructure(content: string): {
+  passed: boolean;
+  suggestion?: string;
+} {
   const hasH1 = /<h1/i.test(content);
   const hasH2 = /<h2/i.test(content);
 
@@ -198,22 +392,35 @@ function checkHeadingStructure(content: string): { passed: boolean; suggestion?:
     return { passed: true };
   }
   if (!hasH1) {
-    return { passed: false, suggestion: 'Add an H1 heading to structure your content' };
+    return {
+      passed: false,
+      suggestion: 'Add an H1 heading to structure your content',
+    };
   }
-  return { passed: false, suggestion: 'Add H2 subheadings to break up your content for better readability' };
+  return {
+    passed: false,
+    suggestion:
+      'Add H2 subheadings to break up your content for better readability',
+  };
 }
 
 /**
  * Check for images
  */
-function checkImages(content: string, featuredImage: string): { passed: boolean; suggestion?: string } {
+function checkImages(
+  content: string,
+  featuredImage: string
+): { passed: boolean; suggestion?: string } {
   const hasContentImages = /<img/i.test(content);
   const hasFeaturedImage = !!featuredImage;
 
   if (hasFeaturedImage || hasContentImages) {
     return { passed: true };
   }
-  return { passed: false, suggestion: 'Add at least one image to make your article more engaging' };
+  return {
+    passed: false,
+    suggestion: 'Add at least one image to make your article more engaging',
+  };
 }
 
 /**
@@ -226,24 +433,43 @@ function checkLinks(content: string): { passed: boolean; suggestion?: string } {
     return { passed: true };
   }
   if (linkCount === 0) {
-    return { passed: false, suggestion: 'Add internal links to other content on your site to improve SEO' };
+    return {
+      passed: false,
+      suggestion:
+        'Add internal links to other content on your site to improve SEO',
+    };
   }
-  return { passed: false, suggestion: 'Add more internal links (aim for at least 2-3 links per article)' };
+  return {
+    passed: false,
+    suggestion:
+      'Add more internal links (aim for at least 2-3 links per article)',
+  };
 }
 
 /**
  * Check paragraph length
  */
-function checkParagraphLength(content: string): { passed: boolean; suggestion?: string } {
+function checkParagraphLength(content: string): {
+  passed: boolean;
+  suggestion?: string;
+} {
   const plainText = extractTextFromHTML(content);
-  const paragraphs = plainText.split(/\n\n+/).filter(p => p.trim().length > 0);
+  const paragraphs = plainText
+    .split(/\n\n+/)
+    .filter((p) => p.trim().length > 0);
 
-  const avgParagraphLength = paragraphs.reduce((sum, p) => sum + p.split(/\s+/).length, 0) / (paragraphs.length || 1);
+  const avgParagraphLength =
+    paragraphs.reduce((sum, p) => sum + p.split(/\s+/).length, 0) /
+    (paragraphs.length || 1);
 
   if (avgParagraphLength <= 100) {
     return { passed: true };
   }
-  return { passed: false, suggestion: 'Some paragraphs are too long. Break them into shorter chunks (3-5 sentences) for better readability' };
+  return {
+    passed: false,
+    suggestion:
+      'Some paragraphs are too long. Break them into shorter chunks (3-5 sentences) for better readability',
+  };
 }
 
 /**
@@ -259,42 +485,70 @@ function checkSlug(slug: string): { passed: boolean; suggestion?: string } {
 /**
  * Check if keywords are defined
  */
-function checkKeywords(keywords: string): { passed: boolean; suggestion?: string } {
-  const keywordArray = keywords.split(',').map(k => k.trim()).filter(k => k.length > 0);
+function checkKeywords(keywords: string): {
+  passed: boolean;
+  suggestion?: string;
+} {
+  const keywordArray = keywords
+    .split(',')
+    .map((k) => k.trim())
+    .filter((k) => k.length > 0);
 
   if (keywordArray.length >= 3) {
     return { passed: true };
   }
   if (keywordArray.length === 0) {
-    return { passed: false, suggestion: 'Add target keywords for your article (at least 3-5 keywords)' };
+    return {
+      passed: false,
+      suggestion:
+        'Add target keywords for your article (at least 3-5 keywords)',
+    };
   }
-  return { passed: false, suggestion: 'Add more target keywords (aim for 3-5 keywords)' };
+  return {
+    passed: false,
+    suggestion: 'Add more target keywords (aim for 3-5 keywords)',
+  };
 }
 
 /**
  * Check if title contains focus keyword
  */
-function checkTitleKeyword(title: string, keywords: string): { passed: boolean; suggestion?: string } {
-  const keywordArray = keywords.split(',').map(k => k.trim().toLowerCase()).filter(k => k.length > 0);
+function checkTitleKeyword(
+  title: string,
+  keywords: string
+): { passed: boolean; suggestion?: string } {
+  const keywordArray = keywords
+    .split(',')
+    .map((k) => k.trim().toLowerCase())
+    .filter((k) => k.length > 0);
 
   if (keywordArray.length === 0) {
     return { passed: true }; // Skip if no keywords defined
   }
 
   const titleLower = title.toLowerCase();
-  const hasKeyword = keywordArray.some(kw => titleLower.includes(kw));
+  const hasKeyword = keywordArray.some((kw) => titleLower.includes(kw));
 
   if (hasKeyword) {
     return { passed: true };
   }
-  return { passed: false, suggestion: 'Include your main keyword in the title for better SEO' };
+  return {
+    passed: false,
+    suggestion: 'Include your main keyword in the title for better SEO',
+  };
 }
 
 /**
  * Check if content has focus keyword
  */
-function checkContentKeyword(content: string, keywords: string): { passed: boolean; suggestion?: string } {
-  const keywordArray = keywords.split(',').map(k => k.trim()).filter(k => k.length > 2);
+function checkContentKeyword(
+  content: string,
+  keywords: string
+): { passed: boolean; suggestion?: string } {
+  const keywordArray = keywords
+    .split(',')
+    .map((k) => k.trim())
+    .filter((k) => k.length > 2);
 
   if (keywordArray.length === 0) {
     return { passed: true };
@@ -312,9 +566,15 @@ function checkContentKeyword(content: string, keywords: string): { passed: boole
     return { passed: true };
   }
   if (count === 0) {
-    return { passed: false, suggestion: `Include your main keyword "${mainKeyword}" in the content (2-3 times recommended)` };
+    return {
+      passed: false,
+      suggestion: `Include your main keyword "${mainKeyword}" in the content (2-3 times recommended)`,
+    };
   }
-  return { passed: false, suggestion: `Main keyword appears ${count} times. Consider using it 2-3 times to avoid keyword stuffing` };
+  return {
+    passed: false,
+    suggestion: `Main keyword appears ${count} times. Consider using it 2-3 times to avoid keyword stuffing`,
+  };
 }
 
 /**
@@ -331,7 +591,7 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     passed: wordCountCheck.passed,
     weight: 15,
     category: 'content',
-    suggestion: wordCountCheck.suggestion
+    suggestion: wordCountCheck.suggestion,
   });
 
   const headingCheck = checkHeadingStructure(doc.content);
@@ -341,7 +601,7 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     passed: headingCheck.passed,
     weight: 10,
     category: 'structure',
-    suggestion: headingCheck.suggestion
+    suggestion: headingCheck.suggestion,
   });
 
   const imageCheck = checkImages(doc.content, doc.featuredImageUrl);
@@ -351,7 +611,7 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     passed: imageCheck.passed,
     weight: 10,
     category: 'content',
-    suggestion: imageCheck.suggestion
+    suggestion: imageCheck.suggestion,
   });
 
   const linkCheck = checkLinks(doc.content);
@@ -361,7 +621,7 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     passed: linkCheck.passed,
     weight: 5,
     category: 'structure',
-    suggestion: linkCheck.suggestion
+    suggestion: linkCheck.suggestion,
   });
 
   // Metadata checks (weight: 35%)
@@ -372,7 +632,7 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     passed: titleLengthCheck.passed,
     weight: 10,
     category: 'metadata',
-    suggestion: titleLengthCheck.suggestion
+    suggestion: titleLengthCheck.suggestion,
   });
 
   const metaDescCheck = checkMetaDescription(doc.metaDescription);
@@ -382,7 +642,7 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     passed: metaDescCheck.passed,
     weight: 10,
     category: 'metadata',
-    suggestion: metaDescCheck.suggestion
+    suggestion: metaDescCheck.suggestion,
   });
 
   const slugCheck = checkSlug(doc.slug);
@@ -392,7 +652,7 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     passed: slugCheck.passed,
     weight: 5,
     category: 'metadata',
-    suggestion: slugCheck.suggestion
+    suggestion: slugCheck.suggestion,
   });
 
   const keywordsCheck = checkKeywords(doc.metaKeywords);
@@ -402,7 +662,7 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     passed: keywordsCheck.passed,
     weight: 10,
     category: 'metadata',
-    suggestion: keywordsCheck.suggestion
+    suggestion: keywordsCheck.suggestion,
   });
 
   // Keyword optimization checks (weight: 15%)
@@ -413,17 +673,20 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     passed: titleKeywordCheck.passed,
     weight: 8,
     category: 'metadata',
-    suggestion: titleKeywordCheck.suggestion
+    suggestion: titleKeywordCheck.suggestion,
   });
 
-  const contentKeywordCheck = checkContentKeyword(doc.content, doc.metaKeywords);
+  const contentKeywordCheck = checkContentKeyword(
+    doc.content,
+    doc.metaKeywords
+  );
   checklist.push({
     id: 'content-keyword',
     label: 'Content uses keywords naturally',
     passed: contentKeywordCheck.passed,
     weight: 7,
     category: 'content',
-    suggestion: contentKeywordCheck.suggestion
+    suggestion: contentKeywordCheck.suggestion,
   });
 
   // Readability checks (weight: 10%)
@@ -434,12 +697,15 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     passed: paragraphCheck.passed,
     weight: 10,
     category: 'readability',
-    suggestion: paragraphCheck.suggestion
+    suggestion: paragraphCheck.suggestion,
   });
 
   // Calculate score
   const totalWeight = checklist.reduce((sum, item) => sum + item.weight, 0);
-  const earnedWeight = checklist.reduce((sum, item) => sum + (item.passed ? item.weight : 0), 0);
+  const earnedWeight = checklist.reduce(
+    (sum, item) => sum + (item.passed ? item.weight : 0),
+    0
+  );
   const score = Math.round((earnedWeight / totalWeight) * 100);
 
   // Determine level
@@ -451,8 +717,8 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
 
   // Collect suggestions
   const suggestions = checklist
-    .filter(item => !item.passed && item.suggestion)
-    .map(item => item.suggestion!);
+    .filter((item) => !item.passed && item.suggestion)
+    .map((item) => item.suggestion!);
 
   // Calculate keyword density
   const keywordDensity = calculateKeywordDensity(doc.content);
@@ -462,7 +728,7 @@ export function calculateSEOScore(doc: SEODocument): SEOScoreResult {
     level,
     checklist,
     keywordDensity,
-    suggestions
+    suggestions,
   };
 }
 
@@ -477,12 +743,17 @@ export function getQuickSEOScore(
 ): { score: number; items: Array<{ id: string; passed: boolean }> } {
   const items = [
     { id: 'title', passed: title.length >= 30 && title.length <= 60 },
-    { id: 'description', passed: metaDescription.length >= 120 && metaDescription.length <= 160 },
+    {
+      id: 'description',
+      passed: metaDescription.length >= 120 && metaDescription.length <= 160,
+    },
     { id: 'content', passed: wordCount >= 300 },
     { id: 'headings', passed: /<h1/i.test(content) && /<h2/i.test(content) },
   ];
 
-  const score = Math.round((items.filter(i => i.passed).length / items.length) * 100);
+  const score = Math.round(
+    (items.filter((i) => i.passed).length / items.length) * 100
+  );
 
   return { score, items };
 }

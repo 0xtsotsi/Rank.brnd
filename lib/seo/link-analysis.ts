@@ -15,8 +15,14 @@ function extractLinks(html: string): Array<{
   isNofollow: boolean;
   isInternal: boolean;
 }> {
-  const linkRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])([^"']+)\1[^>]*>(.*?)<\/a>/gi;
-  const links: Array<{ href: string; text: string; isNofollow: boolean; isInternal: boolean }> = [];
+  const linkRegex =
+    /<a\s+(?:[^>]*?\s+)?href=(["'])([^"']+)\1[^>]*>(.*?)<\/a>/gi;
+  const links: Array<{
+    href: string;
+    text: string;
+    isNofollow: boolean;
+    isInternal: boolean;
+  }> = [];
   let match;
 
   while ((match = linkRegex.exec(html)) !== null) {
@@ -25,9 +31,10 @@ function extractLinks(html: string): Array<{
     const tag = match[0];
 
     // Check for rel="nofollow"
-    const isNofollow = /rel\s*=\s*["'][^"']*nofollow[^"']*["']/i.test(tag) ||
-                       /rel\s*=\s*"nofollow"/i.test(tag) ||
-                       /rel\s*=\s*'nofollow'/i.test(tag);
+    const isNofollow =
+      /rel\s*=\s*["'][^"']*nofollow[^"']*["']/i.test(tag) ||
+      /rel\s*=\s*"nofollow"/i.test(tag) ||
+      /rel\s*=\s*'nofollow'/i.test(tag);
 
     links.push({
       href,
@@ -46,7 +53,12 @@ function extractLinks(html: string): Array<{
 function isInternalUrl(url: string, baseUrl?: string): boolean {
   if (!baseUrl) {
     // If no base URL provided, assume relative URLs and same-domain URLs are internal
-    return url.startsWith('/') || url.startsWith('./') || url.startsWith('../') || !url.match(/^https?:\/\//);
+    return (
+      url.startsWith('/') ||
+      url.startsWith('./') ||
+      url.startsWith('../') ||
+      !url.match(/^https?:\/\//)
+    );
   }
 
   try {
@@ -95,7 +107,7 @@ export function analyzeLinks(
   const hasValidInternalLinks = internalLinks >= 2; // At least 2 internal links recommended
   const hasValidExternalLinks = externalLinks >= 1; // At least 1 external link recommended
 
-  const linkTexts = links.map(l => l.text).filter(t => t.length > 0);
+  const linkTexts = links.map((l) => l.text).filter((t) => t.length > 0);
 
   return {
     internalLinks,
@@ -149,7 +161,10 @@ export function calculateLinkScore(analysis: LinkAnalysis): number {
   }
 
   // Deduct points for nofollow on internal links (not recommended)
-  if (analysis.noFollowLinks > 0 && analysis.noFollowLinks >= analysis.internalLinks * 0.5) {
+  if (
+    analysis.noFollowLinks > 0 &&
+    analysis.noFollowLinks >= analysis.internalLinks * 0.5
+  ) {
     score -= 10;
   }
 
@@ -163,32 +178,47 @@ export function getLinkRecommendations(analysis: LinkAnalysis): string[] {
   const recommendations: string[] = [];
 
   if (analysis.totalLinks === 0) {
-    recommendations.push('Add links to your content. Internal and external links help SEO and provide value to readers.');
+    recommendations.push(
+      'Add links to your content. Internal and external links help SEO and provide value to readers.'
+    );
   } else {
     if (!analysis.hasValidInternalLinks) {
-      recommendations.push('Add at least 2-3 internal links to related content on your site. This helps with site structure and user engagement.');
+      recommendations.push(
+        'Add at least 2-3 internal links to related content on your site. This helps with site structure and user engagement.'
+      );
     }
 
     if (!analysis.hasValidExternalLinks) {
-      recommendations.push('Add at least 1 external link to a high-quality, authoritative source. This builds credibility.');
+      recommendations.push(
+        'Add at least 1 external link to a high-quality, authoritative source. This builds credibility.'
+      );
     }
   }
 
-  if (analysis.internalLinks > 0 && analysis.noFollowLinks >= analysis.internalLinks) {
-    recommendations.push('Avoid using nofollow on internal links. Internal links should pass link juice freely.');
+  if (
+    analysis.internalLinks > 0 &&
+    analysis.noFollowLinks >= analysis.internalLinks
+  ) {
+    recommendations.push(
+      'Avoid using nofollow on internal links. Internal links should pass link juice freely.'
+    );
   }
 
   // Check for generic link text
-  const genericTexts = analysis.linkTexts.filter(text =>
+  const genericTexts = analysis.linkTexts.filter((text) =>
     /^(click here|read more|learn more|here|this)$/i.test(text.trim())
   );
 
   if (genericTexts.length > analysis.linkTexts.length * 0.3) {
-    recommendations.push('Avoid generic link text like "click here" or "read more". Use descriptive, keyword-rich anchor text.');
+    recommendations.push(
+      'Avoid generic link text like "click here" or "read more". Use descriptive, keyword-rich anchor text.'
+    );
   }
 
   if (analysis.totalLinks > 20) {
-    recommendations.push('You have many links. Consider if all are necessary. Too many links can dilute link equity and overwhelm readers.');
+    recommendations.push(
+      'You have many links. Consider if all are necessary. Too many links can dilute link equity and overwhelm readers.'
+    );
   }
 
   return recommendations;

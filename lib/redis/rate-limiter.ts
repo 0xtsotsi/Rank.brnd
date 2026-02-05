@@ -39,8 +39,7 @@ export const RATE_LIMIT_KEYS = {
    * Global rate limit for an endpoint
    * Pattern: ratelimit:global:{endpoint}
    */
-  globalEndpoint: (endpoint: string) =>
-    `ratelimit:global:${endpoint}`,
+  globalEndpoint: (endpoint: string) => `ratelimit:global:${endpoint}`,
 
   /**
    * Per-IP rate limit
@@ -258,7 +257,9 @@ export class TokenBucketRateLimiter {
         resetTime: new Date(Date.now() + config.window * 1000),
         limit: config.limit,
         currentUsage: config.limit - currentTokens,
-        retryAfter: allowed ? undefined : Math.ceil((1 - remaining) / refillRate),
+        retryAfter: allowed
+          ? undefined
+          : Math.ceil((1 - remaining) / refillRate),
       };
     } catch (error) {
       // On Redis error, allow request but log
@@ -375,7 +376,9 @@ export class UsageTracker {
 /**
  * Create a rate limiter instance
  */
-export function createRateLimiter(type: 'sliding' | 'token-bucket' = 'sliding'): SlidingWindowRateLimiter | TokenBucketRateLimiter | null {
+export function createRateLimiter(
+  type: 'sliding' | 'token-bucket' = 'sliding'
+): SlidingWindowRateLimiter | TokenBucketRateLimiter | null {
   const redis = getRedisClient();
   if (!redis) {
     return null;

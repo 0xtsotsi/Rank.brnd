@@ -283,7 +283,9 @@ export const featureAnalytics = {
   competitorAnalysisViewed: (competitor: string) =>
     trackEvent(FEATURE_EVENTS.COMPETITOR_ANALYSIS_VIEWED, { competitor }),
   calendarEventCreated: (eventType: string) =>
-    trackEvent(FEATURE_EVENTS.CALENDAR_EVENT_CREATED, { event_type: eventType }),
+    trackEvent(FEATURE_EVENTS.CALENDAR_EVENT_CREATED, {
+      event_type: eventType,
+    }),
 };
 
 /**

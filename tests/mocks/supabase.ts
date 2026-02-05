@@ -34,7 +34,11 @@ export const mockSession = {
  * Mock Supabase error
  */
 export class SupabaseError extends Error {
-  constructor(message: string, public code?: string, public statusCode?: number) {
+  constructor(
+    message: string,
+    public code?: string,
+    public statusCode?: number
+  ) {
     super(message);
     this.name = 'SupabaseError';
   }
@@ -118,16 +122,25 @@ export function createMockSupabaseClient() {
   return {
     from: vi.fn(() => queryBuilder),
     auth: {
-      getUser: vi.fn(() => Promise.resolve({ data: { user: mockUser }, error: null })),
-      signInWithPassword: vi.fn(() =>
-        Promise.resolve({ data: { session: mockSession, user: mockUser }, error: null })
+      getUser: vi.fn(() =>
+        Promise.resolve({ data: { user: mockUser }, error: null })
       ),
-      signInWithOAuth: vi.fn(() => Promise.resolve({ data: { url: 'https://test.com' }, error: null })),
+      signInWithPassword: vi.fn(() =>
+        Promise.resolve({
+          data: { session: mockSession, user: mockUser },
+          error: null,
+        })
+      ),
+      signInWithOAuth: vi.fn(() =>
+        Promise.resolve({ data: { url: 'https://test.com' }, error: null })
+      ),
       signOut: vi.fn(() => Promise.resolve({ error: null })),
       refreshSession: vi.fn(() =>
         Promise.resolve({ data: { session: mockSession }, error: null })
       ),
-      updateUser: vi.fn(() => Promise.resolve({ data: { user: mockUser }, error: null })),
+      updateUser: vi.fn(() =>
+        Promise.resolve({ data: { user: mockUser }, error: null })
+      ),
       getSession: vi.fn(() =>
         Promise.resolve({ data: { session: mockSession }, error: null })
       ),
@@ -137,9 +150,13 @@ export function createMockSupabaseClient() {
     },
     storage: {
       from: vi.fn(() => ({
-        upload: vi.fn(() => Promise.resolve({ data: { path: 'test/path' }, error: null })),
+        upload: vi.fn(() =>
+          Promise.resolve({ data: { path: 'test/path' }, error: null })
+        ),
         download: vi.fn(() => Promise.resolve({ data: null, error: null })),
-        getPublicUrl: vi.fn(() => ({ data: { publicUrl: 'https://test.com/file' } })),
+        getPublicUrl: vi.fn(() => ({
+          data: { publicUrl: 'https://test.com/file' },
+        })),
         remove: vi.fn(() => Promise.resolve({ data: null, error: null })),
         list: vi.fn(() => Promise.resolve({ data: [], error: null })),
       })),
@@ -158,6 +175,9 @@ export function createMockSupabaseClient() {
 /**
  * Create a mock Supabase response
  */
-export function createMockResponse(data: unknown, error: SupabaseError | null = null) {
+export function createMockResponse(
+  data: unknown,
+  error: SupabaseError | null = null
+) {
   return { data, error };
 }

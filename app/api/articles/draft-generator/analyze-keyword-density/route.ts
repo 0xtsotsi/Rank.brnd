@@ -19,15 +19,15 @@ export async function POST(req: NextRequest) {
     // Authenticate user
     const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse and validate request body
     const body = await req.json();
-    const validationResult: ValidationResult = validateRequest(body, analyzeKeywordDensitySchema);
+    const validationResult: ValidationResult = validateRequest(
+      body,
+      analyzeKeywordDensitySchema
+    );
 
     if (!validationResult.success || !validationResult.data) {
       return NextResponse.json(

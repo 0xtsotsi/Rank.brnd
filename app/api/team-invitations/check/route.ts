@@ -19,23 +19,20 @@ export async function GET(request: NextRequest) {
     const email = searchParams.get('email');
 
     if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
     const validatedData = checkInvitationStatusSchema.parse({ email });
 
     const client = getSupabaseServerClient();
 
-    const result = await getPendingInvitationsByEmail(client, validatedData.email);
+    const result = await getPendingInvitationsByEmail(
+      client,
+      validatedData.email
+    );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     // Return only non-sensitive information
@@ -56,7 +53,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid email address', details: error.errors },
+        { error: 'Invalid email address', details: error.issues },
         { status: 400 }
       );
     }

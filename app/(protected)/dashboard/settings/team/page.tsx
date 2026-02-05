@@ -18,7 +18,8 @@ import type { TeamMemberRole } from '@/components/team-management/team-invitatio
 export default function TeamManagementPage() {
   const { organization, isLoaded: orgLoaded } = useOrganization();
   const { user, isLoaded: userLoaded } = useUser();
-  const [currentUserRole, setCurrentUserRole] = useState<TeamMemberRole>('viewer');
+  const [currentUserRole, setCurrentUserRole] =
+    useState<TeamMemberRole>('viewer');
   const [currentUserId, setCurrentUserId] = useState<string>('');
   const [isLoadingRole, setIsLoadingRole] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -57,7 +58,14 @@ export default function TeamManagementPage() {
     if (orgLoaded && userLoaded && organization?.id) {
       fetchUserRole();
     }
-  }, [organization?.id, user?.id, user?.emailAddresses, orgLoaded, userLoaded, refreshKey]);
+  }, [
+    organization?.id,
+    user?.id,
+    user?.emailAddresses,
+    orgLoaded,
+    userLoaded,
+    refreshKey,
+  ]);
 
   const handleRefresh = () => {
     setRefreshKey((prev) => prev + 1);
@@ -74,7 +82,9 @@ export default function TeamManagementPage() {
   if (!organization) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">Please select an organization to manage team members.</p>
+        <p className="text-gray-500">
+          Please select an organization to manage team members.
+        </p>
       </div>
     );
   }

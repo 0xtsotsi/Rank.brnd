@@ -7,10 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import {
-  dragDropRescheduleSchema,
-  validateRequest,
-} from '@/lib/schemas';
+import { dragDropRescheduleSchema, validateRequest } from '@/lib/schemas';
 import {
   updateScheduledArticle,
   scheduleArticle,
@@ -41,7 +38,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Validation failed' }, { status: 400 });
     }
 
-    const { article_id, scheduled_at, organization_id, source_date } = validationResult.data;
+    const { article_id, scheduled_at, organization_id, source_date } =
+      validationResult.data;
     const client = getSupabaseServerClient();
 
     // Verify user is a member of the organization
@@ -116,23 +114,15 @@ export async function POST(request: NextRequest) {
       );
     } else {
       // Article doesn't have a schedule yet, create one
-      result = await scheduleArticle(
-        client,
-        article_id,
-        scheduled_at,
-        {
-          status: 'scheduled',
-          notes: 'Scheduled from calendar (drag-drop)',
-          metadata,
-        }
-      );
+      result = await scheduleArticle(client, article_id, scheduled_at, {
+        status: 'scheduled',
+        notes: 'Scheduled from calendar (drag-drop)',
+        metadata,
+      });
     }
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({

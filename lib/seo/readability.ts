@@ -36,8 +36,8 @@ function countSentences(text: string): number {
   // Split by sentence endings, but handle abbreviations and decimals
   const sentences = text
     .split(/[.!?]+/)
-    .filter(s => s.trim().length > 0)
-    .filter(s => /\b[a-zA-Z]{2,}/.test(s.trim())); // Must contain at least one word
+    .filter((s) => s.trim().length > 0)
+    .filter((s) => /\b[a-zA-Z]{2,}/.test(s.trim())); // Must contain at least one word
 
   return Math.max(1, sentences.length);
 }
@@ -64,7 +64,8 @@ export function calculateFleschKincaidGrade(text: string): number {
   const avgSentenceLength = wordCount / sentenceCount;
   const avgSyllablesPerWord = syllableCount / wordCount;
 
-  const gradeLevel = 0.39 * avgSentenceLength + 11.8 * avgSyllablesPerWord - 15.59;
+  const gradeLevel =
+    0.39 * avgSentenceLength + 11.8 * avgSyllablesPerWord - 15.59;
 
   return Math.max(0, Math.min(20, gradeLevel)); // Clamp between 0 and 20
 }
@@ -84,7 +85,8 @@ export function calculateFleschReadingEase(text: string): number {
   const avgSentenceLength = wordCount / sentenceCount;
   const avgSyllablesPerWord = syllableCount / wordCount;
 
-  const score = 206.835 - 1.015 * avgSentenceLength - 84.6 * avgSyllablesPerWord;
+  const score =
+    206.835 - 1.015 * avgSentenceLength - 84.6 * avgSyllablesPerWord;
 
   return Math.max(0, Math.min(100, score)); // Clamp between 0 and 100
 }
@@ -112,7 +114,9 @@ export function analyzeReadability(
   const avgSentenceLength = wordCount / sentenceCount;
   const avgSyllablesPerWord = syllableCount / Math.max(1, wordCount);
 
-  const targetGradeMet = fleschKincaidGrade >= targetGradeMin && fleschKincaidGrade <= targetGradeMax;
+  const targetGradeMet =
+    fleschKincaidGrade >= targetGradeMin &&
+    fleschKincaidGrade <= targetGradeMax;
 
   // Calculate score based on how close we are to target grade
   let score = 0;

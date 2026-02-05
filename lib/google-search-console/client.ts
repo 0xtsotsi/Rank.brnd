@@ -71,7 +71,13 @@ export interface DimensionFilterGroup {
 export interface DimensionFilter {
   dimension: SearchAnalyticsDimension;
   expression: string;
-  operator?: 'contains' | 'equals' | 'notContains' | 'notEquals' | 'includingRegex' | 'excludingRegex';
+  operator?:
+    | 'contains'
+    | 'equals'
+    | 'notContains'
+    | 'notEquals'
+    | 'includingRegex'
+    | 'excludingRegex';
 }
 
 /**
@@ -157,7 +163,15 @@ export class GoogleSearchConsoleClient {
     siteUrl: string,
     startDate: string,
     endDate: string
-  ): Promise<Array<{ date: string; clicks: number; impressions: number; ctr: number; position: number }>> {
+  ): Promise<
+    Array<{
+      date: string;
+      clicks: number;
+      impressions: number;
+      ctr: number;
+      position: number;
+    }>
+  > {
     const rows = await this.getSearchAnalytics({
       siteUrl,
       startDate,
@@ -166,7 +180,7 @@ export class GoogleSearchConsoleClient {
       rowLimit: 1000,
     });
 
-    return rows.map(row => ({
+    return rows.map((row) => ({
       date: row.keys?.[0] || '',
       clicks: row.clicks || 0,
       impressions: row.impressions || 0,
@@ -187,17 +201,27 @@ export class GoogleSearchConsoleClient {
       minClicks?: number;
       minImpressions?: number;
     } = {}
-  ): Promise<Array<{ query: string; clicks: number; impressions: number; ctr: number; position: number }>> {
+  ): Promise<
+    Array<{
+      query: string;
+      clicks: number;
+      impressions: number;
+      ctr: number;
+      position: number;
+    }>
+  > {
     const dimensionFilters: DimensionFilterGroup[] = [];
 
     if (options.minClicks !== undefined) {
       dimensionFilters.push({
         groupType: 'and',
-        filters: [{
-          dimension: 'query',
-          expression: `>${options.minClicks}`,
-          operator: 'equals',
-        }],
+        filters: [
+          {
+            dimension: 'query',
+            expression: `>${options.minClicks}`,
+            operator: 'equals',
+          },
+        ],
       });
     }
 
@@ -206,17 +230,20 @@ export class GoogleSearchConsoleClient {
       startDate,
       endDate,
       dimensions: ['query'],
-      dimensionFilterGroups: dimensionFilters.length > 0 ? dimensionFilters : undefined,
+      dimensionFilterGroups:
+        dimensionFilters.length > 0 ? dimensionFilters : undefined,
       rowLimit: options.rowLimit || 100,
     });
 
     // Filter by minimum impressions if specified (API doesn't support this filter)
     let filteredRows = rows;
     if (options.minImpressions !== undefined) {
-      filteredRows = rows.filter(row => (row.impressions || 0) >= options.minImpressions!);
+      filteredRows = rows.filter(
+        (row) => (row.impressions || 0) >= options.minImpressions!
+      );
     }
 
-    return filteredRows.map(row => ({
+    return filteredRows.map((row) => ({
       query: row.keys?.[0] || '',
       clicks: row.clicks || 0,
       impressions: row.impressions || 0,
@@ -233,7 +260,15 @@ export class GoogleSearchConsoleClient {
     startDate: string,
     endDate: string,
     rowLimit = 100
-  ): Promise<Array<{ page: string; clicks: number; impressions: number; ctr: number; position: number }>> {
+  ): Promise<
+    Array<{
+      page: string;
+      clicks: number;
+      impressions: number;
+      ctr: number;
+      position: number;
+    }>
+  > {
     const rows = await this.getSearchAnalytics({
       siteUrl,
       startDate,
@@ -242,7 +277,7 @@ export class GoogleSearchConsoleClient {
       rowLimit,
     });
 
-    return rows.map(row => ({
+    return rows.map((row) => ({
       page: row.keys?.[0] || '',
       clicks: row.clicks || 0,
       impressions: row.impressions || 0,
@@ -259,7 +294,15 @@ export class GoogleSearchConsoleClient {
     startDate: string,
     endDate: string,
     rowLimit = 100
-  ): Promise<Array<{ country: string; clicks: number; impressions: number; ctr: number; position: number }>> {
+  ): Promise<
+    Array<{
+      country: string;
+      clicks: number;
+      impressions: number;
+      ctr: number;
+      position: number;
+    }>
+  > {
     const rows = await this.getSearchAnalytics({
       siteUrl,
       startDate,
@@ -268,7 +311,7 @@ export class GoogleSearchConsoleClient {
       rowLimit,
     });
 
-    return rows.map(row => ({
+    return rows.map((row) => ({
       country: row.keys?.[0] || '',
       clicks: row.clicks || 0,
       impressions: row.impressions || 0,
@@ -284,7 +327,15 @@ export class GoogleSearchConsoleClient {
     siteUrl: string,
     startDate: string,
     endDate: string
-  ): Promise<Array<{ device: DeviceType; clicks: number; impressions: number; ctr: number; position: number }>> {
+  ): Promise<
+    Array<{
+      device: DeviceType;
+      clicks: number;
+      impressions: number;
+      ctr: number;
+      position: number;
+    }>
+  > {
     const rows = await this.getSearchAnalytics({
       siteUrl,
       startDate,
@@ -292,7 +343,7 @@ export class GoogleSearchConsoleClient {
       dimensions: ['device'],
     });
 
-    return rows.map(row => ({
+    return rows.map((row) => ({
       device: (row.keys?.[0] || 'desktop') as DeviceType,
       clicks: row.clicks || 0,
       impressions: row.impressions || 0,
@@ -308,7 +359,12 @@ export class GoogleSearchConsoleClient {
     siteUrl: string,
     startDate: string,
     endDate: string
-  ): Promise<{ clicks: number; impressions: number; ctr: number; position: number }> {
+  ): Promise<{
+    clicks: number;
+    impressions: number;
+    ctr: number;
+    position: number;
+  }> {
     const rows = await this.getSearchAnalytics({
       siteUrl,
       startDate,
@@ -316,11 +372,16 @@ export class GoogleSearchConsoleClient {
     });
 
     const totalClicks = rows.reduce((sum, row) => sum + (row.clicks || 0), 0);
-    const totalImpressions = rows.reduce((sum, row) => sum + (row.impressions || 0), 0);
-    const totalCtr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
-    const avgPosition = rows.length > 0
-      ? rows.reduce((sum, row) => sum + (row.position || 0), 0) / rows.length
-      : 0;
+    const totalImpressions = rows.reduce(
+      (sum, row) => sum + (row.impressions || 0),
+      0
+    );
+    const totalCtr =
+      totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
+    const avgPosition =
+      rows.length > 0
+        ? rows.reduce((sum, row) => sum + (row.position || 0), 0) / rows.length
+        : 0;
 
     return {
       clicks: totalClicks,
@@ -333,7 +394,9 @@ export class GoogleSearchConsoleClient {
   /**
    * Build the query request object for the API
    */
-  private buildQueryRequest(query: SearchAnalyticsQueryRequest): Record<string, unknown> {
+  private buildQueryRequest(
+    query: SearchAnalyticsQueryRequest
+  ): Record<string, unknown> {
     const request: Record<string, unknown> = {
       startDate: query.startDate,
       endDate: query.endDate,
@@ -377,14 +440,16 @@ export class GoogleSearchConsoleClient {
     const response = await fetch(url, {
       ...options,
       headers: {
-        'Authorization': `Bearer ${this.accessToken}`,
+        Authorization: `Bearer ${this.accessToken}`,
         'Content-Type': 'application/json',
         ...options?.headers,
       },
     });
 
     if (!response.ok) {
-      const errorData: GoogleErrorResponse = await response.json().catch(() => ({}));
+      const errorData: GoogleErrorResponse = await response
+        .json()
+        .catch(() => ({}));
       const message = errorData.error?.message || response.statusText;
       throw new Error(`Google API error: ${response.status} - ${message}`);
     }
@@ -395,7 +460,9 @@ export class GoogleSearchConsoleClient {
   /**
    * Create a client from OAuth tokens
    */
-  static async fromTokens(tokens: OAuthTokens): Promise<GoogleSearchConsoleClient> {
+  static async fromTokens(
+    tokens: OAuthTokens
+  ): Promise<GoogleSearchConsoleClient> {
     return new GoogleSearchConsoleClient(tokens);
   }
 }
@@ -403,7 +470,10 @@ export class GoogleSearchConsoleClient {
 /**
  * Helper function to get date range for last N days
  */
-export function getLastNDays(n: number): { startDate: string; endDate: string } {
+export function getLastNDays(n: number): {
+  startDate: string;
+  endDate: string;
+} {
   const end = new Date();
   const start = new Date();
   start.setDate(start.getDate() - n + 1);
@@ -438,10 +508,7 @@ export function normalizeSiteUrl(siteUrl: string): string {
   let normalized = siteUrl.trim();
 
   // Add sc-prefix if missing for URL-property
-  if (
-    normalized.startsWith('http://') ||
-    normalized.startsWith('https://')
-  ) {
+  if (normalized.startsWith('http://') || normalized.startsWith('https://')) {
     if (!normalized.startsWith('sc-')) {
       normalized = `sc-${normalized}`;
     }

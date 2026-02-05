@@ -15,7 +15,11 @@ interface PlatformCardProps {
   onClick: () => void;
 }
 
-export function PlatformCard({ platform, connected, onClick }: PlatformCardProps) {
+export function PlatformCard({
+  platform,
+  connected,
+  onClick,
+}: PlatformCardProps) {
   const platformClasses = PLATFORM_COLORS[platform];
 
   return (

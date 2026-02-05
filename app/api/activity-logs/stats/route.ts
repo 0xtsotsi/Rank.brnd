@@ -72,7 +72,8 @@ export async function GET(request: NextRequest) {
     for (const stat of data || []) {
       const key = `${stat.action}:${stat.resource_type}`;
       statsByAction[key] = (statsByAction[key] || 0) + stat.count;
-      statsByResource[stat.resource_type] = (statsByResource[stat.resource_type] || 0) + stat.count;
+      statsByResource[stat.resource_type] =
+        (statsByResource[stat.resource_type] || 0) + stat.count;
       totalCount += stat.count;
     }
 
@@ -85,7 +86,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid query parameters', details: error.errors },
+        { error: 'Invalid query parameters', details: error.issues },
         { status: 400 }
       );
     }

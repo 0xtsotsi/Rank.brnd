@@ -6,14 +6,13 @@
  * Displays a list of articles with filtering, search, and actions.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Plus,
   Search,
   Filter,
   FileText,
-  Calendar,
   Eye,
   Edit,
   Trash2,
@@ -21,6 +20,8 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BulkPublishButton } from '@/components/articles/bulk-publish-modal';
+import type { BulkPublishResult } from '@/components/articles/bulk-publish-modal';
 
 interface Article {
   id: string;
@@ -37,11 +38,19 @@ interface Article {
   published_at: string | null;
 }
 
+interface CMSIntegration {
+  id: string;
+  platform: string;
+  name: string;
+  status: string;
+}
+
 interface ArticleListProps {
   organizationId: string;
   status?: string;
   search?: string;
   category?: string;
+  integrations?: CMSIntegration[];
 }
 
 export function ArticleList({
@@ -49,24 +58,36 @@ export function ArticleList({
   status: initialStatus,
   search: initialSearch,
   category: initialCategory,
+  integrations = [],
 }: ArticleListProps) {
   const router = useRouter();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState(initialSearch || '');
   const [selectedStatus, setSelectedStatus] = useState(initialStatus || 'all');
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
+  const [selectedCategory, setSelectedCategory] = useState(
+    initialCategory || 'all'
+  );
   const [categories, setCategories] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedArticles, setSelectedArticles] = useState<Set<string>>(new Set());
+  const [selectedArticles, setSelectedArticles] = useState<Set<string>>(
+    new Set()
+  );
   const [actionMenuOpen, setActionMenuOpen] = useState<string | null>(null);
+  const [selectAll, setSelectAll] = useState(false);
+
+  // Handle select all toggle
+  const handleSelectAll = useCallback(() => {
+    if (selectAll) {
+      setSelectedArticles(new Set());
+    } else {
+      setSelectedArticles(new Set(articles.map((a) => a.id)));
+    }
+    setSelectAll(!selectAll);
+  }, [selectAll, articles]);
 
   // Fetch articles
-  useEffect(() => {
-    fetchArticles();
-  }, [organizationId, selectedStatus, selectedCategory, searchTerm]);
-
-  async function fetchArticles() {
+  const fetchArticles = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -93,7 +114,11 @@ export function ArticleList({
 
         // Extract unique categories
         const uniqueCategories = Array.from(
-          new Set(data.articles.filter((a: Article) => a.category).map((a: Article) => a.category as string))
+          new Set(
+            data.articles
+              .filter((a: Article) => a.category)
+              .map((a: Article) => a.category as string)
+          )
         ) as string[];
         setCategories(uniqueCategories);
       }
@@ -102,7 +127,25 @@ export function ArticleList({
     } finally {
       setLoading(false);
     }
-  }
+  }, [organizationId, selectedStatus, selectedCategory, searchTerm]);
+
+  useEffect(() => {
+    fetchArticles();
+  }, [fetchArticles]);
+
+  // Handle bulk publish completion
+  const handlePublishComplete = useCallback(
+    (result: BulkPublishResult) => {
+      // Clear selection after successful publish
+      if (result.successful > 0) {
+        setSelectedArticles(new Set());
+        setSelectAll(false);
+        // Refresh articles to show updated status
+        fetchArticles();
+      }
+    },
+    [fetchArticles]
+  );
 
   async function handleDelete(articleId: string) {
     if (!confirm('Are you sure you want to delete this article?')) return;
@@ -113,7 +156,7 @@ export function ArticleList({
       });
 
       if (response.ok) {
-        setArticles(articles.filter(a => a.id !== articleId));
+        setArticles(articles.filter((a) => a.id !== articleId));
       }
     } catch (error) {
       console.error('Failed to delete article:', error);
@@ -122,9 +165,9 @@ export function ArticleList({
 
   const statusCounts = {
     all: articles.length,
-    draft: articles.filter(a => a.status === 'draft').length,
-    published: articles.filter(a => a.status === 'published').length,
-    archived: articles.filter(a => a.status === 'archived').length,
+    draft: articles.filter((a) => a.status === 'draft').length,
+    published: articles.filter((a) => a.status === 'published').length,
+    archived: articles.filter((a) => a.status === 'archived').length,
   };
 
   const formatDate = (dateString: string) => {
@@ -164,7 +207,12 @@ export function ArticleList({
           >
             <Filter className="w-4 h-4" />
             Filters
-            <ChevronDown className={cn('w-4 h-4 transition-transform', showFilters && 'rotate-180')} />
+            <ChevronDown
+              className={cn(
+                'w-4 h-4 transition-transform',
+                showFilters && 'rotate-180'
+              )}
+            />
           </button>
 
           {/* New Article Button */}
@@ -179,8 +227,26 @@ export function ArticleList({
 
         {/* Bulk Actions */}
         {selectedArticles.size > 0 && (
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            {selectedArticles.size} article{selectedArticles.size > 1 ? 's' : ''} selected
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSelectAll}
+                className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                {selectAll ? 'Deselect All' : 'Select All'}
+              </button>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                {selectedArticles.size} article
+                {selectedArticles.size > 1 ? 's' : ''} selected
+              </span>
+            </div>
+            <BulkPublishButton
+              selectedArticles={selectedArticles}
+              articles={articles}
+              integrations={integrations}
+              organizationId={organizationId}
+              onPublishComplete={handlePublishComplete}
+            />
           </div>
         )}
       </div>
@@ -251,7 +317,9 @@ export function ArticleList({
             No articles found
           </h3>
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {searchTerm || selectedStatus !== 'all' || selectedCategory !== 'all'
+            {searchTerm ||
+            selectedStatus !== 'all' ||
+            selectedCategory !== 'all'
               ? 'Try adjusting your filters or search terms'
               : 'Get started by creating your first article'}
           </p>
@@ -267,7 +335,22 @@ export function ArticleList({
         <div className="space-y-2">
           {/* Header */}
           <div className="hidden sm:grid grid-cols-12 gap-4 px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-            <div className="col-span-5">Article</div>
+            <div className="col-span-5 flex items-center gap-3">
+              <input
+                type="checkbox"
+                checked={selectAll && selectedArticles.size === articles.length}
+                onChange={handleSelectAll}
+                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                ref={(el) => {
+                  if (el && selectedArticles.size > 0 && !selectAll) {
+                    el.indeterminate = true;
+                  } else if (el) {
+                    el.indeterminate = false;
+                  }
+                }}
+              />
+              Article
+            </div>
             <div className="col-span-2">Status</div>
             <div className="col-span-2">Category</div>
             <div className="col-span-2">Updated</div>
@@ -327,9 +410,12 @@ export function ArticleList({
                   <span
                     className={cn(
                       'inline-flex items-center px-2 py-1 text-xs font-medium rounded-full capitalize',
-                      article.status === 'published' && 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-                      article.status === 'draft' && 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-                      article.status === 'archived' && 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                      article.status === 'published' &&
+                        'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+                      article.status === 'draft' &&
+                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+                      article.status === 'archived' &&
+                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
                     )}
                   >
                     {article.status}
@@ -357,7 +443,9 @@ export function ArticleList({
                 {/* Actions */}
                 <div className="col-span-1 flex items-center justify-end gap-1">
                   <button
-                    onClick={() => router.push(`/dashboard/articles/${article.id}`)}
+                    onClick={() =>
+                      router.push(`/dashboard/articles/${article.id}`)
+                    }
                     className="p-2 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                     title="Edit"
                   >
@@ -365,7 +453,11 @@ export function ArticleList({
                   </button>
                   <div className="relative">
                     <button
-                      onClick={() => setActionMenuOpen(actionMenuOpen === article.id ? null : article.id)}
+                      onClick={() =>
+                        setActionMenuOpen(
+                          actionMenuOpen === article.id ? null : article.id
+                        )
+                      }
                       className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                     >
                       <MoreVertical className="w-4 h-4" />

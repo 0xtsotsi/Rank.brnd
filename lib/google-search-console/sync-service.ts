@@ -14,8 +14,17 @@
 
 import type { OAuthTokens } from '@/lib/oauth';
 import { createLogger } from '@/lib/logger';
-import { GoogleSearchConsoleClient, formatDateForGSC, getYesterdayDate, getLastNDays } from './client';
-import { checkGscQuota, recordGscUsage, type GscQuotaUsage } from './rate-limiter';
+import {
+  GoogleSearchConsoleClient,
+  formatDateForGSC,
+  getYesterdayDate,
+  getLastNDays,
+} from './client';
+import {
+  checkGscQuota,
+  recordGscUsage,
+  type GscQuotaUsage,
+} from './rate-limiter';
 
 const logger = createLogger({ context: 'gsc-sync-service' });
 
@@ -128,7 +137,11 @@ export class GscSyncService {
 
     // Check quota before starting
     const estimatedUnits = this.estimateQuotaUnits(opts);
-    const quotaCheck = await checkGscQuota(this.organizationId, this.siteUrl, estimatedUnits);
+    const quotaCheck = await checkGscQuota(
+      this.organizationId,
+      this.siteUrl,
+      estimatedUnits
+    );
 
     if (!quotaCheck.canMakeRequest) {
       logger.warn('Sync aborted due to quota limit', {
@@ -208,7 +221,11 @@ export class GscSyncService {
       await recordGscUsage(this.organizationId, this.siteUrl, totalApiRequests);
 
       // Get updated quota info
-      const finalQuota = await checkGscQuota(this.organizationId, this.siteUrl, 0);
+      const finalQuota = await checkGscQuota(
+        this.organizationId,
+        this.siteUrl,
+        0
+      );
 
       const duration = Date.now() - startTime;
       logger.info('GSC sync completed', {
@@ -273,10 +290,15 @@ export class GscSyncService {
     options: Required<GscSyncOptions>
   ): Promise<GscDataRecord[]> {
     try {
-      const results = await this.client.getAnalyticsByQuery(this.siteUrl, startDate, endDate, {
-        rowLimit: options.rowLimit,
-        minImpressions: options.minImpressions,
-      });
+      const results = await this.client.getAnalyticsByQuery(
+        this.siteUrl,
+        startDate,
+        endDate,
+        {
+          rowLimit: options.rowLimit,
+          minImpressions: options.minImpressions,
+        }
+      );
 
       return results.map((row) => ({
         keyword: row.query,
@@ -333,9 +355,16 @@ export class GscSyncService {
   /**
    * Sync aggregated daily data
    */
-  private async syncByDate(startDate: string, endDate: string): Promise<GscDataRecord[]> {
+  private async syncByDate(
+    startDate: string,
+    endDate: string
+  ): Promise<GscDataRecord[]> {
     try {
-      const results = await this.client.getAnalyticsByDate(this.siteUrl, startDate, endDate);
+      const results = await this.client.getAnalyticsByDate(
+        this.siteUrl,
+        startDate,
+        endDate
+      );
 
       return results.map((row) => ({
         keyword: '_total',
@@ -396,7 +425,10 @@ export class GscSyncService {
   /**
    * Calculate date range for sync
    */
-  private calculateDateRange(days: number): { startDate: string; endDate: string } {
+  private calculateDateRange(days: number): {
+    startDate: string;
+    endDate: string;
+  } {
     const endDate = new Date();
     // GSC data is typically available up to 2 days ago
     endDate.setDate(endDate.getDate() - 2);
@@ -431,7 +463,11 @@ export class GscSyncService {
   /**
    * Test connection and verify access
    */
-  async testConnection(): Promise<{ success: boolean; sites?: string[]; error?: string }> {
+  async testConnection(): Promise<{
+    success: boolean;
+    sites?: string[];
+    error?: string;
+  }> {
     try {
       const sites = await this.client.listSites();
       const hasAccess = sites.some((site) => site.siteUrl === this.siteUrl);
@@ -467,7 +503,13 @@ export function createGscSyncService(
   integrationId: string,
   siteUrl: string
 ): GscSyncService {
-  return new GscSyncService(tokens, organizationId, productId, integrationId, siteUrl);
+  return new GscSyncService(
+    tokens,
+    organizationId,
+    productId,
+    integrationId,
+    siteUrl
+  );
 }
 
 /**
@@ -481,14 +523,23 @@ export async function performGscSync(
   siteUrl: string,
   options?: GscSyncOptions
 ): Promise<GscSyncResult> {
-  const service = createGscSyncService(tokens, organizationId, productId, integrationId, siteUrl);
+  const service = createGscSyncService(
+    tokens,
+    organizationId,
+    productId,
+    integrationId,
+    siteUrl
+  );
   return service.sync(options);
 }
 
 /**
  * Check if a sync is needed based on last sync time
  */
-export function needsGscSync(lastSyncedAt: Date | null, syncIntervalSeconds: number): boolean {
+export function needsGscSync(
+  lastSyncedAt: Date | null,
+  syncIntervalSeconds: number
+): boolean {
   if (!lastSyncedAt) return true;
 
   const now = new Date();
@@ -499,7 +550,9 @@ export function needsGscSync(lastSyncedAt: Date | null, syncIntervalSeconds: num
 /**
  * Get recommended sync schedule based on data volume
  */
-export function getRecommendedSyncInterval(dataVolume: 'low' | 'medium' | 'high'): number {
+export function getRecommendedSyncInterval(
+  dataVolume: 'low' | 'medium' | 'high'
+): number {
   switch (dataVolume) {
     case 'low':
       return 8 * 60 * 60; // 8 hours

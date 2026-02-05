@@ -7,10 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import {
-  validateConflictsSchema,
-  validateRequest,
-} from '@/lib/schemas';
+import { validateConflictsSchema, validateRequest } from '@/lib/schemas';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 import { handleAPIError } from '@/lib/api-error-handler';
 

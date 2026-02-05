@@ -115,25 +115,41 @@ Return ONLY a valid JSON object with this exact structure:
 /**
  * Parses an OpenAI API error response
  */
-function parseApiError(error: unknown): { type: ArticleDraftGeneratorErrorType; message: string } {
+function parseApiError(error: unknown): {
+  type: ArticleDraftGeneratorErrorType;
+  message: string;
+} {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
 
-    if (message.includes('api key') || message.includes('authentication') || message.includes('unauthorized')) {
+    if (
+      message.includes('api key') ||
+      message.includes('authentication') ||
+      message.includes('unauthorized')
+    ) {
       return {
         type: 'API_KEY_MISSING',
-        message: 'Invalid or missing OpenAI API key. Please check your environment variables.',
+        message:
+          'Invalid or missing OpenAI API key. Please check your environment variables.',
       };
     }
 
-    if (message.includes('rate limit') || message.includes('quota') || message.includes('429')) {
+    if (
+      message.includes('rate limit') ||
+      message.includes('quota') ||
+      message.includes('429')
+    ) {
       return {
         type: 'RATE_LIMIT_EXCEEDED',
         message: 'Rate limit exceeded. Please try again later.',
       };
     }
 
-    if (message.includes('content policy') || message.includes('safety') || message.includes('violates')) {
+    if (
+      message.includes('content policy') ||
+      message.includes('safety') ||
+      message.includes('violates')
+    ) {
       return {
         type: 'CONTENT_POLICY_VIOLATION',
         message: 'The content violates OpenAI content policy.',
@@ -178,7 +194,10 @@ async function fetchBrandVoice(
   productId?: string
 ): Promise<BrandVoiceConfig> {
   try {
-    const aggregatedAnalysis = await getAggregatedAnalysis(organizationId, productId);
+    const aggregatedAnalysis = await getAggregatedAnalysis(
+      organizationId,
+      productId
+    );
 
     if (!aggregatedAnalysis) {
       return DEFAULT_BRAND_VOICE;
@@ -190,11 +209,13 @@ async function fetchBrandVoice(
       .slice(0, 3)
       .map(([tone]) => tone);
 
-    const dominantVocab = Object.entries(aggregatedAnalysis.vocabulary)
-      .sort((a, b) => b[1] - a[1])[0];
+    const dominantVocab = Object.entries(aggregatedAnalysis.vocabulary).sort(
+      (a, b) => b[1] - a[1]
+    )[0];
 
-    const dominantStyle = Object.entries(aggregatedAnalysis.style)
-      .sort((a, b) => b[1] - a[1])[0];
+    const dominantStyle = Object.entries(aggregatedAnalysis.style).sort(
+      (a, b) => b[1] - a[1]
+    )[0];
 
     return {
       tone: dominantTones.length > 0 ? dominantTones : DEFAULT_BRAND_VOICE.tone,
@@ -221,13 +242,16 @@ function buildBrandVoiceInstructions(brandVoice: BrandVoiceConfig): string {
   const instructions: string[] = [];
 
   if (brandVoice.tone && brandVoice.tone.length > 0) {
-    instructions.push(`**Tone**: Use a ${brandVoice.tone.join(' yet ')} tone throughout the article.`);
+    instructions.push(
+      `**Tone**: Use a ${brandVoice.tone.join(' yet ')} tone throughout the article.`
+    );
   }
 
   if (brandVoice.formality_level) {
     const formalityMap = {
       formal: 'Use formal language with proper grammar and avoid contractions.',
-      informal: 'Use conversational language with contractions and a relaxed style.',
+      informal:
+        'Use conversational language with contractions and a relaxed style.',
       neutral: 'Maintain a balanced, professional tone.',
     };
     instructions.push(formalityMap[brandVoice.formality_level]);
@@ -235,10 +259,14 @@ function buildBrandVoiceInstructions(brandVoice: BrandVoiceConfig): string {
 
   if (brandVoice.vocabulary?.complexity_level) {
     const complexityMap = {
-      simple: 'Use simple, accessible language suitable for a general audience.',
-      moderate: 'Use moderate complexity with some technical terms where appropriate.',
-      complex: 'Use sophisticated language and industry terminology suitable for expert readers.',
-      academic: 'Use academic language with proper citations and formal structure.',
+      simple:
+        'Use simple, accessible language suitable for a general audience.',
+      moderate:
+        'Use moderate complexity with some technical terms where appropriate.',
+      complex:
+        'Use sophisticated language and industry terminology suitable for expert readers.',
+      academic:
+        'Use academic language with proper citations and formal structure.',
     };
     instructions.push(complexityMap[brandVoice.vocabulary.complexity_level]);
   }
@@ -284,7 +312,9 @@ function buildSEOInstructions(
   ];
 
   if (secondaryKeywords && secondaryKeywords.length > 0) {
-    instructions.push(`**Secondary Keywords**: ${secondaryKeywords.map(k => `"${k}"`).join(', ')}`);
+    instructions.push(
+      `**Secondary Keywords**: ${secondaryKeywords.map((k) => `"${k}"`).join(', ')}`
+    );
   }
 
   instructions.push(
@@ -310,7 +340,9 @@ function generateMetaTitle(keyword: string, maxLength: number = 60): string {
   ];
 
   const template = templates[Math.floor(Math.random() * templates.length)];
-  return template.length > maxLength ? template.substring(0, maxLength - 3) + '...' : template;
+  return template.length > maxLength
+    ? template.substring(0, maxLength - 3) + '...'
+    : template;
 }
 
 /**
@@ -327,13 +359,18 @@ function generateMetaDescription(
   ];
 
   const template = templates[Math.floor(Math.random() * templates.length)];
-  return template.length > maxLength ? template.substring(0, maxLength - 3) + '...' : template;
+  return template.length > maxLength
+    ? template.substring(0, maxLength - 3) + '...'
+    : template;
 }
 
 /**
  * Generates meta keywords array
  */
-function generateMetaKeywords(keyword: string, secondaryKeywords?: string[]): string[] {
+function generateMetaKeywords(
+  keyword: string,
+  secondaryKeywords?: string[]
+): string[] {
   const baseKeyword = keyword.toLowerCase();
   const keywords = [
     baseKeyword,
@@ -344,7 +381,7 @@ function generateMetaKeywords(keyword: string, secondaryKeywords?: string[]): st
   ];
 
   if (secondaryKeywords && secondaryKeywords.length > 0) {
-    keywords.push(...secondaryKeywords.map(k => k.toLowerCase()));
+    keywords.push(...secondaryKeywords.map((k) => k.toLowerCase()));
   }
 
   return [...new Set(keywords)]; // Remove duplicates
@@ -361,9 +398,17 @@ function buildUserMessage(
   request: ArticleDraftGenerationRequest,
   brandVoice: BrandVoiceConfig
 ): string {
-  const { keyword, outline, target_word_count, internal_link_placeholders, custom_instructions, seo_config } = request;
+  const {
+    keyword,
+    outline,
+    target_word_count,
+    internal_link_placeholders,
+    custom_instructions,
+    seo_config,
+  } = request;
 
-  const keywordDensity = seo_config?.keyword_density_target || SERVICE_CONFIG.keywordDensityTarget;
+  const keywordDensity =
+    seo_config?.keyword_density_target || SERVICE_CONFIG.keywordDensityTarget;
 
   let message = `# Article Generation Request\n\n`;
   message += `**Primary Keyword**: ${keyword}\n`;
@@ -433,7 +478,8 @@ function processAIResponse(
       content: parsed.content || '',
       excerpt: parsed.excerpt || generateExcerptFromContent(parsed.content),
       table_of_contents: toc,
-      internal_links_used: parsed.internal_links_used || parsed.internalLinksUsed || [],
+      internal_links_used:
+        parsed.internal_links_used || parsed.internalLinksUsed || [],
     };
   } catch (parseError) {
     // If JSON parsing fails, treat the response as markdown content
@@ -455,7 +501,10 @@ function processAIResponse(
 /**
  * Generates excerpt from content
  */
-function generateExcerptFromContent(content: string, maxLength: number = 300): string {
+function generateExcerptFromContent(
+  content: string,
+  maxLength: number = 300
+): string {
   const firstParagraph = content.split('\n\n')[0].replace(/[#*]/g, '').trim();
   return firstParagraph.length > maxLength
     ? firstParagraph.substring(0, maxLength - 3) + '...'
@@ -474,7 +523,10 @@ function generateTableOfContentsFromContent(content: string): TOCEntry[] {
     if (match) {
       const level = match[1].length - 1; // H2 = 1, H3 = 2
       const title = match[2].trim();
-      const id = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+      const id = title
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]/g, '');
       toc.push({ level, title, id });
     }
   }
@@ -506,10 +558,13 @@ function processInternalLinks(
   }
 
   // Remove any remaining placeholders
-  content = content.replace(/\[\{\{[^\}]+\}\}\]\(INTERNAL_LINK:[^\)]+\)/g, (match) => {
-    const anchorMatch = match.match(/\[\{\{(.+?)\}\}\]/);
-    return anchorMatch ? `[${anchorMatch[1]}]` : match;
-  });
+  content = content.replace(
+    /\[\{\{[^\}]+\}\}\]\(INTERNAL_LINK:[^\)]+\)/g,
+    (match) => {
+      const anchorMatch = match.match(/\[\{\{(.+?)\}\}\]/);
+      return anchorMatch ? `[${anchorMatch[1]}]` : match;
+    }
+  );
 
   return { content, linksUsed };
 }
@@ -534,17 +589,20 @@ export async function generateArticleDraft(
   const validation = validateDraftRequest(request);
   if (!validation.valid) {
     const firstError = validation.errors[0];
-    throw new ArticleDraftGeneratorError('INVALID_INPUT', firstError.message, validation.errors);
+    throw new ArticleDraftGeneratorError(
+      'INVALID_INPUT',
+      firstError.message,
+      validation.errors
+    );
   }
 
   // Validate API key
   const apiKey = validateApiKey();
 
   // Fetch brand voice
-  const brandVoice = request.brand_voice_config || await fetchBrandVoice(
-    request.organization_id,
-    request.product_id
-  );
+  const brandVoice =
+    request.brand_voice_config ||
+    (await fetchBrandVoice(request.organization_id, request.product_id));
 
   // Build messages
   const userMessage = buildUserMessage(request, brandVoice);
@@ -573,22 +631,37 @@ export async function generateArticleDraft(
       const errorData = await response.json().catch(() => ({}));
       const error = new Error(errorData.error?.message || response.statusText);
       const parsed = parseApiError(error);
-      throw new ArticleDraftGeneratorError(parsed.type, parsed.message, errorData);
+      throw new ArticleDraftGeneratorError(
+        parsed.type,
+        parsed.message,
+        errorData
+      );
     }
 
     const data = await response.json();
 
     if (!data.choices || data.choices.length === 0) {
-      throw new ArticleDraftGeneratorError('GENERATION_FAILED', 'No response from OpenAI API');
+      throw new ArticleDraftGeneratorError(
+        'GENERATION_FAILED',
+        'No response from OpenAI API'
+      );
     }
 
     const aiContent = data.choices[0]?.message?.content;
     if (!aiContent) {
-      throw new ArticleDraftGeneratorError('GENERATION_FAILED', 'Empty response from OpenAI API');
+      throw new ArticleDraftGeneratorError(
+        'GENERATION_FAILED',
+        'Empty response from OpenAI API'
+      );
     }
 
     // Process AI response
-    const processed = processAIResponse(aiContent, request.keyword, brandVoice, request);
+    const processed = processAIResponse(
+      aiContent,
+      request.keyword,
+      brandVoice,
+      request
+    );
 
     // Process internal links
     const { content: finalContent, linksUsed } = processInternalLinks(
@@ -598,7 +671,10 @@ export async function generateArticleDraft(
 
     // Calculate metrics
     const wordCount = calculateWordCount(finalContent);
-    const keywordDensity = calculateKeywordDensity(finalContent, request.keyword);
+    const keywordDensity = calculateKeywordDensity(
+      finalContent,
+      request.keyword
+    );
     const readingTime = calculateReadingTime(wordCount);
     const generationTime = Date.now() - startTime;
 
@@ -610,9 +686,18 @@ export async function generateArticleDraft(
     };
 
     const seo: ArticleDraftSEO = {
-      meta_title: generateMetaTitle(request.keyword, seoConfig.meta_title_length),
-      meta_description: generateMetaDescription(request.keyword, seoConfig.meta_description_length),
-      meta_keywords: generateMetaKeywords(request.keyword, seoConfig.secondary_keywords),
+      meta_title: generateMetaTitle(
+        request.keyword,
+        seoConfig.meta_title_length
+      ),
+      meta_description: generateMetaDescription(
+        request.keyword,
+        seoConfig.meta_description_length
+      ),
+      meta_keywords: generateMetaKeywords(
+        request.keyword,
+        seoConfig.secondary_keywords
+      ),
       primary_keyword: request.keyword,
       keyword_density: keywordDensity,
       keyword_count: Math.round(keywordDensity * wordCount),
@@ -702,7 +787,11 @@ export async function saveDraftToDatabase(
     .single();
 
   if (error) {
-    throw new ArticleDraftGeneratorError('GENERATION_FAILED', `Failed to save draft: ${error.message}`, error);
+    throw new ArticleDraftGeneratorError(
+      'GENERATION_FAILED',
+      `Failed to save draft: ${error.message}`,
+      error
+    );
   }
 
   return data.id;
@@ -738,7 +827,11 @@ export async function listOrganizationDrafts(
     .range(offset, offset + limit - 1);
 
   if (error) {
-    throw new ArticleDraftGeneratorError('GENERATION_FAILED', `Failed to list drafts: ${error.message}`, error);
+    throw new ArticleDraftGeneratorError(
+      'GENERATION_FAILED',
+      `Failed to list drafts: ${error.message}`,
+      error
+    );
   }
 
   return data || [];
@@ -765,7 +858,11 @@ export async function getDraftById(
     if (error.code === 'PGRST116') {
       return null;
     }
-    throw new ArticleDraftGeneratorError('GENERATION_FAILED', `Failed to get draft: ${error.message}`, error);
+    throw new ArticleDraftGeneratorError(
+      'GENERATION_FAILED',
+      `Failed to get draft: ${error.message}`,
+      error
+    );
   }
 
   return data;
@@ -787,7 +884,11 @@ export async function deleteDraft(
     .eq('organization_id', organizationId);
 
   if (error) {
-    throw new ArticleDraftGeneratorError('GENERATION_FAILED', `Failed to delete draft: ${error.message}`, error);
+    throw new ArticleDraftGeneratorError(
+      'GENERATION_FAILED',
+      `Failed to delete draft: ${error.message}`,
+      error
+    );
   }
 }
 
@@ -813,22 +914,30 @@ export function analyzeKeywordDensity(
 
   // Count keyword occurrences (exact match and partial matches)
   const words = content.toLowerCase().split(/\s+/);
-  const count = words.filter(word => word.includes(keywordLower) || keywordLower.includes(word)).length;
+  const count = words.filter(
+    (word) => word.includes(keywordLower) || keywordLower.includes(word)
+  ).length;
 
   const density = count / totalWords;
   const densityPercent = density * 100;
 
-  const inRange = density >= SERVICE_CONFIG.keywordDensityMin && density <= SERVICE_CONFIG.keywordDensityMax;
+  const inRange =
+    density >= SERVICE_CONFIG.keywordDensityMin &&
+    density <= SERVICE_CONFIG.keywordDensityMax;
 
   const recommendations: string[] = [];
 
   if (density < SERVICE_CONFIG.keywordDensityMin) {
-    const needed = Math.round((SERVICE_CONFIG.keywordDensityTarget * totalWords) - count);
+    const needed = Math.round(
+      SERVICE_CONFIG.keywordDensityTarget * totalWords - count
+    );
     recommendations.push(
       `Keyword density is low (${densityPercent.toFixed(2)}%). Add approximately ${needed} more occurrences of "${keyword}".`
     );
   } else if (density > SERVICE_CONFIG.keywordDensityMax) {
-    const excess = Math.round(count - (SERVICE_CONFIG.keywordDensityTarget * totalWords));
+    const excess = Math.round(
+      count - SERVICE_CONFIG.keywordDensityTarget * totalWords
+    );
     recommendations.push(
       `Keyword density is high (${densityPercent.toFixed(2)}%). Remove approximately ${excess} occurrences of "${keyword}" to avoid keyword stuffing.`
     );

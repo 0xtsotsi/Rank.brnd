@@ -8,7 +8,13 @@
  */
 
 import { Check, X, Minus } from 'lucide-react';
-import { FEATURES, FREE_PLAN, STARTER_PLAN, PRO_PLAN, AGENCY_PLAN } from '@/lib/stripe/plans';
+import {
+  FEATURES,
+  FREE_PLAN,
+  STARTER_PLAN,
+  PRO_PLAN,
+  AGENCY_PLAN,
+} from '@/lib/stripe/plans';
 
 const allPlans = [FREE_PLAN, STARTER_PLAN, PRO_PLAN, AGENCY_PLAN];
 
@@ -70,7 +76,11 @@ export function PricingComparisonTable() {
               {comparisonFeatures.map((feature, index) => (
                 <tr
                   key={feature.key}
-                  className={index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800/50'}
+                  className={
+                    index % 2 === 0
+                      ? 'bg-white dark:bg-gray-900'
+                      : 'bg-gray-50 dark:bg-gray-800/50'
+                  }
                 >
                   <td className="px-6 py-3 text-sm text-gray-900 dark:text-white">
                     {feature.label}
@@ -120,7 +130,11 @@ export function PricingComparisonTable() {
               {comparisonLimits.map((limit, index) => (
                 <tr
                   key={limit.key}
-                  className={index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800/50'}
+                  className={
+                    index % 2 === 0
+                      ? 'bg-white dark:bg-gray-900'
+                      : 'bg-gray-50 dark:bg-gray-800/50'
+                  }
                 >
                   <td className="px-6 py-3 text-sm text-gray-900 dark:text-white">
                     {limit.label}
@@ -128,9 +142,14 @@ export function PricingComparisonTable() {
                   {allPlans.map((plan) => {
                     const value = plan.limits[limit.key];
                     return (
-                      <td key={plan.id} className="px-6 py-3 text-center text-sm text-gray-700 dark:text-gray-300">
+                      <td
+                        key={plan.id}
+                        className="px-6 py-3 text-center text-sm text-gray-700 dark:text-gray-300"
+                      >
                         {value === -1 ? (
-                          <span className="font-semibold text-indigo-600 dark:text-indigo-400">Unlimited</span>
+                          <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                            Unlimited
+                          </span>
                         ) : (
                           value.toLocaleString()
                         )}

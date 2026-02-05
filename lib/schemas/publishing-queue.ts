@@ -148,7 +148,11 @@ export const retryPublishingQueueItemSchema = z.object({
  */
 export const markPublishingQueueItemCompletedSchema = z.object({
   id: z.string().uuid('Invalid queue item ID'),
-  published_url: z.string().url('Invalid published URL').optional().or(z.literal('')),
+  published_url: z
+    .string()
+    .url('Invalid published URL')
+    .optional()
+    .or(z.literal('')),
   published_post_id: z.string().optional(),
   published_data: z.record(z.unknown()).optional(),
 });
@@ -180,7 +184,8 @@ export const deletePublishingQueueItemSchema = z.object({
  */
 export const bulkQueueArticlesSchema = z.object({
   organization_id: z.string().uuid('Invalid organization ID'),
-  article_ids: z.array(z.string().uuid('Invalid article ID'))
+  article_ids: z
+    .array(z.string().uuid('Invalid article ID'))
     .min(1, 'At least one article ID is required')
     .max(50, 'Cannot queue more than 50 articles at once'),
   platform: publishingPlatformSchema,

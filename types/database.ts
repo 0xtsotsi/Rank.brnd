@@ -335,7 +335,12 @@ export interface Database {
           role?: 'owner' | 'admin' | 'editor' | 'viewer';
           token: string;
           invited_by_user_id: string;
-          status?: 'pending' | 'accepted' | 'declined' | 'expired' | 'cancelled';
+          status?:
+            | 'pending'
+            | 'accepted'
+            | 'declined'
+            | 'expired'
+            | 'cancelled';
           expires_at?: string;
           accepted_at?: string | null;
           created_at?: string;
@@ -348,7 +353,12 @@ export interface Database {
           role?: 'owner' | 'admin' | 'editor' | 'viewer';
           token?: string;
           invited_by_user_id?: string;
-          status?: 'pending' | 'accepted' | 'declined' | 'expired' | 'cancelled';
+          status?:
+            | 'pending'
+            | 'accepted'
+            | 'declined'
+            | 'expired'
+            | 'cancelled';
           expires_at?: string;
           accepted_at?: string | null;
           updated_at?: string;
@@ -421,7 +431,11 @@ export interface Database {
           keyword: string;
           search_volume: number;
           difficulty: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
-          intent: 'informational' | 'navigational' | 'transactional' | 'commercial';
+          intent:
+            | 'informational'
+            | 'navigational'
+            | 'transactional'
+            | 'commercial';
           opportunity_score: number;
           status: 'tracking' | 'paused' | 'opportunity' | 'ignored';
           current_rank: number | null;
@@ -442,7 +456,11 @@ export interface Database {
           keyword: string;
           search_volume?: number;
           difficulty?: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
-          intent?: 'informational' | 'navigational' | 'transactional' | 'commercial';
+          intent?:
+            | 'informational'
+            | 'navigational'
+            | 'transactional'
+            | 'commercial';
           opportunity_score?: number;
           status?: 'tracking' | 'paused' | 'opportunity' | 'ignored';
           current_rank?: number | null;
@@ -463,7 +481,11 @@ export interface Database {
           keyword?: string;
           search_volume?: number;
           difficulty?: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
-          intent?: 'informational' | 'navigational' | 'transactional' | 'commercial';
+          intent?:
+            | 'informational'
+            | 'navigational'
+            | 'transactional'
+            | 'commercial';
           opportunity_score?: number;
           status?: 'tracking' | 'paused' | 'opportunity' | 'ignored';
           current_rank?: number | null;
@@ -597,6 +619,81 @@ export interface Database {
           updated_at?: string;
         };
       };
+
+      /**
+       * Backlinks table
+       * Inbound links tracked by organizations for their products and articles
+       */
+      backlinks: {
+        Row: {
+          id: string;
+          organization_id: string;
+          product_id: string | null;
+          article_id: string | null;
+          source_url: string;
+          target_url: string;
+          domain_authority: number | null;
+          page_authority: number | null;
+          spam_score: number | null;
+          link_type: 'dofollow' | 'nofollow' | 'sponsored' | 'ugc' | null;
+          anchor_text: string | null;
+          first_seen_at: string;
+          last_verified_at: string | null;
+          lost_at: string | null;
+          status: 'pending' | 'active' | 'lost' | 'disavowed' | 'spam';
+          notes: string | null;
+          tags: string[];
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          product_id?: string | null;
+          article_id?: string | null;
+          source_url: string;
+          target_url: string;
+          domain_authority?: number | null;
+          page_authority?: number | null;
+          spam_score?: number | null;
+          link_type?: 'dofollow' | 'nofollow' | 'sponsored' | 'ugc' | null;
+          anchor_text?: string | null;
+          first_seen_at?: string;
+          last_verified_at?: string | null;
+          lost_at?: string | null;
+          status?: 'pending' | 'active' | 'lost' | 'disavowed' | 'spam';
+          notes?: string | null;
+          tags?: string[];
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          product_id?: string | null;
+          article_id?: string | null;
+          source_url?: string;
+          target_url?: string;
+          domain_authority?: number | null;
+          page_authority?: number | null;
+          spam_score?: number | null;
+          link_type?: 'dofollow' | 'nofollow' | 'sponsored' | 'ugc' | null;
+          anchor_text?: string | null;
+          first_seen_at?: string;
+          last_verified_at?: string | null;
+          lost_at?: string | null;
+          status?: 'pending' | 'active' | 'lost' | 'disavowed' | 'spam';
+          notes?: string | null;
+          tags?: string[];
+          metadata?: Json;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+      };
     };
     Views: {
       // Placeholder for view definitions
@@ -718,7 +815,11 @@ export interface Database {
           keyword: string;
           search_volume: number;
           difficulty: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
-          intent: 'informational' | 'navigational' | 'transactional' | 'commercial';
+          intent:
+            | 'informational'
+            | 'navigational'
+            | 'transactional'
+            | 'commercial';
           opportunity_score: number;
           status: 'tracking' | 'paused' | 'opportunity' | 'ignored';
           current_rank: number | null;
@@ -739,7 +840,11 @@ export interface Database {
           keyword: string;
           search_volume: number;
           difficulty: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
-          intent: 'informational' | 'navigational' | 'transactional' | 'commercial';
+          intent:
+            | 'informational'
+            | 'navigational'
+            | 'transactional'
+            | 'commercial';
           opportunity_score: number;
           status: 'tracking' | 'paused' | 'opportunity' | 'ignored';
           current_rank: number | null;
@@ -1040,16 +1145,129 @@ export interface Database {
           resource_type: string;
         }[];
       };
+
+      // Backlinks helper functions
+      soft_delete_backlink: {
+        Args: {
+          p_backlink_id: string;
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
+      get_organization_backlinks: {
+        Args: {
+          p_org_id: string;
+          p_include_deleted?: boolean;
+          p_product_id?: string | null;
+          p_article_id?: string | null;
+          p_status?:
+            | 'pending'
+            | 'active'
+            | 'lost'
+            | 'disavowed'
+            | 'spam'
+            | null;
+        };
+        Returns: {
+          id: string;
+          source_url: string;
+          target_url: string;
+          domain_authority: number | null;
+          page_authority: number | null;
+          status: 'pending' | 'active' | 'lost' | 'disavowed' | 'spam';
+          link_type: 'dofollow' | 'nofollow' | 'sponsored' | 'ugc' | null;
+          anchor_text: string | null;
+          first_seen_at: string;
+          last_verified_at: string | null;
+          created_at: string;
+        }[];
+      };
+      get_product_backlinks: {
+        Args: {
+          p_product_id: string;
+          p_include_deleted?: boolean;
+          p_status?:
+            | 'pending'
+            | 'active'
+            | 'lost'
+            | 'disavowed'
+            | 'spam'
+            | null;
+        };
+        Returns: {
+          id: string;
+          source_url: string;
+          target_url: string;
+          domain_authority: number | null;
+          page_authority: number | null;
+          status: 'pending' | 'active' | 'lost' | 'disavowed' | 'spam';
+          link_type: 'dofollow' | 'nofollow' | 'sponsored' | 'ugc' | null;
+          anchor_text: string | null;
+          first_seen_at: string;
+          last_verified_at: string | null;
+          created_at: string;
+        }[];
+      };
+      get_article_backlinks: {
+        Args: {
+          p_article_id: string;
+          p_include_deleted?: boolean;
+          p_status?:
+            | 'pending'
+            | 'active'
+            | 'lost'
+            | 'disavowed'
+            | 'spam'
+            | null;
+        };
+        Returns: {
+          id: string;
+          source_url: string;
+          target_url: string;
+          domain_authority: number | null;
+          page_authority: number | null;
+          status: 'pending' | 'active' | 'lost' | 'disavowed' | 'spam';
+          link_type: 'dofollow' | 'nofollow' | 'sponsored' | 'ugc' | null;
+          anchor_text: string | null;
+          first_seen_at: string;
+          last_verified_at: string | null;
+          created_at: string;
+        }[];
+      };
+      can_access_backlink: {
+        Args: {
+          p_backlink_id: string;
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
+      update_backlink_status: {
+        Args: {
+          p_backlink_id: string;
+          p_status: 'pending' | 'active' | 'lost' | 'disavowed' | 'spam';
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
     };
     Enums: {
       organization_tier: 'free' | 'starter' | 'pro' | 'agency';
       organization_role: 'owner' | 'admin' | 'member' | 'viewer';
       user_role: 'owner' | 'admin' | 'member' | 'viewer';
       team_member_role: 'owner' | 'admin' | 'editor' | 'viewer';
-      team_invitation_status: 'pending' | 'accepted' | 'declined' | 'expired' | 'cancelled';
+      team_invitation_status:
+        | 'pending'
+        | 'accepted'
+        | 'declined'
+        | 'expired'
+        | 'cancelled';
       product_status: 'active' | 'archived' | 'pending';
       keyword_status: 'tracking' | 'paused' | 'opportunity' | 'ignored';
-      search_intent: 'informational' | 'navigational' | 'transactional' | 'commercial';
+      search_intent:
+        | 'informational'
+        | 'navigational'
+        | 'transactional'
+        | 'commercial';
       difficulty_level: 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
       serp_analysis_status: 'pending' | 'analyzing' | 'completed' | 'failed';
       gap_type:
@@ -1064,6 +1282,8 @@ export interface Database {
         | 'poor_structure'
         | 'opportunity';
       activity_action: 'create' | 'update' | 'delete' | 'publish';
+      backlink_status: 'pending' | 'active' | 'lost' | 'disavowed' | 'spam';
+      link_type: 'dofollow' | 'nofollow' | 'sponsored' | 'ugc';
     };
     CompositeTypes: {
       // Placeholder for composite type definitions

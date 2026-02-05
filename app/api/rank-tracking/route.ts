@@ -47,7 +47,10 @@ export async function GET(request: NextRequest) {
     );
 
     if (!validationResult.success || !validationResult.data) {
-      return NextResponse.json({ error: validationResult.error }, { status: 400 });
+      return NextResponse.json(
+        { error: validationResult.error },
+        { status: 400 }
+      );
     }
 
     const data = validationResult.data;
@@ -60,10 +63,14 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (userError || !userData) {
-      return NextResponse.json({ error: 'Failed to get user organization' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Failed to get user organization' },
+        { status: 400 }
+      );
     }
 
-    const organizationId = data.organization_id || (userData as any).organization_id;
+    const organizationId =
+      data.organization_id || (userData as any).organization_id;
 
     // Fetch rank tracking records
     const result = await getOrganizationRankTracking(client, organizationId, {
@@ -97,10 +104,13 @@ export async function GET(request: NextRequest) {
         .in('id', keywordIds);
 
       if (keywords) {
-        keywordNames = keywords.reduce((acc, kw: any) => {
-          acc[kw.id] = kw.keyword;
-          return acc;
-        }, {} as Record<string, string>);
+        keywordNames = keywords.reduce(
+          (acc, kw: any) => {
+            acc[kw.id] = kw.keyword;
+            return acc;
+          },
+          {} as Record<string, string>
+        );
       }
     }
 
@@ -129,7 +139,9 @@ export async function GET(request: NextRequest) {
           ...record,
           keyword: keywordNames[record.keyword_id] || record.keyword_id,
           position_change,
-          previous_position: previousRecord ? (previousRecord as any).position : null,
+          previous_position: previousRecord
+            ? (previousRecord as any).position
+            : null,
         };
       })
     );
@@ -160,7 +172,10 @@ export async function POST(request: NextRequest) {
     const validationResult = validateRequest(body, rankTrackingPostSchema);
 
     if (!validationResult.success || !validationResult.data) {
-      return NextResponse.json({ error: validationResult.error }, { status: 400 });
+      return NextResponse.json(
+        { error: validationResult.error },
+        { status: 400 }
+      );
     }
 
     const data = validationResult.data;
@@ -173,10 +188,14 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (userError || !userData) {
-      return NextResponse.json({ error: 'Failed to get user organization' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Failed to get user organization' },
+        { status: 400 }
+      );
     }
 
-    const organizationId = data.organization_id || (userData as any).organization_id;
+    const organizationId =
+      data.organization_id || (userData as any).organization_id;
 
     // Handle bulk import
     if (data.bulk) {
@@ -184,7 +203,11 @@ export async function POST(request: NextRequest) {
         ...record,
         organization_id: organizationId,
         product_id: data.product_id,
-        date: record.date ? (record.date instanceof Date ? record.date.toISOString() : record.date) : undefined,
+        date: record.date
+          ? record.date instanceof Date
+            ? record.date.toISOString()
+            : record.date
+          : undefined,
       }));
 
       const result = await bulkInsertRankTracking(client, records);
@@ -240,7 +263,10 @@ export async function PATCH(request: NextRequest) {
     const validationResult = validateRequest(body, updateRankTrackingSchema);
 
     if (!validationResult.success || !validationResult.data) {
-      return NextResponse.json({ error: validationResult.error }, { status: 400 });
+      return NextResponse.json(
+        { error: validationResult.error },
+        { status: 400 }
+      );
     }
 
     const { id } = validationResult.data;
@@ -281,7 +307,10 @@ export async function DELETE(request: NextRequest) {
     const validationResult = validateRequest(body, deleteRankTrackingSchema);
 
     if (!validationResult.success || !validationResult.data) {
-      return NextResponse.json({ error: validationResult.error }, { status: 400 });
+      return NextResponse.json(
+        { error: validationResult.error },
+        { status: 400 }
+      );
     }
 
     const { id } = validationResult.data;

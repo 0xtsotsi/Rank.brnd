@@ -7,7 +7,11 @@
 
 import { useState } from 'react';
 import type { RankDevice } from '@/types/rank-tracking';
-import { DEVICE_LABELS, DEVICE_COLORS, LOCATION_LABELS } from '@/types/rank-tracking';
+import {
+  DEVICE_LABELS,
+  DEVICE_COLORS,
+  LOCATION_LABELS,
+} from '@/types/rank-tracking';
 import { cn } from '@/lib/utils';
 import { Search, X, ChevronDown, Filter } from 'lucide-react';
 
@@ -78,7 +82,10 @@ export function RankTrackingFilters({
   };
 
   return (
-    <div className={cn('space-y-4', className)} data-testid="rank-tracking-filters">
+    <div
+      className={cn('space-y-4', className)}
+      data-testid="rank-tracking-filters"
+    >
       {/* Search and Actions Bar */}
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Search Input */}
@@ -152,7 +159,14 @@ export function RankTrackingFilters({
           >
             {filters.device !== 'all' ? (
               <>
-                <span className={cn('h-2 w-2 rounded-full', DEVICE_COLORS[filters.device].bg.replace('bg-', 'bg-').split(' ')[0])} />
+                <span
+                  className={cn(
+                    'h-2 w-2 rounded-full',
+                    DEVICE_COLORS[filters.device].bg
+                      .replace('bg-', 'bg-')
+                      .split(' ')[0]
+                  )}
+                />
                 {DEVICE_LABELS[filters.device]}
               </>
             ) : (
@@ -195,7 +209,8 @@ export function RankTrackingFilters({
                       className={cn(
                         'w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700',
                         'flex items-center gap-2',
-                        filters.device === device && 'bg-gray-50 dark:bg-gray-700'
+                        filters.device === device &&
+                          'bg-gray-50 dark:bg-gray-700'
                       )}
                     >
                       <span className={cn('h-2 w-2 rounded-full', colors.bg)} />
@@ -251,7 +266,8 @@ export function RankTrackingFilters({
                     onClick={() => handleLocationChange(loc.code)}
                     className={cn(
                       'w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap',
-                      filters.location === loc.code && 'bg-gray-50 dark:bg-gray-700'
+                      filters.location === loc.code &&
+                        'bg-gray-50 dark:bg-gray-700'
                     )}
                   >
                     {loc.name}
@@ -276,7 +292,8 @@ export function RankTrackingFilters({
             )}
             data-testid="date-filter-button"
           >
-            {dateRanges.find((r) => r.value === filters.dateRange)?.label || 'Date Range'}
+            {dateRanges.find((r) => r.value === filters.dateRange)?.label ||
+              'Date Range'}
             <ChevronDown className="h-4 w-4" />
           </button>
 
@@ -301,7 +318,8 @@ export function RankTrackingFilters({
                     onClick={() => handleDateRangeChange(range.value as any)}
                     className={cn(
                       'w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700',
-                      filters.dateRange === range.value && 'bg-gray-50 dark:bg-gray-700'
+                      filters.dateRange === range.value &&
+                        'bg-gray-50 dark:bg-gray-700'
                     )}
                   >
                     {range.label}

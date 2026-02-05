@@ -37,7 +37,10 @@ interface ImageGenerationDialogProps {
   /** Called when the dialog should close */
   onClose: () => void;
   /** Called when an image is selected */
-  onSelectImage: (imageUrl: string, imageData?: ImageGenerationResponse) => void;
+  onSelectImage: (
+    imageUrl: string,
+    imageData?: ImageGenerationResponse
+  ) => void;
   /** Organization ID for brand settings */
   organizationId: string;
   /** User ID for ownership tracking */
@@ -109,7 +112,8 @@ export function ImageGenerationDialog({
 }: ImageGenerationDialogProps) {
   // Form state
   const [prompt, setPrompt] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState<ImageGenerationStyle>('realistic');
+  const [selectedStyle, setSelectedStyle] =
+    useState<ImageGenerationStyle>('realistic');
   const [applyBrandColors, setApplyBrandColors] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
@@ -136,70 +140,92 @@ export function ImageGenerationDialog({
     setError(null);
 
     // Initialize empty image slots
-    const newImages: GeneratedImage[] = Array.from({ length: GENERATION_COUNT }, () => ({
-      url: '',
-      loading: true,
-    }));
+    const newImages: GeneratedImage[] = Array.from(
+      { length: GENERATION_COUNT },
+      () => ({
+        url: '',
+        loading: true,
+      })
+    );
     setGeneratedImages(newImages);
 
     try {
       // Generate multiple images in parallel
-      const promises = Array.from({ length: GENERATION_COUNT }, async (_, index) => {
-        try {
-          const response = await fetch('/api/images/generate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              prompt: prompt.trim(),
-              style: selectedStyle,
-              size: '1024x1024',
-              quality: 'standard',
-              applyBrandColors: applyBrandColors && !!brandSettings?.colors,
-              organizationId,
-              userId,
-            }),
-          });
+      const promises = Array.from(
+        { length: GENERATION_COUNT },
+        async (_, index) => {
+          try {
+            const response = await fetch('/api/images/generate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                prompt: prompt.trim(),
+                style: selectedStyle,
+                size: '1024x1024',
+                quality: 'standard',
+                applyBrandColors: applyBrandColors && !!brandSettings?.colors,
+                organizationId,
+                userId,
+              }),
+            });
 
-          if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.error || 'Failed to generate image');
+            if (!response.ok) {
+              const data = await response.json();
+              throw new Error(data.error || 'Failed to generate image');
+            }
+
+            const result = await response.json();
+            return {
+              url: result.data.imageUrl,
+              data: result.data,
+              loading: false,
+            };
+          } catch (err) {
+            return {
+              url: '',
+              loading: false,
+              error: err instanceof Error ? err.message : 'Generation failed',
+            };
           }
-
-          const result = await response.json();
-          return {
-            url: result.data.imageUrl,
-            data: result.data,
-            loading: false,
-          };
-        } catch (err) {
-          return {
-            url: '',
-            loading: false,
-            error: err instanceof Error ? err.message : 'Generation failed',
-          };
         }
-      });
+      );
 
       const results = await Promise.all(promises);
       setGeneratedImages(results);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate images');
+      setError(
+        err instanceof Error ? err.message : 'Failed to generate images'
+      );
       setGeneratedImages([]);
     } finally {
       setIsGenerating(false);
     }
-  }, [prompt, selectedStyle, applyBrandColors, brandSettings, organizationId, userId, isGenerating]);
+  }, [
+    prompt,
+    selectedStyle,
+    applyBrandColors,
+    brandSettings,
+    organizationId,
+    userId,
+    isGenerating,
+  ]);
 
   // Select an image
-  const handleSelectImage = useCallback((imageUrl: string, imageData?: ImageGenerationResponse) => {
-    setSelectedImage(imageUrl);
-    onSelectImage(imageUrl, imageData);
-    onClose();
-  }, [onSelectImage, onClose]);
+  const handleSelectImage = useCallback(
+    (imageUrl: string, imageData?: ImageGenerationResponse) => {
+      setSelectedImage(imageUrl);
+      onSelectImage(imageUrl, imageData);
+      onClose();
+    },
+    [onSelectImage, onClose]
+  );
 
   // Get brand colors for preview
   const brandPrimaryColor = brandSettings?.colors?.primary || '#2563eb';
-  const brandSecondaryColor = brandSettings?.colors?.secondary || brandSettings?.colors?.accent || '#1e40af';
+  const brandSecondaryColor =
+    brandSettings?.colors?.secondary ||
+    brandSettings?.colors?.accent ||
+    '#1e40af';
 
   return (
     <Modal
@@ -233,12 +259,13 @@ export function ImageGenerationDialog({
                     className="w-6 h-6 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"
                     style={{ backgroundColor: brandPrimaryColor }}
                   />
-                  {brandSecondaryColor && brandSecondaryColor !== brandPrimaryColor && (
-                    <div
-                      className="w-6 h-6 rounded-full border-2 border-white dark:border-gray-800 shadow-sm -ml-2"
-                      style={{ backgroundColor: brandSecondaryColor }}
-                    />
-                  )}
+                  {brandSecondaryColor &&
+                    brandSecondaryColor !== brandPrimaryColor && (
+                      <div
+                        className="w-6 h-6 rounded-full border-2 border-white dark:border-gray-800 shadow-sm -ml-2"
+                        style={{ backgroundColor: brandSecondaryColor }}
+                      />
+                    )}
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -297,10 +324,12 @@ export function ImageGenerationDialog({
                       <Check className="w-3 h-3 text-white" />
                     </div>
                   )}
-                  <div className={cn(
-                    'w-10 h-10 rounded-lg bg-gradient-to-br mb-2 flex items-center justify-center',
-                    style.gradient
-                  )}>
+                  <div
+                    className={cn(
+                      'w-10 h-10 rounded-lg bg-gradient-to-br mb-2 flex items-center justify-center',
+                      style.gradient
+                    )}
+                  >
                     <Icon className="w-5 h-5 text-white" />
                   </div>
                   <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
@@ -345,10 +374,13 @@ export function ImageGenerationDialog({
                 >
                   {image.error ? (
                     <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 p-4 text-center">
-                      <p className="text-sm text-red-600 dark:text-red-400">{image.error}</p>
+                      <p className="text-sm text-red-600 dark:text-red-400">
+                        {image.error}
+                      </p>
                     </div>
                   ) : image.url ? (
                     <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={image.url}
                         alt={`Generated ${index + 1}`}
@@ -357,7 +389,9 @@ export function ImageGenerationDialog({
                       {/* Hover overlay */}
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <button
-                          onClick={() => handleSelectImage(image.url, image.data)}
+                          onClick={() =>
+                            handleSelectImage(image.url, image.data)
+                          }
                           className="p-3 bg-white dark:bg-gray-800 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                           title="Use this image"
                         >
@@ -399,7 +433,8 @@ export function ImageGenerationDialog({
                   Ready to create
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
-                  Enter a description above and choose a style to generate unique AI images
+                  Enter a description above and choose a style to generate
+                  unique AI images
                 </p>
               </div>
             </div>

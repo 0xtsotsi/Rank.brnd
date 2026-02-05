@@ -52,4 +52,8 @@ export {
   CORRELATION_HEADER,
   CORRELATION_COOKIE,
 } from './correlation';
-export { withLoggingHeaders, withLogging, withMiddlewareCorrelationId } from './middleware';
+export {
+  withLoggingHeaders,
+  withLogging,
+  withMiddlewareCorrelationId,
+} from './middleware';

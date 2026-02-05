@@ -58,7 +58,10 @@ export function hasAnyPermission(
   permissions: Permission[]
 ): boolean {
   return permissions.some((permission) => {
-    const [category, resource] = permission.split(':') as [PermissionCategory, Resource];
+    const [category, resource] = permission.split(':') as [
+      PermissionCategory,
+      Resource,
+    ];
     return hasPermission(role, resource, category);
   });
 }
@@ -71,7 +74,10 @@ export function hasAllPermissions(
   permissions: Permission[]
 ): boolean {
   return permissions.every((permission) => {
-    const [category, resource] = permission.split(':') as [PermissionCategory, Resource];
+    const [category, resource] = permission.split(':') as [
+      PermissionCategory,
+      Resource,
+    ];
     return hasPermission(role, resource, category);
   });
 }
@@ -79,7 +85,9 @@ export function hasAllPermissions(
 /**
  * Get the minimum role required for an operation category
  */
-export function getMinRoleForOperation(category: PermissionCategory): TeamMemberRole {
+export function getMinRoleForOperation(
+  category: PermissionCategory
+): TeamMemberRole {
   return OPERATION_MIN_ROLE[category];
 }
 
@@ -143,7 +151,11 @@ export async function canUserAccessResource(
   resource: Resource,
   category: PermissionCategory
 ): Promise<boolean> {
-  const context = await getUserPermissionContext(client, userId, organizationId);
+  const context = await getUserPermissionContext(
+    client,
+    userId,
+    organizationId
+  );
 
   if (!context) {
     return false;
@@ -350,7 +362,11 @@ export async function canModifyUserRole(
   organizationId: string,
   newRole: TeamMemberRole
 ): Promise<boolean> {
-  const requesterRole = await getTeamRole(client, organizationId, requesterUserId);
+  const requesterRole = await getTeamRole(
+    client,
+    organizationId,
+    requesterUserId
+  );
 
   if (!requesterRole) {
     return false;
@@ -420,7 +436,11 @@ export async function validateOperation(
   reason?: string;
   role?: TeamMemberRole;
 }> {
-  const context = await getUserPermissionContext(client, userId, organizationId);
+  const context = await getUserPermissionContext(
+    client,
+    userId,
+    organizationId
+  );
 
   if (!context) {
     return {

@@ -36,7 +36,10 @@ export async function GET(request: NextRequest) {
 
     // Validate query parameters
     const { searchParams } = new URL(request.url);
-    const validationResult = validateQueryParams(searchParams, productQuerySchema);
+    const validationResult = validateQueryParams(
+      searchParams,
+      productQuerySchema
+    );
     if (!validationResult.success) {
       return NextResponse.json(validationResult.error, { status: 400 });
     }
@@ -53,7 +56,13 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (userError || !user) {
-      return NextResponse.json({ products: [], total: 0, page, limit, hasMore: false });
+      return NextResponse.json({
+        products: [],
+        total: 0,
+        page,
+        limit,
+        hasMore: false,
+      });
     }
 
     // Get user's organizations
@@ -63,7 +72,13 @@ export async function GET(request: NextRequest) {
     );
 
     if (orgError || !orgData || orgData.length === 0) {
-      return NextResponse.json({ products: [], total: 0, page, limit, hasMore: false });
+      return NextResponse.json({
+        products: [],
+        total: 0,
+        page,
+        limit,
+        hasMore: false,
+      });
     }
 
     // Get products from all user's organizations
@@ -93,8 +108,10 @@ export async function GET(request: NextRequest) {
 
     // Sort products
     filteredProducts.sort((a, b) => {
-      const aValue = a[sort as keyof Database['public']['Tables']['products']['Row']];
-      const bValue = b[sort as keyof Database['public']['Tables']['products']['Row']];
+      const aValue =
+        a[sort as keyof Database['public']['Tables']['products']['Row']];
+      const bValue =
+        b[sort as keyof Database['public']['Tables']['products']['Row']];
       if (aValue === undefined) return 1;
       if (bValue === undefined) return -1;
       if (aValue < bValue) return order === 'asc' ? -1 : 1;
@@ -185,11 +202,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate unique slug if not provided
-    const slug = data.slug || await generateUniqueProductSlug(
-      supabase,
-      organizationId,
-      data.name
-    );
+    const slug =
+      data.slug ||
+      (await generateUniqueProductSlug(supabase, organizationId, data.name));
 
     // Build brand colors
     const brandColors = data.brand_colors || {
@@ -280,10 +295,7 @@ export async function PUT(request: NextRequest) {
       .maybeSingle();
 
     if (productError || !product) {
-      return NextResponse.json(
-        { error: 'Product not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
     // Verify user belongs to the product's organization
@@ -320,11 +332,17 @@ export async function PUT(request: NextRequest) {
     if (body.name !== undefined) updates.name = body.name;
     if (body.slug !== undefined) updates.slug = body.slug;
     if (body.url !== undefined) updates.url = body.url || null;
-    if (body.description !== undefined) updates.description = body.description || null;
+    if (body.description !== undefined)
+      updates.description = body.description || null;
     if (body.status !== undefined) updates.status = body.status;
 
     // Handle nested objects
-    if (body.primaryColor || body.secondaryColor || body.accentColor || body.brand_colors) {
+    if (
+      body.primaryColor ||
+      body.secondaryColor ||
+      body.accentColor ||
+      body.brand_colors
+    ) {
       updates.brand_colors = {
         primary: body.primaryColor || product.brand_colors.primary,
         secondary: body.secondaryColor || product.brand_colors.secondary,
@@ -416,10 +434,7 @@ export async function DELETE(request: NextRequest) {
       .maybeSingle();
 
     if (productError || !product) {
-      return NextResponse.json(
-        { error: 'Product not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
     // Verify user belongs to the product's organization

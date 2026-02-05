@@ -441,6 +441,38 @@ Reverse-engineered from live analysis of Outrank.so application, incorporating 9
       <name>Build team activity feed page</name>
       <description>Create feed showing recent team activities (article creation, publishing, configuration changes) with timestamps and user names.</description>
     </feature>
+    <feature>
+      <name>Write API integration tests</name>
+      <description>Create integration tests for all API endpoints testing authentication, authorization, validation, error cases, edge cases.</description>
+    </feature>
+    <feature>
+      <name>Implement article preview mode</name>
+      <description>Create preview mode in article editor showing published appearance, SERP snippet preview, featured image display.</description>
+    </feature>
+    <feature>
+      <name>Create backlinks database table</name>
+      <description>Create backlinks table with organization_id, product_id, article_id, source_url, target_url, domain_authority, status, created_at.</description>
+    </feature>
+    <feature>
+      <name>Implement bulk publishing feature</name>
+      <description>Create UI and API for selecting multiple articles to publish to selected CMS platforms simultaneously with progress tracking.</description>
+    </feature>
+    <feature>
+      <name>Implement competitor rank comparison</name>
+      <description>Create feature to compare user keyword rankings with competitors, show ranking gaps, identify quick-win opportunities.</description>
+    </feature>
+    <feature>
+      <name>Implement cookie consent banner</name>
+      <description>Create cookie consent banner with essential/optional categories, store preferences in cookies, load non-essential scripts based on consent.</description>
+    </feature>
+    <feature>
+      <name>Write E2E tests for critical user paths</name>
+      <description>Create Playwright E2E tests for registration, login, article creation, keyword search, publishing workflows.</description>
+    </feature>
+    <feature>
+      <name>Implement React error boundary components</name>
+      <description>Create error boundary components for pages and sections, catch React errors, display user-friendly error messages, log to Sentry.</description>
+    </feature>
   </implemented_features>
 
   <additional_requirements>

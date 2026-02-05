@@ -66,7 +66,11 @@ export function useCalendarDragDrop(
    * Reschedule an article to a new date via drag-drop
    */
   const rescheduleArticle = useCallback(
-    async (articleId: string, newDate: Date, sourceDate?: Date): Promise<DragDropResult> => {
+    async (
+      articleId: string,
+      newDate: Date,
+      sourceDate?: Date
+    ): Promise<DragDropResult> => {
       setIsRescheduling(true);
       setError(null);
 
@@ -171,9 +175,7 @@ export function useCalendarDragDrop(
         return {
           valid: false,
           hasConflicts: true,
-          conflicts: [
-            { type: 'validation_error', message: errorMsg },
-          ],
+          conflicts: [{ type: 'validation_error', message: errorMsg }],
         };
       } finally {
         setIsValidating(false);

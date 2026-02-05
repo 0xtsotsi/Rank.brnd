@@ -56,20 +56,20 @@ export interface MozUrlMetricsResponse {
   filter?: string;
   next_token?: string;
   results: Array<{
-  sort?: string;
-  filter?: string;
-  next_token?: string;
-  results: Array<{
-    domain_authority: number;
-    page_authority: number;
-    spam_score: number;
-    root_domains_to_page: number;
-    root_domains_to_root_domain: number;
-    ranking_keywords: number;
-    global_volume: number;
-    error?: string;
+    sort?: string;
+    filter?: string;
+    next_token?: string;
+    results: Array<{
+      domain_authority: number;
+      page_authority: number;
+      spam_score: number;
+      root_domains_to_page: number;
+      root_domains_to_root_domain: number;
+      ranking_keywords: number;
+      global_volume: number;
+      error?: string;
+    }>;
   }>;
-}>;
 }
 
 /**
@@ -102,7 +102,10 @@ export class MozClient {
   /**
    * Execute a fetch request with timeout
    */
-  private async fetchWithTimeout(url: string, options: RequestInit = {}): Promise<Response> {
+  private async fetchWithTimeout(
+    url: string,
+    options: RequestInit = {}
+  ): Promise<Response> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
@@ -129,10 +132,13 @@ export class MozClient {
 
     // Build query string with authentication
     const queryParams = new URLSearchParams({
-      ...Object.entries(params).reduce((acc, [key, value]) => {
-        acc[key] = String(value);
-        return acc;
-      }, {} as Record<string, string>),
+      ...Object.entries(params).reduce(
+        (acc, [key, value]) => {
+          acc[key] = String(value);
+          return acc;
+        },
+        {} as Record<string, string>
+      ),
       'Access-ID': this.accessId,
       Expires: (timestamp + this.timeout).toString(),
       Signature: signature,
@@ -148,7 +154,9 @@ export class MozClient {
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unknown error');
-      throw new Error(`Moz API request failed: ${response.status} - ${errorText}`);
+      throw new Error(
+        `Moz API request failed: ${response.status} - ${errorText}`
+      );
     }
 
     return response.json();
@@ -208,7 +216,9 @@ export class MozClient {
       };
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`Failed to fetch domain authority for ${normalizedDomain}: ${error.message}`);
+        throw new Error(
+          `Failed to fetch domain authority for ${normalizedDomain}: ${error.message}`
+        );
       }
       throw error;
     }
@@ -250,7 +260,9 @@ export class MozClient {
 
       if (!response.ok) {
         const errorText = await response.text().catch(() => 'Unknown error');
-        throw new Error(`Moz API batch request failed: ${response.status} - ${errorText}`);
+        throw new Error(
+          `Moz API batch request failed: ${response.status} - ${errorText}`
+        );
       }
 
       const data = await response.json();
@@ -267,7 +279,9 @@ export class MozClient {
       }));
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`Failed to fetch batch domain authority: ${error.message}`);
+        throw new Error(
+          `Failed to fetch batch domain authority: ${error.message}`
+        );
       }
       throw error;
     }
@@ -278,7 +292,8 @@ export class MozClient {
    */
   isValidDomain(domain: string): boolean {
     const normalized = this.normalizeDomain(domain);
-    const domainRegex = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$/i;
+    const domainRegex =
+      /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$/i;
     return domainRegex.test(normalized);
   }
 }
@@ -329,9 +344,7 @@ export function resetMozClient(): void {
  * Check if Moz API is properly configured
  */
 export function isMozConfigured(): boolean {
-  return !!(
-    process.env.MOZ_API_ACCESS_ID && process.env.MOZ_API_SECRET_KEY
-  );
+  return !!(process.env.MOZ_API_ACCESS_ID && process.env.MOZ_API_SECRET_KEY);
 }
 
 /**

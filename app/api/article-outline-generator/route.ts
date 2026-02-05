@@ -98,7 +98,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validationResult = validateRequest(body, generateArticleOutlineSchema);
+    const validationResult = validateRequest(
+      body,
+      generateArticleOutlineSchema
+    );
 
     if (!validationResult.success) {
       return NextResponse.json(validationResult.error, { status: 400 });

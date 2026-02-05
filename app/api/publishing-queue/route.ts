@@ -40,18 +40,23 @@ export async function GET(request: NextRequest) {
       publishingQueueQuerySchema
     );
 
-    const params = validationResult.success ? validationResult.data : {
-      organization_id: request.nextUrl.searchParams.get('organization_id') || undefined,
-      product_id: request.nextUrl.searchParams.get('product_id') || undefined,
-      article_id: request.nextUrl.searchParams.get('article_id') || undefined,
-      status: request.nextUrl.searchParams.get('status') || undefined,
-      platform: request.nextUrl.searchParams.get('platform') || undefined,
-      search: request.nextUrl.searchParams.get('search') || undefined,
-      sort: request.nextUrl.searchParams.get('sort') || 'created_at',
-      order: request.nextUrl.searchParams.get('order') || 'desc',
-      limit: request.nextUrl.searchParams.get('limit') || '50',
-      offset: request.nextUrl.searchParams.get('offset') || '0',
-    };
+    const params = validationResult.success
+      ? validationResult.data
+      : {
+          organization_id:
+            request.nextUrl.searchParams.get('organization_id') || undefined,
+          product_id:
+            request.nextUrl.searchParams.get('product_id') || undefined,
+          article_id:
+            request.nextUrl.searchParams.get('article_id') || undefined,
+          status: request.nextUrl.searchParams.get('status') || undefined,
+          platform: request.nextUrl.searchParams.get('platform') || undefined,
+          search: request.nextUrl.searchParams.get('search') || undefined,
+          sort: request.nextUrl.searchParams.get('sort') || 'created_at',
+          order: request.nextUrl.searchParams.get('order') || 'desc',
+          limit: request.nextUrl.searchParams.get('limit') || '50',
+          offset: request.nextUrl.searchParams.get('offset') || '0',
+        };
 
     if (!params?.organization_id) {
       return NextResponse.json(
@@ -62,23 +67,24 @@ export async function GET(request: NextRequest) {
 
     const client = getSupabaseServerClient();
 
-    const result = await getOrganizationPublishingQueue(client, params.organization_id, {
-      productId: params.product_id,
-      articleId: params.article_id,
-      status: params.status as any,
-      platform: params.platform as any,
-      search: params.search,
-      sortBy: params.sort as any,
-      sortOrder: params.order as any,
-      limit: params.limit ? Number(params.limit) : 50,
-      offset: params.offset ? Number(params.offset) : 0,
-    });
+    const result = await getOrganizationPublishingQueue(
+      client,
+      params.organization_id,
+      {
+        productId: params.product_id,
+        articleId: params.article_id,
+        status: params.status as any,
+        platform: params.platform as any,
+        search: params.search,
+        sortBy: params.sort as any,
+        sortOrder: params.order as any,
+        limit: params.limit ? Number(params.limit) : 50,
+        offset: params.offset ? Number(params.offset) : 0,
+      }
+    );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -102,7 +108,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validationResult = validateRequest(body, createPublishingQueueItemSchema);
+    const validationResult = validateRequest(
+      body,
+      createPublishingQueueItemSchema
+    );
 
     if (!validationResult.success) {
       return NextResponse.json(validationResult.error, { status: 400 });
@@ -121,10 +130,7 @@ export async function POST(request: NextRequest) {
     } as any);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data, { status: 201 });
@@ -145,7 +151,10 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validationResult = validateRequest(body, updatePublishingQueueItemSchema);
+    const validationResult = validateRequest(
+      body,
+      updatePublishingQueueItemSchema
+    );
 
     if (!validationResult.success) {
       return NextResponse.json(validationResult.error, { status: 400 });
@@ -167,7 +176,10 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (!queueItem) {
-      return NextResponse.json({ error: 'Queue item not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Queue item not found' },
+        { status: 404 }
+      );
     }
 
     const { data: memberRole } = await client
@@ -188,10 +200,7 @@ export async function PATCH(request: NextRequest) {
     const result = await updatePublishingQueueItem(client, id, updates as any);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data);
@@ -236,7 +245,10 @@ export async function DELETE(request: NextRequest) {
       .single();
 
     if (!queueItem) {
-      return NextResponse.json({ error: 'Queue item not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Queue item not found' },
+        { status: 404 }
+      );
     }
 
     const { data: memberRole } = await client
@@ -257,10 +269,7 @@ export async function DELETE(request: NextRequest) {
     const result = await softDeletePublishingQueueItem(client, id);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });

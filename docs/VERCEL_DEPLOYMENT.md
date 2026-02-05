@@ -54,49 +54,51 @@ Navigate to **Project Settings > Environment Variables** and add the following:
 
 #### Clerk Authentication
 
-| Name | Value | Environment |
-|------|-------|-------------|
+| Name                                | Value                      | Environment                      |
+| ----------------------------------- | -------------------------- | -------------------------------- |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Your Clerk publishable key | Production, Preview, Development |
-| `CLERK_SECRET_KEY` | Your Clerk secret key | Production, Preview, Development |
-| `CLERK_JWT_KEY` | Your Clerk JWT public key | Production, Preview, Development |
-| `CLERK_WEBHOOK_SECRET` | Your Clerk webhook secret | Production, Preview |
+| `CLERK_SECRET_KEY`                  | Your Clerk secret key      | Production, Preview, Development |
+| `CLERK_JWT_KEY`                     | Your Clerk JWT public key  | Production, Preview, Development |
+| `CLERK_WEBHOOK_SECRET`              | Your Clerk webhook secret  | Production, Preview              |
 
 #### Supabase Storage
 
-| Name | Value | Environment |
-|------|-------|-------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL | All |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon key | All |
-| `SUPABASE_SERVICE_ROLE_KEY` | Your Supabase service role key | Production, Preview, Development |
+| Name                            | Value                          | Environment                      |
+| ------------------------------- | ------------------------------ | -------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Your Supabase project URL      | All                              |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon key         | All                              |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Your Supabase service role key | Production, Preview, Development |
 
 #### Stripe Payments
 
-| Name | Value | Environment |
-|------|-------|-------------|
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Your Stripe publishable key | All |
-| `STRIPE_SECRET_KEY` | Your Stripe secret key | Production, Preview, Development |
-| `STRIPE_WEBHOOK_SECRET` | Your Stripe webhook secret | Production, Preview |
-| `STRIPE_PRICE_ID_MONTHLY` | Monthly subscription price ID | All |
-| `STRIPE_PRICE_ID_YEARLY` | Yearly subscription price ID | All |
+| Name                                 | Value                         | Environment                      |
+| ------------------------------------ | ----------------------------- | -------------------------------- |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Your Stripe publishable key   | All                              |
+| `STRIPE_SECRET_KEY`                  | Your Stripe secret key        | Production, Preview, Development |
+| `STRIPE_WEBHOOK_SECRET`              | Your Stripe webhook secret    | Production, Preview              |
+| `STRIPE_PRICE_ID_MONTHLY`            | Monthly subscription price ID | All                              |
+| `STRIPE_PRICE_ID_YEARLY`             | Yearly subscription price ID  | All                              |
 
 #### Application
 
-| Name | Value | Environment |
-|------|-------|-------------|
-| `NEXT_PUBLIC_APP_URL` | Your deployed URL | All (use different values per environment) |
-| `NEXT_PUBLIC_CLERK_SIGN_IN_URL` | `/sign-in` | All |
-| `NEXT_PUBLIC_CLERK_SIGN_UP_URL` | `/sign-up` | All |
-| `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` | `/dashboard` | All |
-| `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL` | `/onboarding` | All |
+| Name                                  | Value             | Environment                                |
+| ------------------------------------- | ----------------- | ------------------------------------------ |
+| `NEXT_PUBLIC_APP_URL`                 | Your deployed URL | All (use different values per environment) |
+| `NEXT_PUBLIC_CLERK_SIGN_IN_URL`       | `/sign-in`        | All                                        |
+| `NEXT_PUBLIC_CLERK_SIGN_UP_URL`       | `/sign-up`        | All                                        |
+| `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL` | `/dashboard`      | All                                        |
+| `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL` | `/onboarding`     | All                                        |
 
 ### Environment-Specific Values
 
 For **Preview deployments**, use:
+
 ```
 NEXT_PUBLIC_APP_URL=https://your-project-git-branch.vercel.app
 ```
 
 For **Production**, use:
+
 ```
 NEXT_PUBLIC_APP_URL=https://your-custom-domain.com
 ```
@@ -104,6 +106,7 @@ NEXT_PUBLIC_APP_URL=https://your-custom-domain.com
 ## Preview Deployments
 
 Preview deployments are automatically created for:
+
 - Every pull request
 - Every commit to a non-production branch
 
@@ -116,6 +119,7 @@ Preview deployments are automatically created for:
 ### Configuring Preview Behavior
 
 In `.vercelignore` (optional):
+
 ```
 # Don't deploy these files in previews
 .env.local
@@ -138,12 +142,14 @@ git push origin main
 ### Automatic Production Deployment
 
 Production deployments are automatically triggered when:
+
 - A commit is pushed to the `main` branch
 - A tag is pushed that matches the production pattern
 
 ### Production Branch Configuration
 
 Go to **Project Settings > Git** and set:
+
 - **Production Branch**: `main`
 - **Preview Branches**: All other branches
 
@@ -151,12 +157,12 @@ Go to **Project Settings > Git** and set:
 
 ### Deployment Triggers
 
-| Event | Deployment Type |
-|-------|----------------|
-| Push to `main` | Production |
-| Push to other branches | Preview |
-| Pull Request created/updated | Preview |
-| Pull Request merged to `main` | Production |
+| Event                         | Deployment Type |
+| ----------------------------- | --------------- |
+| Push to `main`                | Production      |
+| Push to other branches        | Preview         |
+| Pull Request created/updated  | Preview         |
+| Pull Request merged to `main` | Production      |
 
 ### Deployment Hooks
 
@@ -171,6 +177,7 @@ curl -X POST https://your-webhook-url \
 ### Deployment Protection
 
 Enable **Deploy Previews** in **Project Settings > Git**:
+
 - Require approval for deploy previews
 - Restrict deploy previews to specific teams
 
@@ -220,6 +227,7 @@ vercel --force
 ### Deployment Status Checks
 
 View deployment logs in:
+
 1. Vercel Dashboard > Deployments > [deployment] > Logs
 2. Via CLI: `vercel logs [deployment-url]`
 

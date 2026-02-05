@@ -43,7 +43,16 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { productId, keyword, startDate, endDate, sort, order, limit, offset } = validationResult.data;
+    const {
+      productId,
+      keyword,
+      startDate,
+      endDate,
+      sort,
+      order,
+      limit,
+      offset,
+    } = validationResult.data;
 
     const client = getSupabaseServerClient();
     const result = await getProductSearchConsoleData(client, productId, {
@@ -85,7 +94,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validationResult = validateRequest(body, createSearchConsoleDataSchema);
+    const validationResult = validateRequest(
+      body,
+      createSearchConsoleDataSchema
+    );
 
     if (!validationResult.success || !validationResult.data) {
       return NextResponse.json(
@@ -117,7 +129,10 @@ export async function POST(request: NextRequest) {
       clicks: data.clicks,
       ctr: data.ctr,
       avg_position: data.avg_position,
-      date: data.date instanceof Date ? data.date.toISOString().split('T')[0] : data.date,
+      date:
+        data.date instanceof Date
+          ? data.date.toISOString().split('T')[0]
+          : data.date,
       metadata: data.metadata,
     });
 

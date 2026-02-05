@@ -190,14 +190,16 @@ export const updateImageSchema = z.object({
  *
  * POST /api/images/link
  */
-export const linkImageSchema = z.object({
-  image_id: z.string().uuid('Invalid image ID'),
-  product_id: z.string().uuid('Invalid product ID').optional(),
-  article_id: z.string().uuid('Invalid article ID').optional(),
-}).refine(
-  (data) => data.product_id || data.article_id,
-  'Either product_id or article_id must be provided'
-);
+export const linkImageSchema = z
+  .object({
+    image_id: z.string().uuid('Invalid image ID'),
+    product_id: z.string().uuid('Invalid product ID').optional(),
+    article_id: z.string().uuid('Invalid article ID').optional(),
+  })
+  .refine(
+    (data) => data.product_id || data.article_id,
+    'Either product_id or article_id must be provided'
+  );
 
 /**
  * Unlink Image Schema

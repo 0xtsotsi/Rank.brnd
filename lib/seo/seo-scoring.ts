@@ -4,13 +4,34 @@
  * Main service that orchestrates all SEO analysis modules.
  */
 
-import type { SEOMetric, SEOAnalysisResult, SEOAnalysisOptions, ArticleInput } from './types';
+import type {
+  SEOMetric,
+  SEOAnalysisResult,
+  SEOAnalysisOptions,
+  ArticleInput,
+} from './types';
 import { analyzeKeywordDensity, getDensityRating } from './keyword-density';
 import { analyzeReadability, getReadingLevelDescription } from './readability';
-import { analyzeHeadingStructure, calculateHeadingScore, getHeadingRecommendations } from './heading-structure';
-import { analyzeMetaTags, calculateMetaTagsScore, getMetaTagRecommendations } from './meta-tags';
-import { analyzeLinks, calculateLinkScore, getLinkRecommendations } from './link-analysis';
-import { analyzeImages, calculateImageAltScore, getImageRecommendations } from './image-analysis';
+import {
+  analyzeHeadingStructure,
+  calculateHeadingScore,
+  getHeadingRecommendations,
+} from './heading-structure';
+import {
+  analyzeMetaTags,
+  calculateMetaTagsScore,
+  getMetaTagRecommendations,
+} from './meta-tags';
+import {
+  analyzeLinks,
+  calculateLinkScore,
+  getLinkRecommendations,
+} from './link-analysis';
+import {
+  analyzeImages,
+  calculateImageAltScore,
+  getImageRecommendations,
+} from './image-analysis';
 
 /**
  * Default analysis options
@@ -28,7 +49,11 @@ const DEFAULT_OPTIONS: Required<SEOAnalysisOptions> = {
 /**
  * Calculate content length score
  */
-function calculateContentLengthScore(wordCount: number, min: number, max: number): SEOMetric {
+function calculateContentLengthScore(
+  wordCount: number,
+  min: number,
+  max: number
+): SEOMetric {
   let score = 0;
   let passed = false;
   let message = '';
@@ -58,8 +83,19 @@ function calculateContentLengthScore(wordCount: number, min: number, max: number
 /**
  * Calculate keyword density metric
  */
-function calculateKeywordDensityMetric(analysis: ReturnType<typeof analyzeKeywordDensity>): SEOMetric {
-  const { density, score, keyword, inTitle, inFirstParagraph, inHeadings, inMetaDescription, inUrl } = analysis;
+function calculateKeywordDensityMetric(
+  analysis: ReturnType<typeof analyzeKeywordDensity>
+): SEOMetric {
+  const {
+    density,
+    score,
+    keyword,
+    inTitle,
+    inFirstParagraph,
+    inHeadings,
+    inMetaDescription,
+    inUrl,
+  } = analysis;
 
   let message = '';
   let passed = score >= 60;
@@ -97,8 +133,16 @@ function calculateKeywordDensityMetric(analysis: ReturnType<typeof analyzeKeywor
 /**
  * Calculate readability metric
  */
-function calculateReadabilityMetric(analysis: ReturnType<typeof analyzeReadability>): SEOMetric {
-  const { score, fleschKincaidGrade, targetGradeMin, targetGradeMax, targetGradeMet } = analysis;
+function calculateReadabilityMetric(
+  analysis: ReturnType<typeof analyzeReadability>
+): SEOMetric {
+  const {
+    score,
+    fleschKincaidGrade,
+    targetGradeMin,
+    targetGradeMax,
+    targetGradeMet,
+  } = analysis;
   const passed = targetGradeMet;
 
   const message = targetGradeMet
@@ -148,7 +192,9 @@ function calculateHeadingStructureMetric(
 /**
  * Calculate meta tags metric
  */
-function calculateMetaTagsMetric(analysis: ReturnType<typeof analyzeMetaTags>): SEOMetric {
+function calculateMetaTagsMetric(
+  analysis: ReturnType<typeof analyzeMetaTags>
+): SEOMetric {
   const score = calculateMetaTagsScore(analysis);
   const passed = score >= 60;
 
@@ -156,11 +202,13 @@ function calculateMetaTagsMetric(analysis: ReturnType<typeof analyzeMetaTags>): 
   if (!analysis.hasTitle) issues.push('missing title');
   if (!analysis.hasDescription) issues.push('missing description');
   if (!analysis.titleOptimal) issues.push('suboptimal title length');
-  if (!analysis.descriptionOptimal) issues.push('suboptimal description length');
+  if (!analysis.descriptionOptimal)
+    issues.push('suboptimal description length');
 
-  const message = issues.length > 0
-    ? `Meta tags need improvement: ${issues.join(', ')}.`
-    : 'Meta tags are well optimized.';
+  const message =
+    issues.length > 0
+      ? `Meta tags need improvement: ${issues.join(', ')}.`
+      : 'Meta tags are well optimized.';
 
   return {
     score,
@@ -175,7 +223,9 @@ function calculateMetaTagsMetric(analysis: ReturnType<typeof analyzeMetaTags>): 
 /**
  * Calculate internal links metric
  */
-function calculateInternalLinksMetric(analysis: ReturnType<typeof analyzeLinks>): SEOMetric {
+function calculateInternalLinksMetric(
+  analysis: ReturnType<typeof analyzeLinks>
+): SEOMetric {
   const score = calculateLinkScore(analysis);
   const passed = analysis.hasValidInternalLinks;
 
@@ -196,7 +246,9 @@ function calculateInternalLinksMetric(analysis: ReturnType<typeof analyzeLinks>)
 /**
  * Calculate external links metric
  */
-function calculateExternalLinksMetric(analysis: ReturnType<typeof analyzeLinks>): SEOMetric {
+function calculateExternalLinksMetric(
+  analysis: ReturnType<typeof analyzeLinks>
+): SEOMetric {
   const passed = analysis.hasValidExternalLinks;
 
   const message = analysis.hasValidExternalLinks
@@ -204,8 +256,11 @@ function calculateExternalLinksMetric(analysis: ReturnType<typeof analyzeLinks>)
     : `Add external links to authoritative sources (currently ${analysis.externalLinks}).`;
 
   // External links get 40% of the link score
-  const score = analysis.hasValidExternalLinks ? 100 :
-                analysis.externalLinks > 0 ? 50 : 0;
+  const score = analysis.hasValidExternalLinks
+    ? 100
+    : analysis.externalLinks > 0
+      ? 50
+      : 0;
 
   return {
     score: Math.round(score * 0.4), // Weight for external links portion
@@ -220,7 +275,9 @@ function calculateExternalLinksMetric(analysis: ReturnType<typeof analyzeLinks>)
 /**
  * Calculate image alt text metric
  */
-function calculateImageAltTextMetric(analysis: ReturnType<typeof analyzeImages>): SEOMetric {
+function calculateImageAltTextMetric(
+  analysis: ReturnType<typeof analyzeImages>
+): SEOMetric {
   const score = calculateImageAltScore(analysis);
   const passed = analysis.totalImages === 0 || analysis.imagesWithoutAlt === 0;
 
@@ -262,7 +319,7 @@ export function analyzeSEO(
     .replace(/\s+/g, ' ')
     .trim();
 
-  const wordCount = plainText.split(/\s+/).filter(w => w.length > 0).length;
+  const wordCount = plainText.split(/\s+/).filter((w) => w.length > 0).length;
 
   // Run all analyses
   const keywordDensity = analyzeKeywordDensity(article.content, {
@@ -303,7 +360,8 @@ export function analyzeSEO(
 
   const keywordDensityMetric = calculateKeywordDensityMetric(keywordDensity);
   const readabilityMetric = calculateReadabilityMetric(readability);
-  const headingStructureMetric = calculateHeadingStructureMetric(headingStructure);
+  const headingStructureMetric =
+    calculateHeadingStructureMetric(headingStructure);
   const metaTagsMetric = calculateMetaTagsMetric(metaTags);
   const internalLinksMetric = calculateInternalLinksMetric(links);
   const externalLinksMetric = calculateExternalLinksMetric(links);
@@ -394,9 +452,12 @@ export function getSEOGrade(score: number): string {
  */
 export function getSEOGradeDescription(score: number): string {
   if (score >= 90) return 'Excellent - Your content is well optimized for SEO.';
-  if (score >= 80) return 'Good - Your content has strong SEO with minor improvements possible.';
-  if (score >= 70) return 'Fair - Your content has decent SEO but needs some improvements.';
-  if (score >= 60) return 'Poor - Your content needs significant SEO improvements.';
+  if (score >= 80)
+    return 'Good - Your content has strong SEO with minor improvements possible.';
+  if (score >= 70)
+    return 'Fair - Your content has decent SEO but needs some improvements.';
+  if (score >= 60)
+    return 'Poor - Your content needs significant SEO improvements.';
   return 'Very Poor - Your content requires major SEO work.';
 }
 
@@ -404,7 +465,23 @@ export function getSEOGradeDescription(score: number): string {
 export * from './types';
 export { analyzeReadability, getReadingLevelDescription } from './readability';
 export { analyzeKeywordDensity, getDensityRating } from './keyword-density';
-export { analyzeHeadingStructure, calculateHeadingScore, getHeadingRecommendations } from './heading-structure';
-export { analyzeMetaTags, calculateMetaTagsScore, getMetaTagRecommendations } from './meta-tags';
-export { analyzeLinks, calculateLinkScore, getLinkRecommendations } from './link-analysis';
-export { analyzeImages, calculateImageAltScore, getImageRecommendations } from './image-analysis';
+export {
+  analyzeHeadingStructure,
+  calculateHeadingScore,
+  getHeadingRecommendations,
+} from './heading-structure';
+export {
+  analyzeMetaTags,
+  calculateMetaTagsScore,
+  getMetaTagRecommendations,
+} from './meta-tags';
+export {
+  analyzeLinks,
+  calculateLinkScore,
+  getLinkRecommendations,
+} from './link-analysis';
+export {
+  analyzeImages,
+  calculateImageAltScore,
+  getImageRecommendations,
+} from './image-analysis';

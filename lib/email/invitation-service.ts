@@ -77,7 +77,7 @@ async function sendViaResend(
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
+        Authorization: `Bearer ${resendApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -99,7 +99,10 @@ async function sendViaResend(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to send email via Resend',
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to send email via Resend',
     };
   }
 }
@@ -123,7 +126,7 @@ async function sendViaSendGrid(
     const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${sendGridApiKey}`,
+        Authorization: `Bearer ${sendGridApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -155,7 +158,10 @@ async function sendViaSendGrid(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to send email via SendGrid',
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to send email via SendGrid',
     };
   }
 }

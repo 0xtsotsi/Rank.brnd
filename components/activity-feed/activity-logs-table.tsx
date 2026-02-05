@@ -8,7 +8,7 @@
  * by action type and resource type.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Table,
   TableBody,
@@ -85,12 +85,16 @@ export function ActivityLogsTable({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedActions, setSelectedActions] = useState<ActivityAction[]>([]);
-  const [selectedResourceTypes, setSelectedResourceTypes] = useState<string[]>([]);
-  const [availableResourceTypes, setAvailableResourceTypes] = useState<string[]>([]);
+  const [selectedResourceTypes, setSelectedResourceTypes] = useState<string[]>(
+    []
+  );
+  const [availableResourceTypes, setAvailableResourceTypes] = useState<
+    string[]
+  >([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -102,11 +106,13 @@ export function ActivityLogsTable({
       });
 
       if (selectedActions.length > 0) {
-        selectedActions.forEach(action => params.append('action', action));
+        selectedActions.forEach((action) => params.append('action', action));
       }
 
       if (selectedResourceTypes.length > 0) {
-        selectedResourceTypes.forEach(type => params.append('resource_type', type));
+        selectedResourceTypes.forEach((type) =>
+          params.append('resource_type', type)
+        );
       }
 
       const response = await fetch(`/api/activity-logs?${params}`);
@@ -118,20 +124,26 @@ export function ActivityLogsTable({
 
       // Extract unique resource types from the data
       const uniqueTypes = Array.from(
-        new Set((data.activity_logs || []).map((log: ActivityLog) => log.resource_type))
+        new Set(
+          (data.activity_logs || []).map(
+            (log: ActivityLog) => log.resource_type
+          )
+        )
       ).sort() as string[];
       setAvailableResourceTypes(uniqueTypes);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load activity logs');
+      setError(
+        err instanceof Error ? err.message : 'Failed to load activity logs'
+      );
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  };
+  }, [organizationId, limit, selectedActions, selectedResourceTypes]);
 
   useEffect(() => {
     fetchLogs();
-  }, [organizationId, limit, selectedActions.join(','), selectedResourceTypes.join(',')]);
+  }, [fetchLogs]);
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -140,18 +152,16 @@ export function ActivityLogsTable({
   };
 
   const toggleActionFilter = (action: ActivityAction) => {
-    setSelectedActions(prev =>
+    setSelectedActions((prev) =>
       prev.includes(action)
-        ? prev.filter(a => a !== action)
+        ? prev.filter((a) => a !== action)
         : [...prev, action]
     );
   };
 
   const toggleResourceTypeFilter = (type: string) => {
-    setSelectedResourceTypes(prev =>
-      prev.includes(type)
-        ? prev.filter(t => t !== type)
-        : [...prev, type]
+    setSelectedResourceTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
   };
 
@@ -160,7 +170,8 @@ export function ActivityLogsTable({
     setSelectedResourceTypes([]);
   };
 
-  const hasActiveFilters = selectedActions.length > 0 || selectedResourceTypes.length > 0;
+  const hasActiveFilters =
+    selectedActions.length > 0 || selectedResourceTypes.length > 0;
 
   const getActionIcon = (action: ActivityAction) => {
     const icons: Record<ActivityAction, React.ReactNode> = {
@@ -174,12 +185,18 @@ export function ActivityLogsTable({
 
   const getActionColor = (action: ActivityAction) => {
     const colors: Record<ActivityAction, string> = {
-      create: 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-300',
-      update: 'text-blue-600 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300',
+      create:
+        'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-300',
+      update:
+        'text-blue-600 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300',
       delete: 'text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-300',
-      publish: 'text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-300',
+      publish:
+        'text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-300',
     };
-    return colors[action] || 'text-gray-600 bg-gray-100 dark:bg-gray-700 dark:text-gray-300';
+    return (
+      colors[action] ||
+      'text-gray-600 bg-gray-100 dark:bg-gray-700 dark:text-gray-300'
+    );
   };
 
   const getActionLabel = (action: ActivityAction) => {
@@ -194,7 +211,9 @@ export function ActivityLogsTable({
 
   const getActionBadge = (action: ActivityAction) => {
     return (
-      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium ${getActionColor(action)}`}>
+      <span
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium ${getActionColor(action)}`}
+      >
         {getActionIcon(action)}
         {getActionLabel(action)}
       </span>
@@ -205,7 +224,7 @@ export function ActivityLogsTable({
     // Convert snake_case or kebab-case to Title Case
     return resourceType
       .split(/[_-]/)
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
 
@@ -213,7 +232,7 @@ export function ActivityLogsTable({
     if (name) {
       return name
         .split(' ')
-        .map(n => n[0])
+        .map((n) => n[0])
         .join('')
         .toUpperCase()
         .slice(0, 2);
@@ -230,21 +249,32 @@ export function ActivityLogsTable({
       'from-pink-500 to-rose-600',
       'from-teal-500 to-green-600',
     ];
-    const index = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+    const index =
+      userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+      colors.length;
     return colors[index];
   };
 
   const exportLogs = () => {
     const csv = [
-      ['Timestamp', 'User', 'Email', 'Action', 'Resource Type', 'Resource ID'].join(','),
-      ...logs.map(log => [
-        new Date(log.timestamp).toISOString(),
-        log.user?.name || '',
-        log.user?.email || '',
-        log.action,
-        log.resource_type,
-        log.resource_id,
-      ].join(',')),
+      [
+        'Timestamp',
+        'User',
+        'Email',
+        'Action',
+        'Resource Type',
+        'Resource ID',
+      ].join(','),
+      ...logs.map((log) =>
+        [
+          new Date(log.timestamp).toISOString(),
+          log.user?.name || '',
+          log.user?.email || '',
+          log.action,
+          log.resource_type,
+          log.resource_id,
+        ].join(',')
+      ),
     ].join('\n');
 
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -261,7 +291,9 @@ export function ActivityLogsTable({
       <Card>
         <CardHeader>
           <CardTitle>Activity Logs</CardTitle>
-          <CardDescription>Recent activity in your organization</CardDescription>
+          <CardDescription>
+            Recent activity in your organization
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -280,8 +312,7 @@ export function ActivityLogsTable({
               <CardDescription>
                 {logs.length === 0
                   ? 'No activity recorded yet.'
-                  : `${totalCount.toLocaleString()} activity ${totalCount !== 1 ? 'entries' : 'entry'} in your organization.`
-                }
+                  : `${totalCount.toLocaleString()} activity ${totalCount !== 1 ? 'entries' : 'entry'} in your organization.`}
               </CardDescription>
             </div>
             <div className="flex gap-2">
@@ -294,11 +325,15 @@ export function ActivityLogsTable({
                     <ChevronDown className="h-4 w-4 ml-2" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-48">
-                    {availableResourceTypes.map(type => (
+                    {availableResourceTypes.map((type) => (
                       <DropdownMenuItem
                         key={type}
                         onClick={() => toggleResourceTypeFilter(type)}
-                        className={selectedResourceTypes.includes(type) ? 'bg-gray-100 dark:bg-gray-800' : ''}
+                        className={
+                          selectedResourceTypes.includes(type)
+                            ? 'bg-gray-100 dark:bg-gray-800'
+                            : ''
+                        }
                       >
                         <span className="mr-2">
                           {selectedResourceTypes.includes(type) ? '✓' : ''}
@@ -309,7 +344,9 @@ export function ActivityLogsTable({
                     {selectedResourceTypes.length > 0 && (
                       <>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => setSelectedResourceTypes([])}>
+                        <DropdownMenuItem
+                          onClick={() => setSelectedResourceTypes([])}
+                        >
                           Clear resource filter
                         </DropdownMenuItem>
                       </>
@@ -326,11 +363,22 @@ export function ActivityLogsTable({
                   <ChevronDown className="h-4 w-4 ml-2" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-48">
-                  {(['create', 'update', 'delete', 'publish'] as ActivityAction[]).map(action => (
+                  {(
+                    [
+                      'create',
+                      'update',
+                      'delete',
+                      'publish',
+                    ] as ActivityAction[]
+                  ).map((action) => (
                     <DropdownMenuItem
                       key={action}
                       onClick={() => toggleActionFilter(action)}
-                      className={selectedActions.includes(action) ? 'bg-gray-100 dark:bg-gray-800' : ''}
+                      className={
+                        selectedActions.includes(action)
+                          ? 'bg-gray-100 dark:bg-gray-800'
+                          : ''
+                      }
                     >
                       <span className="mr-2 flex items-center gap-2">
                         {selectedActions.includes(action) ? '✓' : ''}
@@ -351,14 +399,26 @@ export function ActivityLogsTable({
               </DropdownMenu>
 
               {/* Export */}
-              <Button variant="outline" size="sm" onClick={exportLogs} disabled={logs.length === 0}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={exportLogs}
+                disabled={logs.length === 0}
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
 
               {/* Refresh */}
-              <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isRefreshing}>
-                <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+              >
+                <RefreshCw
+                  className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`}
+                />
                 Refresh
               </Button>
             </div>
@@ -367,7 +427,7 @@ export function ActivityLogsTable({
           {/* Active Filters */}
           {hasActiveFilters && (
             <div className="flex flex-wrap gap-2 mt-3">
-              {selectedActions.map(action => (
+              {selectedActions.map((action) => (
                 <button
                   key={action}
                   onClick={() => toggleActionFilter(action)}
@@ -377,7 +437,7 @@ export function ActivityLogsTable({
                   <span className="ml-1 text-gray-500">&times;</span>
                 </button>
               ))}
-              {selectedResourceTypes.map(type => (
+              {selectedResourceTypes.map((type) => (
                 <button
                   key={type}
                   onClick={() => toggleResourceTypeFilter(type)}
@@ -422,8 +482,13 @@ export function ActivityLogsTable({
                   <TableRow key={log.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className={`h-9 w-9 rounded-full bg-gradient-to-br ${getUserAvatarColor(log.user_id)} flex items-center justify-center text-white text-sm font-medium`}>
-                          {getUserInitials(log.user?.name || '', log.user?.email || '')}
+                        <div
+                          className={`h-9 w-9 rounded-full bg-gradient-to-br ${getUserAvatarColor(log.user_id)} flex items-center justify-center text-white text-sm font-medium`}
+                        >
+                          {getUserInitials(
+                            log.user?.name || '',
+                            log.user?.email || ''
+                          )}
                         </div>
                         <div>
                           <div className="font-medium text-gray-900 dark:text-white">
@@ -435,9 +500,7 @@ export function ActivityLogsTable({
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      {getActionBadge(log.action)}
-                    </TableCell>
+                    <TableCell>{getActionBadge(log.action)}</TableCell>
                     <TableCell>
                       <div>
                         <div className="font-medium text-gray-900 dark:text-white">
@@ -496,7 +559,12 @@ export function ActivityLogsTable({
                   : 'Activity will appear here as team members interact with resources.'}
               </p>
               {hasActiveFilters && (
-                <Button variant="outline" size="sm" onClick={clearFilters} className="mt-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="mt-4"
+                >
                   Clear filters
                 </Button>
               )}

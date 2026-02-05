@@ -7,13 +7,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import {
-  bulkUpdateSchedulesSchema,
-  validateRequest,
-} from '@/lib/schemas';
-import {
-  bulkUpdateSchedules,
-} from '@/lib/supabase/schedules';
+import { bulkUpdateSchedulesSchema, validateRequest } from '@/lib/schemas';
+import { bulkUpdateSchedules } from '@/lib/supabase/schedules';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 import { handleAPIError } from '@/lib/api-error-handler';
 
@@ -49,10 +44,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!firstArticle) {
-      return NextResponse.json(
-        { error: 'Article not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
     const organizationId = (firstArticle as any).organization_id;
@@ -67,7 +59,10 @@ export async function POST(request: NextRequest) {
 
     if (!member || (member.role !== 'owner' && member.role !== 'admin')) {
       return NextResponse.json(
-        { error: 'Only organization owners and admins can bulk update schedules' },
+        {
+          error:
+            'Only organization owners and admins can bulk update schedules',
+        },
         { status: 403 }
       );
     }
@@ -95,10 +90,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data);

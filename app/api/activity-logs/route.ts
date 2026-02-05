@@ -143,7 +143,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid query parameters', details: error.errors },
+        { error: 'Invalid query parameters', details: error.issues },
         { status: 400 }
       );
     }
@@ -188,14 +188,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Create activity log
-    const activityLogToInsert: Database['public']['Tables']['activity_logs']['Insert'] = {
-      organization_id: validatedData.organization_id,
-      user_id: validatedData.user_id,
-      action: validatedData.action,
-      resource_type: validatedData.resource_type,
-      resource_id: validatedData.resource_id,
-      metadata: validatedData.metadata as Database['public']['Tables']['activity_logs']['Insert']['metadata'],
-    };
+    const activityLogToInsert: Database['public']['Tables']['activity_logs']['Insert'] =
+      {
+        organization_id: validatedData.organization_id,
+        user_id: validatedData.user_id,
+        action: validatedData.action,
+        resource_type: validatedData.resource_type,
+        resource_id: validatedData.resource_id,
+        metadata:
+          validatedData.metadata as Database['public']['Tables']['activity_logs']['Insert']['metadata'],
+      };
 
     const { data, error } = await client
       .from('activity_logs')
@@ -215,7 +217,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }

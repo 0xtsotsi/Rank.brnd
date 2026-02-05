@@ -125,7 +125,9 @@ export function useCSRF(): CSRFState {
       setToken(newToken);
       cacheToken(newToken);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load CSRF token');
+      setError(
+        err instanceof Error ? err.message : 'Failed to load CSRF token'
+      );
     } finally {
       setLoading(false);
     }

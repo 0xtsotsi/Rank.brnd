@@ -36,12 +36,16 @@ export function analyzeMetaTags(options: {
   // Use metaTitle if available, otherwise use title
   const effectiveTitle = metaTitle || title;
   const titleLength = effectiveTitle.length;
-  const titleOptimal = titleLength >= OPTIMAL_TITLE_LENGTH.min && titleLength <= OPTIMAL_TITLE_LENGTH.max;
+  const titleOptimal =
+    titleLength >= OPTIMAL_TITLE_LENGTH.min &&
+    titleLength <= OPTIMAL_TITLE_LENGTH.max;
 
   const hasTitle = effectiveTitle.length > 0;
   const hasDescription = (metaDescription || '').length > 0;
   const descriptionLength = (metaDescription || '').length;
-  const descriptionOptimal = descriptionLength >= OPTIMAL_DESCRIPTION_LENGTH.min && descriptionLength <= OPTIMAL_DESCRIPTION_LENGTH.max;
+  const descriptionOptimal =
+    descriptionLength >= OPTIMAL_DESCRIPTION_LENGTH.min &&
+    descriptionLength <= OPTIMAL_DESCRIPTION_LENGTH.max;
 
   const hasKeywords = Array.isArray(metaKeywords) && metaKeywords.length > 0;
   const hasCanonical = (canonicalUrl || '').length > 0;
@@ -116,55 +120,69 @@ export function calculateMetaTagsScore(analysis: MetaTagsAnalysis): number {
 /**
  * Get meta tag recommendations
  */
-export function getMetaTagRecommendations(analysis: MetaTagsAnalysis): string[] {
+export function getMetaTagRecommendations(
+  analysis: MetaTagsAnalysis
+): string[] {
   const recommendations: string[] = [];
 
   if (!analysis.hasTitle) {
-    recommendations.push('Add a meta title to your page. This is crucial for SEO.');
+    recommendations.push(
+      'Add a meta title to your page. This is crucial for SEO.'
+    );
   } else if (!analysis.titleOptimal) {
     if (analysis.titleLength < OPTIMAL_TITLE_LENGTH.min) {
       recommendations.push(
         `Your meta title is too short (${analysis.titleLength} chars). ` +
-        `Aim for ${OPTIMAL_TITLE_LENGTH.min}-${OPTIMAL_TITLE_LENGTH.max} characters.`
+          `Aim for ${OPTIMAL_TITLE_LENGTH.min}-${OPTIMAL_TITLE_LENGTH.max} characters.`
       );
     } else if (analysis.titleLength > OPTIMAL_TITLE_LENGTH.max) {
       recommendations.push(
         `Your meta title is too long (${analysis.titleLength} chars). ` +
-        `It may be truncated in search results. Aim for ${OPTIMAL_TITLE_LENGTH.min}-${OPTIMAL_TITLE_LENGTH.max} characters.`
+          `It may be truncated in search results. Aim for ${OPTIMAL_TITLE_LENGTH.min}-${OPTIMAL_TITLE_LENGTH.max} characters.`
       );
     }
   }
 
   if (!analysis.hasDescription) {
-    recommendations.push('Add a meta description to improve click-through rates from search results.');
+    recommendations.push(
+      'Add a meta description to improve click-through rates from search results.'
+    );
   } else if (!analysis.descriptionOptimal) {
     if (analysis.descriptionLength < OPTIMAL_DESCRIPTION_LENGTH.min) {
       recommendations.push(
         `Your meta description is too short (${analysis.descriptionLength} chars). ` +
-        `Aim for ${OPTIMAL_DESCRIPTION_LENGTH.min}-${OPTIMAL_DESCRIPTION_LENGTH.max} characters.`
+          `Aim for ${OPTIMAL_DESCRIPTION_LENGTH.min}-${OPTIMAL_DESCRIPTION_LENGTH.max} characters.`
       );
     } else if (analysis.descriptionLength > OPTIMAL_DESCRIPTION_LENGTH.max) {
       recommendations.push(
         `Your meta description is too long (${analysis.descriptionLength} chars). ` +
-        `It may be truncated in search results. Aim for ${OPTIMAL_DESCRIPTION_LENGTH.min}-${OPTIMAL_DESCRIPTION_LENGTH.max} characters.`
+          `It may be truncated in search results. Aim for ${OPTIMAL_DESCRIPTION_LENGTH.min}-${OPTIMAL_DESCRIPTION_LENGTH.max} characters.`
       );
     }
   }
 
   if (!analysis.hasKeywords) {
-    recommendations.push('Consider adding meta keywords to help search engines understand your content.');
+    recommendations.push(
+      'Consider adding meta keywords to help search engines understand your content.'
+    );
   }
 
   if (!analysis.hasCanonical) {
-    recommendations.push('Add a canonical URL to prevent duplicate content issues.');
+    recommendations.push(
+      'Add a canonical URL to prevent duplicate content issues.'
+    );
   }
 
   if (!analysis.hasOpenGraph) {
-    recommendations.push('Add Open Graph tags to improve how your content appears when shared on social media.');
+    recommendations.push(
+      'Add Open Graph tags to improve how your content appears when shared on social media.'
+    );
   }
 
   if (!analysis.hasTwitterCard) {
-    recommendations.push('Add Twitter Card tags to improve how your content appears when shared on Twitter.');
+    recommendations.push(
+      'Add Twitter Card tags to improve how your content appears when shared on Twitter.'
+    );
   }
 
   return recommendations;

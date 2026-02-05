@@ -38,7 +38,10 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (orgError || !userOrg) {
-      return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Organization not found' },
+        { status: 404 }
+      );
     }
 
     const organizationId = (userOrg as any).organization_id;
@@ -46,13 +49,18 @@ export async function GET(request: NextRequest) {
     // Parse query parameters
     const searchParams = request.nextUrl.searchParams;
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
-    const pageSize = Math.min(100, Math.max(1, parseInt(searchParams.get('page_size') || '20', 10)));
+    const pageSize = Math.min(
+      100,
+      Math.max(1, parseInt(searchParams.get('page_size') || '20', 10))
+    );
     const status = searchParams.get('status') || 'all';
     const sourceType = searchParams.get('source_type') || 'all';
     const productId = searchParams.get('product_id') || 'all';
     const search = searchParams.get('search') || '';
     const sortBy = searchParams.get('sort_by') || 'created_at';
-    const sortOrder = (searchParams.get('sort_order') || 'desc') as 'asc' | 'desc';
+    const sortOrder = (searchParams.get('sort_order') || 'desc') as
+      | 'asc'
+      | 'desc';
     const offset = (page - 1) * pageSize;
 
     // Build query
@@ -83,8 +91,15 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply sorting
-    if (sortBy === 'created_at' || sortBy === 'updated_at' || sortBy === 'confidence_score') {
-      query = query.order(sortBy, { ascending: sortOrder === 'asc', nullsFirst: false });
+    if (
+      sortBy === 'created_at' ||
+      sortBy === 'updated_at' ||
+      sortBy === 'confidence_score'
+    ) {
+      query = query.order(sortBy, {
+        ascending: sortOrder === 'asc',
+        nullsFirst: false,
+      });
     }
 
     // Apply pagination
@@ -94,10 +109,15 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('Error fetching brand voice samples:', error);
-      return NextResponse.json({ error: 'Failed to fetch samples' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Failed to fetch samples' },
+        { status: 500 }
+      );
     }
 
-    const transformedSamples = (samples || []).map(dbBrandVoiceLearningToBrandVoiceLearning);
+    const transformedSamples = (samples || []).map(
+      dbBrandVoiceLearningToBrandVoiceLearning
+    );
 
     const hasMore = count !== null ? offset + pageSize < count : false;
 
@@ -113,7 +133,10 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error in brand voice samples GET:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
@@ -130,7 +153,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validationResult = validateRequest(body, createBrandVoiceSampleSchema);
+    const validationResult = validateRequest(
+      body,
+      createBrandVoiceSampleSchema
+    );
 
     if (!validationResult.success) {
       return NextResponse.json(validationResult.error, { status: 400 });
@@ -149,13 +175,19 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (orgError || !userOrg) {
-      return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Organization not found' },
+        { status: 404 }
+      );
     }
 
     const organizationId = (userOrg as any).organization_id;
 
     // Calculate word count for metadata
-    const wordCount = (data.sample_text || '').trim().split(/\s+/).filter(Boolean).length;
+    const wordCount = (data.sample_text || '')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean).length;
 
     // Create the sample
     const { data: newSample, error: insertError } = await supabase
@@ -188,7 +220,10 @@ export async function POST(request: NextRequest) {
 
     if (insertError || !newSample) {
       console.error('Error creating brand voice sample:', insertError);
-      return NextResponse.json({ error: 'Failed to create sample' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Failed to create sample' },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
@@ -197,6 +232,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error in brand voice samples POST:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }

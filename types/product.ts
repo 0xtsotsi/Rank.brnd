@@ -21,12 +21,14 @@ export type DbProduct = Database['public']['Tables']['products']['Row'];
 /**
  * Product insert type (for creating new records)
  */
-export type DbProductInsert = Database['public']['Tables']['products']['Insert'];
+export type DbProductInsert =
+  Database['public']['Tables']['products']['Insert'];
 
 /**
  * Product update type (for updating existing records)
  */
-export type DbProductUpdate = Database['public']['Tables']['products']['Update'];
+export type DbProductUpdate =
+  Database['public']['Tables']['products']['Update'];
 
 /**
  * Product status enum (matches database: product_status)
@@ -281,10 +283,10 @@ export function dbProductToProduct(dbProduct: DbProduct): Product {
     url: dbProduct.url,
     description: dbProduct.description,
     status: dbProduct.status,
-    brand_colors: (dbProduct.brand_colors as unknown) as BrandColors,
-    tone_preferences: (dbProduct.tone_preferences as unknown) as TonePreferences,
-    analytics_config: (dbProduct.analytics_config as unknown) as AnalyticsConfig,
-    metadata: ((dbProduct.metadata || {}) as unknown) as ProductMetadata,
+    brand_colors: dbProduct.brand_colors as unknown as BrandColors,
+    tone_preferences: dbProduct.tone_preferences as unknown as TonePreferences,
+    analytics_config: dbProduct.analytics_config as unknown as AnalyticsConfig,
+    metadata: (dbProduct.metadata || {}) as unknown as ProductMetadata,
     created_at: new Date(dbProduct.created_at),
     updated_at: new Date(dbProduct.updated_at),
     deleted_at: dbProduct.deleted_at ? new Date(dbProduct.deleted_at) : null,
@@ -304,9 +306,12 @@ export function productToDbInsert(
     url: product.url || null,
     description: product.description || null,
     status: product.status || 'active',
-    brand_colors: (product.brand_colors || DEFAULT_BRAND_COLORS) as unknown as Json,
-    tone_preferences: (product.tone_preferences || DEFAULT_TONE_PREFERENCES) as unknown as Json,
-    analytics_config: (product.analytics_config || DEFAULT_ANALYTICS_CONFIG) as unknown as Json,
+    brand_colors: (product.brand_colors ||
+      DEFAULT_BRAND_COLORS) as unknown as Json,
+    tone_preferences: (product.tone_preferences ||
+      DEFAULT_TONE_PREFERENCES) as unknown as Json,
+    analytics_config: (product.analytics_config ||
+      DEFAULT_ANALYTICS_CONFIG) as unknown as Json,
     metadata: (product.metadata || {}) as unknown as Json,
   };
 }
@@ -320,12 +325,17 @@ export function productToDbUpdate(product: Partial<Product>): DbProductUpdate {
   if (product.name !== undefined) update.name = product.name;
   if (product.slug !== undefined) update.slug = product.slug;
   if (product.url !== undefined) update.url = product.url;
-  if (product.description !== undefined) update.description = product.description;
+  if (product.description !== undefined)
+    update.description = product.description;
   if (product.status !== undefined) update.status = product.status;
-  if (product.brand_colors !== undefined) update.brand_colors = (product.brand_colors as unknown) as Json;
-  if (product.tone_preferences !== undefined) update.tone_preferences = (product.tone_preferences as unknown) as Json;
-  if (product.analytics_config !== undefined) update.analytics_config = (product.analytics_config as unknown) as Json;
-  if (product.metadata !== undefined) update.metadata = (product.metadata as unknown) as Json;
+  if (product.brand_colors !== undefined)
+    update.brand_colors = product.brand_colors as unknown as Json;
+  if (product.tone_preferences !== undefined)
+    update.tone_preferences = product.tone_preferences as unknown as Json;
+  if (product.analytics_config !== undefined)
+    update.analytics_config = product.analytics_config as unknown as Json;
+  if (product.metadata !== undefined)
+    update.metadata = product.metadata as unknown as Json;
 
   return update;
 }

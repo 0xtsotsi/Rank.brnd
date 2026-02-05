@@ -7,7 +7,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 import { getKeywordRankHistory } from '@/lib/supabase/rank-tracking';
-import { getRankHistorySchema, validateQueryParams } from '@/lib/schemas/rank-tracking';
+import {
+  getRankHistorySchema,
+  validateQueryParams,
+} from '@/lib/schemas/rank-tracking';
 import { handleAPIError } from '@/lib/api-error-handler';
 
 /**
@@ -30,7 +33,10 @@ export async function GET(request: NextRequest) {
     );
 
     if (!validationResult.success || !validationResult.data) {
-      return NextResponse.json({ error: validationResult.error }, { status: 400 });
+      return NextResponse.json(
+        { error: validationResult.error },
+        { status: 400 }
+      );
     }
 
     const data = validationResult.data;

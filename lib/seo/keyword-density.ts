@@ -37,7 +37,7 @@ function countWordOccurrences(text: string, keyword: string): number {
  */
 function getFirstParagraph(content: string): string {
   const text = extractText(content);
-  const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 20);
+  const paragraphs = text.split(/\n\s*\n/).filter((p) => p.trim().length > 20);
 
   return paragraphs[0] || text.substring(0, 500);
 }
@@ -73,7 +73,7 @@ export function analyzeKeywordDensity(
   } = {}
 ): KeywordDensity {
   const text = extractText(content);
-  const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
+  const wordCount = text.split(/\s+/).filter((w) => w.length > 0).length;
 
   // If no keyword specified, try to extract from title or use first few words
   let keyword = options.keyword?.trim();
@@ -82,8 +82,28 @@ export function analyzeKeywordDensity(
     const titleWords = options.title
       .toLowerCase()
       .split(/\s+/)
-      .filter(w => w.length > 3)
-      .filter(w => !['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her', 'was', 'one', 'our', 'out', 'has'].includes(w));
+      .filter((w) => w.length > 3)
+      .filter(
+        (w) =>
+          ![
+            'the',
+            'and',
+            'for',
+            'are',
+            'but',
+            'not',
+            'you',
+            'all',
+            'can',
+            'had',
+            'her',
+            'was',
+            'one',
+            'our',
+            'out',
+            'has',
+          ].includes(w)
+      );
     keyword = titleWords.slice(0, 2).join(' ');
   }
 

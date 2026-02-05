@@ -13,15 +13,26 @@ import { z } from 'zod';
 const generateArticleSchema = z.object({
   keyword_id: z.string().optional(),
   keyword: z.string().min(1, 'Keyword is required'),
-  outline: z.array(
-    z.object({
-      id: z.string(),
-      title: z.string(),
-      points: z.array(z.string()),
-      wordCount: z.number(),
-    })
-  ).optional(),
-  tone: z.enum(['professional', 'casual', 'friendly', 'authoritative', 'minimalist', 'playful']).default('professional'),
+  outline: z
+    .array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        points: z.array(z.string()),
+        wordCount: z.number(),
+      })
+    )
+    .optional(),
+  tone: z
+    .enum([
+      'professional',
+      'casual',
+      'friendly',
+      'authoritative',
+      'minimalist',
+      'playful',
+    ])
+    .default('professional'),
   customInstructions: z.string().optional(),
   targetLength: z.number().int().positive().default(1000),
   organization_id: z.string().optional(),
@@ -31,12 +42,18 @@ const generateArticleSchema = z.object({
  * Tone-specific writing instructions
  */
 const toneInstructions: Record<string, string> = {
-  professional: 'Use formal language, industry terminology, and a confident, authoritative voice. Avoid slang and maintain a business-appropriate tone.',
-  casual: 'Use conversational language, contractions, and a relaxed tone. Write as if speaking to a friend while maintaining credibility.',
-  friendly: 'Use warm, approachable language with positive sentiments. Be encouraging and inclusive in your messaging.',
-  authoritative: 'Demonstrate expertise through data, research, and confident assertions. Use precise language and cite sources where applicable.',
-  minimalist: 'Be concise and direct. Eliminate fluff and unnecessary words. Focus on clear, impactful statements.',
-  playful: 'Use humor, wit, and engaging language. Incorporate pop culture references and fun analogies where appropriate.',
+  professional:
+    'Use formal language, industry terminology, and a confident, authoritative voice. Avoid slang and maintain a business-appropriate tone.',
+  casual:
+    'Use conversational language, contractions, and a relaxed tone. Write as if speaking to a friend while maintaining credibility.',
+  friendly:
+    'Use warm, approachable language with positive sentiments. Be encouraging and inclusive in your messaging.',
+  authoritative:
+    'Demonstrate expertise through data, research, and confident assertions. Use precise language and cite sources where applicable.',
+  minimalist:
+    'Be concise and direct. Eliminate fluff and unnecessary words. Focus on clear, impactful statements.',
+  playful:
+    'Use humor, wit, and engaging language. Incorporate pop culture references and fun analogies where appropriate.',
 };
 
 /**
@@ -55,7 +72,7 @@ export async function POST(request: NextRequest) {
 
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: validationResult.error.errors[0].message },
+        { error: validationResult.error.issues[0].message },
         { status: 400 }
       );
     }
@@ -81,11 +98,14 @@ export async function POST(request: NextRequest) {
  * In production, this would call an AI service like OpenAI's GPT-4.
  * For now, it returns a structured template based on the inputs.
  */
-async function generateArticleWithAI(data: z.infer<typeof generateArticleSchema>) {
+async function generateArticleWithAI(
+  data: z.infer<typeof generateArticleSchema>
+) {
   const { keyword, outline, tone, customInstructions, targetLength } = data;
 
   // Build the system prompt based on tone and custom instructions
-  const toneInstruction = toneInstructions[tone] || toneInstructions.professional;
+  const toneInstruction =
+    toneInstructions[tone] || toneInstructions.professional;
   const systemPrompt = `${toneInstruction}${customInstructions ? ` Additional requirements: ${customInstructions}` : ''}`;
 
   // Generate title based on keyword
@@ -99,7 +119,9 @@ async function generateArticleWithAI(data: z.infer<typeof generateArticleSchema>
   let sections: string[];
 
   if (outline && outline.length > 0) {
-    sections = outline.map(section => generateSection(section.title, section.points, tone));
+    sections = outline.map((section) =>
+      generateSection(section.title, section.points, tone)
+    );
   } else {
     sections = generateDefaultSections(keyword, tone);
   }
@@ -112,7 +134,8 @@ async function generateArticleWithAI(data: z.infer<typeof generateArticleSchema>
   const metaKeywords = generateMetaKeywords(keyword);
 
   // Generate excerpt
-  const excerpt = content.length > 200 ? content.substring(0, 197) + '...' : content;
+  const excerpt =
+    content.length > 200 ? content.substring(0, 197) + '...' : content;
 
   return {
     title,
@@ -145,7 +168,9 @@ function generateTitle(keyword: string): string {
   ];
 
   // Select a template based on keyword hash for consistency
-  const index = keyword.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % templates.length;
+  const index =
+    keyword.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+    templates.length;
   return templates[index];
 }
 
@@ -164,9 +189,15 @@ function generateSlug(title: string): string {
 /**
  * Generate a section of content based on title and bullet points
  */
-function generateSection(title: string, points: string[], tone: string): string {
+function generateSection(
+  title: string,
+  points: string[],
+  tone: string
+): string {
   const intro = generateIntro(title, tone);
-  const pointsContent = points.map(point => `## ${point}\n\n${generateParagraphForPoint(point, tone)}`).join('\n\n');
+  const pointsContent = points
+    .map((point) => `## ${point}\n\n${generateParagraphForPoint(point, tone)}`)
+    .join('\n\n');
   const conclusion = generateConclusion(title, tone);
 
   return `## ${title}\n\n${intro}\n\n${pointsContent}\n\n${conclusion}`;

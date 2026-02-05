@@ -6,7 +6,7 @@
  * Client-side page for editing an existing article.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArticleEditor } from '@/components/articles/article-editor';
 import type { Article } from '@/components/articles/article-editor';
@@ -22,18 +22,7 @@ export default function EditArticlePage() {
   const [error, setError] = useState<string | null>(null);
   const [organizationId, setOrganizationId] = useState<string>('');
 
-  useEffect(() => {
-    // Get organization ID from user session
-    // TODO: Fetch actual user data
-    setOrganizationId('default-org-id');
-
-    // Fetch article
-    if (articleId) {
-      fetchArticle();
-    }
-  }, [articleId]);
-
-  async function fetchArticle() {
+  const fetchArticle = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -56,7 +45,18 @@ export default function EditArticlePage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [articleId]);
+
+  useEffect(() => {
+    // Get organization ID from user session
+    // TODO: Fetch actual user data
+    setOrganizationId('default-org-id');
+
+    // Fetch article
+    if (articleId) {
+      fetchArticle();
+    }
+  }, [articleId, fetchArticle]);
 
   const handleSave = async (articleData: Partial<Article>) => {
     const response = await fetch('/api/articles', {
@@ -132,7 +132,9 @@ export default function EditArticlePage() {
         <div className="flex items-center gap-3 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
           <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" />
           <div>
-            <h3 className="font-medium text-red-900 dark:text-red-400">Error</h3>
+            <h3 className="font-medium text-red-900 dark:text-red-400">
+              Error
+            </h3>
             <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
           </div>
         </div>

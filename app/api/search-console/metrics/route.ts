@@ -10,9 +10,7 @@ import {
   validateQueryParams,
 } from '@/lib/schemas';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
-import {
-  getProductSearchConsoleMetrics,
-} from '@/lib/supabase/google-search-console';
+import { getProductSearchConsoleMetrics } from '@/lib/supabase/google-search-console';
 
 /**
  * GET /api/search-console/metrics

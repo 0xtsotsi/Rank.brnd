@@ -25,7 +25,10 @@ function record(name: string, passed: boolean, message: string) {
   console.log(`${passed ? '✅' : '❌'} ${name}: ${message}`);
 }
 
-function checkFileForRlsPatterns(content: string, filename: string): {
+function checkFileForRlsPatterns(
+  content: string,
+  filename: string
+): {
   hasEnableRls: boolean;
   hasCreatePolicy: boolean;
   hasAlterTable: boolean;
@@ -95,7 +98,11 @@ async function verifyRlsMigrations(): Promise<boolean> {
   console.log('--- Checking Migrations Directory ---');
   try {
     const files = readdirSync(migrationsDir);
-    record('Migrations directory exists', true, `Found ${files.length} migration files`);
+    record(
+      'Migrations directory exists',
+      true,
+      `Found ${files.length} migration files`
+    );
   } catch (error) {
     record('Migrations directory exists', false, 'Directory not found');
     return false;
@@ -114,7 +121,8 @@ async function verifyRlsMigrations(): Promise<boolean> {
     const filePath = join(migrationsDir, filename);
     try {
       const content = readFileSync(filePath, 'utf-8');
-      const { hasEnableRls, hasCreatePolicy, policies } = checkFileForRlsPatterns(content, filename);
+      const { hasEnableRls, hasCreatePolicy, policies } =
+        checkFileForRlsPatterns(content, filename);
       record(
         `${filename} exists and has RLS`,
         hasEnableRls || hasCreatePolicy,
@@ -128,7 +136,10 @@ async function verifyRlsMigrations(): Promise<boolean> {
   // 3. Analyze organizations table RLS
   console.log('\n--- Analyzing Organizations RLS ---');
   try {
-    const orgContent = readFileSync(join(migrationsDir, '20260110_create_organizations_table.sql'), 'utf-8');
+    const orgContent = readFileSync(
+      join(migrationsDir, '20260110_create_organizations_table.sql'),
+      'utf-8'
+    );
     record(
       'Organizations: Service role policy',
       /CREATE POLICY.*Service role.*organizations/i.test(orgContent),
@@ -157,7 +168,10 @@ async function verifyRlsMigrations(): Promise<boolean> {
   // 4. Analyze products table RLS
   console.log('\n--- Analyzing Products RLS ---');
   try {
-    const productsContent = readFileSync(join(migrationsDir, '20260204_create_products_table.sql'), 'utf-8');
+    const productsContent = readFileSync(
+      join(migrationsDir, '20260204_create_products_table.sql'),
+      'utf-8'
+    );
     record(
       'Products: Organization-scoped access',
       /organization_members|om\.organization_id/i.test(productsContent),
@@ -175,7 +189,9 @@ async function verifyRlsMigrations(): Promise<boolean> {
     );
     record(
       'Products: Create/Update policies',
-      /CREATE POLICY.*created|CREATE POLICY.*updated|INSERT|UPDATE/i.test(productsContent),
+      /CREATE POLICY.*created|CREATE POLICY.*updated|INSERT|UPDATE/i.test(
+        productsContent
+      ),
       'Has INSERT/UPDATE policies'
     );
   } catch (error) {
@@ -185,7 +201,10 @@ async function verifyRlsMigrations(): Promise<boolean> {
   // 5. Analyze users table RLS
   console.log('\n--- Analyzing Users RLS ---');
   try {
-    const usersContent = readFileSync(join(migrationsDir, '20260204_create_users_table.sql'), 'utf-8');
+    const usersContent = readFileSync(
+      join(migrationsDir, '20260204_create_users_table.sql'),
+      'utf-8'
+    );
     record(
       'Users: Self-access policy',
       /clerk_id = auth\.uid\(\)|clerk_id.*auth\.uid/i.test(usersContent),
@@ -226,7 +245,9 @@ async function verifyRlsMigrations(): Promise<boolean> {
   }
 
   for (const funcName of helperFunctions) {
-    const found = new RegExp(`CREATE.*FUNCTION.*${funcName}`, 'i').test(allContent);
+    const found = new RegExp(`CREATE.*FUNCTION.*${funcName}`, 'i').test(
+      allContent
+    );
     const hasSecurityDefiner = new RegExp(
       `CREATE.*FUNCTION.*${funcName}.*SECURITY DEFINER`,
       'is'
@@ -234,7 +255,11 @@ async function verifyRlsMigrations(): Promise<boolean> {
     record(
       `Function: ${funcName}`,
       found,
-      found ? (hasSecurityDefiner ? 'With SECURITY DEFINER' : 'Found') : 'Not found'
+      found
+        ? hasSecurityDefiner
+          ? 'With SECURITY DEFINER'
+          : 'Found'
+        : 'Not found'
     );
   }
 
@@ -275,7 +300,9 @@ async function verifyRlsMigrations(): Promise<boolean> {
 // Run verification
 verifyRlsMigrations()
   .then((success) => {
-    console.log(`\n${success ? '✅ RLS migration verification PASSED' : '❌ RLS migration verification FAILED'}\n`);
+    console.log(
+      `\n${success ? '✅ RLS migration verification PASSED' : '❌ RLS migration verification FAILED'}\n`
+    );
     process.exit(success ? 0 : 1);
   })
   .catch((error) => {

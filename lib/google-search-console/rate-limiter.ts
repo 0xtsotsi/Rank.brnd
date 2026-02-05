@@ -72,8 +72,12 @@ export class GscRateLimiter {
       this.getCurrentHourlyRequests(organizationId, siteUrl, currentHour),
     ]);
 
-    const dailyUnitsRemaining = GSC_QUOTA_LIMITS.DAILY_UNITS_PER_PROPERTY - dailyUnits - GSC_QUOTA_LIMITS.RESERVED_UNITS;
-    const hourlyRequestsRemaining = GSC_QUOTA_LIMITS.HOURLY_REQUESTS - hourlyRequests;
+    const dailyUnitsRemaining =
+      GSC_QUOTA_LIMITS.DAILY_UNITS_PER_PROPERTY -
+      dailyUnits -
+      GSC_QUOTA_LIMITS.RESERVED_UNITS;
+    const hourlyRequestsRemaining =
+      GSC_QUOTA_LIMITS.HOURLY_REQUESTS - hourlyRequests;
 
     const canMakeRequest =
       dailyUnitsRemaining >= units && hourlyRequestsRemaining > 0;
@@ -92,8 +96,8 @@ export class GscRateLimiter {
       reason: canMakeRequest
         ? undefined
         : dailyUnitsRemaining < units
-        ? 'Daily quota exceeded'
-        : 'Hourly request limit exceeded',
+          ? 'Daily quota exceeded'
+          : 'Hourly request limit exceeded',
     };
   }
 
@@ -141,7 +145,11 @@ export class GscRateLimiter {
     siteUrl: string,
     hour: string
   ): Promise<number> {
-    const key = GSC_RATE_LIMIT_KEYS.hourlyRequests(organizationId, siteUrl, hour);
+    const key = GSC_RATE_LIMIT_KEYS.hourlyRequests(
+      organizationId,
+      siteUrl,
+      hour
+    );
     try {
       const result = await this.redis.get(key);
       return result ? parseInt(result, 10) : 0;
@@ -178,7 +186,11 @@ export class GscRateLimiter {
     siteUrl: string,
     hour: string
   ): Promise<void> {
-    const key = GSC_RATE_LIMIT_KEYS.hourlyRequests(organizationId, siteUrl, hour);
+    const key = GSC_RATE_LIMIT_KEYS.hourlyRequests(
+      organizationId,
+      siteUrl,
+      hour
+    );
     try {
       // Set expiry to 2 hours to be safe
       const ttl = 2 * 60 * 60;
@@ -200,7 +212,12 @@ export class GscRateLimiter {
     const key = GSC_RATE_LIMIT_KEYS.lastSyncTime(organizationId, siteUrl);
     try {
       // Set with 7 day expiration (PX = milliseconds)
-      await (this.redis as any).set(key, time.toISOString(), 'PX', 7 * 24 * 60 * 60 * 1000);
+      await (this.redis as any).set(
+        key,
+        time.toISOString(),
+        'PX',
+        7 * 24 * 60 * 60 * 1000
+      );
     } catch (error) {
       console.error('Failed to update last sync time:', error);
     }
@@ -225,10 +242,7 @@ export class GscRateLimiter {
   /**
    * Reset quota tracking (for testing or manual intervention)
    */
-  async resetQuota(
-    organizationId: string,
-    siteUrl: string
-  ): Promise<void> {
+  async resetQuota(organizationId: string, siteUrl: string): Promise<void> {
     const now = new Date();
     const today = now.toISOString().split('T')[0];
     const currentHour = `${today}:${String(now.getUTCHours()).padStart(2, '0')}`;
@@ -249,7 +263,10 @@ export class GscRateLimiter {
   /**
    * Get quota usage summary for all sites in an organization
    */
-  async getOrgQuotaSummary(organizationId: string, siteUrls: string[]): Promise<
+  async getOrgQuotaSummary(
+    organizationId: string,
+    siteUrls: string[]
+  ): Promise<
     Array<{
       siteUrl: string;
       quotaUsage: GscQuotaUsage;

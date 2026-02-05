@@ -5,15 +5,16 @@ relevantTo: [error, bug, fix, issue, problem]
 importance: 0.9
 relatedFiles: []
 usageStats:
-  loaded: 151
-  referenced: 53
-  successfulFeatures: 53
+  loaded: 160
+  referenced: 61
+  successfulFeatures: 61
 ---
 # Gotchas
 
 Mistakes and edge cases to avoid. These are lessons learned from past issues.
 
 ---
+
 # **System Handbook: How This Architecture Operates**
 
 ## **The GOTCHA Framework**
@@ -21,11 +22,13 @@ Mistakes and edge cases to avoid. These are lessons learned from past issues.
 This system uses the **GOTCHA Framework** — a 6-layer architecture for agentic systems:
 
 **GOT** (The Engine):
+
 - **Goals** (`goals/`) — What needs to happen (process definitions)
 - **Orchestration** — The AI manager (you) that coordinates execution
 - **Tools** (`tools/`) — Deterministic scripts that do the actual work
 
 **CHA** (The Context):
+
 - **Context** (`context/`) — Reference material and domain knowledge
 - **Hard prompts** (`hardprompts/`) — Reusable instruction templates
 - **Args** (`args/`) — Behavior settings that shape how the system acts
@@ -42,12 +45,12 @@ When AI tries to do everything itself, errors compound fast.
 
 The solution:
 
-* Push **reliability** into deterministic code (tools)
-* Push **flexibility and reasoning** into the LLM (manager)
-* Push **process clarity** into goals
-* Push **behavior settings** into args files
-* Push **domain knowledge** into the context layer
-* Keep each layer focused on a single responsibility
+- Push **reliability** into deterministic code (tools)
+- Push **flexibility and reasoning** into the LLM (manager)
+- Push **process clarity** into goals
+- Push **behavior settings** into args files
+- Push **domain knowledge** into the context layer
+- Keep each layer focused on a single responsibility
 
 You make smart decisions. Tools execute perfectly.
 
@@ -57,59 +60,59 @@ You make smart decisions. Tools execute perfectly.
 
 ## **1. Process Layer — Goals (`goals/`)**
 
-* Task-specific instructions in clear markdown
-* Each goal defines: objective, inputs, which tools to use, expected outputs, edge cases
-* Written like you're briefing someone competent
-* Only modified with explicit permission
-* Goals tell the system **what** to achieve, not how it should behave today
+- Task-specific instructions in clear markdown
+- Each goal defines: objective, inputs, which tools to use, expected outputs, edge cases
+- Written like you're briefing someone competent
+- Only modified with explicit permission
+- Goals tell the system **what** to achieve, not how it should behave today
 
 ---
 
 ## **2. Orchestration Layer — Manager (AI Role)**
 
-* Reads the relevant goal
-* Decides which tools (scripts) to use and in what order
-* Applies args settings to shape behavior
-* References context for domain knowledge (voice, ICP, examples, etc.)
-* Handles errors, asks clarifying questions, makes judgment calls
-* Never executes work — it delegates intelligently
-* Example: Don't scrape websites yourself. Read `goals/research_lead.md`, understand requirements, then call `tools/lead_gen/scrape_linkedin.py` with the correct parameters.
+- Reads the relevant goal
+- Decides which tools (scripts) to use and in what order
+- Applies args settings to shape behavior
+- References context for domain knowledge (voice, ICP, examples, etc.)
+- Handles errors, asks clarifying questions, makes judgment calls
+- Never executes work — it delegates intelligently
+- Example: Don't scrape websites yourself. Read `goals/research_lead.md`, understand requirements, then call `tools/lead_gen/scrape_linkedin.py` with the correct parameters.
 
 ---
 
 ## **3. Execution Layer — Tools (`tools/`)**
 
-* Python scripts organized by workflow
-* Each has **one job**: API calls, data processing, file operations, database work, etc.
-* Fast, documented, testable, deterministic
-* They don't think. They don't decide. They just execute.
-* Credentials + environment variables handled via `.env`
-* All tools must be listed in `tools/manifest.md` with a one-sentence description
+- Python scripts organized by workflow
+- Each has **one job**: API calls, data processing, file operations, database work, etc.
+- Fast, documented, testable, deterministic
+- They don't think. They don't decide. They just execute.
+- Credentials + environment variables handled via `.env`
+- All tools must be listed in `tools/manifest.md` with a one-sentence description
 
 ---
 
 ## **4. Args Layer — Behavior (`args/`)**
 
-* YAML/JSON files controlling how the system behaves right now
-* Examples: daily themes, frameworks, modes, lengths, schedules, model choices
-* Changing args changes behavior without editing goals or tools
-* The manager reads args before running any workflow
+- YAML/JSON files controlling how the system behaves right now
+- Examples: daily themes, frameworks, modes, lengths, schedules, model choices
+- Changing args changes behavior without editing goals or tools
+- The manager reads args before running any workflow
 
 ---
 
 ## **5. Context Layer — Domain Knowledge (`context/`)**
 
-* Static reference material the system uses to reason
-* Examples: tone rules, writing samples, ICP descriptions, case studies, negative examples
-* Shapes quality and style — not process or behavior
+- Static reference material the system uses to reason
+- Examples: tone rules, writing samples, ICP descriptions, case studies, negative examples
+- Shapes quality and style — not process or behavior
 
 ---
 
 ## **6. Hard Prompts Layer — Instruction Templates (`hardprompts/`)**
 
-* Reusable text templates for LLM sub-tasks
-* Example: outline → post, rewrite in voice, summarize transcript, create visual brief
-* Hard prompts are fixed instructions, not context or goals
+- Reusable text templates for LLM sub-tasks
+- Example: outline → post, rewrite in voice, summarize transcript, create visual brief
+- Hard prompts are fixed instructions, not context or goals
 
 ---
 
@@ -134,19 +137,19 @@ If you create a new tool script, you **must** add it to the manifest with a 1-se
 
 ### **3. When tools fail, fix and document**
 
-* Read the error and stack trace carefully
-* Update the tool to handle the issue (ask if API credits are required)
-* Add what you learned to the goal (rate limits, batching rules, timing quirks)
-* Example: tool hits 429 → find batch endpoint → refactor → test → update goal
-* If a goal exceeds a reasonable length, propose splitting it into a primary goal + technical reference
+- Read the error and stack trace carefully
+- Update the tool to handle the issue (ask if API credits are required)
+- Add what you learned to the goal (rate limits, batching rules, timing quirks)
+- Example: tool hits 429 → find batch endpoint → refactor → test → update goal
+- If a goal exceeds a reasonable length, propose splitting it into a primary goal + technical reference
 
 ---
 
 ### **4. Treat goals as living documentation**
 
-* Update only when better approaches or API constraints emerge
-* Never modify/create goals without explicit permission
-* Goals are the instruction manual for the entire system
+- Update only when better approaches or API constraints emerge
+- Never modify/create goals without explicit permission
+- Goals are the instruction manual for the entire system
 
 ---
 
@@ -154,9 +157,9 @@ If you create a new tool script, you **must** add it to the manifest with a 1-se
 
 If you can't complete a task with existing tools and goals:
 
-* Explain what's missing
-* Explain what you need
-* Do not guess or invent capabilities
+- Explain what's missing
+- Explain what you need
+- Do not guess or invent capabilities
 
 ---
 
@@ -164,14 +167,14 @@ If you can't complete a task with existing tools and goals:
 
 Document Claude-specific mistakes here (not script bugs—those go in goals):
 
-* Always check `tools/manifest.md` before writing a new script
-* Verify tool output format before chaining into another tool
-* Don't assume APIs support batch operations—check first
-* When a workflow fails mid-execution, preserve intermediate outputs before retrying
-* Read the full goal before starting a task—don't skim
-* **NEVER DELETE YOUTUBE VIDEOS** — Video deletion is irreversible. The MCP server blocks this intentionally. If deletion is ever truly needed, ask the user 3 times and get 3 confirmations before proceeding. Direct user to YouTube Studio instead.
+- Always check `tools/manifest.md` before writing a new script
+- Verify tool output format before chaining into another tool
+- Don't assume APIs support batch operations—check first
+- When a workflow fails mid-execution, preserve intermediate outputs before retrying
+- Read the full goal before starting a task—don't skim
+- **NEVER DELETE YOUTUBE VIDEOS** — Video deletion is irreversible. The MCP server blocks this intentionally. If deletion is ever truly needed, ask the user 3 times and get 3 confirmations before proceeding. Direct user to YouTube Studio instead.
 
-*(Add new guardrails as mistakes happen. Keep this under 15 items.)*
+_(Add new guardrails as mistakes happen. Keep this under 15 items.)_
 
 ---
 
@@ -278,6 +281,7 @@ print('Memory infrastructure initialized!')
 The system has persistent memory across sessions. At session start, read the memory context:
 
 **Load Memory:**
+
 1. Read `memory/MEMORY.md` for curated facts and preferences
 2. Read today's log: `memory/logs/YYYY-MM-DD.md`
 3. Read yesterday's log for continuity
@@ -287,16 +291,19 @@ python tools/memory/memory_read.py --format markdown
 ```
 
 **During Session:**
+
 - Append notable events to today's log: `python tools/memory/memory_write.py --content "event" --type event`
 - Add facts to the database: `python tools/memory/memory_write.py --content "fact" --type fact --importance 7`
 - For truly persistent facts (always loaded), update MEMORY.md: `python tools/memory/memory_write.py --update-memory --content "New preference" --section user_preferences`
 
 **Search Memory:**
+
 - Keyword search: `python tools/memory/memory_db.py --action search --query "keyword"`
 - Semantic search: `python tools/memory/semantic_search.py --query "related concept"`
 - Hybrid search (best): `python tools/memory/hybrid_search.py --query "what does user prefer"`
 
 **Memory Types:**
+
 - `fact` - Objective information
 - `preference` - User preferences
 - `event` - Something that happened
@@ -322,24 +329,24 @@ Every failure strengthens the system:
 
 **Where Things Live:**
 
-* `goals/` — Process Layer (what to achieve)
-* `tools/` — Execution Layer (organized by workflow)
-* `args/` — Args Layer (behavior settings)
-* `context/` — Context Layer (domain knowledge)
-* `hardprompts/` — Hard Prompts Layer (instruction templates)
-* `.tmp/` — Temporary work (scrapes, raw data, intermediate files). Disposable.
-* `.env` — API keys + environment variables
-* `credentials.json`, `token.json` — OAuth credentials (ignored by Git)
-* `goals/manifest.md` — Index of available goal workflows
-* `tools/manifest.md` — Master list of tools and their functions
+- `goals/` — Process Layer (what to achieve)
+- `tools/` — Execution Layer (organized by workflow)
+- `args/` — Args Layer (behavior settings)
+- `context/` — Context Layer (domain knowledge)
+- `hardprompts/` — Hard Prompts Layer (instruction templates)
+- `.tmp/` — Temporary work (scrapes, raw data, intermediate files). Disposable.
+- `.env` — API keys + environment variables
+- `credentials.json`, `token.json` — OAuth credentials (ignored by Git)
+- `goals/manifest.md` — Index of available goal workflows
+- `tools/manifest.md` — Master list of tools and their functions
 
 ---
 
 ## **Deliverables vs Scratch**
 
-* **Deliverables**: outputs needed by the user (Sheets, Slides, processed data, etc.)
-* **Scratch Work**: temp files (raw scrapes, CSVs, research). Always disposable.
-* Never store important data in `.tmp/`.
+- **Deliverables**: outputs needed by the user (Sheets, Slides, processed data, etc.)
+- **Scratch Work**: temp files (raw scrapes, CSVs, research). Always disposable.
+- Never store important data in `.tmp/`.
 
 ---
 

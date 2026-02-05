@@ -85,7 +85,11 @@ export async function withMiddlewareCorrelationId(
 
   // Set cookie for client-side access
   if (setCookie && !request.cookies.get(CORRELATION_COOKIE)?.value) {
-    const cookieHeader = serializeCookie(CORRELATION_COOKIE, correlationId, cookieOptions);
+    const cookieHeader = serializeCookie(
+      CORRELATION_COOKIE,
+      correlationId,
+      cookieOptions
+    );
     response.headers.append('Set-Cookie', cookieHeader);
   }
 

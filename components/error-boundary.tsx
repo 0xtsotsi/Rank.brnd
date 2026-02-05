@@ -97,13 +97,14 @@ export class ErrorBoundary extends Component<Props, State> {
             </h1>
 
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              We apologize for the inconvenience. The error has been logged and our team
-              will look into it.
+              We apologize for the inconvenience. The error has been logged and
+              our team will look into it.
             </p>
 
             {this.state.eventId && (
               <p className="text-xs text-gray-500 dark:text-gray-500 mb-6">
-                Error ID: <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                Error ID:{' '}
+                <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
                   {this.state.eventId}
                 </code>
               </p>

@@ -23,7 +23,12 @@ const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
 /**
  * State-changing HTTP methods that require CSRF protection
  */
-export const STATE_CHANGING_METHODS = new Set(['POST', 'PUT', 'DELETE', 'PATCH']);
+export const STATE_CHANGING_METHODS = new Set([
+  'POST',
+  'PUT',
+  'DELETE',
+  'PATCH',
+]);
 
 /**
  * Generate a CSRF token
@@ -65,7 +70,7 @@ export async function createCSRFSession(): Promise<string> {
   const session: CSRFSession = { hash, expires };
 
   // Store the hashed token in a cookie
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   cookieStore.set(CSRF_COOKIE_NAME, JSON.stringify(session), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -81,8 +86,10 @@ export async function createCSRFSession(): Promise<string> {
  * Validate a CSRF token from the request
  * Compares the provided token with the stored hashed token
  */
-export async function validateCSRFToken(providedToken: string): Promise<boolean> {
-  const cookieStore = cookies();
+export async function validateCSRFToken(
+  providedToken: string
+): Promise<boolean> {
+  const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(CSRF_COOKIE_NAME);
 
   if (!sessionCookie?.value) {
@@ -161,7 +168,10 @@ export function getAllowedOrigins(): string[] {
  * CSRF error response
  */
 export class CSRFError extends Error {
-  constructor(message: string, public statusCode: number = 403) {
+  constructor(
+    message: string,
+    public statusCode: number = 403
+  ) {
     super(message);
     this.name = 'CSRFError';
   }

@@ -7,10 +7,18 @@
  * schedule publishing UI, history view, and retry failed publishes.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import type { PublishingQueue, PublishingQueueStats, PublishingPlatform, PublishingQueueStatus } from '@/types/publishing-queue';
-import { PUBLISHING_PLATFORM_LABELS, PUBLISHING_QUEUE_STATUS_LABELS } from '@/types/publishing-queue';
+import type {
+  PublishingQueue,
+  PublishingQueueStats,
+  PublishingPlatform,
+  PublishingQueueStatus,
+} from '@/types/publishing-queue';
+import {
+  PUBLISHING_PLATFORM_LABELS,
+  PUBLISHING_QUEUE_STATUS_LABELS,
+} from '@/types/publishing-queue';
 import { PublishingQueueTable } from '@/components/articles/publishing-queue-table';
 import { PublishingStatsCards } from '@/components/publishing/publishing-stats-cards';
 import { SchedulePublishDialog } from '@/components/publishing/schedule-publish-dialog';
@@ -39,16 +47,16 @@ export default function PublishingDashboardPage({ searchParams }: PageProps) {
   const [stats, setStats] = useState<PublishingQueueStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<PublishingQueueStatus | 'all'>(
-    (searchParams.status as PublishingQueueStatus | 'all') || 'all'
-  );
-  const [platformFilter, setPlatformFilter] = useState<PublishingPlatform | 'all'>(
-    (searchParams.platform as PublishingPlatform | 'all') || 'all'
-  );
+  const [statusFilter, setStatusFilter] = useState<
+    PublishingQueueStatus | 'all'
+  >((searchParams.status as PublishingQueueStatus | 'all') || 'all');
+  const [platformFilter, setPlatformFilter] = useState<
+    PublishingPlatform | 'all'
+  >((searchParams.platform as PublishingPlatform | 'all') || 'all');
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
 
   // Fetch queue items and stats
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const organizationId = 'default-org-id'; // TODO: Get from actual user data
 
@@ -56,7 +64,8 @@ export default function PublishingDashboardPage({ searchParams }: PageProps) {
       const queueParams = new URLSearchParams();
       queueParams.append('organization_id', organizationId);
       if (statusFilter !== 'all') queueParams.append('status', statusFilter);
-      if (platformFilter !== 'all') queueParams.append('platform', platformFilter);
+      if (platformFilter !== 'all')
+        queueParams.append('platform', platformFilter);
 
       const [queueResponse, statsResponse] = await Promise.all([
         fetch(`/api/publishing-queue?${queueParams.toString()}`),
@@ -78,11 +87,11 @@ export default function PublishingDashboardPage({ searchParams }: PageProps) {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [statusFilter, platformFilter]);
 
   useEffect(() => {
     fetchData();
-  }, [statusFilter, platformFilter]);
+  }, [statusFilter, platformFilter, fetchData]);
 
   const handleRefresh = () => {
     setRefreshing(true);
@@ -99,7 +108,9 @@ export default function PublishingDashboardPage({ searchParams }: PageProps) {
       if (response.ok) {
         setQueueItems((prev) =>
           prev.map((item) =>
-            item.id === id ? { ...item, status: 'cancelled' as PublishingQueueStatus } : item
+            item.id === id
+              ? { ...item, status: 'cancelled' as PublishingQueueStatus }
+              : item
           )
         );
       }
@@ -118,7 +129,13 @@ export default function PublishingDashboardPage({ searchParams }: PageProps) {
       if (response.ok) {
         setQueueItems((prev) =>
           prev.map((item) =>
-            item.id === id ? { ...item, status: 'pending' as PublishingQueueStatus, retry_count: 0 } : item
+            item.id === id
+              ? {
+                  ...item,
+                  status: 'pending' as PublishingQueueStatus,
+                  retry_count: 0,
+                }
+              : item
           )
         );
       }
@@ -140,7 +157,10 @@ export default function PublishingDashboardPage({ searchParams }: PageProps) {
     }
   };
 
-  const updateFilters = (status: PublishingQueueStatus | 'all', platform: PublishingPlatform | 'all') => {
+  const updateFilters = (
+    status: PublishingQueueStatus | 'all',
+    platform: PublishingPlatform | 'all'
+  ) => {
     setStatusFilter(status);
     setPlatformFilter(platform);
     const params = new URLSearchParams();
@@ -188,7 +208,9 @@ export default function PublishingDashboardPage({ searchParams }: PageProps) {
             )}
             data-testid="refresh-button"
           >
-            <RefreshCw className={cn('h-4 w-4', refreshing && 'animate-spin')} />
+            <RefreshCw
+              className={cn('h-4 w-4', refreshing && 'animate-spin')}
+            />
             Refresh
           </button>
           <button
@@ -209,9 +231,7 @@ export default function PublishingDashboardPage({ searchParams }: PageProps) {
       </div>
 
       {/* Stats Cards */}
-      {stats && (
-        <PublishingStatsCards stats={stats} />
-      )}
+      {stats && <PublishingStatsCards stats={stats} />}
 
       {/* Filters Bar */}
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
@@ -288,7 +308,12 @@ export default function PublishingDashboardPage({ searchParams }: PageProps) {
           {/* Platform Filter */}
           <select
             value={platformFilter}
-            onChange={(e) => updateFilters(statusFilter, e.target.value as PublishingPlatform | 'all')}
+            onChange={(e) =>
+              updateFilters(
+                statusFilter,
+                e.target.value as PublishingPlatform | 'all'
+              )
+            }
             className={cn(
               'px-3 py-1.5 rounded-lg text-sm font-medium',
               'bg-white dark:bg-gray-800',

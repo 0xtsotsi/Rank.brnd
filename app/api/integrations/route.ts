@@ -140,7 +140,9 @@ export async function GET(request: NextRequest) {
         (i) =>
           i.name.toLowerCase().includes(searchLower) ||
           i.description?.toLowerCase().includes(searchLower) ||
-          PLATFORM_LABELS[i.platform as keyof typeof PLATFORM_LABELS].toLowerCase().includes(searchLower)
+          PLATFORM_LABELS[i.platform as keyof typeof PLATFORM_LABELS]
+            .toLowerCase()
+            .includes(searchLower)
       );
     }
 
@@ -179,11 +181,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Validate required fields
-    if (!body.name || typeof body.name !== 'string' || body.name.trim() === '') {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      );
+    if (
+      !body.name ||
+      typeof body.name !== 'string' ||
+      body.name.trim() === ''
+    ) {
+      return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
     if (!body.platform || typeof body.platform !== 'string') {
@@ -208,7 +211,10 @@ export async function POST(request: NextRequest) {
     ];
     if (!validPlatforms.includes(body.platform as Platform)) {
       return NextResponse.json(
-        { error: 'Invalid platform. Must be one of: ' + validPlatforms.join(', ') },
+        {
+          error:
+            'Invalid platform. Must be one of: ' + validPlatforms.join(', '),
+        },
         { status: 400 }
       );
     }
@@ -218,7 +224,10 @@ export async function POST(request: NextRequest) {
       const validAuthTypes = ['api_key', 'oauth', 'bearer_token', 'basic_auth'];
       if (!validAuthTypes.includes(body.auth_type)) {
         return NextResponse.json(
-          { error: 'Invalid auth type. Must be one of: ' + validAuthTypes.join(', ') },
+          {
+            error:
+              'Invalid auth type. Must be one of: ' + validAuthTypes.join(', '),
+          },
           { status: 400 }
         );
       }
@@ -247,7 +256,11 @@ export async function POST(request: NextRequest) {
       sync_interval_seconds: body.sync_interval_seconds,
     };
 
-    const newIntegration = formDataToIntegration(formData, 'org-1', `${Date.now()}`);
+    const newIntegration = formDataToIntegration(
+      formData,
+      'org-1',
+      `${Date.now()}`
+    );
     newIntegration.id = `${Date.now()}`;
     newIntegration.created_at = new Date();
 
@@ -286,7 +299,10 @@ export async function PUT(request: NextRequest) {
 
     const index = mockIntegrations.findIndex((i) => i.id === id);
     if (index === -1) {
-      return NextResponse.json({ error: 'Integration not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Integration not found' },
+        { status: 404 }
+      );
     }
 
     // Validate platform if provided
@@ -361,7 +377,10 @@ export async function DELETE(request: NextRequest) {
 
     const index = mockIntegrations.findIndex((i) => i.id === id);
     if (index === -1) {
-      return NextResponse.json({ error: 'Integration not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Integration not found' },
+        { status: 404 }
+      );
     }
 
     // Soft delete

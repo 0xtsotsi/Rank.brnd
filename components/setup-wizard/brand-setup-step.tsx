@@ -41,10 +41,26 @@ const INDUSTRIES = [
 ];
 
 const TONES = [
-  { value: 'professional', label: 'Professional', description: 'Formal and authoritative' },
-  { value: 'casual', label: 'Casual', description: 'Relaxed and conversational' },
-  { value: 'friendly', label: 'Friendly', description: 'Warm and approachable' },
-  { value: 'authoritative', label: 'Authoritative', description: 'Expert and confident' },
+  {
+    value: 'professional',
+    label: 'Professional',
+    description: 'Formal and authoritative',
+  },
+  {
+    value: 'casual',
+    label: 'Casual',
+    description: 'Relaxed and conversational',
+  },
+  {
+    value: 'friendly',
+    label: 'Friendly',
+    description: 'Warm and approachable',
+  },
+  {
+    value: 'authoritative',
+    label: 'Authoritative',
+    description: 'Expert and confident',
+  },
 ] as const;
 
 const PRESET_COLORS = [
@@ -67,17 +83,23 @@ export function BrandSetupStep({
   const [website, setWebsite] = useState(initialData?.website || '');
   const [industry, setIndustry] = useState(initialData?.industry || '');
   const [showIndustryDropdown, setShowIndustryDropdown] = useState(false);
-  const [primaryColor, setPrimaryColor] = useState(initialData?.primaryColor || '#4f46e5');
-  const [secondaryColor, setSecondaryColor] = useState(initialData?.secondaryColor || '#818cf8');
-  const [tone, setTone] = useState<'professional' | 'casual' | 'friendly' | 'authoritative'>(
-    initialData?.tone || 'professional'
+  const [primaryColor, setPrimaryColor] = useState(
+    initialData?.primaryColor || '#4f46e5'
   );
-  const [description, setDescription] = useState(initialData?.description || '');
+  const [secondaryColor, setSecondaryColor] = useState(
+    initialData?.secondaryColor || '#818cf8'
+  );
+  const [tone, setTone] = useState<
+    'professional' | 'casual' | 'friendly' | 'authoritative'
+  >(initialData?.tone || 'professional');
+  const [description, setDescription] = useState(
+    initialData?.description || ''
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handlePresetSelect = (preset: typeof PRESET_COLORS[number]) => {
+  const handlePresetSelect = (preset: (typeof PRESET_COLORS)[number]) => {
     setPrimaryColor(preset.primary);
     setSecondaryColor(preset.secondary);
   };
@@ -248,7 +270,9 @@ export function BrandSetupStep({
                 isLoading && 'opacity-50 cursor-not-allowed'
               )}
             >
-              <span className={industry ? '' : 'text-gray-400 dark:text-gray-500'}>
+              <span
+                className={industry ? '' : 'text-gray-400 dark:text-gray-500'}
+              >
                 {industry || 'Select your industry'}
               </span>
               <ChevronDown className="w-5 h-5 text-gray-400" />
@@ -267,7 +291,8 @@ export function BrandSetupStep({
                     className={cn(
                       'w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors',
                       'text-gray-900 dark:text-white',
-                      industry === ind && 'bg-indigo-50 dark:bg-indigo-900/20 font-medium'
+                      industry === ind &&
+                        'bg-indigo-50 dark:bg-indigo-900/20 font-medium'
                     )}
                   >
                     {ind}

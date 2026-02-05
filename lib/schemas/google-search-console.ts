@@ -15,7 +15,10 @@ export const googleSearchConsoleDataSchema = z.object({
   clicks: z.coerce.number().int().nonnegative().default(0),
   ctr: z.coerce.number().nonnegative().default(0),
   avg_position: z.coerce.number().nonnegative().default(0),
-  date: z.coerce.date().or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).transform(val => new Date(val)),
+  date: z.coerce
+    .date()
+    .or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/))
+    .transform((val) => new Date(val)),
   metadata: z.record(z.any()).optional().default({}),
 });
 
@@ -36,7 +39,9 @@ export const createSearchConsoleDataSchema = z.object({
  */
 export const bulkImportSearchConsoleDataSchema = z.object({
   productId: z.string().min(1, 'Product ID is required'),
-  data: z.array(googleSearchConsoleDataSchema).min(1, 'At least one data record is required'),
+  data: z
+    .array(googleSearchConsoleDataSchema)
+    .min(1, 'At least one data record is required'),
 });
 
 /**
@@ -49,7 +54,10 @@ export const searchConsoleQuerySchema = z.object({
   keyword: z.string().optional(),
   startDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional(),
-  sort: z.enum(['date', 'impressions', 'clicks', 'ctr', 'avg_position', 'keyword']).optional().default('date'),
+  sort: z
+    .enum(['date', 'impressions', 'clicks', 'ctr', 'avg_position', 'keyword'])
+    .optional()
+    .default('date'),
   order: z.enum(['asc', 'desc']).optional().default('desc'),
   limit: z.coerce.number().int().positive().max(1000).optional().default(100),
   offset: z.coerce.number().int().nonnegative().optional().default(0),
@@ -80,7 +88,9 @@ export const searchConsoleMetricsQuerySchema = z.object({
  */
 export const searchConsoleConnectionSchema = z.object({
   siteUrl: z.string().url('Invalid site URL').min(1, 'Site URL is required'),
-  propertyType: z.enum(['domain', 'url-prefix', 'provider']).default('url-prefix'),
+  propertyType: z
+    .enum(['domain', 'url-prefix', 'provider'])
+    .default('url-prefix'),
 });
 
 /**
@@ -95,9 +105,19 @@ export const searchConsoleErrorResponseSchema = z.object({
 /**
  * Type exports
  */
-export type GoogleSearchConsoleData = z.infer<typeof googleSearchConsoleDataSchema>;
-export type CreateSearchConsoleDataInput = z.infer<typeof createSearchConsoleDataSchema>;
-export type BulkImportSearchConsoleDataInput = z.infer<typeof bulkImportSearchConsoleDataSchema>;
+export type GoogleSearchConsoleData = z.infer<
+  typeof googleSearchConsoleDataSchema
+>;
+export type CreateSearchConsoleDataInput = z.infer<
+  typeof createSearchConsoleDataSchema
+>;
+export type BulkImportSearchConsoleDataInput = z.infer<
+  typeof bulkImportSearchConsoleDataSchema
+>;
 export type SearchConsoleQueryInput = z.infer<typeof searchConsoleQuerySchema>;
-export type SearchConsoleMetricsQueryInput = z.infer<typeof searchConsoleMetricsQuerySchema>;
-export type SearchConsoleConnectionConfig = z.infer<typeof searchConsoleConnectionSchema>;
+export type SearchConsoleMetricsQueryInput = z.infer<
+  typeof searchConsoleMetricsQuerySchema
+>;
+export type SearchConsoleConnectionConfig = z.infer<
+  typeof searchConsoleConnectionSchema
+>;

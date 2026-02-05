@@ -19,10 +19,15 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useUser, useClerk, useOrganization, useOrganizationList } from '@clerk/nextjs';
+import {
+  useUser,
+  useClerk,
+  useOrganization,
+  useOrganizationList,
+} from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import type { OrganizationResource } from '@clerk/types';
+import type { Organization } from '@clerk/nextjs/dist/types/server';
 
 interface UserMenuDropdownProps {
   /** Additional CSS classes for the trigger button */
@@ -151,7 +156,11 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
   const { user } = useUser();
   const { signOut } = useClerk();
   const { organization: currentOrganization } = useOrganization();
-  const { userMemberships, isLoaded: orgListLoaded, setActive } = useOrganizationList({
+  const {
+    userMemberships,
+    isLoaded: orgListLoaded,
+    setActive,
+  } = useOrganizationList({
     userMemberships: true,
   });
 
@@ -168,7 +177,11 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
   };
 
   // Get user display name
-  const displayName = user?.fullName || user?.firstName || user?.emailAddresses?.[0]?.emailAddress || 'User';
+  const displayName =
+    user?.fullName ||
+    user?.firstName ||
+    user?.emailAddresses?.[0]?.emailAddress ||
+    'User';
 
   // Toggle menu open/close
   const toggleMenu = useCallback(() => {
@@ -193,7 +206,7 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
 
   // Handle organization switch - use the organization's setActive method
   const handleOrganizationSwitch = useCallback(
-    (org: OrganizationResource) => {
+    (org: Organization) => {
       // Use Clerk's setActive to switch organizations
       setActive?.({ organization: org.id });
       closeMenu();
@@ -234,62 +247,60 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
   useEffect(() => {
     if (isOpen) {
       // Focus the first focusable element in the menu
-      const firstFocusable = menuRef.current?.querySelector<HTMLButtonElement | HTMLAnchorElement>(
-        'button:not(:disabled), a[href]'
-      );
+      const firstFocusable = menuRef.current?.querySelector<
+        HTMLButtonElement | HTMLAnchorElement
+      >('button:not(:disabled), a[href]');
       firstFocusable?.focus();
     }
   }, [isOpen]);
 
   // Focus trap within menu
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
-      const focusableElements = menuRef.current?.querySelectorAll<
-        HTMLAnchorElement | HTMLButtonElement
-      >('a[href], button:not(:disabled)');
+  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
+    const focusableElements = menuRef.current?.querySelectorAll<
+      HTMLAnchorElement | HTMLButtonElement
+    >('a[href], button:not(:disabled)');
 
-      if (!focusableElements || focusableElements.length === 0) return;
+    if (!focusableElements || focusableElements.length === 0) return;
 
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
 
-      if (event.key === 'Tab') {
-        // If tabbing on last item, wrap to first
-        if (event.shiftKey && document.activeElement === firstElement) {
-          event.preventDefault();
-          (lastElement as HTMLElement)?.focus();
-        } else if (!event.shiftKey && document.activeElement === lastElement) {
-          event.preventDefault();
-          (firstElement as HTMLElement)?.focus();
-        }
-      }
-
-      // Arrow key navigation
-      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    if (event.key === 'Tab') {
+      // If tabbing on last item, wrap to first
+      if (event.shiftKey && document.activeElement === firstElement) {
         event.preventDefault();
-        const currentIndex = Array.from(focusableElements).indexOf(
-          document.activeElement as HTMLAnchorElement | HTMLButtonElement
-        );
-
-        const direction = event.key === 'ArrowDown' ? 1 : -1;
-        const nextIndex =
-          (currentIndex + direction + focusableElements.length) % focusableElements.length;
-
-        (focusableElements[nextIndex] as HTMLElement)?.focus();
-      }
-
-      // Home/End keys
-      if (event.key === 'Home') {
+        (lastElement as HTMLElement)?.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
         event.preventDefault();
         (firstElement as HTMLElement)?.focus();
       }
-      if (event.key === 'End') {
-        event.preventDefault();
-        (lastElement as HTMLElement)?.focus();
-      }
-    },
-    []
-  );
+    }
+
+    // Arrow key navigation
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      const currentIndex = Array.from(focusableElements).indexOf(
+        document.activeElement as HTMLAnchorElement | HTMLButtonElement
+      );
+
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+      const nextIndex =
+        (currentIndex + direction + focusableElements.length) %
+        focusableElements.length;
+
+      (focusableElements[nextIndex] as HTMLElement)?.focus();
+    }
+
+    // Home/End keys
+    if (event.key === 'Home') {
+      event.preventDefault();
+      (firstElement as HTMLElement)?.focus();
+    }
+    if (event.key === 'End') {
+      event.preventDefault();
+      (lastElement as HTMLElement)?.focus();
+    }
+  }, []);
 
   // Get user's avatar URL or create a colored placeholder
   const avatarUrl = user?.imageUrl;
@@ -320,13 +331,18 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
         {/* Avatar */}
         <div className="relative h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium shadow-sm">
           {avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt={`Avatar for ${displayName}`}
-              className="h-full w-full rounded-full object-cover"
-            />
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={avatarUrl}
+                alt={`Avatar for ${displayName}`}
+                className="h-full w-full rounded-full object-cover"
+              />
+            </>
           ) : (
-            <span className="text-sm">{getInitials(userFirstName, userLastName)}</span>
+            <span className="text-sm">
+              {getInitials(userFirstName, userLastName)}
+            </span>
           )}
         </div>
 
@@ -373,11 +389,14 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-medium shadow-md">
                   {avatarUrl ? (
-                    <img
-                      src={avatarUrl}
-                      alt={`Avatar for ${displayName}`}
-                      className="h-full w-full rounded-full object-cover"
-                    />
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={avatarUrl}
+                        alt={`Avatar for ${displayName}`}
+                        className="h-full w-full rounded-full object-cover"
+                      />
+                    </>
                   ) : (
                     <span>{getInitials(userFirstName, userLastName)}</span>
                   )}
@@ -404,45 +423,61 @@ export function UserMenuDropdown({ className }: UserMenuDropdownProps) {
             </div>
 
             {/* Organization Switcher Section */}
-            {orgListLoaded && userMemberships?.data && userMemberships.data.length > 0 && (
-              <div className="py-2 border-b border-gray-100 dark:border-gray-700">
-                <div className="px-3 py-1.5">
-                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Switch Organization
-                  </p>
-                </div>
-                {userMemberships.data.map((membership) => {
-                  const org = membership.organization;
-                  const isActive = org.id === currentOrganization?.id;
-                  return (
-                    <button
-                      key={org.id}
-                      type="button"
-                      onClick={() => handleOrganizationSwitch(org)}
-                      role="menuitem"
-                      className={cn(
-                        'w-full flex items-center gap-3 px-4 py-2 text-sm',
-                        'transition-colors',
-                        'focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700',
-                        isActive
-                          ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300'
-                          : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
-                      )}
-                    >
-                      <div className="h-8 w-8 rounded bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300">
-                        {org.imageUrl ? (
-                          <img src={org.imageUrl} alt={`Logo for ${org.name}`} className="h-6 w-6 rounded" />
-                        ) : (
-                          <Icons.Building className="h-4 w-4" aria-hidden="true" />
+            {orgListLoaded &&
+              userMemberships?.data &&
+              userMemberships.data.length > 0 && (
+                <div className="py-2 border-b border-gray-100 dark:border-gray-700">
+                  <div className="px-3 py-1.5">
+                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Switch Organization
+                    </p>
+                  </div>
+                  {userMemberships.data.map((membership) => {
+                    const org = membership.organization;
+                    const isActive = org.id === currentOrganization?.id;
+                    return (
+                      <button
+                        key={org.id}
+                        type="button"
+                        onClick={() => handleOrganizationSwitch(org)}
+                        role="menuitem"
+                        className={cn(
+                          'w-full flex items-center gap-3 px-4 py-2 text-sm',
+                          'transition-colors',
+                          'focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700',
+                          isActive
+                            ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300'
+                            : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                         )}
-                      </div>
-                      <span className="flex-1 text-left truncate">{org.name}</span>
-                      {isActive && <Icons.Check className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+                      >
+                        <div className="h-8 w-8 rounded bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300">
+                          {org.imageUrl ? (
+                            <>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={org.imageUrl}
+                                alt={`Logo for ${org.name}`}
+                                className="h-6 w-6 rounded"
+                              />
+                            </>
+                          ) : (
+                            <Icons.Building
+                              className="h-4 w-4"
+                              aria-hidden="true"
+                            />
+                          )}
+                        </div>
+                        <span className="flex-1 text-left truncate">
+                          {org.name}
+                        </span>
+                        {isActive && (
+                          <Icons.Check className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
             {/* Menu Items */}
             <div className="py-1">

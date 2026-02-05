@@ -79,12 +79,42 @@ interface WizardState {
 }
 
 const toneOptions = [
-  { value: 'professional', label: 'Professional', description: 'Formal and authoritative', emoji: '💼' },
-  { value: 'casual', label: 'Casual', description: 'Relaxed and conversational', emoji: '🎯' },
-  { value: 'friendly', label: 'Friendly', description: 'Warm and approachable', emoji: '👋' },
-  { value: 'authoritative', label: 'Authoritative', description: 'Expert and confident', emoji: '📚' },
-  { value: 'minimalist', label: 'Minimalist', description: 'Concise and direct', emoji: '✨' },
-  { value: 'playful', label: 'Playful', description: 'Fun and engaging', emoji: '🎨' },
+  {
+    value: 'professional',
+    label: 'Professional',
+    description: 'Formal and authoritative',
+    emoji: '💼',
+  },
+  {
+    value: 'casual',
+    label: 'Casual',
+    description: 'Relaxed and conversational',
+    emoji: '🎯',
+  },
+  {
+    value: 'friendly',
+    label: 'Friendly',
+    description: 'Warm and approachable',
+    emoji: '👋',
+  },
+  {
+    value: 'authoritative',
+    label: 'Authoritative',
+    description: 'Expert and confident',
+    emoji: '📚',
+  },
+  {
+    value: 'minimalist',
+    label: 'Minimalist',
+    description: 'Concise and direct',
+    emoji: '✨',
+  },
+  {
+    value: 'playful',
+    label: 'Playful',
+    description: 'Fun and engaging',
+    emoji: '🎨',
+  },
 ];
 
 const lengthOptions = [
@@ -119,7 +149,9 @@ export default function ArticleGenerationPage() {
 
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [isLoadingKeywords, setIsLoadingKeywords] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(
+    new Set()
+  );
   const [organizationId, setOrganizationId] = useState<string>('');
 
   useEffect(() => {
@@ -132,7 +164,9 @@ export default function ArticleGenerationPage() {
   const fetchKeywords = async (orgId: string) => {
     setIsLoadingKeywords(true);
     try {
-      const response = await fetch(`/api/keywords?organization_id=${orgId}&status=tracking,opportunity`);
+      const response = await fetch(
+        `/api/keywords?organization_id=${orgId}&status=tracking,opportunity`
+      );
       if (response.ok) {
         const data = await response.json();
         setKeywords(data.keywords || []);
@@ -170,7 +204,11 @@ export default function ArticleGenerationPage() {
   };
 
   const handlePrevious = () => {
-    setState((prev) => ({ ...prev, step: Math.max(1, prev.step - 1), error: null }));
+    setState((prev) => ({
+      ...prev,
+      step: Math.max(1, prev.step - 1),
+      error: null,
+    }));
   };
 
   const generateOutline = async () => {
@@ -264,39 +302,51 @@ export default function ArticleGenerationPage() {
     });
   };
 
-  const updateOutlinePoint = (sectionId: string, pointIndex: number, newValue: string) => {
+  const updateOutlinePoint = (
+    sectionId: string,
+    pointIndex: number,
+    newValue: string
+  ) => {
     setState((prev) => ({
       ...prev,
-      outline: prev.outline?.map((section) =>
-        section.id === sectionId
-          ? {
-              ...section,
-              points: section.points.map((point, idx) => (idx === pointIndex ? newValue : point)),
-            }
-          : section
-      ) ?? null,
+      outline:
+        prev.outline?.map((section) =>
+          section.id === sectionId
+            ? {
+                ...section,
+                points: section.points.map((point, idx) =>
+                  idx === pointIndex ? newValue : point
+                ),
+              }
+            : section
+        ) ?? null,
     }));
   };
 
   const addOutlinePoint = (sectionId: string) => {
     setState((prev) => ({
       ...prev,
-      outline: prev.outline?.map((section) =>
-        section.id === sectionId
-          ? { ...section, points: [...section.points, ''] }
-          : section
-      ) ?? null,
+      outline:
+        prev.outline?.map((section) =>
+          section.id === sectionId
+            ? { ...section, points: [...section.points, ''] }
+            : section
+        ) ?? null,
     }));
   };
 
   const removeOutlinePoint = (sectionId: string, pointIndex: number) => {
     setState((prev) => ({
       ...prev,
-      outline: prev.outline?.map((section) =>
-        section.id === sectionId
-          ? { ...section, points: section.points.filter((_, idx) => idx !== pointIndex) }
-          : section
-      ) ?? null,
+      outline:
+        prev.outline?.map((section) =>
+          section.id === sectionId
+            ? {
+                ...section,
+                points: section.points.filter((_, idx) => idx !== pointIndex),
+              }
+            : section
+        ) ?? null,
     }));
   };
 
@@ -323,7 +373,8 @@ export default function ArticleGenerationPage() {
           Generate Article with AI
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Follow the steps to create an SEO-optimized article tailored to your brand voice
+          Follow the steps to create an SEO-optimized article tailored to your
+          brand voice
         </p>
       </div>
 
@@ -338,8 +389,8 @@ export default function ArticleGenerationPage() {
                   state.step === step.id
                     ? 'border-indigo-600 bg-indigo-600 text-white'
                     : state.step > step.id
-                    ? 'border-green-500 bg-green-500 text-white'
-                    : 'border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-600'
+                      ? 'border-green-500 bg-green-500 text-white'
+                      : 'border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-600'
                 )}
               >
                 {state.step > step.id ? (
@@ -352,7 +403,9 @@ export default function ArticleGenerationPage() {
                 <div
                   className={cn(
                     'w-12 h-0.5 mx-2',
-                    state.step > step.id ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
+                    state.step > step.id
+                      ? 'bg-green-500'
+                      : 'bg-gray-300 dark:bg-gray-600'
                   )}
                 />
               )}
@@ -396,7 +449,12 @@ export default function ArticleGenerationPage() {
                 <input
                   type="text"
                   value={state.searchQuery}
-                  onChange={(e) => setState((prev) => ({ ...prev, searchQuery: e.target.value }))}
+                  onChange={(e) =>
+                    setState((prev) => ({
+                      ...prev,
+                      searchQuery: e.target.value,
+                    }))
+                  }
                   placeholder="Search for a keyword..."
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400"
                 />
@@ -449,8 +507,8 @@ export default function ArticleGenerationPage() {
                           )}
                           {keyword.current_rank && (
                             <span className="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 flex items-center gap-1">
-                              <Target className="w-3 h-3" />
-                              #{keyword.current_rank}
+                              <Target className="w-3 h-3" />#
+                              {keyword.current_rank}
                             </span>
                           )}
                         </div>
@@ -519,7 +577,8 @@ export default function ArticleGenerationPage() {
                           {section.title}
                         </h4>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {section.points.length} points · ~{section.wordCount} words
+                          {section.points.length} points · ~{section.wordCount}{' '}
+                          words
                         </p>
                       </div>
                     </div>
@@ -539,12 +598,18 @@ export default function ArticleGenerationPage() {
                             type="text"
                             value={point}
                             onChange={(e) =>
-                              updateOutlinePoint(section.id, pointIndex, e.target.value)
+                              updateOutlinePoint(
+                                section.id,
+                                pointIndex,
+                                e.target.value
+                              )
                             }
                             className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
                           />
                           <button
-                            onClick={() => removeOutlinePoint(section.id, pointIndex)}
+                            onClick={() =>
+                              removeOutlinePoint(section.id, pointIndex)
+                            }
                             className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400"
                           >
                             <X className="w-4 h-4" />
@@ -577,7 +642,9 @@ export default function ArticleGenerationPage() {
                 {toneOptions.map((tone) => (
                   <button
                     key={tone.value}
-                    onClick={() => setState((prev) => ({ ...prev, brandTone: tone.value }))}
+                    onClick={() =>
+                      setState((prev) => ({ ...prev, brandTone: tone.value }))
+                    }
                     className={cn(
                       'p-4 rounded-lg border-2 transition-all text-left',
                       state.brandTone === tone.value
@@ -605,7 +672,12 @@ export default function ArticleGenerationPage() {
                 {lengthOptions.map((length) => (
                   <button
                     key={length.value}
-                    onClick={() => setState((prev) => ({ ...prev, targetLength: length.value }))}
+                    onClick={() =>
+                      setState((prev) => ({
+                        ...prev,
+                        targetLength: length.value,
+                      }))
+                    }
                     className={cn(
                       'p-3 rounded-lg border-2 transition-all text-center',
                       state.targetLength === length.value
@@ -631,7 +703,10 @@ export default function ArticleGenerationPage() {
               <textarea
                 value={state.customInstructions}
                 onChange={(e) =>
-                  setState((prev) => ({ ...prev, customInstructions: e.target.value }))
+                  setState((prev) => ({
+                    ...prev,
+                    customInstructions: e.target.value,
+                  }))
                 }
                 placeholder="Add any specific requirements or instructions for the article..."
                 rows={4}
@@ -641,12 +716,29 @@ export default function ArticleGenerationPage() {
 
             {/* Summary */}
             <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg space-y-2">
-              <h4 className="font-medium text-gray-900 dark:text-white">Summary</h4>
+              <h4 className="font-medium text-gray-900 dark:text-white">
+                Summary
+              </h4>
               <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <p><span className="font-medium">Keyword:</span> {state.selectedKeyword?.keyword}</p>
-                <p><span className="font-medium">Tone:</span> {toneOptions.find(t => t.value === state.brandTone)?.label}</p>
-                <p><span className="font-medium">Length:</span> {lengthOptions.find(l => l.value === state.targetLength)?.label}</p>
-                <p><span className="font-medium">Sections:</span> {state.outline?.length}</p>
+                <p>
+                  <span className="font-medium">Keyword:</span>{' '}
+                  {state.selectedKeyword?.keyword}
+                </p>
+                <p>
+                  <span className="font-medium">Tone:</span>{' '}
+                  {toneOptions.find((t) => t.value === state.brandTone)?.label}
+                </p>
+                <p>
+                  <span className="font-medium">Length:</span>{' '}
+                  {
+                    lengthOptions.find((l) => l.value === state.targetLength)
+                      ?.label
+                  }
+                </p>
+                <p>
+                  <span className="font-medium">Sections:</span>{' '}
+                  {state.outline?.length}
+                </p>
               </div>
             </div>
           </div>
@@ -666,7 +758,8 @@ export default function ArticleGenerationPage() {
                   Generating your article...
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  This may take a moment. We&apos;re creating optimized content based on your preferences.
+                  This may take a moment. We&apos;re creating optimized content
+                  based on your preferences.
                 </p>
               </div>
             ) : state.generatedArticle ? (
@@ -683,7 +776,9 @@ export default function ArticleGenerationPage() {
                   </p>
                 </div>
                 <div className="flex items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                  <span>{state.generatedArticle.content.split(' ').length} words</span>
+                  <span>
+                    {state.generatedArticle.content.split(' ').length} words
+                  </span>
                   <span>·</span>
                   <span>{state.outline?.length} sections</span>
                 </div>
@@ -691,7 +786,10 @@ export default function ArticleGenerationPage() {
                   <button
                     onClick={() => {
                       // Store in sessionStorage and navigate to editor
-                      sessionStorage.setItem('generatedArticle', JSON.stringify(state.generatedArticle));
+                      sessionStorage.setItem(
+                        'generatedArticle',
+                        JSON.stringify(state.generatedArticle)
+                      );
                       router.push('/dashboard/articles/new?generated=true');
                     }}
                     className="inline-flex items-center gap-2 px-6 py-3 font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
@@ -746,7 +844,9 @@ export default function ArticleGenerationPage() {
             </>
           ) : (
             <>
-              {state.step === 4 && state.generatedArticle ? 'Edit Article' : 'Continue'}
+              {state.step === 4 && state.generatedArticle
+                ? 'Edit Article'
+                : 'Continue'}
               <ArrowRight className="w-5 h-5" />
             </>
           )}

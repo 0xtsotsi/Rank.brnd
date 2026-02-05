@@ -63,10 +63,7 @@ export async function GET(
       .maybeSingle();
 
     if (productError || !product) {
-      return NextResponse.json(
-        { error: 'Product not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
     // Verify user belongs to the product's organization
@@ -144,10 +141,7 @@ export async function PUT(
       .maybeSingle();
 
     if (productError || !product) {
-      return NextResponse.json(
-        { error: 'Product not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
     // Verify user belongs to the product's organization
@@ -173,27 +167,30 @@ export async function PUT(
     if (validatedData.name !== undefined) updates.name = validatedData.name;
     if (validatedData.slug !== undefined) updates.slug = validatedData.slug;
     if (validatedData.url !== undefined) updates.url = validatedData.url;
-    if (validatedData.description !== undefined) updates.description = validatedData.description;
-    if (validatedData.status !== undefined) updates.status = validatedData.status;
-    if (validatedData.brand_colors !== undefined) updates.brand_colors = validatedData.brand_colors as any;
-    if (validatedData.tone_preferences !== undefined) updates.tone_preferences = validatedData.tone_preferences as any;
-    if (validatedData.analytics_config !== undefined) updates.analytics_config = validatedData.analytics_config as any;
-    if (validatedData.metadata !== undefined) updates.metadata = validatedData.metadata as any;
+    if (validatedData.description !== undefined)
+      updates.description = validatedData.description;
+    if (validatedData.status !== undefined)
+      updates.status = validatedData.status;
+    if (validatedData.brand_colors !== undefined)
+      updates.brand_colors = validatedData.brand_colors as any;
+    if (validatedData.tone_preferences !== undefined)
+      updates.tone_preferences = validatedData.tone_preferences as any;
+    if (validatedData.analytics_config !== undefined)
+      updates.analytics_config = validatedData.analytics_config as any;
+    if (validatedData.metadata !== undefined)
+      updates.metadata = validatedData.metadata as any;
 
     const result = await updateProduct(supabase, productId, updates);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data);
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }
@@ -263,10 +260,7 @@ export async function DELETE(
       .maybeSingle();
 
     if (productError || !product) {
-      return NextResponse.json(
-        { error: 'Product not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
     // Verify user belongs to the product's organization
@@ -287,10 +281,7 @@ export async function DELETE(
     const result = await softDeleteProduct(supabase, productId);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });

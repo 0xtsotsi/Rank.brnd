@@ -6,8 +6,18 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { AnalyticsFilters, AnalyticsMetrics, AnalyticsTable, TopKeywords, OpportunityGaps } from '@/components/search-console';
-import type { AnalyticsFilters as FiltersType, SearchConsoleData, SearchConsoleMetrics } from '@/types/google-search-console';
+import {
+  AnalyticsFilters,
+  AnalyticsMetrics,
+  AnalyticsTable,
+  TopKeywords,
+  OpportunityGaps,
+} from '@/components/search-console';
+import type {
+  AnalyticsFilters as FiltersType,
+  SearchConsoleData,
+  SearchConsoleMetrics,
+} from '@/types/google-search-console';
 import { AlertCircle, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -104,7 +114,9 @@ export default function GscAnalyticsPage() {
 
         const [dataResponse, metricsResponse] = await Promise.all([
           fetch(`/api/search-console?${dataParams.toString()}`),
-          fetch(`/api/search-console/metrics?productId=${filters.productId}&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`),
+          fetch(
+            `/api/search-console/metrics?productId=${filters.productId}&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
+          ),
         ]);
 
         if (!dataResponse.ok || !metricsResponse.ok) {
@@ -115,16 +127,20 @@ export default function GscAnalyticsPage() {
         const metricsResult = await metricsResponse.json();
 
         setGscData(dataResult.data || []);
-        setMetrics(metricsResult || {
-          total_impressions: 0,
-          total_clicks: 0,
-          avg_ctr: 0,
-          avg_position: 0,
-          unique_keywords: 0,
-        });
+        setMetrics(
+          metricsResult || {
+            total_impressions: 0,
+            total_clicks: 0,
+            avg_ctr: 0,
+            avg_position: 0,
+            unique_keywords: 0,
+          }
+        );
       } catch (err) {
         console.error('Error fetching analytics:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load analytics data');
+        setError(
+          err instanceof Error ? err.message : 'Failed to load analytics data'
+        );
         setGscData([]);
         setMetrics({
           total_impressions: 0,
@@ -154,7 +170,8 @@ export default function GscAnalyticsPage() {
             Search Console Analytics
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Monitor your search performance, keyword rankings, and discover opportunities
+            Monitor your search performance, keyword rankings, and discover
+            opportunities
           </p>
         </div>
       </div>
@@ -164,8 +181,12 @@ export default function GscAnalyticsPage() {
         <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-start gap-3">
           <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
           <div>
-            <p className="font-medium text-red-900 dark:text-red-300">Error loading analytics</p>
-            <p className="text-sm text-red-700 dark:text-red-400 mt-1">{error}</p>
+            <p className="font-medium text-red-900 dark:text-red-300">
+              Error loading analytics
+            </p>
+            <p className="text-sm text-red-700 dark:text-red-400 mt-1">
+              {error}
+            </p>
           </div>
         </div>
       )}
@@ -184,7 +205,11 @@ export default function GscAnalyticsPage() {
       {/* Top Keywords and Opportunities */}
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="lg:col-span-1">
-          <TopKeywords data={gscData} metric="impressions" isLoading={isLoading} />
+          <TopKeywords
+            data={gscData}
+            metric="impressions"
+            isLoading={isLoading}
+          />
         </div>
         <div className="lg:col-span-1">
           <TopKeywords data={gscData} metric="ctr" isLoading={isLoading} />

@@ -4,7 +4,12 @@
  * Handles OAuth token refresh for platforms that support refresh tokens.
  */
 
-import { getTokens, storeTokens, encryptToken, decryptToken } from './token-storage';
+import {
+  getTokens,
+  storeTokens,
+  encryptToken,
+  decryptToken,
+} from './token-storage';
 import type { OAuthTokens } from './types';
 
 /**
@@ -38,13 +43,21 @@ export async function refreshAccessToken(
   }
 
   try {
-    const refreshedTokens = await performRefresh(platform, refreshUrl, stored.refreshToken);
+    const refreshedTokens = await performRefresh(
+      platform,
+      refreshUrl,
+      stored.refreshToken
+    );
 
     // Store new tokens
-    await storeTokens(platform, {
-      ...refreshedTokens,
-      obtainedAt: new Date().toISOString(),
-    }, { integrationId });
+    await storeTokens(
+      platform,
+      {
+        ...refreshedTokens,
+        obtainedAt: new Date().toISOString(),
+      },
+      { integrationId }
+    );
 
     return refreshedTokens;
   } catch (error) {
@@ -71,7 +84,9 @@ async function performRefresh(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Refresh failed: ${response.status} ${response.statusText} - ${errorText}`);
+    throw new Error(
+      `Refresh failed: ${response.status} ${response.statusText} - ${errorText}`
+    );
   }
 
   const data = await response.json();
@@ -114,7 +129,8 @@ function parseRefreshResponse(
     accessToken: data.access_token,
     refreshToken: data.refresh_token || oldRefreshToken,
     tokenType: data.token_type || 'Bearer',
-    expiresIn: data.expires_in || data.expires_in ? Number(data.expires_in) : null,
+    expiresIn:
+      data.expires_in || data.expires_in ? Number(data.expires_in) : null,
     scope: data.scope || null,
     obtainedAt: new Date().toISOString(),
   };
@@ -139,7 +155,10 @@ export async function refreshMultipleTokens(
   await Promise.all(
     entries.map(async (entry) => {
       const key = `${entry.platform}:${entry.integrationId}`;
-      const result = await refreshAccessToken(entry.platform, entry.integrationId);
+      const result = await refreshAccessToken(
+        entry.platform,
+        entry.integrationId
+      );
       results.set(key, result);
     })
   );
@@ -150,7 +169,10 @@ export async function refreshMultipleTokens(
 /**
  * Check if token is expired or will expire soon
  */
-export function isTokenExpired(tokens: OAuthTokens, bufferSeconds: number = 300): boolean {
+export function isTokenExpired(
+  tokens: OAuthTokens,
+  bufferSeconds: number = 300
+): boolean {
   if (!tokens.expiresIn) {
     return false; // No expiry info, assume valid
   }
@@ -159,7 +181,7 @@ export function isTokenExpired(tokens: OAuthTokens, bufferSeconds: number = 300)
   const expiresAt = new Date(obtainedAt.getTime() + tokens.expiresIn * 1000);
   const now = new Date();
 
-  return now.getTime() > (expiresAt.getTime() - bufferSeconds * 1000);
+  return now.getTime() > expiresAt.getTime() - bufferSeconds * 1000;
 }
 
 /**
@@ -186,7 +208,10 @@ export function getTokenExpiry(tokens: OAuthTokens): {
     };
   }
 
-  const secondsRemaining = Math.max(0, Math.floor((expiresAt.getTime() - now.getTime()) / 1000));
+  const secondsRemaining = Math.max(
+    0,
+    Math.floor((expiresAt.getTime() - now.getTime()) / 1000)
+  );
   const isExpired = secondsRemaining === 0;
   const expiresSoon = secondsRemaining < 300; // Less than 5 minutes
 

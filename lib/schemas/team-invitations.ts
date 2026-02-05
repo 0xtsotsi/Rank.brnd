@@ -16,7 +16,9 @@ export const invitationTeamMemberRoleSchema = z.enum([
   'viewer',
 ]);
 
-export type InvitationTeamMemberRole = z.infer<typeof invitationTeamMemberRoleSchema>;
+export type InvitationTeamMemberRole = z.infer<
+  typeof invitationTeamMemberRoleSchema
+>;
 
 /**
  * Team invitation status enum

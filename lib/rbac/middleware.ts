@@ -15,14 +15,8 @@ import type {
   PermissionCategory,
   Resource,
 } from '@/lib/rbac/types';
-import {
-  ROLE_HIERARCHY,
-  OPERATION_MIN_ROLE,
-} from '@/lib/rbac/types';
-import {
-  getTeamRole,
-  hasMinTeamRole,
-} from '@/lib/supabase/team-members';
+import { ROLE_HIERARCHY, OPERATION_MIN_ROLE } from '@/lib/rbac/types';
+import { getTeamRole, hasMinTeamRole } from '@/lib/supabase/team-members';
 
 /**
  * Authentication result containing user ID and optionally organization ID
@@ -274,7 +268,7 @@ export function withAuth<T extends (...args: any[]) => Promise<NextResponse>>(
  * Middleware wrapper for API routes that require organization access
  */
 export function withOrganizationAccess<
-  T extends (...args: any[]) => Promise<NextResponse>
+  T extends (...args: any[]) => Promise<NextResponse>,
 >(
   handler: T,
   options: {
@@ -321,7 +315,12 @@ export function withOrganizationAccess<
       // Check membership if required
       if (options.requireMembership || options.minRole) {
         const minRoleToCheck = options.minRole || 'viewer';
-        await requireMinRole(client, organizationId, authContext.userId, minRoleToCheck);
+        await requireMinRole(
+          client,
+          organizationId,
+          authContext.userId,
+          minRoleToCheck
+        );
       }
 
       // Call the original handler with additional context
@@ -342,7 +341,9 @@ export function createPermissionMiddleware(
   resource: Resource,
   category: PermissionCategory
 ) {
-  return <T extends (...args: any[]) => Promise<NextResponse>>(handler: T): T => {
+  return <T extends (...args: any[]) => Promise<NextResponse>>(
+    handler: T
+  ): T => {
     return (async (...args: any[]) => {
       try {
         const request = args[0] as Request;
@@ -374,7 +375,8 @@ export function createPermissionMiddleware(
         }
 
         // Get Supabase client and check permission
-        const { getSupabaseServerClient } = await import('@/lib/supabase/client');
+        const { getSupabaseServerClient } =
+          await import('@/lib/supabase/client');
         const client = getSupabaseServerClient();
 
         await requirePermission(client, authContext.userId, organizationId, {
@@ -400,17 +402,29 @@ export function createPermissionMiddleware(
 export const rbac = {
   /** Require viewer role (read access) */
   viewer: (handler: (...args: any[]) => Promise<NextResponse>) =>
-    createPermissionMiddleware('articles' as Resource, 'read' as PermissionCategory)(handler),
+    createPermissionMiddleware(
+      'articles' as Resource,
+      'read' as PermissionCategory
+    )(handler),
 
   /** Require editor role (create/edit) */
   editor: (handler: (...args: any[]) => Promise<NextResponse>) =>
-    createPermissionMiddleware('articles' as Resource, 'create' as PermissionCategory)(handler),
+    createPermissionMiddleware(
+      'articles' as Resource,
+      'create' as PermissionCategory
+    )(handler),
 
   /** Require admin role */
   admin: (handler: (...args: any[]) => Promise<NextResponse>) =>
-    createPermissionMiddleware('team' as Resource, 'manage_team' as PermissionCategory)(handler),
+    createPermissionMiddleware(
+      'team' as Resource,
+      'manage_team' as PermissionCategory
+    )(handler),
 
   /** Require owner role */
   owner: (handler: (...args: any[]) => Promise<NextResponse>) =>
-    createPermissionMiddleware('settings' as Resource, 'admin' as PermissionCategory)(handler),
+    createPermissionMiddleware(
+      'settings' as Resource,
+      'admin' as PermissionCategory
+    )(handler),
 };

@@ -16,12 +16,23 @@ interface TopKeywordsProps {
   isLoading?: boolean;
 }
 
-export function TopKeywords({ data, metric = 'impressions', limit = 5, isLoading }: TopKeywordsProps) {
+export function TopKeywords({
+  data,
+  metric = 'impressions',
+  limit = 5,
+  isLoading,
+}: TopKeywordsProps) {
   const topKeywords = useMemo(() => {
     // Group by keyword and aggregate metrics
     const keywordMap = new Map<
       string,
-      { keyword: string; impressions: number; clicks: number; ctr: number; avg_position: number }
+      {
+        keyword: string;
+        impressions: number;
+        clicks: number;
+        ctr: number;
+        avg_position: number;
+      }
     >();
 
     for (const row of data) {
@@ -31,11 +42,14 @@ export function TopKeywords({ data, metric = 'impressions', limit = 5, isLoading
         existing.clicks += row.clicks;
         existing.ctr =
           existing.impressions > 0
-            ? ((existing.clicks + row.clicks) / (existing.impressions + row.impressions)) * 100
+            ? ((existing.clicks + row.clicks) /
+                (existing.impressions + row.impressions)) *
+              100
             : 0;
         const totalImpressions = existing.impressions + row.impressions;
         existing.avg_position =
-          (existing.avg_position * existing.impressions + row.avg_position * row.impressions) /
+          (existing.avg_position * existing.impressions +
+            row.avg_position * row.impressions) /
           totalImpressions;
       } else {
         keywordMap.set(row.keyword, {
@@ -76,7 +90,9 @@ export function TopKeywords({ data, metric = 'impressions', limit = 5, isLoading
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-      <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Top Keywords by {metricLabel}</h3>
+      <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
+        Top Keywords by {metricLabel}
+      </h3>
 
       {isLoading ? (
         <div className="space-y-3">
@@ -119,7 +135,10 @@ export function TopKeywords({ data, metric = 'impressions', limit = 5, isLoading
               </div>
               <div className="flex items-center gap-4 flex-shrink-0">
                 <span
-                  className={cn('text-sm font-medium', getPositionColor(kw.avg_position))}
+                  className={cn(
+                    'text-sm font-medium',
+                    getPositionColor(kw.avg_position)
+                  )}
                   title="Average position"
                 >
                   #{kw.avg_position.toFixed(1)}
@@ -140,12 +159,26 @@ export function TopKeywords({ data, metric = 'impressions', limit = 5, isLoading
  * Opportunity Gaps Component
  * Shows keywords with high impressions but low CTR
  */
-export function OpportunityGaps({ data, limit = 5, isLoading }: { data: SearchConsoleData[]; limit?: number; isLoading?: boolean }) {
+export function OpportunityGaps({
+  data,
+  limit = 5,
+  isLoading,
+}: {
+  data: SearchConsoleData[];
+  limit?: number;
+  isLoading?: boolean;
+}) {
   const opportunities = useMemo(() => {
     // Group by keyword and aggregate metrics
     const keywordMap = new Map<
       string,
-      { keyword: string; impressions: number; clicks: number; ctr: number; avg_position: number }
+      {
+        keyword: string;
+        impressions: number;
+        clicks: number;
+        ctr: number;
+        avg_position: number;
+      }
     >();
 
     for (const row of data) {
@@ -159,7 +192,8 @@ export function OpportunityGaps({ data, limit = 5, isLoading }: { data: SearchCo
             ? ((existing.clicks + row.clicks) / totalImpressions) * 100
             : 0;
         existing.avg_position =
-          (existing.avg_position * existing.impressions + row.avg_position * row.impressions) /
+          (existing.avg_position * existing.impressions +
+            row.avg_position * row.impressions) /
           totalImpressions;
       } else {
         keywordMap.set(row.keyword, {
@@ -199,7 +233,10 @@ export function OpportunityGaps({ data, limit = 5, isLoading }: { data: SearchCo
       {isLoading ? (
         <div className="space-y-3">
           {Array.from({ length: limit }).map((_, i) => (
-            <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+            <div
+              key={i}
+              className="h-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"
+            />
           ))}
         </div>
       ) : opportunities.length === 0 ? (
@@ -212,7 +249,9 @@ export function OpportunityGaps({ data, limit = 5, isLoading }: { data: SearchCo
       ) : (
         <div className="space-y-3">
           {opportunities.map((kw, index) => {
-            const potentialClicks = Math.round(kw.impressions * 0.1 - kw.clicks);
+            const potentialClicks = Math.round(
+              kw.impressions * 0.1 - kw.clicks
+            );
             return (
               <div
                 key={kw.keyword}
@@ -231,7 +270,9 @@ export function OpportunityGaps({ data, limit = 5, isLoading }: { data: SearchCo
                   </div>
                 </div>
                 <div className="flex-shrink-0 ml-3 text-right">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Potential gain</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Potential gain
+                  </p>
                   <p className="text-sm font-semibold text-green-600 dark:text-green-400">
                     +{potentialClicks} clicks
                   </p>

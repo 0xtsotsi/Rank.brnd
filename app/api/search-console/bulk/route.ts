@@ -10,9 +10,7 @@ import {
   validateRequest,
 } from '@/lib/schemas';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
-import {
-  bulkUpsertSearchConsoleData,
-} from '@/lib/supabase/google-search-console';
+import { bulkUpsertSearchConsoleData } from '@/lib/supabase/google-search-console';
 
 /**
  * POST /api/search-console/bulk
@@ -26,7 +24,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validationResult = validateRequest(body, bulkImportSearchConsoleDataSchema);
+    const validationResult = validateRequest(
+      body,
+      bulkImportSearchConsoleDataSchema
+    );
 
     if (!validationResult.success || !validationResult.data) {
       return NextResponse.json(
@@ -50,13 +51,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Format data for bulk upsert
-    const formattedData = data.map(item => ({
+    const formattedData = data.map((item) => ({
       keyword: item.keyword,
       impressions: item.impressions,
       clicks: item.clicks,
       ctr: item.ctr,
       avg_position: item.avg_position,
-      date: item.date instanceof Date ? item.date.toISOString().split('T')[0] : item.date,
+      date:
+        item.date instanceof Date
+          ? item.date.toISOString().split('T')[0]
+          : item.date,
       metadata: item.metadata,
     }));
 

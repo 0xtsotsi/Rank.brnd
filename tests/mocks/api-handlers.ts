@@ -51,7 +51,11 @@ export class ApiHandlers {
   /**
    * Mock DELETE request
    */
-  mockDelete(endpoint: string, response: any = { success: true }, status = 200): void {
+  mockDelete(
+    endpoint: string,
+    response: any = { success: true },
+    status = 200
+  ): void {
     this.page.route(`**${endpoint}**`, (route: Route) => {
       route.fulfill({
         status,
@@ -64,7 +68,11 @@ export class ApiHandlers {
   /**
    * Mock API error
    */
-  mockError(endpoint: string, message = 'Internal Server Error', status = 500): void {
+  mockError(
+    endpoint: string,
+    message = 'Internal Server Error',
+    status = 500
+  ): void {
     this.page.route(`**${endpoint}**`, (route: Route) => {
       route.fulfill({
         status,
@@ -101,7 +109,10 @@ export class ApiHandlers {
   /**
    * Mock with custom handler
    */
-  mockCustom(endpoint: string, handler: (route: Route) => void | Promise<void>): void {
+  mockCustom(
+    endpoint: string,
+    handler: (route: Route) => void | Promise<void>
+  ): void {
     this.page.route(`**${endpoint}**`, handler);
   }
 
@@ -155,13 +166,12 @@ export class CommonApiMocks extends ApiHandlers {
       isAuthenticated
         ? {
             success: true,
-            data:
-              user || {
-                id: 'test-user-id',
-                email: 'test@example.com',
-                firstName: 'Test',
-                lastName: 'User',
-              },
+            data: user || {
+              id: 'test-user-id',
+              email: 'test@example.com',
+              firstName: 'Test',
+              lastName: 'User',
+            },
           }
         : { success: false, error: { code: '401', message: 'Unauthorized' } },
       isAuthenticated ? 200 : 401
@@ -222,7 +232,9 @@ export class CommonApiMocks extends ApiHandlers {
   /**
    * Mock Supabase storage
    */
-  mockStorageUpload(response: any = { success: true, path: '/test/path' }): void {
+  mockStorageUpload(
+    response: any = { success: true, path: '/test/path' }
+  ): void {
     this.mockPost('/api/storage/upload', response);
   }
 }

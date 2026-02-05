@@ -26,24 +26,71 @@ interface KeywordSetupStepProps {
 }
 
 const SEARCH_INTENTS = [
-  { value: 'informational', label: 'Informational', description: 'Looking for information', icon: '📚' },
-  { value: 'commercial', label: 'Commercial', description: 'Researching purchases', icon: '🛍️' },
-  { value: 'transactional', label: 'Transactional', description: 'Ready to buy', icon: '💳' },
-  { value: 'navigational', label: 'Navigational', description: 'Finding a specific site', icon: '🧭' },
+  {
+    value: 'informational',
+    label: 'Informational',
+    description: 'Looking for information',
+    icon: '📚',
+  },
+  {
+    value: 'commercial',
+    label: 'Commercial',
+    description: 'Researching purchases',
+    icon: '🛍️',
+  },
+  {
+    value: 'transactional',
+    label: 'Transactional',
+    description: 'Ready to buy',
+    icon: '💳',
+  },
+  {
+    value: 'navigational',
+    label: 'Navigational',
+    description: 'Finding a specific site',
+    icon: '🧭',
+  },
 ] as const;
 
 const DIFFICULTY_LEVELS = [
-  { value: 'low', label: 'Low', color: 'text-green-600', bgColor: 'bg-green-100 dark:bg-green-900/30' },
-  { value: 'medium', label: 'Medium', color: 'text-yellow-600', bgColor: 'bg-yellow-100 dark:bg-yellow-900/30' },
-  { value: 'high', label: 'High', color: 'text-red-600', bgColor: 'bg-red-100 dark:bg-red-900/30' },
+  {
+    value: 'low',
+    label: 'Low',
+    color: 'text-green-600',
+    bgColor: 'bg-green-100 dark:bg-green-900/30',
+  },
+  {
+    value: 'medium',
+    label: 'Medium',
+    color: 'text-yellow-600',
+    bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
+  },
+  {
+    value: 'high',
+    label: 'High',
+    color: 'text-red-600',
+    bgColor: 'bg-red-100 dark:bg-red-900/30',
+  },
 ] as const;
 
 // Mock keyword suggestions based on input
 const KEYWORD_SUGGESTIONS = [
-  { keyword: 'best seo tools 2025', volume: 1200, difficulty: 'medium' as const },
-  { keyword: 'how to improve seo ranking', volume: 3400, difficulty: 'high' as const },
+  {
+    keyword: 'best seo tools 2025',
+    volume: 1200,
+    difficulty: 'medium' as const,
+  },
+  {
+    keyword: 'how to improve seo ranking',
+    volume: 3400,
+    difficulty: 'high' as const,
+  },
   { keyword: 'seo checker free', volume: 8900, difficulty: 'low' as const },
-  { keyword: 'content marketing strategy', volume: 2200, difficulty: 'medium' as const },
+  {
+    keyword: 'content marketing strategy',
+    volume: 2200,
+    difficulty: 'medium' as const,
+  },
 ];
 
 export function KeywordSetupStep({
@@ -52,18 +99,22 @@ export function KeywordSetupStep({
   initialData,
 }: KeywordSetupStepProps) {
   const [keyword, setKeyword] = useState(initialData?.keyword || '');
-  const [searchVolume, setSearchVolume] = useState<number | undefined>(initialData?.searchVolume);
+  const [searchVolume, setSearchVolume] = useState<number | undefined>(
+    initialData?.searchVolume
+  );
   const [difficulty, setDifficulty] = useState<'low' | 'medium' | 'high'>(
     initialData?.difficulty || 'medium'
   );
-  const [intent, setIntent] = useState<'informational' | 'commercial' | 'transactional' | 'navigational'>(
-    initialData?.intent || 'informational'
-  );
+  const [intent, setIntent] = useState<
+    'informational' | 'commercial' | 'transactional' | 'navigational'
+  >(initialData?.intent || 'informational');
   const [targetUrl, setTargetUrl] = useState(initialData?.targetUrl || '');
   const [isLoading, setIsLoading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState('');
-  const [suggestions, setSuggestions] = useState<typeof KEYWORD_SUGGESTIONS>([]);
+  const [suggestions, setSuggestions] = useState<typeof KEYWORD_SUGGESTIONS>(
+    []
+  );
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<{
     volume: number;
@@ -88,9 +139,17 @@ export function KeywordSetupStep({
 
       // Mock analysis result
       const mockVolume = Math.floor(Math.random() * 10000) + 100;
-      const mockDifficulties: Array<'low' | 'medium' | 'high'> = ['low', 'medium', 'high'];
+      const mockDifficulties: Array<'low' | 'medium' | 'high'> = [
+        'low',
+        'medium',
+        'high',
+      ];
       const mockDifficulty = mockDifficulties[Math.floor(Math.random() * 3)];
-      const mockTrends: Array<'up' | 'down' | 'stable'> = ['up', 'down', 'stable'];
+      const mockTrends: Array<'up' | 'down' | 'stable'> = [
+        'up',
+        'down',
+        'stable',
+      ];
       const mockTrend = mockTrends[Math.floor(Math.random() * 3)];
 
       setAnalysisResult({
@@ -111,7 +170,9 @@ export function KeywordSetupStep({
     }
   };
 
-  const handleSuggestionClick = (suggestion: typeof KEYWORD_SUGGESTIONS[number]) => {
+  const handleSuggestionClick = (
+    suggestion: (typeof KEYWORD_SUGGESTIONS)[number]
+  ) => {
     setKeyword(suggestion.keyword);
     setSearchVolume(suggestion.volume);
     setDifficulty(suggestion.difficulty);
@@ -173,7 +234,9 @@ export function KeywordSetupStep({
     );
   }
 
-  const selectedDifficulty = DIFFICULTY_LEVELS.find((d) => d.value === difficulty);
+  const selectedDifficulty = DIFFICULTY_LEVELS.find(
+    (d) => d.value === difficulty
+  );
   const selectedIntent = SEARCH_INTENTS.find((i) => i.value === intent);
 
   return (
@@ -187,7 +250,8 @@ export function KeywordSetupStep({
           Add Your First Keyword
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
-          Track your SEO performance and generate content based on target keywords.
+          Track your SEO performance and generate content based on target
+          keywords.
         </p>
       </div>
 
@@ -254,9 +318,12 @@ export function KeywordSetupStep({
                         <span
                           className={cn(
                             'text-xs px-2 py-0.5 rounded-full',
-                            suggestion.difficulty === 'low' && 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
-                            suggestion.difficulty === 'medium' && 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300',
-                            suggestion.difficulty === 'high' && 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                            suggestion.difficulty === 'low' &&
+                              'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
+                            suggestion.difficulty === 'medium' &&
+                              'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300',
+                            suggestion.difficulty === 'high' &&
+                              'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
                           )}
                         >
                           {suggestion.difficulty} difficulty
@@ -275,7 +342,8 @@ export function KeywordSetupStep({
                 'px-4 py-3 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300',
                 'hover:bg-indigo-200 dark:hover:bg-indigo-900/50',
                 'font-medium rounded-lg transition-colors flex items-center gap-2',
-                (isAnalyzing || isLoading || !keyword.trim()) && 'opacity-50 cursor-not-allowed'
+                (isAnalyzing || isLoading || !keyword.trim()) &&
+                  'opacity-50 cursor-not-allowed'
               )}
             >
               {isAnalyzing ? (
@@ -295,23 +363,33 @@ export function KeywordSetupStep({
           <div className="p-4 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-              <span className="font-medium text-gray-900 dark:text-white">Keyword Analysis</span>
+              <span className="font-medium text-gray-900 dark:text-white">
+                Keyword Analysis
+              </span>
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Monthly Searches</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                  Monthly Searches
+                </div>
                 <div className="text-xl font-bold text-gray-900 dark:text-white">
                   {analysisResult.volume.toLocaleString()}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Difficulty</div>
-                <div className={cn('text-xl font-bold', selectedDifficulty?.color)}>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                  Difficulty
+                </div>
+                <div
+                  className={cn('text-xl font-bold', selectedDifficulty?.color)}
+                >
                   {selectedDifficulty?.label}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Trend</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                  Trend
+                </div>
                 <div
                   className={cn(
                     'text-xl font-bold flex items-center gap-1',

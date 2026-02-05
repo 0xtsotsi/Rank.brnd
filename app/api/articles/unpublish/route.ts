@@ -48,7 +48,10 @@ export async function POST(request: NextRequest) {
     }
 
     if ((article as any).status !== 'published') {
-      return NextResponse.json({ error: 'Only published articles can be unpublished' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Only published articles can be unpublished' },
+        { status: 400 }
+      );
     }
 
     const { data: memberRole } = await client
@@ -69,10 +72,7 @@ export async function POST(request: NextRequest) {
     const result = await unpublishArticleRecord(client, id);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data);

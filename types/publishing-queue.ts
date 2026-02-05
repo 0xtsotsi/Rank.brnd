@@ -7,9 +7,12 @@
 
 import type { Database } from './database';
 
-type PublishingQueueRow = Database['public']['Tables']['publishing_queue']['Row'];
-type PublishingQueueInsert = Database['public']['Tables']['publishing_queue']['Insert'];
-type PublishingQueueUpdateType = Database['public']['Tables']['publishing_queue']['Update'];
+type PublishingQueueRow =
+  Database['public']['Tables']['publishing_queue']['Row'];
+type PublishingQueueInsert =
+  Database['public']['Tables']['publishing_queue']['Insert'];
+type PublishingQueueUpdateType =
+  Database['public']['Tables']['publishing_queue']['Update'];
 
 /**
  * Publishing queue status
@@ -62,7 +65,10 @@ export interface PublishingQueue extends Omit<PublishingQueueRow, 'id'> {
 /**
  * Publishing Queue Item for Create
  */
-export interface PublishingQueueCreate extends Omit<PublishingQueueInsert, 'article_id' | 'integration_id'> {
+export interface PublishingQueueCreate extends Omit<
+  PublishingQueueInsert,
+  'article_id' | 'integration_id'
+> {
   article_id?: string;
   integration_id?: string;
 }
@@ -276,10 +282,7 @@ export type PublishingPriority = 'low' | 'normal' | 'high' | 'urgent';
 /**
  * Priority labels and values
  */
-export const PUBLISHING_PRIORITY_VALUES: Record<
-  PublishingPriority,
-  number
-> = {
+export const PUBLISHING_PRIORITY_VALUES: Record<PublishingPriority, number> = {
   low: 0,
   normal: 5,
   high: 10,
@@ -333,15 +336,16 @@ export type SortDirection = 'asc' | 'desc';
 /**
  * Error type labels
  */
-export const PUBLISHING_ERROR_TYPE_LABELS: Record<PublishingErrorType, string> = {
-  network: 'Network Error',
-  timeout: 'Timeout',
-  rate_limit: 'Rate Limited',
-  auth: 'Authentication Error',
-  validation: 'Validation Error',
-  server_error: 'Server Error',
-  unknown: 'Unknown Error',
-} as const;
+export const PUBLISHING_ERROR_TYPE_LABELS: Record<PublishingErrorType, string> =
+  {
+    network: 'Network Error',
+    timeout: 'Timeout',
+    rate_limit: 'Rate Limited',
+    auth: 'Authentication Error',
+    validation: 'Validation Error',
+    server_error: 'Server Error',
+    unknown: 'Unknown Error',
+  } as const;
 
 /**
  * Error type colors

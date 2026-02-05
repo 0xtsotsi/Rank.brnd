@@ -14,7 +14,13 @@ import { ActivityLogsTable } from '@/components/activity-feed';
 interface SessionData {
   userId: string | null;
   orgId: string | null;
-  organizations: Array<{ id: string; name: string; slug: string; role: string; tier: string }>;
+  organizations: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    role: string;
+    tier: string;
+  }>;
   email?: string;
   fullName?: string | null;
 }
@@ -46,9 +52,12 @@ export default function ActivityFeedPage() {
         }
 
         // Check if user has organizations
-        const hasOrg = data.orgId || (data.organizations && data.organizations.length > 0);
+        const hasOrg =
+          data.orgId || (data.organizations && data.organizations.length > 0);
         if (!hasOrg) {
-          setError('No organization found. Please create an organization first.');
+          setError(
+            'No organization found. Please create an organization first.'
+          );
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load data');
@@ -65,7 +74,9 @@ export default function ActivityFeedPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" />
-          <p className="text-sm text-gray-500 dark:text-gray-400">Loading activity feed...</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Loading activity feed...
+          </p>
         </div>
       </div>
     );
@@ -90,8 +101,12 @@ export default function ActivityFeedPage() {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Error Loading Activity</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{error}</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Error Loading Activity
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            {error}
+          </p>
           <button
             onClick={() => router.push('/dashboard')}
             className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -103,7 +118,8 @@ export default function ActivityFeedPage() {
     );
   }
 
-  const organizationId = sessionData?.orgId || (sessionData?.organizations?.[0]?.id ?? null);
+  const organizationId =
+    sessionData?.orgId || (sessionData?.organizations?.[0]?.id ?? null);
   const userId = sessionData?.userId ?? null;
 
   if (!organizationId || !userId) {
@@ -125,7 +141,9 @@ export default function ActivityFeedPage() {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Organization Found</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            No Organization Found
+          </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
             You need to be part of an organization to view the activity feed.
           </p>
@@ -144,9 +162,12 @@ export default function ActivityFeedPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Activity Feed</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Activity Feed
+        </h1>
         <p className="text-gray-600 dark:text-gray-400 mt-1">
-          Track recent team activities, changes, and events across your organization.
+          Track recent team activities, changes, and events across your
+          organization.
         </p>
       </div>
 

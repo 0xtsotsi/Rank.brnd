@@ -44,7 +44,11 @@ export interface TiptapEditorProps {
   /** Placeholder text when editor is empty */
   placeholder?: string;
   /** Called when content changes (debounced) */
-  onUpdate?: (content: string, wordCount: number, characterCount: number) => void;
+  onUpdate?: (
+    content: string,
+    wordCount: number,
+    characterCount: number
+  ) => void;
   /** Editor height */
   height?: string;
   /** Whether to show the toolbar */
@@ -103,7 +107,7 @@ export function TiptapEditor({
         ),
       },
     },
-    onUpdate: ({ editor }) => {
+    onUpdate: ({ editor }: { editor: any }) => {
       if (onUpdate) {
         const html = editor.getHTML();
         const wordCount = calculateWordCount(editor.getText());
@@ -150,7 +154,8 @@ export function TiptapEditor({
         'p-2 rounded transition-colors',
         'hover:bg-gray-100 dark:hover:bg-gray-700',
         'disabled:opacity-50 disabled:cursor-not-allowed',
-        isActive && 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'
+        isActive &&
+          'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'
       )}
     >
       {children}
@@ -158,7 +163,12 @@ export function TiptapEditor({
   );
 
   return (
-    <div className={cn('rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden', className)}>
+    <div
+      className={cn(
+        'rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden',
+        className
+      )}
+    >
       {showToolbar && (
         <div className="flex flex-wrap items-center gap-1 p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
           {/* Undo/Redo */}
@@ -181,21 +191,27 @@ export function TiptapEditor({
 
           {/* Headings */}
           <ToolbarButton
-            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 1 }).run()
+            }
             isActive={editor.isActive('heading', { level: 1 })}
             title="Heading 1"
           >
             <Heading1 className="w-4 h-4" />
           </ToolbarButton>
           <ToolbarButton
-            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 2 }).run()
+            }
             isActive={editor.isActive('heading', { level: 2 })}
             title="Heading 2"
           >
             <Heading2 className="w-4 h-4" />
           </ToolbarButton>
           <ToolbarButton
-            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 3 }).run()
+            }
             isActive={editor.isActive('heading', { level: 3 })}
             title="Heading 3"
           >
@@ -299,10 +315,16 @@ export function TiptapEditor({
       <div className="flex items-center justify-between px-4 py-2 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-sm">
         <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400">
           <span>
-            <span className="font-medium text-gray-900 dark:text-white">{wordCount}</span> words
+            <span className="font-medium text-gray-900 dark:text-white">
+              {wordCount}
+            </span>{' '}
+            words
           </span>
           <span>
-            <span className="font-medium text-gray-900 dark:text-white">{characterCount}</span> characters
+            <span className="font-medium text-gray-900 dark:text-white">
+              {characterCount}
+            </span>{' '}
+            characters
           </span>
         </div>
         <div className="text-gray-500 dark:text-gray-500">
@@ -317,7 +339,10 @@ export function TiptapEditor({
  * Calculate word count from text
  */
 function calculateWordCount(text: string): number {
-  return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+  return text
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word.length > 0).length;
 }
 
 /**
@@ -335,8 +360,11 @@ export function calculateReadabilityScore(text: string): {
   level: string;
   description: string;
 } {
-  const words = text.trim().split(/\s+/).filter(w => w.length > 0);
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  const words = text
+    .trim()
+    .split(/\s+/)
+    .filter((w) => w.length > 0);
+  const sentences = text.split(/[.!?]+/).filter((s) => s.trim().length > 0);
   const syllables = words.reduce((acc, word) => acc + countSyllables(word), 0);
 
   if (words.length === 0 || sentences.length === 0) {
@@ -344,9 +372,15 @@ export function calculateReadabilityScore(text: string): {
   }
 
   // Flesch Reading Ease formula
-  const score = Math.max(0, Math.min(100,
-    206.835 - 1.015 * (words.length / sentences.length) - 84.6 * (syllables / words.length)
-  ));
+  const score = Math.max(
+    0,
+    Math.min(
+      100,
+      206.835 -
+        1.015 * (words.length / sentences.length) -
+        84.6 * (syllables / words.length)
+    )
+  );
 
   let level = '';
   let description = '';

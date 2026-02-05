@@ -63,10 +63,7 @@ export default function ProductsPage() {
   }, [fetchProducts]);
 
   // Handle filters change
-  const handleFiltersChange = (
-    key: keyof ProductFilters,
-    value: string
-  ) => {
+  const handleFiltersChange = (key: keyof ProductFilters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -157,10 +154,7 @@ export default function ProductsPage() {
   };
 
   return (
-    <div
-      className="space-y-6 fade-in"
-      data-testid="products-page"
-    >
+    <div className="space-y-6 fade-in" data-testid="products-page">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -254,9 +248,7 @@ export default function ProductsPage() {
                 type="text"
                 placeholder="Search products..."
                 value={filters.search}
-                onChange={(e) =>
-                  handleFiltersChange('search', e.target.value)
-                }
+                onChange={(e) => handleFiltersChange('search', e.target.value)}
                 className={cn(
                   'w-full pl-10 pr-4 py-2 rounded-lg border',
                   'bg-white dark:bg-gray-900',
@@ -274,9 +266,7 @@ export default function ProductsPage() {
           <div className="sm:w-48">
             <select
               value={filters.status}
-              onChange={(e) =>
-                handleFiltersChange('status', e.target.value)
-              }
+              onChange={(e) => handleFiltersChange('status', e.target.value)}
               className={cn(
                 'w-full px-4 py-2 rounded-lg border',
                 'bg-white dark:bg-gray-900',

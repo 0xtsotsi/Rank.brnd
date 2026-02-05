@@ -81,7 +81,7 @@ export function getSerpApiConfig(): SerpApiConfig {
   if (!apiKey) {
     throw new Error(
       'SERPAPI_API_KEY environment variable is not set. ' +
-      'Get your API key from https://serpapi.com/ and set it in your environment.'
+        'Get your API key from https://serpapi.com/ and set it in your environment.'
     );
   }
 
@@ -97,7 +97,11 @@ export function getSerpApiConfig(): SerpApiConfig {
       googleDomain: process.env.SERPAPI_DEFAULT_DOMAIN || 'google.com',
       language: process.env.SERPAPI_DEFAULT_LANGUAGE || 'en',
       country: process.env.SERPAPI_DEFAULT_COUNTRY || 'us',
-      device: (process.env.SERPAPI_DEFAULT_DEVICE as 'desktop' | 'mobile' | 'tablet') || 'desktop',
+      device:
+        (process.env.SERPAPI_DEFAULT_DEVICE as
+          | 'desktop'
+          | 'mobile'
+          | 'tablet') || 'desktop',
       safe: (process.env.SERPAPI_DEFAULT_SAFE as 'active' | 'off') || 'off',
       num: parseInt(process.env.SERPAPI_DEFAULT_NUM || '10', 10),
     },
@@ -197,7 +201,8 @@ export function validateSerpApiConfiguration(): {
   } catch (error) {
     return {
       valid: false,
-      error: error instanceof Error ? error.message : 'Unknown configuration error',
+      error:
+        error instanceof Error ? error.message : 'Unknown configuration error',
     };
   }
 }

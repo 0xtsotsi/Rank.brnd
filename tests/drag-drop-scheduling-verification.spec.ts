@@ -14,7 +14,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Drag-Drop API Endpoints', () => {
-  test('POST /api/schedule/drag-drop validates request body', async ({ request }) => {
+  test('POST /api/schedule/drag-drop validates request body', async ({
+    request,
+  }) => {
     // Test with missing required fields
     const response1 = await request.post('/api/schedule/drag-drop', {
       data: {},
@@ -32,7 +34,9 @@ test.describe('Drag-Drop API Endpoints', () => {
     expect(response2.status()).toBe(401); // Unauthorized without auth
   });
 
-  test('POST /api/schedule/validate-conflicts validates request body', async ({ request }) => {
+  test('POST /api/schedule/validate-conflicts validates request body', async ({
+    request,
+  }) => {
     // Test with missing required fields
     const response1 = await request.post('/api/schedule/validate-conflicts', {
       data: {},
@@ -79,7 +83,9 @@ test.describe('Drag-Drop Hook', () => {
     const hookExists = await page.evaluate(async () => {
       try {
         // This would normally be imported by a component
-        const hookModule = await import('/lib/hooks/use-calendar-drag-drop');
+        const modulePath = '/lib/hooks/use-calendar-drag-drop';
+        // @ts-ignore - dynamic import in browser context
+        const hookModule = await import(modulePath);
         return typeof hookModule.useCalendarDragDrop === 'function';
       } catch {
         return false;
@@ -99,7 +105,10 @@ test.describe('Scheduled Articles Calendar Component', () => {
 
     const componentExists = await page.evaluate(async () => {
       try {
-        const componentModule = await import('/components/scheduled-articles-calendar/scheduled-articles-calendar');
+        const modulePath =
+          '/components/scheduled-articles-calendar/scheduled-articles-calendar';
+        // @ts-ignore - dynamic import in browser context
+        const componentModule = await import(modulePath);
         return typeof componentModule.ScheduledArticlesCalendar === 'function';
       } catch {
         return false;
@@ -109,12 +118,16 @@ test.describe('Scheduled Articles Calendar Component', () => {
     expect(componentExists).toBe(true);
   });
 
-  test('component index file exports ScheduledArticlesCalendar', async ({ page }) => {
+  test('component index file exports ScheduledArticlesCalendar', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     const exportsComponent = await page.evaluate(async () => {
       try {
-        const indexModule = await import('/components/scheduled-articles-calendar');
+        const modulePath = '/components/scheduled-articles-calendar';
+        // @ts-ignore - dynamic import in browser context
+        const indexModule = await import(modulePath);
         return typeof indexModule.ScheduledArticlesCalendar === 'function';
       } catch {
         return false;
@@ -126,13 +139,19 @@ test.describe('Scheduled Articles Calendar Component', () => {
 });
 
 test.describe('Calendar Utils', () => {
-  test('scheduledArticlesToCalendarEvents function exists', async ({ page }) => {
+  test('scheduledArticlesToCalendarEvents function exists', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     const utilExists = await page.evaluate(async () => {
       try {
-        const utilsModule = await import('/lib/calendar-utils');
-        return typeof utilsModule.scheduledArticlesToCalendarEvents === 'function';
+        const modulePath = '/lib/calendar-utils';
+        // @ts-ignore - dynamic import in browser context
+        const utilsModule = await import(modulePath);
+        return (
+          typeof utilsModule.scheduledArticlesToCalendarEvents === 'function'
+        );
       } catch {
         return false;
       }
@@ -141,12 +160,16 @@ test.describe('Calendar Utils', () => {
     expect(utilExists).toBe(true);
   });
 
-  test('function converts scheduled articles to calendar events', async ({ page }) => {
+  test('function converts scheduled articles to calendar events', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     const conversionWorks = await page.evaluate(async () => {
       try {
-        const utilsModule = await import('/lib/calendar-utils');
+        const modulePath = '/lib/calendar-utils';
+        // @ts-ignore - dynamic import in browser context
+        const utilsModule = await import(modulePath);
         const { scheduledArticlesToCalendarEvents } = utilsModule;
 
         // Test the function with mock data
@@ -155,13 +178,19 @@ test.describe('Calendar Utils', () => {
             id: 'test-1',
             article_id: 'test-1',
             title: 'Test Article',
-            scheduled_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+            scheduled_at: new Date(
+              Date.now() + 7 * 24 * 60 * 60 * 1000
+            ).toISOString(),
             status: 'draft',
           },
         ];
 
         const events = scheduledArticlesToCalendarEvents(mockArticles);
-        return Array.isArray(events) && events.length === 1 && events[0].title === 'Test Article';
+        return (
+          Array.isArray(events) &&
+          events.length === 1 &&
+          events[0].title === 'Test Article'
+        );
       } catch {
         return false;
       }
@@ -184,8 +213,10 @@ test.describe('Calendar Demo Page', () => {
 
   test('calendar view component is present', async ({ page }) => {
     // Look for calendar grid or day cells
-    const calendarGrid = page.locator('[data-testid="calendar-view"], .calendar-grid');
-    const hasCalendar = await calendarGrid.count() > 0;
+    const calendarGrid = page.locator(
+      '[data-testid="calendar-view"], .calendar-grid'
+    );
+    const hasCalendar = (await calendarGrid.count()) > 0;
     expect(hasCalendar).toBe(true);
   });
 
@@ -222,8 +253,10 @@ test.describe('Content Planner Page', () => {
 
   test('displays calendar with events', async ({ page }) => {
     // Look for calendar elements
-    const calendarGrid = page.locator('.calendar-grid, [data-testid="calendar-view"]');
-    const hasCalendar = await calendarGrid.count() > 0;
+    const calendarGrid = page.locator(
+      '.calendar-grid, [data-testid="calendar-view"]'
+    );
+    const hasCalendar = (await calendarGrid.count()) > 0;
     expect(hasCalendar).toBe(true);
   });
 });

@@ -49,10 +49,7 @@ export {
   getReadabilityAssessment,
 } from './readability';
 
-export {
-  analyzeKeywordDensity,
-  getDensityRating,
-} from './keyword-density';
+export { analyzeKeywordDensity, getDensityRating } from './keyword-density';
 
 export {
   analyzeHeadingStructure,

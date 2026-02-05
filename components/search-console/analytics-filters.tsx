@@ -7,7 +7,10 @@
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import type { AnalyticsFilters, DateRangePreset } from '@/types/google-search-console';
+import type {
+  AnalyticsFilters,
+  DateRangePreset,
+} from '@/types/google-search-console';
 import { Calendar, Filter } from 'lucide-react';
 
 const dateRangePresets: DateRangePreset[] = [
@@ -44,7 +47,9 @@ export function AnalyticsFilters({
     onFiltersChange({ ...filters, keyword: keyword || undefined });
   };
 
-  const selectedProduct = productOptions.find((p) => p.id === filters.productId);
+  const selectedProduct = productOptions.find(
+    (p) => p.id === filters.productId
+  );
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
@@ -106,7 +111,11 @@ export function AnalyticsFilters({
           </label>
           <select
             value={filters.dateRange}
-            onChange={(e) => handleDateRangeChange(e.target.value as AnalyticsFilters['dateRange'])}
+            onChange={(e) =>
+              handleDateRangeChange(
+                e.target.value as AnalyticsFilters['dateRange']
+              )
+            }
             disabled={isLoading}
             className={cn(
               'w-full px-3 py-2 rounded-lg border',

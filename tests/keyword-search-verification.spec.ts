@@ -40,9 +40,11 @@ test.describe('Keyword Research Page - Search Integration', () => {
     await expect(searchButton).toContainText('Hide Search');
 
     // Check that the search panel is visible
-    const searchPanel = page.locator('.border').filter({ hasText: 'Search for keywords' }).or(
-      page.locator('.border').filter({ hasText: 'keyword' })
-    ).first();
+    const searchPanel = page
+      .locator('.border')
+      .filter({ hasText: 'Search for keywords' })
+      .or(page.locator('.border').filter({ hasText: 'keyword' }))
+      .first();
     await expect(searchPanel).toBeVisible();
 
     // Click again to hide
@@ -56,7 +58,11 @@ test.describe('Keyword Research Page - Search Integration', () => {
     await searchButton.click();
 
     // Look for keyword input
-    const keywordInput = page.locator('input[placeholder*="keyword"], input[placeholder*="Keyword"], input[type="text"]').first();
+    const keywordInput = page
+      .locator(
+        'input[placeholder*="keyword"], input[placeholder*="Keyword"], input[type="text"]'
+      )
+      .first();
     await expect(keywordInput).toBeVisible();
   });
 
@@ -93,45 +99,57 @@ test.describe('Keyword Research Page - Search Integration', () => {
 
   test('page has keyword filters section', async ({ page }) => {
     // Check for filters
-    const filtersSection = page.locator('text=Difficulty, text=Intent, text=Status').or(
-      page.locator('[class*="filter"]')
-    ).first();
+    const filtersSection = page
+      .locator('text=Difficulty, text=Intent, text=Status')
+      .or(page.locator('[class*="filter"]'))
+      .first();
     await expect(filtersSection).toBeVisible();
   });
 
   test('has keyword table', async ({ page }) => {
     // Check for the keywords table
-    const table = page.locator('table, [role="table"]').or(
-      page.locator('[data-testid*="keyword"]')
-    ).first();
+    const table = page
+      .locator('table, [role="table"]')
+      .or(page.locator('[data-testid*="keyword"]'))
+      .first();
     await expect(table).toBeVisible();
   });
 
   test('keyword search API endpoint exists', async ({ page }) => {
     // Make a request to the search API endpoint
-    const response = await page.request.get('/api/keywords/search?keyword=test');
+    const response = await page.request.get(
+      '/api/keywords/search?keyword=test'
+    );
 
     // The endpoint should respond (may return error if not authenticated, but should exist)
     expect([200, 400, 401, 500]).toContain(response.status());
   });
 
-  test('success message displays after adding keyword (mock)', async ({ page }) => {
+  test('success message displays after adding keyword (mock)', async ({
+    page,
+  }) => {
     // First toggle the search panel
     const searchButton = page.locator('[data-testid="toggle-search-button"]');
     await searchButton.click();
 
     // The success message should not be visible initially
-    const successMessage = page.locator('.bg-green-50, [class*="green"]').filter({ hasText: 'Added' });
+    const successMessage = page
+      .locator('.bg-green-50, [class*="green"]')
+      .filter({ hasText: 'Added' });
     await expect(successMessage).not.toBeVisible({ timeout: 2000 });
   });
 
   test('error message can be dismissed', async ({ page }) => {
     // Check if there's an error message (likely no error on fresh load)
-    const errorAlert = page.locator('.bg-red-50, [class*="red"]').filter({ hasText: /error|Error/i });
+    const errorAlert = page
+      .locator('.bg-red-50, [class*="red"]')
+      .filter({ hasText: /error|Error/i });
 
     if (await errorAlert.isVisible()) {
       // If error is visible, check for close button
-      const closeButton = errorAlert.locator('button').or(page.locator('.bg-red-50 button, [class*="red"] button'));
+      const closeButton = errorAlert
+        .locator('button')
+        .or(page.locator('.bg-red-50 button, [class*="red"] button'));
       if (await closeButton.isVisible()) {
         await closeButton.click();
         await expect(errorAlert).not.toBeVisible();
@@ -141,7 +159,9 @@ test.describe('Keyword Research Page - Search Integration', () => {
 });
 
 test.describe('Keyword Search API', () => {
-  test('GET /api/keywords/search requires keyword parameter', async ({ page }) => {
+  test('GET /api/keywords/search requires keyword parameter', async ({
+    page,
+  }) => {
     // Test that the API requires a keyword parameter
     const response = await page.request.get('/api/keywords/search');
 
@@ -151,18 +171,22 @@ test.describe('Keyword Search API', () => {
 
   test('GET /api/keywords/search with keyword parameter', async ({ page }) => {
     // Test that the API accepts a keyword parameter
-    const response = await page.request.get('/api/keywords/search?keyword=seo+tips');
+    const response = await page.request.get(
+      '/api/keywords/search?keyword=seo+tips'
+    );
 
     // Should respond (may return error due to auth or API limits, but should handle the request)
     expect([200, 400, 401, 500, 503]).toContain(response.status());
   });
 
-  test('POST /api/keywords/search exists for batch requests', async ({ page }) => {
+  test('POST /api/keywords/search exists for batch requests', async ({
+    page,
+  }) => {
     // Test batch endpoint
     const response = await page.request.post('/api/keywords/search', {
       data: {
-        keywords: ['test keyword 1', 'test keyword 2']
-      }
+        keywords: ['test keyword 1', 'test keyword 2'],
+      },
     });
 
     // Should respond (may return error due to auth or API limits, but should handle the request)

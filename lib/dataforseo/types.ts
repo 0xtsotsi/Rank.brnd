@@ -247,7 +247,11 @@ export function getLanguageCode(lang: string): string {
 // Search Intent Types
 // ============================================================================
 
-export type SearchIntent = 'informational' | 'navigational' | 'transactional' | 'commercial';
+export type SearchIntent =
+  | 'informational'
+  | 'navigational'
+  | 'transactional'
+  | 'commercial';
 
 // ============================================================================
 // Keyword Research Result Types

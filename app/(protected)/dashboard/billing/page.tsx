@@ -82,7 +82,8 @@ interface InvoiceData {
 
 export default function BillingPage() {
   const router = useRouter();
-  const [subscriptionData, setSubscriptionData] = useState<SubscriptionData | null>(null);
+  const [subscriptionData, setSubscriptionData] =
+    useState<SubscriptionData | null>(null);
   const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
   const [usageQuotas, setUsageQuotas] = useState<UsageQuotaInfo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -104,7 +105,9 @@ export default function BillingPage() {
       }
     } catch (err) {
       console.error('Error fetching billing data:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load billing data');
+      setError(
+        err instanceof Error ? err.message : 'Failed to load billing data'
+      );
     }
   };
 
@@ -194,7 +197,9 @@ export default function BillingPage() {
       await fetchBillingData();
     } catch (err) {
       console.error('Error canceling subscription:', err);
-      setError(err instanceof Error ? err.message : 'Failed to cancel subscription');
+      setError(
+        err instanceof Error ? err.message : 'Failed to cancel subscription'
+      );
     }
   };
 
@@ -212,7 +217,9 @@ export default function BillingPage() {
       await fetchBillingData();
     } catch (err) {
       console.error('Error undoing cancellation:', err);
-      setError(err instanceof Error ? err.message : 'Failed to undo cancellation');
+      setError(
+        err instanceof Error ? err.message : 'Failed to undo cancellation'
+      );
     }
   };
 
@@ -285,7 +292,9 @@ export default function BillingPage() {
       {subscriptionData && usageQuotas.length > 0 && (
         <UsageOverviewCard
           quotas={usageQuotas}
-          periodStart={new Date(subscriptionData.subscription.currentPeriodStart)}
+          periodStart={
+            new Date(subscriptionData.subscription.currentPeriodStart)
+          }
           periodEnd={new Date(subscriptionData.subscription.currentPeriodEnd)}
           daysRemaining={subscriptionData.subscription.daysUntilBilling}
         />
@@ -303,9 +312,12 @@ export default function BillingPage() {
       <div className="card bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-lg font-semibold">Need help with your subscription?</h3>
+            <h3 className="text-lg font-semibold">
+              Need help with your subscription?
+            </h3>
             <p className="mt-1 text-sm text-indigo-100">
-              Our support team is here to help with billing questions, plan changes, and more.
+              Our support team is here to help with billing questions, plan
+              changes, and more.
             </p>
           </div>
           <div className="flex gap-3">

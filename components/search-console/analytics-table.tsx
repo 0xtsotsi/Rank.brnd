@@ -18,7 +18,10 @@ interface AnalyticsTableProps {
   isLoading?: boolean;
 }
 
-export function AnalyticsTable({ data, isLoading = false }: AnalyticsTableProps) {
+export function AnalyticsTable({
+  data,
+  isLoading = false,
+}: AnalyticsTableProps) {
   const [sortField, setSortField] = useState<GscSortField>('impressions');
   const [sortOrder, setSortOrder] = useState<GscSortOrder>('desc');
 
@@ -45,12 +48,15 @@ export function AnalyticsTable({ data, isLoading = false }: AnalyticsTableProps)
         existing.clicks += row.clicks;
         existing.ctr =
           existing.impressions > 0
-            ? ((existing.clicks + row.clicks) / (existing.impressions + row.impressions)) * 100
+            ? ((existing.clicks + row.clicks) /
+                (existing.impressions + row.impressions)) *
+              100
             : 0;
         // Weighted average for position
         const totalImpressions = existing.impressions + row.impressions;
         existing.avg_position =
-          (existing.avg_position * existing.impressions + row.avg_position * row.impressions) /
+          (existing.avg_position * existing.impressions +
+            row.avg_position * row.impressions) /
           totalImpressions;
         existing.dates.push(row.date);
         if (row.date > existing.latest_date) {
@@ -93,7 +99,11 @@ export function AnalyticsTable({ data, isLoading = false }: AnalyticsTableProps)
     }
   };
 
-  const columns: { id: GscSortField; label: string; align: 'left' | 'right' }[] = [
+  const columns: {
+    id: GscSortField;
+    label: string;
+    align: 'left' | 'right';
+  }[] = [
     { id: 'keyword', label: 'Keyword', align: 'left' },
     { id: 'impressions', label: 'Impressions', align: 'right' },
     { id: 'clicks', label: 'Clicks', align: 'right' },
@@ -120,9 +130,18 @@ export function AnalyticsTable({ data, isLoading = false }: AnalyticsTableProps)
                       : 'text-gray-500 dark:text-gray-400'
                   )}
                 >
-                  <div className={cn('flex items-center gap-1', col.align === 'right' && 'justify-end')}>
+                  <div
+                    className={cn(
+                      'flex items-center gap-1',
+                      col.align === 'right' && 'justify-end'
+                    )}
+                  >
                     {col.label}
-                    <SortIcon field={col.id} currentField={sortField} order={sortOrder} />
+                    <SortIcon
+                      field={col.id}
+                      currentField={sortField}
+                      order={sortOrder}
+                    />
                   </div>
                 </th>
               ))}
@@ -141,12 +160,16 @@ export function AnalyticsTable({ data, isLoading = false }: AnalyticsTableProps)
               ))
             ) : groupedData.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                <td
+                  colSpan={columns.length}
+                  className="px-4 py-8 text-center text-gray-500 dark:text-gray-400"
+                >
                   <div className="flex flex-col items-center gap-2">
                     <Search className="h-8 w-8 opacity-50" />
                     <p>No search console data found</p>
                     <p className="text-sm">
-                      Import data from Google Search Console to see analytics here
+                      Import data from Google Search Console to see analytics
+                      here
                     </p>
                   </div>
                 </td>
@@ -225,21 +248,25 @@ function PositionBadge({ position }: PositionBadgeProps) {
   const config =
     position <= 3
       ? {
-          className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+          className:
+            'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
           label: 'Top 3',
         }
       : position <= 10
         ? {
-            className: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+            className:
+              'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
             label: '4-10',
           }
         : position <= 20
           ? {
-              className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+              className:
+                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
               label: '11-20',
             }
           : {
-              className: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+              className:
+                'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
               label: '20+',
             };
 

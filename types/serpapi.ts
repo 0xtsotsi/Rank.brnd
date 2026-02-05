@@ -300,7 +300,12 @@ export interface CompetitorContentStructure {
  */
 export interface ContentGap {
   /** Type of gap */
-  type: 'missing_format' | 'missing_depth' | 'missing_freshness' | 'missing_structure' | 'missing_topic';
+  type:
+    | 'missing_format'
+    | 'missing_depth'
+    | 'missing_freshness'
+    | 'missing_structure'
+    | 'missing_topic';
   /** Description of the gap */
   description: string;
   /** Opportunity score (0-100) */
@@ -317,7 +322,12 @@ export type RecommendationPriority = 'high' | 'medium' | 'low';
  */
 export interface ContentRecommendation {
   /** Type of recommendation */
-  type: 'content_format' | 'word_count' | 'seo_element' | 'structure' | 'schema';
+  type:
+    | 'content_format'
+    | 'word_count'
+    | 'seo_element'
+    | 'structure'
+    | 'schema';
   /** The recommendation text */
   recommendation: string;
   /** Priority level */
@@ -363,7 +373,11 @@ export interface SerpAnalysisSummary {
 /**
  * SERP analysis status
  */
-export type SerpAnalysisStatus = 'pending' | 'analyzing' | 'completed' | 'failed';
+export type SerpAnalysisStatus =
+  | 'pending'
+  | 'analyzing'
+  | 'completed'
+  | 'failed';
 
 /**
  * SERP feature data

@@ -13,7 +13,11 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { generateAuthorizationUrl, handleOAuthCallback, getStoredTokens } from '@/lib/oauth';
+import {
+  generateAuthorizationUrl,
+  handleOAuthCallback,
+  getStoredTokens,
+} from '@/lib/oauth';
 import { GoogleSearchConsoleClient } from '@/lib/google-search-console';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 
@@ -26,25 +30,28 @@ export async function GET(request: NextRequest) {
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json(
-        { error: 'Unauthorized', message: 'You must be logged in to connect Google Search Console' },
+        {
+          error: 'Unauthorized',
+          message: 'You must be logged in to connect Google Search Console',
+        },
         { status: 401 }
       );
     }
 
-    const clientId = process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_OAUTH_CLIENT_ID;
+    const clientId =
+      process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_OAUTH_CLIENT_ID;
     const isConfigured = !!clientId;
 
-    const redirectUri = process.env.GOOGLE_REDIRECT_URI || process.env.GOOGLE_OAUTH_REDIRECT_URI
-      || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/search-console/oauth/callback`;
+    const redirectUri =
+      process.env.GOOGLE_REDIRECT_URI ||
+      process.env.GOOGLE_OAUTH_REDIRECT_URI ||
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/search-console/oauth/callback`;
 
     return NextResponse.json({
       platform: 'google-search-console',
       supportsOAuth: true,
       isConfigured,
-      scopes: [
-        'openid',
-        'https://www.googleapis.com/auth/webmasters.readonly',
-      ],
+      scopes: ['openid', 'https://www.googleapis.com/auth/webmasters.readonly'],
       redirectUri,
     });
   } catch (error) {
@@ -65,17 +72,22 @@ export async function POST(request: NextRequest) {
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json(
-        { error: 'Unauthorized', message: 'You must be logged in to connect Google Search Console' },
+        {
+          error: 'Unauthorized',
+          message: 'You must be logged in to connect Google Search Console',
+        },
         { status: 401 }
       );
     }
 
-    const clientId = process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_OAUTH_CLIENT_ID;
+    const clientId =
+      process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_OAUTH_CLIENT_ID;
     if (!clientId) {
       return NextResponse.json(
         {
           error: 'Configuration error',
-          message: 'Google OAuth client ID not configured. Please set GOOGLE_CLIENT_ID environment variable.',
+          message:
+            'Google OAuth client ID not configured. Please set GOOGLE_CLIENT_ID environment variable.',
         },
         { status: 500 }
       );
@@ -84,8 +96,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { redirectUri: customRedirectUri, state: customState } = body;
 
-    const redirectUri = customRedirectUri || process.env.GOOGLE_REDIRECT_URI || process.env.GOOGLE_OAUTH_REDIRECT_URI
-      || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/search-console/oauth/callback`;
+    const redirectUri =
+      customRedirectUri ||
+      process.env.GOOGLE_REDIRECT_URI ||
+      process.env.GOOGLE_OAUTH_REDIRECT_URI ||
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/search-console/oauth/callback`;
 
     const scopes = [
       'openid',

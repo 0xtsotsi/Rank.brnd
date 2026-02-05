@@ -44,13 +44,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const result = await getPublishingQueueStats(client, organizationId, productId || undefined);
+    const result = await getPublishingQueueStats(
+      client,
+      organizationId,
+      productId || undefined
+    );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json(result.data);

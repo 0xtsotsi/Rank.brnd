@@ -99,8 +99,7 @@ export async function getProductById(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to fetch product',
+      error: error instanceof Error ? error.message : 'Failed to fetch product',
     };
   }
 }
@@ -129,8 +128,7 @@ export async function getProductBySlug(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to fetch product',
+      error: error instanceof Error ? error.message : 'Failed to fetch product',
     };
   }
 }
@@ -191,9 +189,12 @@ export async function createProduct(
         url: product.url || null,
         description: product.description || null,
         status: product.status || 'active',
-        brand_colors: (product.brand_colors || DEFAULT_BRAND_COLORS) as unknown as Json,
-        tone_preferences: (product.tone_preferences || DEFAULT_TONE_PREFERENCES) as unknown as Json,
-        analytics_config: (product.analytics_config || DEFAULT_ANALYTICS_CONFIG) as unknown as Json,
+        brand_colors: (product.brand_colors ||
+          DEFAULT_BRAND_COLORS) as unknown as Json,
+        tone_preferences: (product.tone_preferences ||
+          DEFAULT_TONE_PREFERENCES) as unknown as Json,
+        analytics_config: (product.analytics_config ||
+          DEFAULT_ANALYTICS_CONFIG) as unknown as Json,
         metadata: (product.metadata || {}) as unknown as Json,
       })
       .select()
@@ -311,7 +312,9 @@ export async function updateProductBrandColors(
   productId: string,
   brandColors: BrandColors
 ): Promise<ProductResult<Product>> {
-  return updateProduct(client, productId, { brand_colors: brandColors as unknown as Json });
+  return updateProduct(client, productId, {
+    brand_colors: brandColors as unknown as Json,
+  });
 }
 
 /**
@@ -398,9 +401,10 @@ export async function generateUniqueProductSlug(
 /**
  * Validate brand colors
  */
-export function validateBrandColors(
-  colors: Record<string, unknown>
-): { valid: boolean; errors: string[] } {
+export function validateBrandColors(colors: Record<string, unknown>): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   // Check for required keys
@@ -424,9 +428,10 @@ export function validateBrandColors(
 /**
  * Validate tone preferences
  */
-export function validateTonePreferences(
-  preferences: Record<string, unknown>
-): { valid: boolean; errors: string[] } {
+export function validateTonePreferences(preferences: Record<string, unknown>): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   const validTones = ['professional', 'casual', 'friendly', 'formal'];
@@ -457,9 +462,10 @@ export function validateTonePreferences(
 /**
  * Validate analytics configuration
  */
-export function validateAnalyticsConfig(
-  config: Record<string, unknown>
-): { valid: boolean; errors: string[] } {
+export function validateAnalyticsConfig(config: Record<string, unknown>): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   const validProviders = ['google-analytics', 'plausible', 'fathom', null];

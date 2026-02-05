@@ -9,7 +9,7 @@
  * Supports role changes and member removal for authorized users.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Table,
   TableBody,
@@ -34,7 +34,17 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Modal, ModalFooter } from '@/components/ui/modal';
-import { MoreHorizontal, Trash2, Loader2, Crown, Shield, Edit2, Eye, Mail, AlertTriangle } from 'lucide-react';
+import {
+  MoreHorizontal,
+  Trash2,
+  Loader2,
+  Crown,
+  Shield,
+  Edit2,
+  Eye,
+  Mail,
+  AlertTriangle,
+} from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 export type TeamMemberRole = 'owner' | 'admin' | 'editor' | 'viewer';
@@ -72,7 +82,7 @@ export function TeamMembersTable({
   const [memberToDelete, setMemberToDelete] = useState<TeamMember | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMembers = async () => {
+  const fetchMembers = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -87,17 +97,22 @@ export function TeamMembersTable({
       const data = await response.json();
       setMembers(data.team_members || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load team members');
+      setError(
+        err instanceof Error ? err.message : 'Failed to load team members'
+      );
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [organizationId]);
 
   useEffect(() => {
     fetchMembers();
-  }, [organizationId]);
+  }, [fetchMembers]);
 
-  const handleRoleChange = async (memberId: string, newRole: TeamMemberRole) => {
+  const handleRoleChange = async (
+    memberId: string,
+    newRole: TeamMemberRole
+  ) => {
     setUpdatingId(memberId);
     setError(null);
     try {
@@ -113,7 +128,9 @@ export function TeamMembersTable({
       }
 
       // Update local state
-      setMembers(members.map((m) => (m.id === memberId ? { ...m, role: newRole } : m)));
+      setMembers(
+        members.map((m) => (m.id === memberId ? { ...m, role: newRole } : m))
+      );
       onRefresh?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update role');
@@ -176,15 +193,19 @@ export function TeamMembersTable({
 
   const getRoleBadgeColor = (role: string) => {
     const colors: Record<string, string> = {
-      owner: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+      owner:
+        'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
       admin: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-      editor: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+      editor:
+        'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
       viewer: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
     };
     return colors[role] || 'bg-gray-100 text-gray-800';
   };
 
-  const getAvailableRoles = (targetMemberRole: TeamMemberRole): TeamMemberRole[] => {
+  const getAvailableRoles = (
+    targetMemberRole: TeamMemberRole
+  ): TeamMemberRole[] => {
     // Users cannot promote others to a role higher than their own
     const roleHierarchy: Record<TeamMemberRole, number> = {
       viewer: 1,
@@ -225,7 +246,9 @@ export function TeamMembersTable({
       <Card>
         <CardHeader>
           <CardTitle>Team Members</CardTitle>
-          <CardDescription>People with access to your organization</CardDescription>
+          <CardDescription>
+            People with access to your organization
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-8">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -277,11 +300,14 @@ export function TeamMembersTable({
                       <div className="flex items-center gap-3">
                         <div className="h-9 w-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium">
                           {member.avatar_url ? (
-                            <img
-                              src={member.avatar_url}
-                              alt=""
-                              className="h-full w-full rounded-full object-cover"
-                            />
+                            <>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={member.avatar_url}
+                                alt=""
+                                className="h-full w-full rounded-full object-cover"
+                              />
+                            </>
                           ) : (
                             <span>
                               {member.name
@@ -340,13 +366,22 @@ export function TeamMembersTable({
                             {getAvailableRoles(member.role).map((role) => (
                               <DropdownMenuItem
                                 key={role}
-                                onClick={() => handleRoleChange(member.id, role)}
-                                disabled={updatingId === member.id || member.role === role}
+                                onClick={() =>
+                                  handleRoleChange(member.id, role)
+                                }
+                                disabled={
+                                  updatingId === member.id ||
+                                  member.role === role
+                                }
                               >
-                                <span className="mr-2">{getRoleIcon(role)}</span>
+                                <span className="mr-2">
+                                  {getRoleIcon(role)}
+                                </span>
                                 {getRoleLabel(role)}
                                 {member.role === role && (
-                                  <span className="ml-auto text-xs text-gray-400">Current</span>
+                                  <span className="ml-auto text-xs text-gray-400">
+                                    Current
+                                  </span>
                                 )}
                               </DropdownMenuItem>
                             ))}
@@ -389,20 +424,28 @@ export function TeamMembersTable({
                       {canManageMember(member) && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                            >
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
-                              onClick={() => handleRoleChange(member.id, 'viewer')}
+                              onClick={() =>
+                                handleRoleChange(member.id, 'viewer')
+                              }
                               disabled={updatingId === member.id}
                             >
                               <Eye className="h-4 w-4 mr-2" />
                               Change to Viewer
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => handleRoleChange(member.id, 'editor')}
+                              onClick={() =>
+                                handleRoleChange(member.id, 'editor')
+                              }
                               disabled={updatingId === member.id}
                             >
                               <Edit2 className="h-4 w-4 mr-2" />
@@ -411,7 +454,9 @@ export function TeamMembersTable({
                             {currentUserRole === 'owner' && (
                               <>
                                 <DropdownMenuItem
-                                  onClick={() => handleRoleChange(member.id, 'admin')}
+                                  onClick={() =>
+                                    handleRoleChange(member.id, 'admin')
+                                  }
                                   disabled={updatingId === member.id}
                                 >
                                   <Shield className="h-4 w-4 mr-2" />
@@ -475,8 +520,9 @@ export function TeamMembersTable({
       >
         <p className="text-sm text-gray-600 dark:text-gray-400">
           Are you sure you want to remove{' '}
-          <strong>{memberToDelete?.name || memberToDelete?.email}</strong> from your
-          organization? They will lose access to all organization resources immediately.
+          <strong>{memberToDelete?.name || memberToDelete?.email}</strong> from
+          your organization? They will lose access to all organization resources
+          immediately.
         </p>
       </Modal>
     </>

@@ -23,7 +23,10 @@ export async function GET(
 
     if (!userId) {
       return NextResponse.json(
-        { error: 'Unauthorized', message: 'You must be logged in to connect an integration' },
+        {
+          error: 'Unauthorized',
+          message: 'You must be logged in to connect an integration',
+        },
         { status: 401 }
       );
     }
@@ -33,7 +36,10 @@ export async function GET(
     // Check if platform supports OAuth
     if (!supportsOAuth(platform)) {
       return NextResponse.json(
-        { error: 'Unsupported platform', message: `OAuth is not supported for ${platform}` },
+        {
+          error: 'Unsupported platform',
+          message: `OAuth is not supported for ${platform}`,
+        },
         { status: 400 }
       );
     }
@@ -59,7 +65,10 @@ export async function GET(
     // Validate required parameters
     if (!code) {
       return NextResponse.json(
-        { error: 'Invalid callback', message: 'Authorization code is required' },
+        {
+          error: 'Invalid callback',
+          message: 'Authorization code is required',
+        },
         { status: 400 }
       );
     }
@@ -73,15 +82,24 @@ export async function GET(
 
     // Get OAuth credentials from environment
     const envPrefix = platform.toUpperCase();
-    const clientId = process.env[`${envPrefix}_CLIENT_ID`] || process.env[`${envPrefix}_OAUTH_CLIENT_ID`];
-    const clientSecret = process.env[`${envPrefix}_CLIENT_SECRET`] || process.env[`${envPrefix}_OAUTH_CLIENT_SECRET`];
-    const redirectUri = process.env[`${envPrefix}_REDIRECT_URI`] || process.env[`${envPrefix}_OAUTH_REDIRECT_URI`]
-      || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/oauth/callback/${platform}`;
+    const clientId =
+      process.env[`${envPrefix}_CLIENT_ID`] ||
+      process.env[`${envPrefix}_OAUTH_CLIENT_ID`];
+    const clientSecret =
+      process.env[`${envPrefix}_CLIENT_SECRET`] ||
+      process.env[`${envPrefix}_OAUTH_CLIENT_SECRET`];
+    const redirectUri =
+      process.env[`${envPrefix}_REDIRECT_URI`] ||
+      process.env[`${envPrefix}_OAUTH_REDIRECT_URI`] ||
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/oauth/callback/${platform}`;
 
     // Validate credentials
     if (!clientId) {
       return NextResponse.json(
-        { error: 'Configuration error', message: `OAuth client ID not configured for ${platform}` },
+        {
+          error: 'Configuration error',
+          message: `OAuth client ID not configured for ${platform}`,
+        },
         { status: 500 }
       );
     }
@@ -115,13 +133,15 @@ export async function GET(
   } catch (error) {
     console.error('OAuth callback error:', error);
 
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
 
     return NextResponse.json(
       {
         error: 'OAuth callback failed',
         message: errorMessage,
-        details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+        details:
+          process.env.NODE_ENV === 'development' ? String(error) : undefined,
       },
       { status: 500 }
     );

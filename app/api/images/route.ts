@@ -147,33 +147,42 @@ export async function GET(request: NextRequest) {
       imagesQuerySchema
     );
 
-    const search = validationResult.success && validationResult.data
-      ? validationResult.data.search
-      : request.nextUrl.searchParams.get('search') || '';
-    const productId = validationResult.success && validationResult.data
-      ? validationResult.data.product_id
-      : request.nextUrl.searchParams.get('product_id') || undefined;
-    const articleId = validationResult.success && validationResult.data
-      ? validationResult.data.article_id
-      : request.nextUrl.searchParams.get('article_id') || undefined;
-    const statusFilter = validationResult.success && validationResult.data
-      ? validationResult.data.status
-      : request.nextUrl.searchParams.get('status') || undefined;
-    const style = validationResult.success && validationResult.data
-      ? validationResult.data.style
-      : request.nextUrl.searchParams.get('style') || undefined;
-    const sortField = validationResult.success && validationResult.data
-      ? validationResult.data.sort
-      : request.nextUrl.searchParams.get('sort') || 'created_at';
-    const sortDirection = validationResult.success && validationResult.data
-      ? validationResult.data.order
-      : request.nextUrl.searchParams.get('order') || 'desc';
-    const limit = validationResult.success && validationResult.data
-      ? validationResult.data.limit
-      : 50;
-    const offset = validationResult.success && validationResult.data
-      ? validationResult.data.offset
-      : 0;
+    const search =
+      validationResult.success && validationResult.data
+        ? validationResult.data.search
+        : request.nextUrl.searchParams.get('search') || '';
+    const productId =
+      validationResult.success && validationResult.data
+        ? validationResult.data.product_id
+        : request.nextUrl.searchParams.get('product_id') || undefined;
+    const articleId =
+      validationResult.success && validationResult.data
+        ? validationResult.data.article_id
+        : request.nextUrl.searchParams.get('article_id') || undefined;
+    const statusFilter =
+      validationResult.success && validationResult.data
+        ? validationResult.data.status
+        : request.nextUrl.searchParams.get('status') || undefined;
+    const style =
+      validationResult.success && validationResult.data
+        ? validationResult.data.style
+        : request.nextUrl.searchParams.get('style') || undefined;
+    const sortField =
+      validationResult.success && validationResult.data
+        ? validationResult.data.sort
+        : request.nextUrl.searchParams.get('sort') || 'created_at';
+    const sortDirection =
+      validationResult.success && validationResult.data
+        ? validationResult.data.order
+        : request.nextUrl.searchParams.get('order') || 'desc';
+    const limit =
+      validationResult.success && validationResult.data
+        ? validationResult.data.limit
+        : 50;
+    const offset =
+      validationResult.success && validationResult.data
+        ? validationResult.data.offset
+        : 0;
 
     // Filter images
     let filtered = [...mockImages];
@@ -391,7 +400,10 @@ export async function PATCH(request: NextRequest) {
     const body = await request.json();
 
     if (!body.id) {
-      return NextResponse.json({ error: 'Image ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Image ID is required' },
+        { status: 400 }
+      );
     }
 
     const index = mockImages.findIndex((img) => img.id === body.id);
@@ -432,7 +444,10 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'Image ID is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Image ID is required' },
+        { status: 400 }
+      );
     }
 
     const index = mockImages.findIndex((img) => img.id === id);

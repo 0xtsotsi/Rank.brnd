@@ -193,7 +193,13 @@ export interface ScheduledArticle {
   article_id: string;
   title: string;
   scheduled_at: string;
-  schedule_status?: 'pending' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'cancelled';
+  schedule_status?:
+    | 'pending'
+    | 'scheduled'
+    | 'publishing'
+    | 'published'
+    | 'failed'
+    | 'cancelled';
   published_at?: string | null;
   status?: 'draft' | 'published' | 'archived';
 }
@@ -208,7 +214,8 @@ export function scheduledArticlesToCalendarEvents(
     .map((article) => {
       const scheduledDate = new Date(article.scheduled_at);
       const isPast = scheduledDate < now;
-      const isPublished = article.published_at != null && new Date(article.published_at) <= now;
+      const isPublished =
+        article.published_at != null && new Date(article.published_at) <= now;
 
       // Determine the event status based on schedule state
       let eventStatus: CalendarEvent['status'] = 'pending';

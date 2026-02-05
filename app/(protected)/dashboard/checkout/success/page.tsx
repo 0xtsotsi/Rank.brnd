@@ -7,9 +7,16 @@
  * Shows confirmation of the new subscription and next steps.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Check, X, ArrowRight, Calendar, Settings, FileText } from 'lucide-react';
+import {
+  Check,
+  X,
+  ArrowRight,
+  Calendar,
+  Settings,
+  FileText,
+} from 'lucide-react';
 import { getPlan } from '@/lib/stripe/plans';
 import type { BillingInterval } from '@/types/subscription';
 
@@ -32,6 +39,11 @@ export default function CheckoutSuccessPage() {
   // Countdown for redirect
   const [countdown, setCountdown] = useState(10);
 
+  const handleGoToDashboard = useCallback(() => {
+    setIsRedirecting(true);
+    router.push('/dashboard');
+  }, [router]);
+
   useEffect(() => {
     if (countdown <= 0) {
       handleGoToDashboard();
@@ -40,12 +52,7 @@ export default function CheckoutSuccessPage() {
 
     const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
     return () => clearTimeout(timer);
-  }, [countdown]);
-
-  const handleGoToDashboard = () => {
-    setIsRedirecting(true);
-    router.push('/dashboard');
-  };
+  }, [countdown, handleGoToDashboard]);
 
   const success = !paymentIntent || redirectStatus === 'succeeded';
 
@@ -54,11 +61,13 @@ export default function CheckoutSuccessPage() {
       <div className="card overflow-hidden p-8">
         {/* Success Icon */}
         <div className="mb-6 text-center">
-          <div className={`mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full ${
-            success
-              ? 'bg-green-100 dark:bg-green-900/30'
-              : 'bg-red-100 dark:bg-red-900/30'
-          }`}>
+          <div
+            className={`mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full ${
+              success
+                ? 'bg-green-100 dark:bg-green-900/30'
+                : 'bg-red-100 dark:bg-red-900/30'
+            }`}
+          >
             {success ? (
               <Check className="h-10 w-10 text-green-600 dark:text-green-400" />
             ) : (
@@ -94,7 +103,9 @@ export default function CheckoutSuccessPage() {
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Billing</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Billing
+                  </span>
                   <span className="font-medium text-gray-900 dark:text-white">
                     {formattedPrice}/{period}
                   </span>
@@ -102,7 +113,9 @@ export default function CheckoutSuccessPage() {
 
                 {plan?.metadata.trialDays && plan.metadata.trialDays > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Trial period</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Trial period
+                    </span>
                     <span className="font-medium text-indigo-600 dark:text-indigo-400">
                       {plan.metadata.trialDays} days free
                     </span>
@@ -110,7 +123,9 @@ export default function CheckoutSuccessPage() {
                 )}
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Status</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Status
+                  </span>
                   <span className="flex items-center gap-1 font-medium text-green-600 dark:text-green-400">
                     <span className="h-2 w-2 rounded-full bg-green-600 dark:bg-green-400" />
                     Active
@@ -193,7 +208,11 @@ export default function CheckoutSuccessPage() {
               </button>
 
               <button
-                onClick={() => router.push(`/dashboard/checkout?plan=${planId}&interval=${interval}`)}
+                onClick={() =>
+                  router.push(
+                    `/dashboard/checkout?plan=${planId}&interval=${interval}`
+                  )
+                }
                 className="flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-700"
               >
                 Try Again
@@ -207,7 +226,10 @@ export default function CheckoutSuccessPage() {
       {/* Support Note */}
       <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
         Need help? Contact us at{' '}
-        <a href="mailto:support@rank.brnd" className="text-indigo-600 hover:underline dark:text-indigo-400">
+        <a
+          href="mailto:support@rank.brnd"
+          className="text-indigo-600 hover:underline dark:text-indigo-400"
+        >
           support@rank.brnd
         </a>
       </p>
@@ -235,7 +257,9 @@ function NextStep({ icon, title, description, href }: NextStepProps) {
       </div>
       <div className="flex-1">
         <h3 className="font-medium text-gray-900 dark:text-white">{title}</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          {description}
+        </p>
       </div>
       <ArrowRight className="h-5 w-5 flex-shrink-0 text-gray-400" />
     </button>

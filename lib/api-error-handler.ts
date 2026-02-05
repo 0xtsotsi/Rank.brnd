@@ -129,11 +129,13 @@ export function handleAPIError(
   return createErrorResponse(
     errorType,
     userMessage,
-    process.env.NODE_ENV === 'development' ? {
-      context,
-      details: additionalContext,
-      stack: SentryError.stack,
-    } : undefined,
+    process.env.NODE_ENV === 'development'
+      ? {
+          context,
+          details: additionalContext,
+          stack: SentryError.stack,
+        }
+      : undefined,
     statusCode
   );
 }
@@ -149,7 +151,10 @@ export function handleAPIError(
  */
 export function withErrorHandling(
   context: string,
-  handler: (request: Request, extra?: { userId?: string }) => Promise<NextResponse>,
+  handler: (
+    request: Request,
+    extra?: { userId?: string }
+  ) => Promise<NextResponse>,
   options?: {
     requireAuth?: boolean;
     userId?: string;
@@ -181,8 +186,10 @@ export const APIErrors = {
   notFound: (resource: string = 'Resource') =>
     new APIError(ErrorType.NOT_FOUND, `${resource} not found`, 404),
 
-  validation: (message: string = 'Invalid request data', details?: Record<string, any>) =>
-    new APIError(ErrorType.VALIDATION, message, 400, details),
+  validation: (
+    message: string = 'Invalid request data',
+    details?: Record<string, any>
+  ) => new APIError(ErrorType.VALIDATION, message, 400, details),
 
   conflict: (message: string = 'Resource conflict') =>
     new APIError(ErrorType.CONFLICT, message, 409),
@@ -225,7 +232,7 @@ export async function withAPITracking<T>(
       name: operation,
       op: 'api.request',
     },
-    async (span) => {
+    async (span: any) => {
       try {
         const result = await fn();
         span?.setStatus({ code: 1, message: 'success' });

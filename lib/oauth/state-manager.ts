@@ -18,7 +18,9 @@ const STATE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 function generateRandomState(): string {
   const array = new Uint8Array(32);
   crypto.getRandomValues(array);
-  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join(
+    ''
+  );
 }
 
 /**
@@ -53,9 +55,12 @@ export async function createState(
 /**
  * Validate OAuth state parameter
  */
-export async function validateState(
-  state: string
-): Promise<{ valid: boolean; platform?: string; redirectUri?: string; error?: string }> {
+export async function validateState(state: string): Promise<{
+  valid: boolean;
+  platform?: string;
+  redirectUri?: string;
+  error?: string;
+}> {
   const stateData = stateStore.get(state);
 
   if (!stateData) {

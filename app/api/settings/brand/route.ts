@@ -6,10 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import {
-  validateRequest,
-  brandSettingsFormSchema,
-} from '@/lib/schemas';
+import { validateRequest, brandSettingsFormSchema } from '@/lib/schemas';
 import type {
   BrandSettings,
   BrandSettingsFormData,

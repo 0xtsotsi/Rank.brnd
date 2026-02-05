@@ -102,7 +102,8 @@ export const ROLE_DISPLAY_NAMES: Record<TeamMemberRole, string> = {
  */
 export const ROLE_DESCRIPTIONS: Record<TeamMemberRole, string> = {
   owner: 'Full access to all settings, billing, and can manage team members',
-  admin: 'Can manage team members, settings, and access all organization resources',
+  admin:
+    'Can manage team members, settings, and access all organization resources',
   editor: 'Can create, edit, and publish content within the organization',
   viewer: 'Read-only access to organization resources',
 } as const;
@@ -170,7 +171,11 @@ export const PERMISSION_MATRIX: Record<
 
   [Resource.PRODUCTS]: {
     viewer: [PermissionCategory.READ],
-    editor: [PermissionCategory.READ, PermissionCategory.CREATE, PermissionCategory.UPDATE],
+    editor: [
+      PermissionCategory.READ,
+      PermissionCategory.CREATE,
+      PermissionCategory.UPDATE,
+    ],
     admin: [
       PermissionCategory.READ,
       PermissionCategory.CREATE,
@@ -209,7 +214,11 @@ export const PERMISSION_MATRIX: Record<
 
   [Resource.PUBLISHING]: {
     viewer: [PermissionCategory.READ],
-    editor: [PermissionCategory.READ, PermissionCategory.CREATE, PermissionCategory.PUBLISH],
+    editor: [
+      PermissionCategory.READ,
+      PermissionCategory.CREATE,
+      PermissionCategory.PUBLISH,
+    ],
     admin: [
       PermissionCategory.READ,
       PermissionCategory.CREATE,
@@ -279,7 +288,11 @@ export const PERMISSION_MATRIX: Record<
 
   [Resource.IMAGES]: {
     viewer: [PermissionCategory.READ],
-    editor: [PermissionCategory.READ, PermissionCategory.CREATE, PermissionCategory.DELETE],
+    editor: [
+      PermissionCategory.READ,
+      PermissionCategory.CREATE,
+      PermissionCategory.DELETE,
+    ],
     admin: [
       PermissionCategory.READ,
       PermissionCategory.CREATE,
@@ -296,7 +309,11 @@ export const PERMISSION_MATRIX: Record<
 
   [Resource.BRAND_VOICE]: {
     viewer: [PermissionCategory.READ],
-    editor: [PermissionCategory.READ, PermissionCategory.CREATE, PermissionCategory.UPDATE],
+    editor: [
+      PermissionCategory.READ,
+      PermissionCategory.CREATE,
+      PermissionCategory.UPDATE,
+    ],
     admin: [
       PermissionCategory.READ,
       PermissionCategory.CREATE,
@@ -388,7 +405,10 @@ export function roleHasPermission(
 /**
  * Check if a role meets a minimum hierarchy level
  */
-export function roleHasMinLevel(role: TeamMemberRole, minRole: TeamMemberRole): boolean {
+export function roleHasMinLevel(
+  role: TeamMemberRole,
+  minRole: TeamMemberRole
+): boolean {
   return ROLE_HIERARCHY[role] >= ROLE_HIERARCHY[minRole];
 }
 

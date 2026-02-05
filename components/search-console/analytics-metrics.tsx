@@ -13,7 +13,10 @@ interface MetricsCardsProps {
   isLoading?: boolean;
 }
 
-export function AnalyticsMetrics({ metrics, isLoading = false }: MetricsCardsProps) {
+export function AnalyticsMetrics({
+  metrics,
+  isLoading = false,
+}: MetricsCardsProps) {
   const cards = [
     {
       id: 'impressions',
@@ -83,7 +86,14 @@ interface MetricCardProps {
   isLoading?: boolean;
 }
 
-function MetricCard({ label, value, icon: Icon, color, format, isLoading }: MetricCardProps) {
+function MetricCard({
+  label,
+  value,
+  icon: Icon,
+  color,
+  format,
+  isLoading,
+}: MetricCardProps) {
   const colorClasses = {
     indigo: {
       bg: 'bg-indigo-50 dark:bg-indigo-900/20',
@@ -146,7 +156,9 @@ function MetricCard({ label, value, icon: Icon, color, format, isLoading }: Metr
           <p className={cn('text-xl font-bold truncate', classes.text)}>
             {isLoading ? '—' : formatValue(value)}
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{label}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+            {label}
+          </p>
         </div>
       </div>
     </div>

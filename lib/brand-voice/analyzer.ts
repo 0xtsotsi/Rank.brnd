@@ -171,25 +171,41 @@ function validateApiKey(): string {
 /**
  * Parses an OpenAI API error response
  */
-function parseApiError(error: unknown): { type: BrandVoiceAnalyzerErrorType; message: string } {
+function parseApiError(error: unknown): {
+  type: BrandVoiceAnalyzerErrorType;
+  message: string;
+} {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
 
-    if (message.includes('api key') || message.includes('authentication') || message.includes('unauthorized')) {
+    if (
+      message.includes('api key') ||
+      message.includes('authentication') ||
+      message.includes('unauthorized')
+    ) {
       return {
         type: 'API_KEY_MISSING',
-        message: 'Invalid or missing OpenAI API key. Please check your environment variables.',
+        message:
+          'Invalid or missing OpenAI API key. Please check your environment variables.',
       };
     }
 
-    if (message.includes('rate limit') || message.includes('quota') || message.includes('429')) {
+    if (
+      message.includes('rate limit') ||
+      message.includes('quota') ||
+      message.includes('429')
+    ) {
       return {
         type: 'RATE_LIMIT_EXCEEDED',
         message: 'Rate limit exceeded. Please try again later.',
       };
     }
 
-    if (message.includes('content policy') || message.includes('safety') || message.includes('violates')) {
+    if (
+      message.includes('content policy') ||
+      message.includes('safety') ||
+      message.includes('violates')
+    ) {
       return {
         type: 'CONTENT_POLICY_VIOLATION',
         message: 'The content violates OpenAI content policy.',
@@ -279,7 +295,10 @@ export async function analyzeSingleSample(
   const apiKey = validateApiKey();
 
   // Truncate if necessary
-  const textToAnalyze = truncateText(sampleText, DEFAULT_CONFIG.maxSampleLength);
+  const textToAnalyze = truncateText(
+    sampleText,
+    DEFAULT_CONFIG.maxSampleLength
+  );
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -316,12 +335,18 @@ export async function analyzeSingleSample(
     const data = await response.json();
 
     if (!data.choices || data.choices.length === 0) {
-      throw new BrandVoiceAnalyzerError('ANALYSIS_FAILED', 'No response from OpenAI API');
+      throw new BrandVoiceAnalyzerError(
+        'ANALYSIS_FAILED',
+        'No response from OpenAI API'
+      );
     }
 
     const content = data.choices[0]?.message?.content;
     if (!content) {
-      throw new BrandVoiceAnalyzerError('ANALYSIS_FAILED', 'Empty response from OpenAI API');
+      throw new BrandVoiceAnalyzerError(
+        'ANALYSIS_FAILED',
+        'Empty response from OpenAI API'
+      );
     }
 
     let analysis: BrandVoiceAnalysis;
@@ -374,7 +399,11 @@ export async function analyzeSamples(
     tone: string[];
     vocabulary: Record<string, number>;
     style: Record<string, number>;
-    sentimentDistribution: { positive: number; neutral: number; negative: number };
+    sentimentDistribution: {
+      positive: number;
+      neutral: number;
+      negative: number;
+    };
     totalConfidence: number;
     sampleCount: number;
   } = {
@@ -397,7 +426,13 @@ export async function analyzeSamples(
       confidence = result.confidence;
 
       // Update the sample in the database
-      await updateSampleAnalysis(sample.id, analysis, 'completed', null, confidence);
+      await updateSampleAnalysis(
+        sample.id,
+        analysis,
+        'completed',
+        null,
+        confidence
+      );
     }
 
     // Aggregate tone data
@@ -408,13 +443,15 @@ export async function analyzeSamples(
     // Aggregate vocabulary data
     if (analysis.vocabulary?.category) {
       const category = analysis.vocabulary.category;
-      aggregatedData.vocabulary[category] = (aggregatedData.vocabulary[category] || 0) + 1;
+      aggregatedData.vocabulary[category] =
+        (aggregatedData.vocabulary[category] || 0) + 1;
     }
 
     // Aggregate style data
     if (analysis.style?.type) {
       const styleType = analysis.style.type;
-      aggregatedData.style[styleType] = (aggregatedData.style[styleType] || 0) + 1;
+      aggregatedData.style[styleType] =
+        (aggregatedData.style[styleType] || 0) + 1;
     }
 
     // Aggregate sentiment data
@@ -451,8 +488,9 @@ export async function analyzeSamples(
     .slice(0, 3);
 
   // Find dominant style
-  const dominantStyle = Object.entries(aggregatedData.style)
-    .sort((a, b) => b[1] - a[1])[0];
+  const dominantStyle = Object.entries(aggregatedData.style).sort(
+    (a, b) => b[1] - a[1]
+  )[0];
 
   // Build vocabulary distribution from dominant entries
   const vocabularyDistribution: Record<string, number> = {};
@@ -463,7 +501,9 @@ export async function analyzeSamples(
   return {
     tone: normalizedToneDistribution,
     vocabulary: vocabularyDistribution,
-    style: dominantStyle ? { [dominantStyle[0]]: dominantStyle[1] / samplesToAnalyze.length } : {},
+    style: dominantStyle
+      ? { [dominantStyle[0]]: dominantStyle[1] / samplesToAnalyze.length }
+      : {},
     sentiment_distribution: aggregatedData.sentimentDistribution,
     avg_confidence: aggregatedData.totalConfidence / samplesToAnalyze.length,
     sample_count: samplesToAnalyze.length,
@@ -503,7 +543,11 @@ export async function generateStyleGuide(
     .limit(DEFAULT_CONFIG.maxSamples);
 
   if (error) {
-    throw new BrandVoiceAnalyzerError('DATABASE_ERROR', `Failed to fetch samples: ${error.message}`, error);
+    throw new BrandVoiceAnalyzerError(
+      'DATABASE_ERROR',
+      `Failed to fetch samples: ${error.message}`,
+      error
+    );
   }
 
   if (!samples || samples.length < DEFAULT_CONFIG.minSamples) {
@@ -514,7 +558,9 @@ export async function generateStyleGuide(
   }
 
   // Convert to domain types
-  const brandVoiceSamples = samples.map(dbBrandVoiceLearningToBrandVoiceLearning);
+  const brandVoiceSamples = samples.map(
+    dbBrandVoiceLearningToBrandVoiceLearning
+  );
 
   // Perform aggregated analysis
   const analysis = await analyzeSamples(brandVoiceSamples);
@@ -544,7 +590,8 @@ async function updateSampleAnalysis(
   const { error: updateError } = await (supabase as any)
     .from('brand_voice_learning')
     .update({
-      analysis: analysis as unknown as Database['public']['Tables']['brand_voice_learning']['Insert']['analysis'],
+      analysis:
+        analysis as unknown as Database['public']['Tables']['brand_voice_learning']['Insert']['analysis'],
       analysis_status: status,
       analysis_error: error,
       confidence_score: confidence,
@@ -553,7 +600,11 @@ async function updateSampleAnalysis(
     .eq('id', sampleId);
 
   if (updateError) {
-    throw new BrandVoiceAnalyzerError('DATABASE_ERROR', `Failed to update sample: ${updateError.message}`, updateError);
+    throw new BrandVoiceAnalyzerError(
+      'DATABASE_ERROR',
+      `Failed to update sample: ${updateError.message}`,
+      updateError
+    );
   }
 }
 
@@ -578,11 +629,19 @@ export async function analyzeSampleById(
     .single();
 
   if (error || !sample) {
-    throw new BrandVoiceAnalyzerError('DATABASE_ERROR', `Sample not found: ${sampleId}`, error);
+    throw new BrandVoiceAnalyzerError(
+      'DATABASE_ERROR',
+      `Sample not found: ${sampleId}`,
+      error
+    );
   }
 
   // Check if already analyzed
-  if (!forceRefresh && (sample as any).analysis_status === 'completed' && (sample as any).confidence_score) {
+  if (
+    !forceRefresh &&
+    (sample as any).analysis_status === 'completed' &&
+    (sample as any).confidence_score
+  ) {
     return {
       analysis: (sample as any).analysis as unknown as BrandVoiceAnalysis,
       confidence: (sample as any).confidence_score,
@@ -592,7 +651,10 @@ export async function analyzeSampleById(
   // Update status to analyzing
   await (supabase as any)
     .from('brand_voice_learning')
-    .update({ analysis_status: 'analyzing', updated_at: new Date().toISOString() })
+    .update({
+      analysis_status: 'analyzing',
+      updated_at: new Date().toISOString(),
+    })
     .eq('id', sampleId);
 
   try {
@@ -611,8 +673,15 @@ export async function analyzeSampleById(
     return result;
   } catch (analysisError) {
     // Update with error
-    const errorMessage = analysisError instanceof Error ? analysisError.message : 'Unknown error';
-    await updateSampleAnalysis(sampleId, {} as BrandVoiceAnalysis, 'failed', errorMessage, 0);
+    const errorMessage =
+      analysisError instanceof Error ? analysisError.message : 'Unknown error';
+    await updateSampleAnalysis(
+      sampleId,
+      {} as BrandVoiceAnalysis,
+      'failed',
+      errorMessage,
+      0
+    );
     throw analysisError;
   }
 }
@@ -623,9 +692,14 @@ export async function analyzeSampleById(
  * @param sampleIds - Array of sample IDs to analyze
  * @returns Array of analysis results
  */
-export async function batchAnalyzeSamples(
-  sampleIds: string[]
-): Promise<Array<{ sampleId: string; analysis?: BrandVoiceAnalysis; confidence?: number; error?: string }>> {
+export async function batchAnalyzeSamples(sampleIds: string[]): Promise<
+  Array<{
+    sampleId: string;
+    analysis?: BrandVoiceAnalysis;
+    confidence?: number;
+    error?: string;
+  }>
+> {
   const results: Array<{
     sampleId: string;
     analysis?: BrandVoiceAnalysis;
@@ -683,14 +757,20 @@ export async function getAggregatedAnalysis(
     return null;
   }
 
-  const brandVoiceSamples = samples.map(dbBrandVoiceLearningToBrandVoiceLearning);
+  const brandVoiceSamples = samples.map(
+    dbBrandVoiceLearningToBrandVoiceLearning
+  );
 
   // Aggregate the data
   const aggregatedData: {
     tone: Record<string, number>;
     vocabulary: Record<string, number>;
     style: Record<string, number>;
-    sentimentDistribution: { positive: number; neutral: number; negative: number };
+    sentimentDistribution: {
+      positive: number;
+      neutral: number;
+      negative: number;
+    };
     totalConfidence: number;
   } = {
     tone: {},
@@ -720,7 +800,8 @@ export async function getAggregatedAnalysis(
 
     // Aggregate style data
     if (analysis.style?.type) {
-      aggregatedData.style[analysis.style.type] = (aggregatedData.style[analysis.style.type] || 0) + 1;
+      aggregatedData.style[analysis.style.type] =
+        (aggregatedData.style[analysis.style.type] || 0) + 1;
     }
 
     // Aggregate sentiment data

@@ -282,9 +282,8 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const freshMetrics = await mozClient.getBatchDomainAuthority(
-        domainsToFetch
-      );
+      const freshMetrics =
+        await mozClient.getBatchDomainAuthority(domainsToFetch);
 
       // Cache the fresh results
       for (const metric of freshMetrics) {

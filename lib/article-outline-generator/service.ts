@@ -81,35 +81,68 @@ function validateRequest(request: ArticleOutlineRequest): void {
   }
 
   if (request.keyword.length > 200) {
-    throw new OutlineGenerationError('INVALID_KEYWORD', 'Keyword must be less than 200 characters');
+    throw new OutlineGenerationError(
+      'INVALID_KEYWORD',
+      'Keyword must be less than 200 characters'
+    );
   }
 
-  const validContentTypes = ['blog_post', 'guide', 'tutorial', 'listicle', 'review', 'comparison', 'case_study', 'news_article', 'opinion', 'faq', 'how_to'];
+  const validContentTypes = [
+    'blog_post',
+    'guide',
+    'tutorial',
+    'listicle',
+    'review',
+    'comparison',
+    'case_study',
+    'news_article',
+    'opinion',
+    'faq',
+    'how_to',
+  ];
   if (request.contentType && !validContentTypes.includes(request.contentType)) {
-    throw new OutlineGenerationError('INVALID_CONTENT_TYPE', `Invalid content type. Must be one of: ${validContentTypes.join(', ')}`);
+    throw new OutlineGenerationError(
+      'INVALID_CONTENT_TYPE',
+      `Invalid content type. Must be one of: ${validContentTypes.join(', ')}`
+    );
   }
 
   const validDetailLevels = ['basic', 'standard', 'comprehensive'];
   if (request.detailLevel && !validDetailLevels.includes(request.detailLevel)) {
-    throw new OutlineGenerationError('INVALID_DETAIL_LEVEL', `Invalid detail level. Must be one of: ${validDetailLevels.join(', ')}`);
+    throw new OutlineGenerationError(
+      'INVALID_DETAIL_LEVEL',
+      `Invalid detail level. Must be one of: ${validDetailLevels.join(', ')}`
+    );
   }
 }
 
 /**
  * Parses an OpenAI API error response
  */
-function parseApiError(error: unknown): { type: OutlineGenerationErrorType; message: string } {
+function parseApiError(error: unknown): {
+  type: OutlineGenerationErrorType;
+  message: string;
+} {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
 
-    if (message.includes('api key') || message.includes('authentication') || message.includes('unauthorized')) {
+    if (
+      message.includes('api key') ||
+      message.includes('authentication') ||
+      message.includes('unauthorized')
+    ) {
       return {
         type: 'API_KEY_MISSING',
-        message: 'Invalid or missing OpenAI API key. Please check your environment variables.',
+        message:
+          'Invalid or missing OpenAI API key. Please check your environment variables.',
       };
     }
 
-    if (message.includes('rate limit') || message.includes('quota') || message.includes('429')) {
+    if (
+      message.includes('rate limit') ||
+      message.includes('quota') ||
+      message.includes('429')
+    ) {
       return {
         type: 'RATE_LIMIT_EXCEEDED',
         message: 'Rate limit exceeded. Please try again later.',
@@ -202,8 +235,12 @@ function buildSerpContext(serpAnalysis: SerpAnalysisRow | null): string {
   }
 
   const gaps = (serpAnalysis.gaps as Record<string, unknown>[]) || [];
-  const recommendations = (serpAnalysis.recommendations as Record<string, unknown>[]) || [];
-  const serpFeatures = serpAnalysis.serp_features as Record<string, unknown> | null;
+  const recommendations =
+    (serpAnalysis.recommendations as Record<string, unknown>[]) || [];
+  const serpFeatures = serpAnalysis.serp_features as Record<
+    string,
+    unknown
+  > | null;
 
   let context = '\n\n=== SERP ANALYSIS CONTEXT ===\n';
 
@@ -217,7 +254,9 @@ function buildSerpContext(serpAnalysis: SerpAnalysisRow | null): string {
 
   // Add SERP features
   if (serpFeatures) {
-    const features = Object.keys(serpFeatures).filter(k => serpFeatures[k] !== null);
+    const features = Object.keys(serpFeatures).filter(
+      (k) => serpFeatures[k] !== null
+    );
     if (features.length > 0) {
       context += `\nSERP features present: ${features.join(', ')}\n`;
     }
@@ -279,13 +318,20 @@ function buildBrandVoiceContext(brandVoice: BrandVoiceAnalysis | null): string {
 /**
  * Generates a prompt for outline generation
  */
-function buildOutlinePrompt(request: ArticleOutlineRequest, serpContext: string, brandVoiceContext: string): string {
+function buildOutlinePrompt(
+  request: ArticleOutlineRequest,
+  serpContext: string,
+  brandVoiceContext: string
+): string {
   const contentType = request.contentType || DEFAULT_OUTLINE_CONFIG.contentType;
   const detailLevel = request.detailLevel || DEFAULT_OUTLINE_CONFIG.detailLevel;
   const sectionRange = SECTION_COUNT_RANGES[detailLevel];
-  const sectionCount = request.sectionCount || Math.floor((sectionRange[0] + sectionRange[1]) / 2);
+  const sectionCount =
+    request.sectionCount || Math.floor((sectionRange[0] + sectionRange[1]) / 2);
   const wordCountRange = WORD_COUNT_RANGES[contentType];
-  const targetWordCount = request.targetWordCount || Math.floor((wordCountRange[0] + wordCountRange[1]) / 2);
+  const targetWordCount =
+    request.targetWordCount ||
+    Math.floor((wordCountRange[0] + wordCountRange[1]) / 2);
 
   let prompt = `Generate a comprehensive article outline for the following topic:\n\n`;
   prompt += `**Primary Keyword:** ${request.keyword}\n`;
@@ -316,14 +362,20 @@ function buildOutlinePrompt(request: ArticleOutlineRequest, serpContext: string,
 /**
  * Extracts SERP insights from SERP analysis
  */
-function extractSerpInsights(serpAnalysis: SerpAnalysisRow | null): SerpInsights | undefined {
+function extractSerpInsights(
+  serpAnalysis: SerpAnalysisRow | null
+): SerpInsights | undefined {
   if (!serpAnalysis) {
     return undefined;
   }
 
   const gaps = (serpAnalysis.gaps as Record<string, unknown>[]) || [];
-  const recommendations = (serpAnalysis.recommendations as Record<string, unknown>[]) || [];
-  const serpFeatures = serpAnalysis.serp_features as Record<string, unknown> | null;
+  const recommendations =
+    (serpAnalysis.recommendations as Record<string, unknown>[]) || [];
+  const serpFeatures = serpAnalysis.serp_features as Record<
+    string,
+    unknown
+  > | null;
 
   return {
     competitorPatterns: recommendations
@@ -341,7 +393,9 @@ function extractSerpInsights(serpAnalysis: SerpAnalysisRow | null): SerpInsights
 /**
  * Extracts brand voice summary
  */
-function extractBrandVoiceSummary(brandVoice: BrandVoiceAnalysis | null): BrandVoiceSummary | undefined {
+function extractBrandVoiceSummary(
+  brandVoice: BrandVoiceAnalysis | null
+): BrandVoiceSummary | undefined {
   if (!brandVoice) {
     return undefined;
   }
@@ -373,12 +427,18 @@ function generateSeoRecommendations(
 
   if (serpInsights) {
     if (serpInsights.contentGaps.length > 0) {
-      recommendations.push(`Address content gaps: ${serpInsights.contentGaps.slice(0, 2).join(', ')}`);
+      recommendations.push(
+        `Address content gaps: ${serpInsights.contentGaps.slice(0, 2).join(', ')}`
+      );
     }
     if (serpInsights.difficultyScore < 40) {
-      recommendations.push('Low competition - focus on comprehensive coverage to outrank competitors');
+      recommendations.push(
+        'Low competition - focus on comprehensive coverage to outrank competitors'
+      );
     } else if (serpInsights.difficultyScore > 70) {
-      recommendations.push('High competition - consider a unique angle or more specific topic');
+      recommendations.push(
+        'High competition - consider a unique angle or more specific topic'
+      );
     }
   }
 
@@ -386,7 +446,9 @@ function generateSeoRecommendations(
   switch (contentType) {
     case 'how_to':
     case 'tutorial':
-      recommendations.push('Include step-by-step instructions with clear headings');
+      recommendations.push(
+        'Include step-by-step instructions with clear headings'
+      );
       recommendations.push('Add a "Tools/Prerequisites" section');
       break;
     case 'listicle':
@@ -399,7 +461,9 @@ function generateSeoRecommendations(
       break;
     case 'review':
       recommendations.push('Include an overall verdict or rating');
-      recommendations.push('Add "Who should buy this" and "Who should avoid" sections');
+      recommendations.push(
+        'Add "Who should buy this" and "Who should avoid" sections'
+      );
       break;
   }
 
@@ -441,17 +505,26 @@ export async function generateArticleOutline(
   // Fetch SERP analysis if enabled
   let serpAnalysis: SerpAnalysisRow | null = null;
   if (config.serpIntegration?.enabled && request.keywordId) {
-    serpAnalysis = await getSerpAnalysis(request.keywordId, request.organizationId);
+    serpAnalysis = await getSerpAnalysis(
+      request.keywordId,
+      request.organizationId
+    );
     if (!serpAnalysis && config.serpIntegration?.weight > 0.5) {
       // SERP was requested but not found - warn but continue
-      console.warn('SERP analysis requested but not found for keyword:', request.keywordId);
+      console.warn(
+        'SERP analysis requested but not found for keyword:',
+        request.keywordId
+      );
     }
   }
 
   // Fetch brand voice if enabled
   let brandVoice: BrandVoiceAnalysis | null = null;
   if (config.brandVoice?.enabled) {
-    brandVoice = await getBrandVoiceAnalysis(request.organizationId, config.brandVoice.sampleId);
+    brandVoice = await getBrandVoiceAnalysis(
+      request.organizationId,
+      config.brandVoice.sampleId
+    );
   }
 
   // Build context strings
@@ -459,7 +532,11 @@ export async function generateArticleOutline(
   const brandVoiceContext = buildBrandVoiceContext(brandVoice);
 
   // Build the user prompt
-  const userPrompt = buildOutlinePrompt(request, serpContext, brandVoiceContext);
+  const userPrompt = buildOutlinePrompt(
+    request,
+    serpContext,
+    brandVoiceContext
+  );
 
   try {
     // Make the API request
@@ -492,12 +569,18 @@ export async function generateArticleOutline(
     const data = await response.json();
 
     if (!data.choices || data.choices.length === 0) {
-      throw new OutlineGenerationError('API_ERROR', 'No choices returned from API');
+      throw new OutlineGenerationError(
+        'API_ERROR',
+        'No choices returned from API'
+      );
     }
 
     const content = data.choices[0].message?.content;
     if (!content) {
-      throw new OutlineGenerationError('API_ERROR', 'No content returned from API');
+      throw new OutlineGenerationError(
+        'API_ERROR',
+        'No content returned from API'
+      );
     }
 
     // Parse the JSON response
@@ -505,28 +588,40 @@ export async function generateArticleOutline(
     try {
       outline = JSON.parse(content) as ArticleOutline;
     } catch (parseError) {
-      throw new OutlineGenerationError('API_ERROR', 'Failed to parse AI response as valid outline JSON', parseError);
+      throw new OutlineGenerationError(
+        'API_ERROR',
+        'Failed to parse AI response as valid outline JSON',
+        parseError
+      );
     }
 
     // Validate outline structure
     if (!outline.h1 || !outline.sections || !Array.isArray(outline.sections)) {
-      throw new OutlineGenerationError('API_ERROR', 'AI response missing required outline structure');
+      throw new OutlineGenerationError(
+        'API_ERROR',
+        'AI response missing required outline structure'
+      );
     }
 
     // Calculate total estimated word count
-    const totalEstimatedWordCount = outline.sections.reduce(
-      (sum, section) => {
-        const sectionWords = section.heading.estimatedWordCount || 0;
-        const subsectionWords = section.subsections?.reduce((subSum, sub) => subSum + (sub.estimatedWordCount || 0), 0) || 0;
-        return sum + sectionWords + subsectionWords;
-      },
-      outline.h1.estimatedWordCount || 0
-    );
+    const totalEstimatedWordCount = outline.sections.reduce((sum, section) => {
+      const sectionWords = section.heading.estimatedWordCount || 0;
+      const subsectionWords =
+        section.subsections?.reduce(
+          (subSum, sub) => subSum + (sub.estimatedWordCount || 0),
+          0
+        ) || 0;
+      return sum + sectionWords + subsectionWords;
+    }, outline.h1.estimatedWordCount || 0);
 
     // Extract insights
     const serpInsights = extractSerpInsights(serpAnalysis);
     const brandVoiceApplied = extractBrandVoiceSummary(brandVoice);
-    const seoRecommendations = generateSeoRecommendations(request.keyword, serpInsights, config.contentType);
+    const seoRecommendations = generateSeoRecommendations(
+      request.keyword,
+      serpInsights,
+      config.contentType
+    );
 
     const generationTime = Date.now() - startTime;
 
@@ -543,7 +638,16 @@ export async function generateArticleOutline(
     // Store in database if we have organization context
     if (request.organizationId) {
       try {
-        await storeOutlineInDatabase(outlineId, request, outline, serpInsights, brandVoiceApplied, seoRecommendations, totalEstimatedWordCount, metadata);
+        await storeOutlineInDatabase(
+          outlineId,
+          request,
+          outline,
+          serpInsights,
+          brandVoiceApplied,
+          seoRecommendations,
+          totalEstimatedWordCount,
+          metadata
+        );
       } catch (storageError) {
         console.error('Failed to store outline:', storageError);
         // Don't fail the request if storage fails
@@ -598,8 +702,8 @@ async function storeOutlineInDatabase(
     keyword: request.keyword,
     content_type: request.contentType || DEFAULT_OUTLINE_CONFIG.contentType,
     outline: outline as unknown as Json,
-    serp_insights: serpInsights as unknown as Json || null,
-    brand_voice_applied: brandVoiceApplied as unknown as Json || null,
+    serp_insights: (serpInsights as unknown as Json) || null,
+    brand_voice_applied: (brandVoiceApplied as unknown as Json) || null,
     seo_recommendations: seoRecommendations,
     target_word_count: request.targetWordCount || null,
     estimated_word_count: estimatedWordCount,
@@ -615,7 +719,11 @@ async function storeOutlineInDatabase(
     .insert(insertData);
 
   if (error) {
-    throw new OutlineGenerationError('DATABASE_ERROR', `Failed to store outline: ${error.message}`, error);
+    throw new OutlineGenerationError(
+      'DATABASE_ERROR',
+      `Failed to store outline: ${error.message}`,
+      error
+    );
   }
 }
 
@@ -696,7 +804,11 @@ export async function listOrganizationOutlines(
   const { data, error } = await query;
 
   if (error) {
-    throw new OutlineGenerationError('DATABASE_ERROR', `Failed to list outlines: ${error.message}`, error);
+    throw new OutlineGenerationError(
+      'DATABASE_ERROR',
+      `Failed to list outlines: ${error.message}`,
+      error
+    );
   }
 
   return (data || []).map((item: any) => ({
@@ -729,6 +841,10 @@ export async function deleteOutline(
     .eq('organization_id', organizationId);
 
   if (error) {
-    throw new OutlineGenerationError('DATABASE_ERROR', `Failed to delete outline: ${error.message}`, error);
+    throw new OutlineGenerationError(
+      'DATABASE_ERROR',
+      `Failed to delete outline: ${error.message}`,
+      error
+    );
   }
 }

@@ -9,7 +9,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
+import {
+  useStripe,
+  useElements,
+  PaymentElement,
+} from '@stripe/react-stripe-js';
 import { Lock, AlertCircle, Check } from 'lucide-react';
 import type { BillingInterval } from '@/types/subscription';
 
@@ -85,11 +89,14 @@ export function CheckoutForm({
 
       // Redirect to success page
       setTimeout(() => {
-        router.push(`/dashboard/checkout/success?plan=${planId}&interval=${interval}`);
+        router.push(
+          `/dashboard/checkout/success?plan=${planId}&interval=${interval}`
+        );
       }, 1500);
-
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create subscription');
+      setError(
+        err instanceof Error ? err.message : 'Failed to create subscription'
+      );
       setIsProcessing(false);
     }
   };
@@ -155,9 +162,7 @@ export function CheckoutForm({
             <p className="font-medium text-red-900 dark:text-red-400">
               Payment Error
             </p>
-            <p className="text-sm text-red-700 dark:text-red-300">
-              {error}
-            </p>
+            <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
           </div>
         </div>
       )}
@@ -165,11 +170,17 @@ export function CheckoutForm({
       {/* Terms */}
       <p className="text-xs text-gray-600 dark:text-gray-400">
         By completing your purchase, you agree to our{' '}
-        <a href="/terms" className="text-indigo-600 hover:underline dark:text-indigo-400">
+        <a
+          href="/terms"
+          className="text-indigo-600 hover:underline dark:text-indigo-400"
+        >
           Terms of Service
         </a>{' '}
         and{' '}
-        <a href="/privacy" className="text-indigo-600 hover:underline dark:text-indigo-400">
+        <a
+          href="/privacy"
+          className="text-indigo-600 hover:underline dark:text-indigo-400"
+        >
           Privacy Policy
         </a>
         . Subscription auto-renews at the end of each billing period.

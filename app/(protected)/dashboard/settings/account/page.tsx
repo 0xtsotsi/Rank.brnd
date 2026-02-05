@@ -82,7 +82,9 @@ export default function AccountSettingsPage() {
         window.location.href = '/';
       }, 3000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to request deletion');
+      setError(
+        err instanceof Error ? err.message : 'Failed to request deletion'
+      );
     } finally {
       setDeleting(false);
     }
@@ -106,7 +108,9 @@ export default function AccountSettingsPage() {
 
       await fetchDeletionStatus();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to cancel deletion');
+      setError(
+        err instanceof Error ? err.message : 'Failed to cancel deletion'
+      );
     } finally {
       setDeleting(false);
     }
@@ -131,8 +135,8 @@ export default function AccountSettingsPage() {
                 Account Deletion Initiated
               </h3>
               <p className="text-green-700 dark:text-green-300 mt-2">
-                Your account and all associated data are being deleted. You will be
-                redirected to the home page shortly.
+                Your account and all associated data are being deleted. You will
+                be redirected to the home page shortly.
               </p>
               <p className="text-green-600 dark:text-green-400 text-sm mt-4">
                 Redirecting in 3 seconds...

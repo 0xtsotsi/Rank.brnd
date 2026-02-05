@@ -149,13 +149,7 @@ export const keywordsQuerySchema = z.object({
     .optional()
     .default('created_at'),
   order: z.enum(['asc', 'desc']).optional().default('desc'),
-  limit: z.coerce
-    .number()
-    .int()
-    .min(1)
-    .max(100)
-    .optional()
-    .default(50),
+  limit: z.coerce.number().int().min(1).max(100).optional().default(50),
   offset: z.coerce.number().int().nonnegative().optional().default(0),
 });
 

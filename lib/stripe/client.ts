@@ -84,7 +84,7 @@ export function getStripeClient(): Stripe {
   // Create new Stripe instance
   // Note: Using the latest stable API version supported by the Stripe SDK
   stripeInstance = new Stripe(stripeSecretKey!, {
-    apiVersion: '2023-10-16',
+    apiVersion: '2026-01-28.clover',
     typescript: true,
     // Use Telemetry to help Stripe improve their API
     telemetry: true,

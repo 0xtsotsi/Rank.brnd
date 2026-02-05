@@ -18,7 +18,8 @@ export const IMAGE_GENERATION_STYLES = {
   BRAND_TEXT_OVERLAY: 'brand_text_overlay',
 } as const;
 
-export type ImageGenerationStyle = (typeof IMAGE_GENERATION_STYLES)[keyof typeof IMAGE_GENERATION_STYLES];
+export type ImageGenerationStyle =
+  (typeof IMAGE_GENERATION_STYLES)[keyof typeof IMAGE_GENERATION_STYLES];
 
 /**
  * Image size options for DALL-E 3
@@ -47,11 +48,15 @@ export type ImageModel = (typeof IMAGE_MODELS)[keyof typeof IMAGE_MODELS];
  * Style prompts that get appended to base prompts
  */
 export const STYLE_PROMPTS: Record<ImageGenerationStyle, string> = {
-  realistic: ', photorealistic, highly detailed, professional photography, 8k resolution',
-  watercolor: ', watercolor painting, soft blended colors, artistic, traditional media',
-  illustration: ', digital illustration, bold colors, clean lines, vector art style',
+  realistic:
+    ', photorealistic, highly detailed, professional photography, 8k resolution',
+  watercolor:
+    ', watercolor painting, soft blended colors, artistic, traditional media',
+  illustration:
+    ', digital illustration, bold colors, clean lines, vector art style',
   sketch: ', hand-drawn sketch, pencil strokes, rough lines, concept art',
-  brand_text_overlay: ', professional design, marketing material, minimal text overlay, modern brand style',
+  brand_text_overlay:
+    ', professional design, marketing material, minimal text overlay, modern brand style',
 };
 
 /**

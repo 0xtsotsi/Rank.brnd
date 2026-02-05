@@ -18,7 +18,8 @@ interface SettingCard {
 const settingsCards: SettingCard[] = [
   {
     title: 'Account Settings',
-    description: 'Manage your account and personal data, including account deletion',
+    description:
+      'Manage your account and personal data, including account deletion',
     href: '/dashboard/settings/account',
     icon: 'User',
   },

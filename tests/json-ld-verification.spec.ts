@@ -10,11 +10,15 @@ import { test, expect } from '@playwright/test';
 test.describe('JSON-LD Structured Data', () => {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3007';
 
-  test('homepage should have Organization and WebSite schemas', async ({ page }) => {
+  test('homepage should have Organization and WebSite schemas', async ({
+    page,
+  }) => {
     await page.goto(baseUrl);
 
     // Get all JSON-LD scripts
-    const jsonLdScripts = await page.locator('script[type="application/ld+json"]').all();
+    const jsonLdScripts = await page
+      .locator('script[type="application/ld+json"]')
+      .all();
 
     expect(jsonLdScripts.length).toBeGreaterThanOrEqual(2);
 
@@ -55,7 +59,9 @@ test.describe('JSON-LD Structured Data', () => {
     await page.goto(`${baseUrl}/faq`);
 
     // Get all JSON-LD scripts
-    const jsonLdScripts = await page.locator('script[type="application/ld+json"]').all();
+    const jsonLdScripts = await page
+      .locator('script[type="application/ld+json"]')
+      .all();
 
     expect(jsonLdScripts.length).toBeGreaterThanOrEqual(1);
 
@@ -96,7 +102,9 @@ test.describe('JSON-LD Structured Data', () => {
     await page.goto(`${baseUrl}/faq`);
 
     // Get all JSON-LD scripts
-    const jsonLdScripts = await page.locator('script[type="application/ld+json"]').all();
+    const jsonLdScripts = await page
+      .locator('script[type="application/ld+json"]')
+      .all();
 
     // Find and verify Breadcrumb schema
     let breadcrumbFound = false;
@@ -134,7 +142,9 @@ test.describe('JSON-LD Structured Data', () => {
     await page.goto(`${baseUrl}/blog/seo-tips-for-2025`);
 
     // Get all JSON-LD scripts
-    const jsonLdScripts = await page.locator('script[type="application/ld+json"]').all();
+    const jsonLdScripts = await page
+      .locator('script[type="application/ld+json"]')
+      .all();
 
     expect(jsonLdScripts.length).toBeGreaterThanOrEqual(1);
 
@@ -181,7 +191,9 @@ test.describe('JSON-LD Structured Data', () => {
     await page.goto(`${baseUrl}/blog/seo-tips-for-2025`);
 
     // Get all JSON-LD scripts
-    const jsonLdScripts = await page.locator('script[type="application/ld+json"]').all();
+    const jsonLdScripts = await page
+      .locator('script[type="application/ld+json"]')
+      .all();
 
     // Find and verify Breadcrumb schema
     let breadcrumbFound = false;
@@ -212,11 +224,15 @@ test.describe('JSON-LD Structured Data', () => {
     expect(breadcrumbFound).toBeTruthy();
   });
 
-  test('Organization schema should have required properties', async ({ page }) => {
+  test('Organization schema should have required properties', async ({
+    page,
+  }) => {
     await page.goto(baseUrl);
 
     // Get all JSON-LD scripts
-    const jsonLdScripts = await page.locator('script[type="application/ld+json"]').all();
+    const jsonLdScripts = await page
+      .locator('script[type="application/ld+json"]')
+      .all();
 
     // Find and verify Organization schema properties
     let organizationData: any = null;
@@ -246,11 +262,15 @@ test.describe('JSON-LD Structured Data', () => {
     expect(organizationData['@context']).toBe('https://schema.org');
   });
 
-  test('WebSite schema should have potentialAction for search', async ({ page }) => {
+  test('WebSite schema should have potentialAction for search', async ({
+    page,
+  }) => {
     await page.goto(baseUrl);
 
     // Get all JSON-LD scripts
-    const jsonLdScripts = await page.locator('script[type="application/ld+json"]').all();
+    const jsonLdScripts = await page
+      .locator('script[type="application/ld+json"]')
+      .all();
 
     // Find and verify WebSite schema
     let websiteData: any = null;

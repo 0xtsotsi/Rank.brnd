@@ -13,7 +13,10 @@ import { auth } from '@clerk/nextjs/server';
 import { getSupabaseServerClient } from '@/lib/supabase/client';
 import { dbBrandVoiceLearningToBrandVoiceLearning } from '@/types/brand-voice-learning';
 import { validateRequest } from '@/lib/schemas/validation';
-import { updateBrandVoiceSampleSchema, deleteBrandVoiceSampleSchema } from '@/lib/schemas/brand-voice-learning';
+import {
+  updateBrandVoiceSampleSchema,
+  deleteBrandVoiceSampleSchema,
+} from '@/lib/schemas/brand-voice-learning';
 
 type RouteContext = {
   params: Promise<{ id: string }>;
@@ -43,7 +46,10 @@ export async function GET(request: NextRequest, context: RouteContext) {
       .eq('user_id', userId);
 
     if (!userOrgs || userOrgs.length === 0) {
-      return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Organization not found' },
+        { status: 404 }
+      );
     }
 
     const organizationIds = userOrgs.map((org) => (org as any).organization_id);
@@ -66,7 +72,10 @@ export async function GET(request: NextRequest, context: RouteContext) {
     });
   } catch (error) {
     console.error('Error in brand voice sample GET:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
@@ -86,7 +95,10 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const sampleId = params.id;
 
     const body = await request.json();
-    const validationResult = validateRequest(body, updateBrandVoiceSampleSchema);
+    const validationResult = validateRequest(
+      body,
+      updateBrandVoiceSampleSchema
+    );
 
     if (!validationResult.success) {
       return NextResponse.json(validationResult.error, { status: 400 });
@@ -178,7 +190,10 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     if (updateError || !updatedSample) {
       console.error('Error updating brand voice sample:', updateError);
-      return NextResponse.json({ error: 'Failed to update sample' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Failed to update sample' },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
@@ -187,7 +202,10 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     });
   } catch (error) {
     console.error('Error in brand voice sample PATCH:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
@@ -207,7 +225,10 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     const sampleId = params.id;
 
     // Validate ID
-    const validationResult = validateRequest({ id: sampleId }, deleteBrandVoiceSampleSchema);
+    const validationResult = validateRequest(
+      { id: sampleId },
+      deleteBrandVoiceSampleSchema
+    );
     if (!validationResult.success) {
       return NextResponse.json(validationResult.error, { status: 400 });
     }
@@ -243,7 +264,10 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
 
     if (deleteError) {
       console.error('Error deleting brand voice sample:', deleteError);
-      return NextResponse.json({ error: 'Failed to delete sample' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Failed to delete sample' },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
@@ -252,6 +276,9 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     });
   } catch (error) {
     console.error('Error in brand voice sample DELETE:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }

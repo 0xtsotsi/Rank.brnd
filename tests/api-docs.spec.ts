@@ -52,10 +52,14 @@ test.describe('API Documentation', () => {
     await expect(page.locator('.information-container')).toBeVisible();
 
     // Check that the back link exists
-    await expect(page.getByRole('link', { name: /back to app/i })).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: /back to app/i })
+    ).toBeVisible();
 
     // Check that the download spec link exists
-    await expect(page.getByRole('link', { name: /download openapi spec/i })).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: /download openapi spec/i })
+    ).toBeVisible();
   });
 
   test('should display API information in Swagger UI', async ({ page }) => {
@@ -65,7 +69,9 @@ test.describe('API Documentation', () => {
     await page.waitForSelector('.info');
 
     // Check that the API title is displayed
-    await expect(page.locator('.info .title')).toContainText('Rank API Documentation');
+    await expect(page.locator('.info .title')).toContainText(
+      'Rank API Documentation'
+    );
   });
 
   test('should list all API tags in Swagger UI', async ({ page }) => {
@@ -82,26 +88,33 @@ test.describe('API Documentation', () => {
     const tagNames = await tags.allTextContents();
 
     // Verify important tags are present
-    expect(tagNames.some(tag => tag.includes('Health'))).toBeTruthy();
-    expect(tagNames.some(tag => tag.includes('Products'))).toBeTruthy();
-    expect(tagNames.some(tag => tag.includes('Stripe'))).toBeTruthy();
+    expect(tagNames.some((tag) => tag.includes('Health'))).toBeTruthy();
+    expect(tagNames.some((tag) => tag.includes('Products'))).toBeTruthy();
+    expect(tagNames.some((tag) => tag.includes('Stripe'))).toBeTruthy();
   });
 
-  test('should allow exploring API endpoints in Swagger UI', async ({ page }) => {
+  test('should allow exploring API endpoints in Swagger UI', async ({
+    page,
+  }) => {
     await page.goto('/api/docs');
 
     // Wait for Swagger UI to load
     await page.waitForSelector('.opblock-tag-section');
 
     // Find the Health endpoint and expand it
-    const healthSection = page.getByText('GET').filter({ hasText: '/api/health' }).first();
+    const healthSection = page
+      .getByText('GET')
+      .filter({ hasText: '/api/health' })
+      .first();
     await healthSection.click();
 
     // Verify the operation expanded
     await expect(page.locator('.opblock-body')).toBeVisible();
   });
 
-  test('OpenAPI spec should have proper schema definitions', async ({ request }) => {
+  test('OpenAPI spec should have proper schema definitions', async ({
+    request,
+  }) => {
     const response = await request.get('/openapi.json');
     const spec = await response.json();
 
@@ -118,7 +131,9 @@ test.describe('API Documentation', () => {
     expect(spec.components.schemas.BrandTone.enum).toContain('casual');
   });
 
-  test('OpenAPI spec should have security schemes defined', async ({ request }) => {
+  test('OpenAPI spec should have security schemes defined', async ({
+    request,
+  }) => {
     const response = await request.get('/openapi.json');
     const spec = await response.json();
 
@@ -128,7 +143,9 @@ test.describe('API Documentation', () => {
     expect(spec.components.securitySchemes.bearerAuth.scheme).toBe('bearer');
   });
 
-  test('OpenAPI spec should have proper server configuration', async ({ request }) => {
+  test('OpenAPI spec should have proper server configuration', async ({
+    request,
+  }) => {
     const response = await request.get('/openapi.json');
     const spec = await response.json();
 
@@ -136,7 +153,9 @@ test.describe('API Documentation', () => {
     expect(spec.servers.length).toBeGreaterThan(0);
 
     // Check for local development server
-    const localServer = spec.servers.find((s: any) => s.url.includes('localhost'));
+    const localServer = spec.servers.find((s: any) =>
+      s.url.includes('localhost')
+    );
     expect(localServer).toBeDefined();
   });
 });

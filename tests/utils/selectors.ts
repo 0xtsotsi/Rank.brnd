@@ -6,8 +6,10 @@
 
 export const Selectors = {
   // Auth
-  signInButton: 'button[type="submit"], button:has-text("Sign In"), button:has-text("Sign in")',
-  signOutButton: 'button:has-text("Sign Out"), button:has-text("Sign out"), button:has-text("Logout")',
+  signInButton:
+    'button[type="submit"], button:has-text("Sign In"), button:has-text("Sign in")',
+  signOutButton:
+    'button:has-text("Sign Out"), button:has-text("Sign out"), button:has-text("Logout")',
   emailInput: 'input[name="email"], input[type="email"]',
   passwordInput: 'input[name="password"], input[type="password"]',
 
@@ -28,7 +30,8 @@ export const Selectors = {
   saveButton: 'button:has-text("Save")',
 
   // Forms
-  formInput: 'input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"])',
+  formInput:
+    'input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"])',
   formSelect: 'select',
   formTextarea: 'textarea',
   formCheckbox: 'input[type="checkbox"]',
@@ -37,10 +40,14 @@ export const Selectors = {
 
   // Notifications
   toast: '[role="status"], .toast, .notification',
-  successToast: '.toast.success, .notification.success, [role="status"][data-type="success"]',
-  errorToast: '.toast.error, .notification.error, [role="status"][data-type="error"]',
-  warningToast: '.toast.warning, .notification.warning, [role="status"][data-type="warning"]',
-  infoToast: '.toast.info, .notification.info, [role="status"][data-type="info"]',
+  successToast:
+    '.toast.success, .notification.success, [role="status"][data-type="success"]',
+  errorToast:
+    '.toast.error, .notification.error, [role="status"][data-type="error"]',
+  warningToast:
+    '.toast.warning, .notification.warning, [role="status"][data-type="warning"]',
+  infoToast:
+    '.toast.info, .notification.info, [role="status"][data-type="info"]',
 
   // Loading states
   spinner: '.spinner, .loading, [role="status"][aria-busy="true"]',
@@ -49,7 +56,8 @@ export const Selectors = {
   // Modals
   modal: '.modal, [role="dialog"], .dialog',
   modalOverlay: '.modal-overlay, .dialog-overlay, [role="dialog"] + div',
-  modalClose: 'button[aria-label="Close"], button:has-text("Close"), button:has-text("×")',
+  modalClose:
+    'button[aria-label="Close"], button:has-text("Close"), button:has-text("×")',
   modalTitle: '.modal-title, [role="dialog"] h1, [role="dialog"] h2',
 
   // Dashboard
@@ -60,12 +68,14 @@ export const Selectors = {
   articleList: '.article-list, [data-testid="article-list"]',
   articleCard: '.article-card, [data-testid="article-card"]',
   articleTitle: '.article-title, [data-testid="article-title"]',
-  createArticleButton: 'button:has-text("Create Article"), a[href="/articles/new"]',
+  createArticleButton:
+    'button:has-text("Create Article"), a[href="/articles/new"]',
 
   // Keywords
   keywordList: '.keyword-list, [data-testid="keyword-list"]',
   keywordCard: '.keyword-card, [data-testid="keyword-card"]',
-  keywordSearch: 'input[placeholder*="search" i], input[name="search"], [data-testid="keyword-search"]',
+  keywordSearch:
+    'input[placeholder*="search" i], input[name="search"], [data-testid="keyword-search"]',
 
   // Onboarding
   onboardingProgress: '.progress-bar, [data-testid="onboarding-progress"]',
@@ -129,12 +139,14 @@ export const SelectorBuilders = {
   /**
    * Build a selector for an element with specific text
    */
-  withText: (selector: string, text: string) => `${selector}:has-text("${text}")`,
+  withText: (selector: string, text: string) =>
+    `${selector}:has-text("${text}")`,
 
   /**
    * Build a selector for an element with exact text
    */
-  withExactText: (selector: string, text: string) => `${selector}:text("${text}")`,
+  withExactText: (selector: string, text: string) =>
+    `${selector}:text("${text}")`,
 
   /**
    * Build a selector for an element with specific attribute
@@ -155,10 +167,12 @@ export const SelectorBuilders = {
   /**
    * Build a selector for an element following another
    */
-  following: (selector: string, following: string) => `${selector} + ${following}`,
+  following: (selector: string, following: string) =>
+    `${selector} + ${following}`,
 
   /**
    * Build a selector for an element following another (siblings)
    */
-  followingAll: (selector: string, following: string) => `${selector} ~ ${following}`,
+  followingAll: (selector: string, following: string) =>
+    `${selector} ~ ${following}`,
 };

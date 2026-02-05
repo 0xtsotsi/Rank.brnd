@@ -16,7 +16,11 @@ type KeywordInsert = Database['public']['Tables']['keywords']['Insert'];
 type KeywordUpdate = Database['public']['Tables']['keywords']['Update'];
 
 type KeywordStatus = 'tracking' | 'paused' | 'opportunity' | 'ignored';
-type SearchIntent = 'informational' | 'navigational' | 'transactional' | 'commercial';
+type SearchIntent =
+  | 'informational'
+  | 'navigational'
+  | 'transactional'
+  | 'commercial';
 type DifficultyLevel = 'very-easy' | 'easy' | 'medium' | 'hard' | 'very-hard';
 
 /**
@@ -61,8 +65,7 @@ export async function getKeywordById(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Failed to fetch keyword',
+      error: error instanceof Error ? error.message : 'Failed to fetch keyword',
     };
   }
 }
@@ -87,7 +90,15 @@ export async function getOrganizationKeywords(
     tags?: string[];
     limit?: number;
     offset?: number;
-    sortBy?: 'keyword' | 'search_volume' | 'difficulty' | 'intent' | 'status' | 'opportunity_score' | 'current_rank' | 'created_at';
+    sortBy?:
+      | 'keyword'
+      | 'search_volume'
+      | 'difficulty'
+      | 'intent'
+      | 'status'
+      | 'opportunity_score'
+      | 'current_rank'
+      | 'created_at';
     sortOrder?: 'asc' | 'desc';
   } = {}
 ): Promise<KeywordResult<Keyword[]>> {
@@ -151,7 +162,10 @@ export async function getOrganizationKeywords(
       query = query.limit(options.limit);
     }
     if (options.offset) {
-      query = query.range(options.offset, (options.offset || 0) + (options.limit || 50) - 1);
+      query = query.range(
+        options.offset,
+        (options.offset || 0) + (options.limit || 50) - 1
+      );
     }
 
     const { data, error } = await query;
@@ -182,10 +196,7 @@ export async function getProductKeywords(
   } = {}
 ): Promise<KeywordResult<Keyword[]>> {
   try {
-    let query = client
-      .from('keywords')
-      .select('*')
-      .eq('product_id', productId);
+    let query = client.from('keywords').select('*').eq('product_id', productId);
 
     if (!options.includeDeleted) {
       query = query.is('deleted_at', null);
@@ -230,10 +241,12 @@ export async function createKeyword(
         organization_id: keyword.organization_id,
         product_id: keyword.product_id || null,
         keyword: keyword.keyword,
-        search_volume: keyword.search_volume ?? DEFAULT_KEYWORD_VALUES.search_volume,
+        search_volume:
+          keyword.search_volume ?? DEFAULT_KEYWORD_VALUES.search_volume,
         difficulty: keyword.difficulty || DEFAULT_KEYWORD_VALUES.difficulty,
         intent: keyword.intent || DEFAULT_KEYWORD_VALUES.intent,
-        opportunity_score: keyword.opportunity_score ?? DEFAULT_KEYWORD_VALUES.opportunity_score,
+        opportunity_score:
+          keyword.opportunity_score ?? DEFAULT_KEYWORD_VALUES.opportunity_score,
         status: keyword.status || DEFAULT_KEYWORD_VALUES.status,
         current_rank: keyword.current_rank || null,
         target_url: keyword.target_url || null,
@@ -241,7 +254,8 @@ export async function createKeyword(
         competition: keyword.competition || null,
         notes: keyword.notes || null,
         tags: (keyword.tags || DEFAULT_KEYWORD_VALUES.tags) as unknown as Json,
-        metadata: (keyword.metadata || DEFAULT_KEYWORD_VALUES.metadata) as unknown as Json,
+        metadata: (keyword.metadata ||
+          DEFAULT_KEYWORD_VALUES.metadata) as unknown as Json,
       })
       .select()
       .single();
@@ -275,7 +289,9 @@ export async function bulkCreateKeywords(
     target_url?: string;
     notes?: string;
   }>
-): Promise<KeywordResult<{ successful: number; failed: number; errors: string[] }>> {
+): Promise<
+  KeywordResult<{ successful: number; failed: number; errors: string[] }>
+> {
   const errors: string[] = [];
   let successful = 0;
 
@@ -299,7 +315,9 @@ export async function bulkCreateKeywords(
         errors.push(`${kw.keyword}: ${result.error}`);
       }
     } catch (error) {
-      errors.push(`${kw.keyword}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      errors.push(
+        `${kw.keyword}: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -459,7 +477,9 @@ export async function calculateOpportunityScore(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to calculate opportunity score',
+        error instanceof Error
+          ? error.message
+          : 'Failed to calculate opportunity score',
     };
   }
 }
@@ -471,14 +491,16 @@ export async function getKeywordStats(
   client: SupabaseClient<Database>,
   organizationId: string,
   productId?: string
-): Promise<KeywordResult<{
-  total: number;
-  byStatus: Record<KeywordStatus, number>;
-  byIntent: Record<SearchIntent, number>;
-  byDifficulty: Record<DifficultyLevel, number>;
-  avgOpportunityScore: number;
-  totalSearchVolume: number;
-}>> {
+): Promise<
+  KeywordResult<{
+    total: number;
+    byStatus: Record<KeywordStatus, number>;
+    byIntent: Record<SearchIntent, number>;
+    byDifficulty: Record<DifficultyLevel, number>;
+    avgOpportunityScore: number;
+    totalSearchVolume: number;
+  }>
+> {
   try {
     let query = client
       .from('keywords')
@@ -535,7 +557,8 @@ export async function getKeywordStats(
         byStatus,
         byIntent,
         byDifficulty,
-        avgOpportunityScore: data.length > 0 ? totalOpportunityScore / data.length : 0,
+        avgOpportunityScore:
+          data.length > 0 ? totalOpportunityScore / data.length : 0,
         totalSearchVolume,
       },
     };
@@ -543,7 +566,9 @@ export async function getKeywordStats(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch keyword stats',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch keyword stats',
     };
   }
 }
@@ -578,15 +603,28 @@ export function validateKeyword(keyword: {
     }
   }
 
-  if (keyword.cpc !== undefined && (typeof keyword.cpc !== 'number' || keyword.cpc < 0 || keyword.cpc > 100)) {
+  if (
+    keyword.cpc !== undefined &&
+    (typeof keyword.cpc !== 'number' || keyword.cpc < 0 || keyword.cpc > 100)
+  ) {
     errors.push('CPC must be a number between 0 and 100');
   }
 
-  if (keyword.competition !== undefined && (typeof keyword.competition !== 'number' || keyword.competition < 0 || keyword.competition > 1)) {
+  if (
+    keyword.competition !== undefined &&
+    (typeof keyword.competition !== 'number' ||
+      keyword.competition < 0 ||
+      keyword.competition > 1)
+  ) {
     errors.push('Competition must be a number between 0 and 1');
   }
 
-  if (keyword.opportunity_score !== undefined && (typeof keyword.opportunity_score !== 'number' || keyword.opportunity_score < 0 || keyword.opportunity_score > 100)) {
+  if (
+    keyword.opportunity_score !== undefined &&
+    (typeof keyword.opportunity_score !== 'number' ||
+      keyword.opportunity_score < 0 ||
+      keyword.opportunity_score > 100)
+  ) {
     errors.push('Opportunity score must be a number between 0 and 100');
   }
 

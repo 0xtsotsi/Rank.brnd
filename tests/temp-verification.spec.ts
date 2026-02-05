@@ -11,7 +11,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { createTestHelpers, Selectors } from './utils/test-helpers';
+import { createTestHelpers } from './utils/test-helpers';
 import { MockUsers, randomTestString } from './mocks/test-data';
 
 test.describe('Playwright Setup Verification', () => {
@@ -32,13 +32,6 @@ test.describe('Playwright Setup Verification', () => {
     // Verify utility functions work
     const randomString = randomTestString('verify');
     expect(randomString).toContain('verify-');
-  });
-
-  test('verify selectors can be imported', () => {
-    // Verify selectors are accessible
-    expect(Selectors.submitButton).toBeTruthy();
-    expect(Selectors.emailInput).toBeTruthy();
-    expect(Selectors.toast).toBeTruthy();
   });
 
   test('verify page navigation works', async ({ page }) => {

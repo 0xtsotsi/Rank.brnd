@@ -10,7 +10,11 @@
  */
 export interface RedisClient {
   get(key: string): Promise<string | null>;
-  set(key: string, value: string, options?: { nx?: boolean; px?: number }): Promise<'OK' | null>;
+  set(
+    key: string,
+    value: string,
+    options?: { nx?: boolean; px?: number }
+  ): Promise<'OK' | null>;
   incr(key: string): Promise<number>;
   incrby(key: string, increment: number): Promise<number>;
   expire(key: string, seconds: number): Promise<number>;
@@ -43,11 +47,14 @@ export class UpstashClient implements RedisClient {
   /**
    * Execute a Redis command via Upstash REST API
    */
-  private async command<T = any>(command: string[], options?: RequestInit): Promise<T> {
+  private async command<T = any>(
+    command: string[],
+    options?: RequestInit
+  ): Promise<T> {
     const response = await fetch(`${this.baseUrl}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${this.token}`,
+        Authorization: `Bearer ${this.token}`,
         'Content-Type': 'application/json',
         ...options?.headers,
       },
@@ -77,7 +84,11 @@ export class UpstashClient implements RedisClient {
   /**
    * Set a key-value pair
    */
-  async set(key: string, value: string, options?: { nx?: boolean; px?: number }): Promise<'OK' | null> {
+  async set(
+    key: string,
+    value: string,
+    options?: { nx?: boolean; px?: number }
+  ): Promise<'OK' | null> {
     const command: string[] = ['SET', key, value];
 
     if (options?.nx) {
@@ -104,7 +115,11 @@ export class UpstashClient implements RedisClient {
    * Increment a key by a specific amount
    */
   async incrby(key: string, increment: number): Promise<number> {
-    const result = await this.command<number>(['INCRBY', key, increment.toString()]);
+    const result = await this.command<number>([
+      'INCRBY',
+      key,
+      increment.toString(),
+    ]);
     return result;
   }
 
@@ -112,7 +127,11 @@ export class UpstashClient implements RedisClient {
    * Set expiration time for a key
    */
   async expire(key: string, seconds: number): Promise<number> {
-    const result = await this.command<number>(['EXPIRE', key, seconds.toString()]);
+    const result = await this.command<number>([
+      'EXPIRE',
+      key,
+      seconds.toString(),
+    ]);
     return result;
   }
 
@@ -129,7 +148,13 @@ export class UpstashClient implements RedisClient {
    * Execute a Lua script
    */
   async eval(script: string, keys: string[], args: string[]): Promise<any> {
-    const result = await this.command(['EVAL', script, keys.length.toString(), ...keys, ...args]);
+    const result = await this.command([
+      'EVAL',
+      script,
+      keys.length.toString(),
+      ...keys,
+      ...args,
+    ]);
     return result;
   }
 
@@ -137,7 +162,13 @@ export class UpstashClient implements RedisClient {
    * Execute a Lua script by SHA
    */
   async evalsha(sha: string, keys: string[], args: string[]): Promise<any> {
-    const result = await this.command(['EVALSHA', sha, keys.length.toString(), ...keys, ...args]);
+    const result = await this.command([
+      'EVALSHA',
+      sha,
+      keys.length.toString(),
+      ...keys,
+      ...args,
+    ]);
     return result;
   }
 
@@ -190,5 +221,7 @@ export function resetRedisClient(): void {
  * Check if Redis is properly configured
  */
 export function isRedisConfigured(): boolean {
-  return !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
+  return !!(
+    process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+  );
 }

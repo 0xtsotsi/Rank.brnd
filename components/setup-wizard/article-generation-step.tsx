@@ -19,7 +19,10 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { ArticleGenerationOptions, KeywordConfig } from '@/types/setup-wizard';
+import type {
+  ArticleGenerationOptions,
+  KeywordConfig,
+} from '@/types/setup-wizard';
 
 interface ArticleGenerationStepProps {
   onNext: () => void;
@@ -36,10 +39,26 @@ const WORD_COUNT_OPTIONS = [
 ];
 
 const TONES = [
-  { value: 'professional', label: 'Professional', description: 'Formal and authoritative' },
-  { value: 'casual', label: 'Casual', description: 'Relaxed and conversational' },
-  { value: 'friendly', label: 'Friendly', description: 'Warm and approachable' },
-  { value: 'authoritative', label: 'Authoritative', description: 'Expert and confident' },
+  {
+    value: 'professional',
+    label: 'Professional',
+    description: 'Formal and authoritative',
+  },
+  {
+    value: 'casual',
+    label: 'Casual',
+    description: 'Relaxed and conversational',
+  },
+  {
+    value: 'friendly',
+    label: 'Friendly',
+    description: 'Warm and approachable',
+  },
+  {
+    value: 'authoritative',
+    label: 'Authoritative',
+    description: 'Expert and confident',
+  },
 ] as const;
 
 // Mock article preview
@@ -64,15 +83,23 @@ export function ArticleGenerationStep({
   keywordConfig,
   initialOptions,
 }: ArticleGenerationStepProps) {
-  const [keyword, setKeyword] = useState(initialOptions?.keyword || keywordConfig?.keyword || '');
+  const [keyword, setKeyword] = useState(
+    initialOptions?.keyword || keywordConfig?.keyword || ''
+  );
   const [title, setTitle] = useState(initialOptions?.title || '');
   const [wordCount, setWordCount] = useState(initialOptions?.wordCount || 1000);
-  const [tone, setTone] = useState<'professional' | 'casual' | 'friendly' | 'authoritative'>(
-    initialOptions?.tone || 'professional'
+  const [tone, setTone] = useState<
+    'professional' | 'casual' | 'friendly' | 'authoritative'
+  >(initialOptions?.tone || 'professional');
+  const [includeFaq, setIncludeFaq] = useState(
+    initialOptions?.includeFaq ?? true
   );
-  const [includeFaq, setIncludeFaq] = useState(initialOptions?.includeFaq ?? true);
-  const [includeMeta, setIncludeMeta] = useState(initialOptions?.includeMeta ?? true);
-  const [targetAudience, setTargetAudience] = useState(initialOptions?.targetAudience || '');
+  const [includeMeta, setIncludeMeta] = useState(
+    initialOptions?.includeMeta ?? true
+  );
+  const [targetAudience, setTargetAudience] = useState(
+    initialOptions?.targetAudience || ''
+  );
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState('');
   const [showPreview, setShowPreview] = useState(false);
@@ -142,7 +169,9 @@ export function ArticleGenerationStep({
   }
 
   const selectedTone = TONES.find((t) => t.value === tone);
-  const selectedWordCount = WORD_COUNT_OPTIONS.find((w) => w.value === wordCount);
+  const selectedWordCount = WORD_COUNT_OPTIONS.find(
+    (w) => w.value === wordCount
+  );
 
   return (
     <div className="space-y-6">
@@ -165,7 +194,9 @@ export function ArticleGenerationStep({
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Eye className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-              <span className="font-medium text-gray-900 dark:text-white">Article Preview</span>
+              <span className="font-medium text-gray-900 dark:text-white">
+                Article Preview
+              </span>
             </div>
             <button
               type="button"
@@ -271,7 +302,9 @@ export function ArticleGenerationStep({
               >
                 <div>
                   <div className="font-medium">{selectedWordCount?.label}</div>
-                  <div className="text-xs text-gray-500">{selectedWordCount?.description}</div>
+                  <div className="text-xs text-gray-500">
+                    {selectedWordCount?.description}
+                  </div>
                 </div>
                 <ChevronDown className="w-5 h-5 text-gray-400" />
               </button>
@@ -285,11 +318,16 @@ export function ArticleGenerationStep({
                     onClick={() => setWordCount(option.value)}
                     className={cn(
                       'w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors',
-                      wordCount === option.value && 'bg-indigo-50 dark:bg-indigo-900/20'
+                      wordCount === option.value &&
+                        'bg-indigo-50 dark:bg-indigo-900/20'
                     )}
                   >
-                    <div className="font-medium text-gray-900 dark:text-white">{option.label}</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">{option.description}</div>
+                    <div className="font-medium text-gray-900 dark:text-white">
+                      {option.label}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {option.description}
+                    </div>
                   </button>
                 ))}
               </div>
@@ -317,7 +355,9 @@ export function ArticleGenerationStep({
               >
                 <div>
                   <div className="font-medium">{selectedTone?.label}</div>
-                  <div className="text-xs text-gray-500">{selectedTone?.description}</div>
+                  <div className="text-xs text-gray-500">
+                    {selectedTone?.description}
+                  </div>
                 </div>
                 <ChevronDown className="w-5 h-5 text-gray-400" />
               </button>
@@ -331,11 +371,16 @@ export function ArticleGenerationStep({
                     onClick={() => setTone(toneOption.value)}
                     className={cn(
                       'w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors',
-                      tone === toneOption.value && 'bg-indigo-50 dark:bg-indigo-900/20'
+                      tone === toneOption.value &&
+                        'bg-indigo-50 dark:bg-indigo-900/20'
                     )}
                   >
-                    <div className="font-medium text-gray-900 dark:text-white">{toneOption.label}</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">{toneOption.description}</div>
+                    <div className="font-medium text-gray-900 dark:text-white">
+                      {toneOption.label}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {toneOption.description}
+                    </div>
                   </button>
                 ))}
               </div>
@@ -358,7 +403,9 @@ export function ArticleGenerationStep({
                 className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
               <div className="flex-1">
-                <div className="font-medium text-gray-900 dark:text-white">Include FAQ Section</div>
+                <div className="font-medium text-gray-900 dark:text-white">
+                  Include FAQ Section
+                </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Add common questions and answers
                 </div>
@@ -374,7 +421,9 @@ export function ArticleGenerationStep({
                 className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
               <div className="flex-1">
-                <div className="font-medium text-gray-900 dark:text-white">Generate Meta Content</div>
+                <div className="font-medium text-gray-900 dark:text-white">
+                  Generate Meta Content
+                </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Include meta title and description
                 </div>

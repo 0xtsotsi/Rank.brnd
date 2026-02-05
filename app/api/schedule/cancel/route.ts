@@ -7,10 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import {
-  cancelScheduleSchema,
-  validateRequest,
-} from '@/lib/schemas';
+import { cancelScheduleSchema, validateRequest } from '@/lib/schemas';
 import {
   cancelScheduledArticle,
   canUserAccessSchedule,
@@ -64,7 +61,10 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!article) {
-      return NextResponse.json({ error: 'Schedule not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Schedule not found' },
+        { status: 404 }
+      );
     }
 
     const result = await cancelScheduledArticle(
@@ -75,13 +75,13 @@ export async function POST(request: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, message: 'Schedule cancelled successfully' });
+    return NextResponse.json({
+      success: true,
+      message: 'Schedule cancelled successfully',
+    });
   } catch (error) {
     return handleAPIError(error, 'POST /api/schedule/cancel');
   }

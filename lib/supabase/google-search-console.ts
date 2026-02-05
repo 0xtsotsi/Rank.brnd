@@ -11,9 +11,12 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database';
 import type { Json } from '@/types/database';
 
-type SearchConsoleData = Database['public']['Tables']['google_search_console_data']['Row'];
-type SearchConsoleDataInsert = Database['public']['Tables']['google_search_console_data']['Insert'];
-type SearchConsoleDataUpdate = Database['public']['Tables']['google_search_console_data']['Update'];
+type SearchConsoleData =
+  Database['public']['Tables']['google_search_console_data']['Row'];
+type SearchConsoleDataInsert =
+  Database['public']['Tables']['google_search_console_data']['Insert'];
+type SearchConsoleDataUpdate =
+  Database['public']['Tables']['google_search_console_data']['Update'];
 
 /**
  * Result type for search console operations
@@ -55,7 +58,9 @@ export async function getSearchConsoleDataById(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch search console data',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch search console data',
     };
   }
 }
@@ -70,7 +75,13 @@ export async function getProductSearchConsoleData(
     keyword?: string;
     startDate?: Date;
     endDate?: Date;
-    sortBy?: 'date' | 'impressions' | 'clicks' | 'ctr' | 'avg_position' | 'keyword';
+    sortBy?:
+      | 'date'
+      | 'impressions'
+      | 'clicks'
+      | 'ctr'
+      | 'avg_position'
+      | 'keyword';
     sortOrder?: 'asc' | 'desc';
     limit?: number;
     offset?: number;
@@ -103,7 +114,10 @@ export async function getProductSearchConsoleData(
     }
 
     if (options.offset) {
-      query = query.range(options.offset, (options.offset ?? 0) + (options.limit ?? 100) - 1);
+      query = query.range(
+        options.offset,
+        (options.offset ?? 0) + (options.limit ?? 100) - 1
+      );
     }
 
     const { data, error } = await query;
@@ -116,7 +130,9 @@ export async function getProductSearchConsoleData(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch search console data',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch search console data',
     };
   }
 }
@@ -136,11 +152,14 @@ export async function getProductSearchConsoleMetrics(
     const startDate = options.startDate?.toISOString().split('T')[0];
     const endDate = options.endDate?.toISOString().split('T')[0];
 
-    const { data, error } = await client.rpc('get_product_search_console_metrics', {
-      p_product_id: productId,
-      p_start_date: startDate ?? null,
-      p_end_date: endDate ?? null,
-    });
+    const { data, error } = await client.rpc(
+      'get_product_search_console_metrics',
+      {
+        p_product_id: productId,
+        p_start_date: startDate ?? null,
+        p_end_date: endDate ?? null,
+      }
+    );
 
     if (error) throw error;
     if (!data || data.length === 0) {
@@ -174,7 +193,9 @@ export async function getProductSearchConsoleMetrics(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch search console metrics',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch search console metrics',
     };
   }
 }
@@ -211,7 +232,9 @@ export async function createSearchConsoleData(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to create search console data',
+        error instanceof Error
+          ? error.message
+          : 'Failed to create search console data',
     };
   }
 }
@@ -235,7 +258,7 @@ export async function bulkUpsertSearchConsoleData(
 ): Promise<SearchConsoleResult<number>> {
   try {
     // Format data for the RPC function
-    const formattedData = dataArray.map(item => ({
+    const formattedData = dataArray.map((item) => ({
       keyword: item.keyword,
       impressions: item.impressions,
       clicks: item.clicks,
@@ -258,7 +281,9 @@ export async function bulkUpsertSearchConsoleData(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to bulk upsert search console data',
+        error instanceof Error
+          ? error.message
+          : 'Failed to bulk upsert search console data',
     };
   }
 }
@@ -287,7 +312,9 @@ export async function updateSearchConsoleData(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to update search console data',
+        error instanceof Error
+          ? error.message
+          : 'Failed to update search console data',
     };
   }
 }
@@ -312,7 +339,9 @@ export async function deleteSearchConsoleData(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to delete search console data',
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete search console data',
     };
   }
 }
@@ -337,7 +366,9 @@ export async function deleteProductSearchConsoleData(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to delete product search console data',
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete product search console data',
     };
   }
 }
@@ -366,7 +397,9 @@ export async function deleteProductSearchConsoleDataByDateRange(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to delete search console data by date range',
+        error instanceof Error
+          ? error.message
+          : 'Failed to delete search console data by date range',
     };
   }
 }
@@ -449,7 +482,11 @@ export async function getSearchConsoleTrends(
     endDate?: Date;
     groupBy?: 'day' | 'week' | 'month';
   } = {}
-): Promise<SearchConsoleResult<Array<{ date: string; impressions: number; clicks: number; ctr: number }>>> {
+): Promise<
+  SearchConsoleResult<
+    Array<{ date: string; impressions: number; clicks: number; ctr: number }>
+  >
+> {
   try {
     let query = client
       .from('google_search_console_data')
@@ -472,11 +509,19 @@ export async function getSearchConsoleTrends(
     if (!data) throw new Error('No search console data found');
 
     // Group by date and aggregate
-    const trends = new Map<string, { impressions: number; clicks: number; ctr_sum: number; count: number }>();
+    const trends = new Map<
+      string,
+      { impressions: number; clicks: number; ctr_sum: number; count: number }
+    >();
 
     for (const row of data) {
       const date = row.date;
-      const existing = trends.get(date) ?? { impressions: 0, clicks: 0, ctr_sum: 0, count: 0 };
+      const existing = trends.get(date) ?? {
+        impressions: 0,
+        clicks: 0,
+        ctr_sum: 0,
+        count: 0,
+      };
 
       existing.impressions += row.impressions ?? 0;
       existing.clicks += row.clicks ?? 0;
@@ -499,7 +544,9 @@ export async function getSearchConsoleTrends(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : 'Failed to fetch search console trends',
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch search console trends',
     };
   }
 }

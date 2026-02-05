@@ -34,7 +34,13 @@ interface ScheduledArticle {
   scheduled_at: string;
   published_at: string | null;
   status: 'draft' | 'published' | 'archived';
-  schedule_status?: 'pending' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'cancelled';
+  schedule_status?:
+    | 'pending'
+    | 'scheduled'
+    | 'publishing'
+    | 'published'
+    | 'failed'
+    | 'cancelled';
   created_at: string;
   updated_at: string;
 }
@@ -68,7 +74,9 @@ export function ScheduledArticlesCalendar({
   const [articles, setArticles] = useState<ScheduledArticle[]>([]);
   const [loadingState, setLoadingState] = useState<LoadingState>('loading');
   const [error, setError] = useState<string | null>(null);
-  const [currentDate, setCurrentDate] = useState<Date>(initialDate || new Date());
+  const [currentDate, setCurrentDate] = useState<Date>(
+    initialDate || new Date()
+  );
 
   // Calculate date range for fetching articles
   const dateRange = useMemo(() => {
@@ -116,7 +124,8 @@ export function ScheduledArticlesCalendar({
         setArticles(data.schedules || []);
         setLoadingState('idle');
       } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'An error occurred';
+        const errorMsg =
+          err instanceof Error ? err.message : 'An error occurred';
         setError(errorMsg);
         setLoadingState('error');
       }
@@ -147,14 +156,18 @@ export function ScheduledArticlesCalendar({
   const handleEventDrop = useCallback(
     async (eventId: string, newDate: Date) => {
       // Find the article to get its current scheduled date
-      const article = articles.find((a) => a.article_id === eventId || a.id === eventId);
+      const article = articles.find(
+        (a) => a.article_id === eventId || a.id === eventId
+      );
 
       if (!article) {
         console.error('Article not found:', eventId);
         return;
       }
 
-      const sourceDate = article.scheduled_at ? new Date(article.scheduled_at) : undefined;
+      const sourceDate = article.scheduled_at
+        ? new Date(article.scheduled_at)
+        : undefined;
 
       // Call the API to reschedule
       const result = await rescheduleArticle(eventId, newDate, sourceDate);
@@ -170,7 +183,9 @@ export function ScheduledArticlesCalendar({
   // Handle event click
   const handleEventClick = useCallback(
     (event: CalendarEvent) => {
-      const article = articles.find((a) => a.article_id === event.id || a.id === event.id);
+      const article = articles.find(
+        (a) => a.article_id === event.id || a.id === event.id
+      );
       if (article && onArticleClick) {
         onArticleClick(article);
       }
@@ -210,7 +225,9 @@ export function ScheduledArticlesCalendar({
                 <p className="font-medium text-gray-900 dark:text-white">
                   Failed to load articles
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{error}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {error}
+                </p>
               </div>
               <button
                 onClick={() => fetchArticles()}
@@ -238,18 +255,17 @@ export function ScheduledArticlesCalendar({
           )}
           title="Refresh articles"
         >
-          <RefreshCw
-            className={cn(
-              'h-4 w-4',
-              isLoading && 'animate-spin'
-            )}
-          />
+          <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
           <span className="sr-only">Refresh</span>
         </button>
       </div>
 
       {/* Calendar View */}
-      <div className={cn(isLoading && loadingState === 'refreshing' && 'opacity-50')}>
+      <div
+        className={cn(
+          isLoading && loadingState === 'refreshing' && 'opacity-50'
+        )}
+      >
         <CalendarView
           events={calendarEvents}
           initialDate={currentDate}

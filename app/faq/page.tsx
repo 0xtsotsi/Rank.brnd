@@ -4,10 +4,12 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'FAQ - Rank.brnd',
-  description: 'Frequently asked questions about Rank.brnd, the AI-powered SEO automation platform.',
+  description:
+    'Frequently asked questions about Rank.brnd, the AI-powered SEO automation platform.',
   openGraph: {
     title: 'FAQ - Rank.brnd',
-    description: 'Frequently asked questions about Rank.brnd, the AI-powered SEO automation platform.',
+    description:
+      'Frequently asked questions about Rank.brnd, the AI-powered SEO automation platform.',
     type: 'website',
   },
 };
@@ -15,41 +17,47 @@ export const metadata: Metadata = {
 const faqs = [
   {
     question: 'What is Rank.brnd?',
-    answer: 'Rank.brnd is an AI-powered SEO automation platform that helps businesses optimize their online presence. Our intelligent agents assist with keyword research, content planning, SERP analysis, and domain authority tracking.',
+    answer:
+      'Rank.brnd is an AI-powered SEO automation platform that helps businesses optimize their online presence. Our intelligent agents assist with keyword research, content planning, SERP analysis, and domain authority tracking.',
   },
   {
     question: 'How does the AI-powered keyword research work?',
-    answer: 'Our AI analyzes search trends, competitor data, and user intent to suggest high-value keywords for your niche. The system continuously learns from search algorithm updates to provide relevant recommendations.',
+    answer:
+      'Our AI analyzes search trends, competitor data, and user intent to suggest high-value keywords for your niche. The system continuously learns from search algorithm updates to provide relevant recommendations.',
   },
   {
     question: 'What subscription plans are available?',
-    answer: 'We offer four tiers: Free for individuals getting started, Starter for small businesses, Pro for growing teams, and Agency for marketing agencies managing multiple clients. Each plan includes different features and usage limits.',
+    answer:
+      'We offer four tiers: Free for individuals getting started, Starter for small businesses, Pro for growing teams, and Agency for marketing agencies managing multiple clients. Each plan includes different features and usage limits.',
   },
   {
     question: 'Can I integrate Rank.brnd with my existing CMS?',
-    answer: 'Yes! Rank.brnd integrates with popular CMS platforms including Webflow, WordPress, Ghost, and Notion. We also provide an API for custom integrations.',
+    answer:
+      'Yes! Rank.brnd integrates with popular CMS platforms including Webflow, WordPress, Ghost, and Notion. We also provide an API for custom integrations.',
   },
   {
     question: 'How accurate is the domain authority tracking?',
-    answer: 'We use the Moz API to provide accurate domain authority metrics. Data is cached and regularly updated to ensure you have current information while optimizing performance.',
+    answer:
+      'We use the Moz API to provide accurate domain authority metrics. Data is cached and regularly updated to ensure you have current information while optimizing performance.',
   },
   {
     question: 'Is my data secure?',
-    answer: 'Yes, we take security seriously. Rank.brnd uses industry-standard encryption, secure authentication via Clerk, and follows GDPR best practices. Your data is stored securely in Supabase with proper access controls.',
+    answer:
+      'Yes, we take security seriously. Rank.brnd uses industry-standard encryption, secure authentication via Clerk, and follows GDPR best practices. Your data is stored securely in Supabase with proper access controls.',
   },
   {
     question: 'Can I cancel my subscription at any time?',
-    answer: 'Absolutely. You can cancel your subscription at any time from your account settings. Your access will continue until the end of your current billing period.',
+    answer:
+      'Absolutely. You can cancel your subscription at any time from your account settings. Your access will continue until the end of your current billing period.',
   },
   {
     question: 'Do you offer a free trial?',
-    answer: 'Yes! We offer a 14-day free trial on our Starter and Pro plans. No credit card required to start your trial.',
+    answer:
+      'Yes! We offer a 14-day free trial on our Starter and Pro plans. No credit card required to start your trial.',
   },
 ];
 
-const breadcrumbs = [
-  { name: 'FAQ', url: '' },
-];
+const breadcrumbs = [{ name: 'FAQ', url: '' }];
 
 export default function FAQPage() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rank.brnd';
@@ -70,11 +78,16 @@ export default function FAQPage() {
         <div className="max-w-3xl mx-auto">
           {/* Breadcrumb Navigation */}
           <nav className="flex mb-8 text-sm text-gray-600 dark:text-gray-400">
-            <Link href="/" className="hover:text-indigo-600 dark:hover:text-indigo-400">
+            <Link
+              href="/"
+              className="hover:text-indigo-600 dark:hover:text-indigo-400"
+            >
               Home
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-gray-900 dark:text-white font-medium">FAQ</span>
+            <span className="text-gray-900 dark:text-white font-medium">
+              FAQ
+            </span>
           </nav>
 
           {/* Header */}
