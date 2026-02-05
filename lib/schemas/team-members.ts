@@ -47,14 +47,11 @@ export const teamMembersPostSchema = z.discriminatedUnion('bulk', [
       .min(1, 'At least one member is required'),
   }),
   z.object({
+    bulk: z.literal(false),
     organization_id: z.string().min(1, 'Organization ID is required'),
     user_id: z.string().min(1, 'User ID is required'),
     role: teamMemberRoleSchema.optional().default('viewer'),
-  })
-    .extend({
-      bulk: z.literal(false).optional(),
-    })
-    .transform((val) => ({ ...val, bulk: false as const })),
+  }),
 ]);
 
 /**
