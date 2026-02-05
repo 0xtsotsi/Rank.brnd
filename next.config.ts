@@ -9,9 +9,8 @@ const nextConfig: NextConfig = {
   
   // Sentry configuration - properly typed for TypeScript
   sentry: {
-    // Re-enable Sentry integration with proper configuration
     // Sentry is configured via sentry.client.config.ts and sentry.server.config.ts
-    // No explicit config needed here unless we want to override
+    // No explicit config needed here
   },
   
   // Experimental features for better performance
@@ -20,14 +19,10 @@ const nextConfig: NextConfig = {
     optimizePackageImports: true,
   },
   
-  // Optimize images for LCP
+  // Image optimization - use standard format
   images: {
-    // Disable remote image patterns that might trigger Sentry errors
-    // remotePatterns: [],
-    // We use local Supabase storage for images
-    formats: ['image/avif', 'image/webp', 'image/jpeg'],
+    formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
   },
   
@@ -37,10 +32,15 @@ const nextConfig: NextConfig = {
       default-src 'self';
       script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.com https://*.clerk.accounts.dev;
       style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https://*.supabase.co https://*.clerk.com;
+      img-src 'self' data: https://*.supabase.co https://*.supabase.in;
       connect-src 'self';
       font-src 'self';
-    `;
+      base-uri 'self';
+      object-src 'none';
+      frame-ancestors 'none';
+      form-action 'self';
+      upgrade-insecure-requests;
+    `.replace(/\s{2,}/g, ' ');
     
     return [
       {
@@ -55,7 +55,7 @@ const nextConfig: NextConfig = {
         key: 'X-Content-Type-Options',
         value: 'nosniff',
       },
-    {
+      {
         key: 'Strict-Transport-Security',
         value: 'max-age=63072000; includeSubDomains; preload',
       },
@@ -65,9 +65,28 @@ const nextConfig: NextConfig = {
       },
       {
         key: 'Permissions-Policy',
-        value: 'camera=(), microphone=(), geolocation=()',
+        value: 'camera=(), microphone=(), geolocation=(), payment=()',
       },
     ];
+  },
+  
+  // Webpack configuration for code splitting and optimization
+  webpack: (config, { dev, isServer }) => {
+    // Production optimizations only
+    if (!dev && !isServer) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          minSize: 20000,
+          maxSize: 244000,
+          minChunks: 1,
+          maxAsyncRequests: 30,
+          maxInitialRequests: 30,
+        },
+      };
+    }
+    return config;
   },
 };
 
