@@ -50,7 +50,10 @@ export const teamMembersPostSchema = z.discriminatedUnion('bulk', [
     organization_id: z.string().min(1, 'Organization ID is required'),
     user_id: z.string().min(1, 'User ID is required'),
     role: teamMemberRoleSchema.optional().default('viewer'),
-  }),
+  })
+    .extend({
+      bulk: z.literal(false).optional(),
+    })
     .transform((val) => ({ ...val, bulk: false as const })),
 ]);
 
@@ -77,6 +80,15 @@ export const teamMembersQuerySchema = z.object({
  */
 export const updateTeamMemberSchema = z.object({
   role: teamMemberRoleSchema.optional(),
+});
+
+/**
+ * Accept Team Invitation Schema
+ *
+ * POST /api/team-members/[id]/accept
+ */
+export const acceptTeamInvitationSchema = z.object({
+  team_member_id: z.string().min(1, 'Team member ID is required'),
 });
 
 /**
