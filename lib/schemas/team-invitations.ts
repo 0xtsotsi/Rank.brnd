@@ -7,7 +7,7 @@
 import { z } from 'zod';
 
 /**
- * Team member role enum
+ * Team member role enum (for invitations - different from team members)
  */
 export const invitationTeamMemberRoleSchema = z.enum([
   'owner',
@@ -40,6 +40,25 @@ export const createTeamInvitationSchema = z.object({
   organization_id: z.string().min(1, 'Organization ID is required'),
   email: z.string().email('Invalid email address'),
   role: invitationTeamMemberRoleSchema.optional().default('viewer'),
+});
+
+/**
+ * Bulk Invite Team Members Schema
+ *
+ * POST /api/team-invitations (bulk mode)
+ */
+export const bulkInviteTeamMembersSchema = z.object({
+  bulk: z.literal(true),
+  organization_id: z.string().min(1, 'Organization ID is required'),
+  invitations: z
+    .array(
+      z.object({
+        email: z.string().email('Invalid email address'),
+        role: invitationTeamMemberRoleSchema.optional().default('viewer'),
+      })
+    )
+    .min(1, 'At least one invitation is required')
+    .max(50, 'Cannot send more than 50 invitations at once'),
 });
 
 /**
@@ -114,3 +133,21 @@ export const invitationEmailDataSchema = z.object({
   invite_link: z.string().url(),
   role: invitationTeamMemberRoleSchema,
 });
+
+// Namespace export to avoid conflicts with team-members
+export namespace TeamInvitationsSchemas {
+  export {
+    createTeamInvitationSchema,
+    bulkInviteTeamMembersSchema,
+    validateInvitationTokenSchema,
+    acceptInvitationSchema,
+    cancelInvitationSchema,
+    resendInvitationSchema,
+    declineInvitationSchema,
+    pendingInvitationsQuerySchema,
+    checkInvitationStatusSchema,
+    invitationEmailDataSchema,
+    invitationTeamMemberRoleSchema,
+    teamInvitationStatusSchema,
+  };
+}

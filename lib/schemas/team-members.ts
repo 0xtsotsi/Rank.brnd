@@ -2,6 +2,7 @@
  * Team Members API Schemas
  *
  * Zod validation schemas for team member-related API routes.
+ * Note: Invitation-related schemas moved to team-invitations.ts to avoid conflicts
  */
 
 import { z } from 'zod';
@@ -30,32 +31,26 @@ export const createTeamMemberSchema = z.object({
 });
 
 /**
- * Bulk Invite Team Members Schema
- *
- * POST /api/team-members (bulk mode)
- */
-export const bulkInviteTeamMembersSchema = z.object({
-  bulk: z.literal(true),
-  organization_id: z.string().min(1, 'Organization ID is required'),
-  members: z
-    .array(
-      z.object({
-        user_id: z.string().min(1, 'User ID is required'),
-        role: teamMemberRoleSchema.optional().default('viewer'),
-      })
-    )
-    .min(1, 'At least one member is required'),
-});
-
-/**
  * Combined POST schema for team members (single or bulk)
  */
 export const teamMembersPostSchema = z.discriminatedUnion('bulk', [
-  bulkInviteTeamMembersSchema,
-  createTeamMemberSchema
-    .extend({
-      bulk: z.literal(false).optional(),
-    })
+  z.object({
+    bulk: z.literal(true),
+    organization_id: z.string().min(1, 'Organization ID is required'),
+    members: z
+      .array(
+        z.object({
+          user_id: z.string().min(1, 'User ID is required'),
+          role: teamMemberRoleSchema.optional().default('viewer'),
+        })
+      )
+      .min(1, 'At least one member is required'),
+  }),
+  z.object({
+    organization_id: z.string().min(1, 'Organization ID is required'),
+    user_id: z.string().min(1, 'User ID is required'),
+    role: teamMemberRoleSchema.optional().default('viewer'),
+  }),
     .transform((val) => ({ ...val, bulk: false as const })),
 ]);
 
@@ -85,37 +80,10 @@ export const updateTeamMemberSchema = z.object({
 });
 
 /**
- * Accept Team Invitation Schema
- *
- * POST /api/team-members/[id]/accept
- */
-export const acceptTeamInvitationSchema = z.object({
-  team_member_id: z.string().min(1, 'Team member ID is required'),
-});
-
-/**
  * Remove Team Member Schema
  *
  * DELETE /api/team-members/[id]
  */
 export const removeTeamMemberSchema = z.object({
   team_member_id: z.string().min(1, 'Team member ID is required'),
-});
-
-/**
- * Get Pending Invitations Query Schema
- *
- * GET /api/team-members/pending
- */
-export const pendingInvitationsQuerySchema = z.object({
-  organization_id: z.string().min(1, 'Organization ID is required'),
-});
-
-/**
- * Get User Memberships Query Schema
- *
- * GET /api/team-members/memberships
- */
-export const userMembershipsQuerySchema = z.object({
-  user_id: z.string().optional(), // Optional, defaults to current user
 });
