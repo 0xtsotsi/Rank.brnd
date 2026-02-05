@@ -22,7 +22,6 @@ export const createTeamInvitationSchema = z.object({
  *
  * POST /api/team-invitations (bulk mode)
  */
-export const bulkInviteTeamMembersSchema = z.object({
   bulk: z.literal(true),
   organization_id: z.string().min(1, 'Organization ID is required'),
   members: z
