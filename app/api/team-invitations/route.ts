@@ -15,7 +15,7 @@ import { hasMinTeamRole } from '@/lib/supabase/team-members';
 import {
   teamInvitationsQuerySchema,
   teamInvitationsPostSchema,
-} from '@/lib/schemas/team-invitations';
+} from '@/lib/schemas/team-invitations' as TeamInvitationsSchemas;
 import { ZodError } from 'zod';
 
 /**
