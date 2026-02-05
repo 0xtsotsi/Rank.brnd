@@ -12,8 +12,8 @@ import {
   createTeamInvitation,
 } from '@/lib/supabase/team-invitations';
 import {
-  teamInvitationsQuerySchema,
-  teamInvitationsPostSchema,
+  getPendingInvitationsQuerySchema,
+  createTeamInvitationSchema,
 } from '@/lib/schemas/team-invitations';
 import { hasMinTeamRole } from '@/lib/supabase/team-members';
 import { ZodError } from 'zod';
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const result = teamInvitationsPostSchema.safeParse(body);
+    const result = createTeamInvitationSchema.safeParse(body);
 
     if (!result.success) {
       return NextResponse.json(
