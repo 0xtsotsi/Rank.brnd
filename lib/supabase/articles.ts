@@ -889,10 +889,39 @@ export async function publishArticleToCMS(
     const queueItemId = result.data as string;
 
     // Also update article status to published if not scheduled
+    let wasPublished = false;
     if (!options.scheduledFor || new Date(options.scheduledFor) <= new Date()) {
       const publishResult = await publishArticle(client, articleId);
       if (!publishResult.success) {
         return { success: false, error: publishResult.error };
+      }
+      wasPublished = true;
+    }
+
+    // Trigger webhooks for article published event
+    // Import dynamically to avoid circular dependencies
+    if (wasPublished) {
+      try {
+        const { triggerWebhooks } = await import('@/lib/webhooks/delivery');
+
+        // Trigger webhooks asynchronously in the background
+        triggerWebhooks(client, article.organization_id, 'article.published', {
+          article_id: article.id,
+          title: article.title,
+          slug: article.slug,
+          status: article.status,
+          published_at: article.published_at,
+          scheduled_at: article.scheduled_at,
+          author_id: article.author_id,
+          product_id: article.product_id,
+          keyword_id: article.keyword_id,
+        }).catch((err) => {
+          // Log webhook errors but don't fail the publish operation
+          console.error('Webhook delivery failed:', err);
+        });
+      } catch (err) {
+        // Log webhook import/delivery errors but don't fail the publish operation
+        console.error('Failed to trigger webhooks:', err);
       }
     }
 

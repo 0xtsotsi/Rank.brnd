@@ -54,7 +54,7 @@ export const createBacklinkSchema = z.object({
   status: backlinkStatusSchema.optional().default('pending'),
   notes: z.string().optional(),
   tags: z.array(z.string()).optional().default([]),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 /**
@@ -113,7 +113,7 @@ export const updateBacklinkSchema = z.object({
   status: backlinkStatusSchema.optional(),
   notes: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
   lastVerifiedAt: z.string().datetime().optional(),
 });
 

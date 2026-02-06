@@ -48,7 +48,7 @@ export const createCompetitorComparisonSchema = z.object({
   opportunity_score: z.coerce.number().min(0).max(100).optional(),
   device: z.string().optional().default('desktop'),
   location: z.string().optional().default('us'),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 export const updateCompetitorComparisonSchema = z.object({
@@ -63,7 +63,7 @@ export const updateCompetitorComparisonSchema = z.object({
   opportunity_type: opportunityTypeSchema.optional(),
   opportunity_score: z.coerce.number().min(0).max(100).optional(),
   is_active: z.boolean().optional(),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 export const competitorComparisonsQuerySchema = z.object({

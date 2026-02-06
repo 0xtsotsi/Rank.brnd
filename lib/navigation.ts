@@ -44,6 +44,12 @@ export const mainNavigation: NavSection[] = [
         href: '/dashboard/analytics',
         icon: 'BarChart3',
       },
+      {
+        id: 'marketplace',
+        label: 'Marketplace',
+        href: '/dashboard/marketplace',
+        icon: 'Store',
+      },
     ],
   },
   {

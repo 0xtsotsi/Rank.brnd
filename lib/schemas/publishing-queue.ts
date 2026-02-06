@@ -61,7 +61,7 @@ export const createPublishingQueueItemSchema = z.object({
   priority: z.coerce.number().int().min(0).max(100).optional().default(0),
   scheduled_for: z.string().datetime('Invalid scheduled date').optional(),
   max_retries: z.coerce.number().int().nonnegative().optional().default(3),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -120,7 +120,7 @@ export const updatePublishingQueueItemSchema = z.object({
   scheduled_for: z.string().datetime('Invalid scheduled date').optional(),
   max_retries: z.coerce.number().int().nonnegative().optional(),
   status: publishingQueueStatusSchema.optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -154,7 +154,7 @@ export const markPublishingQueueItemCompletedSchema = z.object({
     .optional()
     .or(z.literal('')),
   published_post_id: z.string().optional(),
-  published_data: z.record(z.unknown()).optional(),
+  published_data: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -192,4 +192,69 @@ export const bulkQueueArticlesSchema = z.object({
   integration_id: z.string().uuid('Invalid integration ID').optional(),
   priority: z.coerce.number().int().min(0).max(100).optional().default(0),
   scheduled_for: z.string().datetime('Invalid scheduled date').optional(),
+});
+
+/**
+ * Schedule Article for Publishing Schema (with timezone support)
+ *
+ * POST /api/publishing-queue/schedule
+ */
+export const scheduleArticleForPublishingSchema = z.object({
+  organization_id: z.string().uuid('Invalid organization ID'),
+  article_id: z.string().uuid('Invalid article ID'),
+  platform: publishingPlatformSchema,
+  integration_id: z.string().uuid('Invalid integration ID').optional(),
+  scheduled_for: z.string().datetime('Invalid scheduled date'),
+  timezone: z.string().optional().default('UTC'),
+  priority: z.coerce.number().int().min(0).max(100).optional().default(0),
+  product_id: z.string().uuid('Invalid product ID').optional(),
+  max_retries: z.coerce.number().int().nonnegative().optional().default(3),
+  metadata: z.record(z.string(), z.unknown()).optional(),
+});
+
+/**
+ * Reschedule Article Schema
+ *
+ * PUT /api/publishing-queue/schedule
+ */
+export const rescheduleArticleSchema = z.object({
+  id: z.string().uuid('Invalid queue item ID'),
+  scheduled_for: z.string().datetime('Invalid scheduled date'),
+  timezone: z.string().optional().default('UTC'),
+});
+
+/**
+ * Get Scheduled Articles Schema
+ *
+ * GET /api/publishing-queue/scheduled
+ */
+export const getScheduledArticlesSchema = z.object({
+  organization_id: z.string().uuid('Invalid organization ID'),
+  product_id: z.string().uuid('Invalid product ID').optional(),
+  platform: publishingPlatformSchema.optional(),
+  date_from: z.string().datetime('Invalid start date').optional(),
+  date_to: z.string().datetime('Invalid end date').optional(),
+  limit: z.coerce.number().int().positive().max(100).optional().default(50),
+  offset: z.coerce.number().int().nonnegative().optional().default(0),
+});
+
+/**
+ * Timezone Validation Schema
+ */
+export const timezoneSchema = z.string().refine((tz) => {
+  try {
+    Intl.DateTimeFormat(undefined, { timeZone: tz });
+    return true;
+  } catch {
+    return false;
+  }
+}, { message: 'Invalid timezone' });
+
+/**
+ * Get Available Timezones Schema
+ *
+ * GET /api/publishing-queue/timezones
+ */
+export const getTimezonesSchema = z.object({
+  search: z.string().optional(),
 });

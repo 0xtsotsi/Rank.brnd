@@ -12,6 +12,11 @@ import { defineConfig as defineBddConfig } from 'playwright-bdd';
  * - tests/mocks/ - Mock data and API handlers
  * - tests/*.spec.ts - E2E test files
  * - tests/unit/ - Unit test files
+ *
+ * Responsive Testing Projects:
+ * - Desktop projects test at 1024px, 1280px, and 1536px
+ * - Tablet projects test at 768px and 1024px
+ * - Mobile projects test at 375px, 640px with device emulation
  */
 export default defineConfig({
   testDir: './tests',
@@ -40,18 +45,78 @@ export default defineConfig({
   },
 
   projects: [
+    // Desktop Chrome - Default
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
 
-    // Test against mobile viewports
+    // Desktop - Small (1024px)
     {
-      name: 'Mobile Chrome',
+      name: 'desktop-small',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1024, height: 1080 },
+      },
+    },
+
+    // Desktop - Medium (1280px)
+    {
+      name: 'desktop-medium',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 1080 },
+      },
+    },
+
+    // Desktop - Large (1536px)
+    {
+      name: 'desktop-large',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1536, height: 1080 },
+      },
+    },
+
+    // Tablet - Portrait (768px)
+    {
+      name: 'tablet-portrait',
+      use: {
+        ...devices['iPad Mini'],
+        viewport: { width: 768, height: 1024 },
+      },
+    },
+
+    // Tablet - Landscape (1024px)
+    {
+      name: 'tablet-landscape',
+      use: {
+        ...devices['iPad Mini'],
+        viewport: { width: 1024, height: 768 },
+      },
+    },
+
+    // Mobile - Small (375px - iPhone SE)
+    {
+      name: 'mobile-small',
+      use: { ...devices['iPhone SE'] },
+    },
+
+    // Mobile - Medium (390px - iPhone 14)
+    {
+      name: 'mobile-medium',
+      use: { ...devices['iPhone 14'] },
+    },
+
+    // Mobile - Large (640px - Pixel 5)
+    {
+      name: 'mobile-large',
       use: { ...devices['Pixel 5'] },
     },
+
+    // Mobile Safari for iOS testing
     {
-      name: 'Mobile Safari',
+      name: 'mobile-safari',
       use: { ...devices['iPhone 12'] },
     },
   ],

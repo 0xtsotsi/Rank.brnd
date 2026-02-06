@@ -48,7 +48,7 @@ export const createExchangeNetworkSchema = z.object({
   contact_name: z.string().optional(),
   notes: z.string().optional(),
   tags: z.array(z.string()).optional().default([]),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 /**
@@ -121,7 +121,7 @@ export const updateExchangeNetworkSchema = z.object({
   contact_name: z.string().optional(),
   notes: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
   last_verified_at: z.string().datetime().optional(),
 });
 

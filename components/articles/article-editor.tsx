@@ -38,6 +38,7 @@ import { TiptapEditor, calculateReadabilityScore } from './tiptap-editor';
 import { ImageGenerationDialog } from './image-generation-dialog';
 import { SEOSidebar } from './seo-sidebar';
 import { ArticlePreviewModal } from './article-preview-modal';
+import { VersionHistoryModal } from './version-history-modal';
 import { cn } from '@/lib/utils';
 import type { ImageGenerationResponse } from '@/types/image-generation';
 
@@ -160,6 +161,7 @@ export function ArticleEditor({
   const [showSEOSidebar, setShowSEOSidebar] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
   const [showImageGeneration, setShowImageGeneration] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   // Refs for auto-save
@@ -470,6 +472,17 @@ export function ArticleEditor({
           >
             <Save className="w-4 h-4" />
             Save
+          </button>
+
+          <button
+            onClick={() => setShowVersionHistory(true)}
+            className={cn(
+              'p-2 rounded-lg transition-colors',
+              'hover:bg-gray-100 dark:hover:bg-gray-700'
+            )}
+            title="Version History"
+          >
+            <History className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </button>
 
           <button
@@ -888,6 +901,24 @@ export function ArticleEditor({
           organizationId={organizationId}
           userId={userId}
           brandSettings={brandSettings}
+        />
+      )}
+
+      {/* Version History Modal */}
+      {article && (
+        <VersionHistoryModal
+          isOpen={showVersionHistory}
+          onClose={() => setShowVersionHistory(false)}
+          articleId={article.id}
+          userId={userId}
+          userRole={userId ? 'owner' : undefined}
+          onReverted={async () => {
+            // Refresh the article data after revert
+            if (onSave) {
+              // Trigger a refresh by calling save which will update the article
+              await handleSave();
+            }
+          }}
         />
       )}
     </div>

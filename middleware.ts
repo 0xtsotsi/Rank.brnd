@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { rateLimit } from './lib/rate-limit';
 
 /**
  * Middleware Configuration
@@ -6,11 +7,16 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
  * This middleware handles:
  * 1. Authentication flow via Clerk
  * 2. CSRF protection for state-changing operations
+ * 3. Rate limiting for API requests
  *
  * Route Protection:
  * - Public routes: accessible without authentication
  * - Protected routes: require authentication
  * - API routes: may require authentication and CSRF validation
+ *
+ * Rate Limiting:
+ * - Authenticated users: 100 requests/minute per user
+ * - Anonymous users: 30 requests/minute per IP
  */
 
 // Define protected routes that require authentication
@@ -40,6 +46,12 @@ const isCSRFExemptRoute = createRouteMatcher([
   '/api/webhooks(.*)', // Webhooks from external services
   '/api/health(.*)', // Health check endpoints
   '/api/csrf-token(.*)', // CSRF token endpoint
+]);
+
+// Routes that should be excluded from rate limiting
+const isRateLimitExemptRoute = createRouteMatcher([
+  '/api/webhooks(.*)', // Webhooks from external services
+  '/api/health(.*)', // Health check endpoints
 ]);
 
 // State-changing methods that require CSRF protection
@@ -114,8 +126,22 @@ export default clerkMiddleware(async (auth, request) => {
     return;
   }
 
-  // CSRF protection for state-changing API requests
+  // Rate limiting for API routes
   const isAPIRoute = request.nextUrl.pathname.startsWith('/api/');
+
+  if (isAPIRoute && !isRateLimitExemptRoute(request)) {
+    // Check rate limit
+    const rateLimitResult = await rateLimit(request, {
+      limit: 100, // 100 requests per minute
+      window: 60, // 1 minute window
+    });
+
+    if (!rateLimitResult.allowed && rateLimitResult.response) {
+      return rateLimitResult.response;
+    }
+  }
+
+  // CSRF protection for state-changing API requests
   const isStateChanging = STATE_CHANGING_METHODS.has(request.method);
 
   if (isAPIRoute && isStateChanging && !isCSRFExemptRoute(request)) {

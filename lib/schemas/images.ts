@@ -68,7 +68,7 @@ export const createImageSchema = z.object({
   mime_type: imageMimeTypeSchema.optional(),
   format: imageFormatSchema.optional(),
   status: imageStatusSchema.optional().default('completed'),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -120,7 +120,7 @@ const singleImageWithBulk = z.object({
   mime_type: imageMimeTypeSchema.optional(),
   format: imageFormatSchema.optional(),
   status: imageStatusSchema.optional().default('completed'),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -182,7 +182,7 @@ export const updateImageSchema = z.object({
   mime_type: imageMimeTypeSchema.optional(),
   format: imageFormatSchema.optional(),
   status: imageStatusSchema.optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**

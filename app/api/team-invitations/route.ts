@@ -154,17 +154,15 @@ export async function POST(request: NextRequest) {
  * DELETE /api/team-invitations/[id]
  * Cancel team invitation
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const invitationId = params.id;
+    const { searchParams } = new URL(request.url);
+    const invitationId = searchParams.get('id');
     const client = getSupabaseServerClient();
 
     // First fetch the invitation to get the organization ID

@@ -39,7 +39,7 @@ export const createRankTrackingSchema = z.object({
   ctr: z.coerce.number().min(0).max(1).optional(),
   impressions: z.coerce.number().int().nonnegative().optional(),
   clicks: z.coerce.number().int().nonnegative().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -94,7 +94,7 @@ const singleRankTrackingWithBulk = z.object({
   ctr: z.coerce.number().min(0).max(1).optional(),
   impressions: z.coerce.number().int().nonnegative().optional(),
   clicks: z.coerce.number().int().nonnegative().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -142,7 +142,7 @@ export const updateRankTrackingSchema = z.object({
   ctr: z.coerce.number().min(0).max(1).optional(),
   impressions: z.coerce.number().int().nonnegative().optional(),
   clicks: z.coerce.number().int().nonnegative().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -185,7 +185,7 @@ export const upsertRankTrackingSchema = z.object({
   ctr: z.coerce.number().min(0).max(1).optional(),
   impressions: z.coerce.number().int().nonnegative().optional(),
   clicks: z.coerce.number().int().nonnegative().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**

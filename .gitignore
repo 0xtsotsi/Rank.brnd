@@ -51,3 +51,6 @@ next-env.d.ts
 *.bak2
 *.bak3
 /.worktrees/
+
+# clerk configuration (can include secrets)
+/.clerk/

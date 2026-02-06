@@ -52,12 +52,12 @@ export const createArticleSchema = z.object({
     .optional()
     .or(z.literal('')),
   schema_type: z.string().optional(),
-  schema_data: z.record(z.unknown()).optional(),
+  schema_data: z.record(z.string(), z.unknown()).optional(),
   scheduled_at: z.string().datetime('Invalid scheduled date').optional(),
   author_id: z.string().optional(),
   tags: z.array(z.string()).optional().default([]),
   category: z.string().max(200, 'Category is too long').optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -133,12 +133,12 @@ const singleArticleWithBulk = z.object({
     .optional()
     .or(z.literal('')),
   schema_type: z.string().optional(),
-  schema_data: z.record(z.unknown()).optional(),
+  schema_data: z.record(z.string(), z.unknown()).optional(),
   scheduled_at: z.string().datetime('Invalid scheduled date').optional(),
   author_id: z.string().optional(),
   tags: z.array(z.string()).optional().default([]),
   category: z.string().max(200, 'Category is too long').optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -227,11 +227,11 @@ export const updateArticleSchema = z.object({
     .optional()
     .or(z.literal('')),
   schema_type: z.string().optional(),
-  schema_data: z.record(z.unknown()).optional(),
+  schema_data: z.record(z.string(), z.unknown()).optional(),
   scheduled_at: z.string().datetime('Invalid scheduled date').optional(),
   tags: z.array(z.string()).optional(),
   category: z.string().max(200, 'Category is too long').optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -297,7 +297,7 @@ export const publishArticleToCMSSchema = z.object({
   platform: publishingPlatformSchema.optional(),
   scheduled_for: z.string().datetime('Invalid scheduled date').optional(),
   priority: z.coerce.number().int().min(0).max(100).optional().default(0),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -314,5 +314,5 @@ export const bulkPublishArticlesSchema = z.object({
   platform: publishingPlatformSchema.optional(),
   scheduled_for: z.string().datetime('Invalid scheduled date').optional(),
   priority: z.coerce.number().int().min(0).max(100).optional().default(0),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });

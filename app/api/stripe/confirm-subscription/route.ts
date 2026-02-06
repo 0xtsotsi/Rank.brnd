@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
       subscriptionParams.trial_period_days = plan.metadata.trialDays;
     }
 
-    const subscription = await stripe.subscriptions.create(subscriptionParams) as Stripe.Subscription;
+    const subscription = await stripe.subscriptions.create(subscriptionParams);
 
     // TODO: Save subscription to database
     // await db.insert(subscriptions).values({
@@ -146,8 +146,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       subscriptionId: subscription.id,
       status: subscription.status,
-      currentPeriodEnd: subscription.current_period_end,
-      trialEnd: subscription.trial_end,
+      currentPeriodEnd: (subscription as any).current_period_end,
+      trialEnd: (subscription as any).trial_end,
       planId,
       interval,
     });

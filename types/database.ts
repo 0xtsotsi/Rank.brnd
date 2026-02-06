@@ -694,6 +694,384 @@ export interface Database {
           deleted_at?: string | null;
         };
       };
+
+      /**
+       * Exchange Network table
+       * Partner sites in the exchange network for link building
+       */
+      exchange_network: {
+        Row: {
+          id: string;
+          organization_id: string;
+          product_id: string | null;
+          site_id: string | null;
+          domain: string;
+          authority: number | null;
+          niche: string | null;
+          credits_available: number;
+          quality_score: number | null;
+          spam_score: number | null;
+          status: 'active' | 'inactive' | 'pending' | 'suspended';
+          contact_email: string | null;
+          contact_name: string | null;
+          notes: string | null;
+          tags: string[];
+          metadata: Json;
+          last_verified_at: string | null;
+          created_at: string;
+          updated_at: string;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          product_id?: string | null;
+          site_id?: string | null;
+          domain: string;
+          authority?: number | null;
+          niche?: string | null;
+          credits_available?: number;
+          quality_score?: number | null;
+          spam_score?: number | null;
+          status?: 'active' | 'inactive' | 'pending' | 'suspended';
+          contact_email?: string | null;
+          contact_name?: string | null;
+          notes?: string | null;
+          tags?: string[];
+          metadata?: Json;
+          last_verified_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          product_id?: string | null;
+          site_id?: string | null;
+          domain?: string;
+          authority?: number | null;
+          niche?: string | null;
+          credits_available?: number;
+          quality_score?: number | null;
+          spam_score?: number | null;
+          status?: 'active' | 'inactive' | 'pending' | 'suspended';
+          contact_email?: string | null;
+          contact_name?: string | null;
+          notes?: string | null;
+          tags?: string[];
+          metadata?: Json;
+          last_verified_at?: string | null;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+      };
+
+      /**
+       * Exchange Matches table
+       * Tracks exchange matches between organizations/products and exchange sites
+       */
+      exchange_matches: {
+        Row: {
+          id: string;
+          organization_id: string;
+          product_id: string | null;
+          exchange_site_id: string;
+          status: 'pending' | 'approved' | 'published' | 'rejected' | 'cancelled';
+          credits_used: number;
+          target_url: string | null;
+          anchor_text: string | null;
+          content_title: string | null;
+          content_id: string | null;
+          notes: string | null;
+          metadata: Json;
+          requested_at: string;
+          approved_at: string | null;
+          published_at: string | null;
+          completed_at: string | null;
+          created_at: string;
+          updated_at: string;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          product_id?: string | null;
+          exchange_site_id: string;
+          status?: 'pending' | 'approved' | 'published' | 'rejected' | 'cancelled';
+          credits_used?: number;
+          target_url?: string | null;
+          anchor_text?: string | null;
+          content_title?: string | null;
+          content_id?: string | null;
+          notes?: string | null;
+          metadata?: Json;
+          requested_at?: string;
+          approved_at?: string | null;
+          published_at?: string | null;
+          completed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          product_id?: string | null;
+          exchange_site_id?: string;
+          status?: 'pending' | 'approved' | 'published' | 'rejected' | 'cancelled';
+          credits_used?: number;
+          target_url?: string | null;
+          anchor_text?: string | null;
+          content_title?: string | null;
+          content_id?: string | null;
+          notes?: string | null;
+          metadata?: Json;
+          requested_at?: string;
+          approved_at?: string | null;
+          published_at?: string | null;
+          completed_at?: string | null;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+      };
+
+      /**
+       * External Link Sources table
+       * Authoritative external sources for citations and external linking
+       */
+      external_link_sources: {
+        Row: {
+          id: string;
+          domain: string;
+          name: string;
+          url: string | null;
+          description: string | null;
+          category:
+            | 'academic'
+            | 'government'
+            | 'industry'
+            | 'news'
+            | 'reference'
+            | 'statistics'
+            | 'health'
+            | 'technology'
+            | 'business'
+            | 'other';
+          status: 'active' | 'inactive' | 'pending' | 'deprecated';
+          domain_authority: number | null;
+          page_authority: number | null;
+          spam_score: number | null;
+          trustworthiness_score: number | null;
+          is_global: boolean;
+          organization_id: string | null;
+          topics: string[];
+          language: string;
+          last_verified_at: string | null;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          domain: string;
+          name: string;
+          url?: string | null;
+          description?: string | null;
+          category?:
+            | 'academic'
+            | 'government'
+            | 'industry'
+            | 'news'
+            | 'reference'
+            | 'statistics'
+            | 'health'
+            | 'technology'
+            | 'business'
+            | 'other';
+          status?: 'active' | 'inactive' | 'pending' | 'deprecated';
+          domain_authority?: number | null;
+          page_authority?: number | null;
+          spam_score?: number | null;
+          trustworthiness_score?: number | null;
+          is_global?: boolean;
+          organization_id?: string | null;
+          topics?: string[];
+          language?: string;
+          last_verified_at?: string | null;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          domain?: string;
+          name?: string;
+          url?: string | null;
+          description?: string | null;
+          category?:
+            | 'academic'
+            | 'government'
+            | 'industry'
+            | 'news'
+            | 'reference'
+            | 'statistics'
+            | 'health'
+            | 'technology'
+            | 'business'
+            | 'other';
+          status?: 'active' | 'inactive' | 'pending' | 'deprecated';
+          domain_authority?: number | null;
+          page_authority?: number | null;
+          spam_score?: number | null;
+          trustworthiness_score?: number | null;
+          is_global?: boolean;
+          organization_id?: string | null;
+          topics?: string[];
+          language?: string;
+          last_verified_at?: string | null;
+          metadata?: Json;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+      };
+
+      /**
+       * External Link Opportunities table
+       * Suggested external link opportunities for articles based on content analysis
+       */
+      external_link_opportunities: {
+        Row: {
+          id: string;
+          organization_id: string;
+          product_id: string | null;
+          article_id: string | null;
+          external_source_id: string | null;
+          keyword: string | null;
+          suggested_url: string | null;
+          suggested_anchor_text: string | null;
+          context_snippet: string | null;
+          position_in_content: number | null;
+          relevance_score: number | null;
+          status: 'pending' | 'approved' | 'rejected' | 'applied';
+          link_type: string;
+          notes: string | null;
+          metadata: Json;
+          suggested_at: string;
+          approved_at: string | null;
+          applied_at: string | null;
+          created_at: string;
+          updated_at: string;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          product_id?: string | null;
+          article_id?: string | null;
+          external_source_id?: string | null;
+          keyword?: string | null;
+          suggested_url?: string | null;
+          suggested_anchor_text?: string | null;
+          context_snippet?: string | null;
+          position_in_content?: number | null;
+          relevance_score?: number | null;
+          status?: 'pending' | 'approved' | 'rejected' | 'applied';
+          link_type?: string;
+          notes?: string | null;
+          metadata?: Json;
+          suggested_at?: string;
+          approved_at?: string | null;
+          applied_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          product_id?: string | null;
+          article_id?: string | null;
+          external_source_id?: string | null;
+          keyword?: string | null;
+          suggested_url?: string | null;
+          suggested_anchor_text?: string | null;
+          context_snippet?: string | null;
+          position_in_content?: number | null;
+          relevance_score?: number | null;
+          status?: 'pending' | 'approved' | 'rejected' | 'applied';
+          link_type?: string;
+          notes?: string | null;
+          metadata?: Json;
+          suggested_at?: string;
+          approved_at?: string | null;
+          applied_at?: string | null;
+          updated_at?: string;
+          deleted_at?: string | null;
+        };
+      };
+
+      /**
+       * Data Exports table
+       * GDPR data export requests for organizations with tracking and file storage
+       */
+      data_exports: {
+        Row: {
+          id: string;
+          organization_id: string;
+          user_id: string;
+          status: 'pending' | 'processing' | 'completed' | 'failed' | 'expired';
+          format: 'json' | 'csv';
+          file_url: string | null;
+          file_size_bytes: number | null;
+          record_count: number;
+          requested_tables: string[];
+          include_deleted: boolean;
+          error_message: string | null;
+          expires_at: string;
+          completed_at: string | null;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          user_id: string;
+          status?: 'pending' | 'processing' | 'completed' | 'failed' | 'expired';
+          format: 'json' | 'csv';
+          file_url?: string | null;
+          file_size_bytes?: number | null;
+          record_count?: number;
+          requested_tables?: string[];
+          include_deleted?: boolean;
+          error_message?: string | null;
+          expires_at?: string;
+          completed_at?: string | null;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organization_id?: string;
+          user_id?: string;
+          status?: 'pending' | 'processing' | 'completed' | 'failed' | 'expired';
+          format?: 'json' | 'csv';
+          file_url?: string | null;
+          file_size_bytes?: number | null;
+          record_count?: number;
+          requested_tables?: string[];
+          include_deleted?: boolean;
+          error_message?: string | null;
+          expires_at?: string;
+          completed_at?: string | null;
+          metadata?: Json;
+          updated_at?: string;
+        };
+      };
     };
     Views: {
       // Placeholder for view definitions
@@ -1284,6 +1662,8 @@ export interface Database {
       activity_action: 'create' | 'update' | 'delete' | 'publish';
       backlink_status: 'pending' | 'active' | 'lost' | 'disavowed' | 'spam';
       link_type: 'dofollow' | 'nofollow' | 'sponsored' | 'ugc';
+      data_export_status: 'pending' | 'processing' | 'completed' | 'failed' | 'expired';
+      data_export_format: 'json' | 'csv';
     };
     CompositeTypes: {
       // Placeholder for composite type definitions

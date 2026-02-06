@@ -68,7 +68,7 @@ export const timestampSchema = z
 /**
  * Schema for metadata objects
  */
-export const metadataSchema = z.record(z.unknown()).optional();
+export const metadataSchema = z.record(z.string(), z.unknown()).optional();
 
 /**
  * Schema for pagination

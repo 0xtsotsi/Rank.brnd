@@ -19,7 +19,7 @@ export const googleSearchConsoleDataSchema = z.object({
     .date()
     .or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/))
     .transform((val) => new Date(val)),
-  metadata: z.record(z.any()).optional().default({}),
+  metadata: z.record(z.string(), z.any()).optional().default({}),
 });
 
 /**
@@ -99,7 +99,7 @@ export const searchConsoleConnectionSchema = z.object({
 export const searchConsoleErrorResponseSchema = z.object({
   error: z.string(),
   message: z.string(),
-  details: z.record(z.any()).optional(),
+  details: z.record(z.string(), z.any()).optional(),
 });
 
 /**

@@ -16,7 +16,7 @@ import { ZodError } from 'zod';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { resource: string[] } }
+  { params }: { params: Promise<{ resource: string[] }> }
 ) {
   try {
     const { userId } = await auth();
@@ -25,7 +25,8 @@ export async function GET(
     }
 
     // Extract resourceType and resourceId from path
-    const [resourceType, resourceId] = params.resource;
+    const { resource } = await params;
+    const [resourceType, resourceId] = resource;
 
     if (!resourceType || !resourceId) {
       return NextResponse.json(

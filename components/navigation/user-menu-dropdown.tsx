@@ -27,7 +27,14 @@ import {
 } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import type { Organization } from '@clerk/nextjs/dist/types/server';
+
+type Organization = {
+  id: string;
+  name: string;
+  slug: string | null;
+  logoUrl?: string | null;
+  imageUrl?: string | null;
+};
 
 interface UserMenuDropdownProps {
   /** Additional CSS classes for the trigger button */

@@ -60,7 +60,7 @@ const syncSettingsSchema = z.object({
 /**
  * Field mapping schema
  */
-const fieldMappingSchema = z.record(z.string());
+const fieldMappingSchema = z.record(z.string(), z.string());
 
 /**
  * Integration config schema

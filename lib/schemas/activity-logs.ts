@@ -32,7 +32,7 @@ export const createActivityLogSchema = z.object({
   action: activityActionSchema,
   resource_type: z.string().min(1, 'Resource type is required'),
   resource_id: z.string().min(1, 'Resource ID is required'),
-  metadata: z.record(z.any()).optional().default({}),
+  metadata: z.record(z.string(), z.any()).optional().default({}),
   timestamp: z.string().datetime().optional(),
 });
 
@@ -89,7 +89,7 @@ export const bulkCreateActivityLogsSchema = z.object({
         action: activityActionSchema,
         resource_type: z.string().min(1, 'Resource type is required'),
         resource_id: z.string().min(1, 'Resource ID is required'),
-        metadata: z.record(z.any()).optional().default({}),
+        metadata: z.record(z.string(), z.any()).optional().default({}),
       })
     )
     .min(1, 'At least one activity log is required')
@@ -107,7 +107,7 @@ export const logActivitySchema = z.object({
   action: activityActionSchema,
   resourceType: z.string().min(1, 'Resource type is required'),
   resourceId: z.string().min(1, 'Resource ID is required'),
-  metadata: z.record(z.any()).optional().default({}),
+  metadata: z.record(z.string(), z.any()).optional().default({}),
 });
 
 /**

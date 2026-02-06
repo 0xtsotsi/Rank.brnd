@@ -19,7 +19,7 @@ import type { Database } from '@/types/database';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -27,7 +27,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const backlinkId = params.id;
+    const backlinkId = (await params).id;
 
     if (!backlinkId) {
       return NextResponse.json(
@@ -82,7 +82,7 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -90,7 +90,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const backlinkId = params.id;
+    const backlinkId = (await params).id;
 
     if (!backlinkId) {
       return NextResponse.json(
@@ -211,7 +211,7 @@ export async function PUT(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // PATCH behaves the same as PUT for this API
   return PUT(request, { params });
@@ -223,7 +223,7 @@ export async function PATCH(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -231,7 +231,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const backlinkId = params.id;
+    const backlinkId = (await params).id;
 
     if (!backlinkId) {
       return NextResponse.json(

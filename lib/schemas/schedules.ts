@@ -46,7 +46,7 @@ export const createScheduleSchema = z.object({
     .datetime('Invalid recurrence end date')
     .optional(),
   notes: z.string().max(2000, 'Notes are too long').optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -65,7 +65,7 @@ export const updateScheduleSchema = z.object({
     .optional()
     .nullable(),
   notes: z.string().max(2000, 'Notes are too long').optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**

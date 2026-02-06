@@ -129,8 +129,8 @@ export function extractSubscriptionCreated(
     status: subscription.status,
     priceId,
     productId,
-    currentPeriodStart: subscription.current_period_start,
-    currentPeriodEnd: subscription.current_period_end,
+    currentPeriodStart: (subscription as any).current_period_start,
+    currentPeriodEnd: (subscription as any).current_period_end,
     cancelAtPeriodEnd: subscription.cancel_at_period_end,
     trialStart: subscription.trial_start ?? undefined,
     trialEnd: subscription.trial_end ?? undefined,
@@ -152,7 +152,7 @@ export function extractSubscriptionUpdated(
     subscriptionId: subscription.id,
     status: subscription.status,
     priceId,
-    currentPeriodEnd: subscription.current_period_end,
+    currentPeriodEnd: (subscription as any).current_period_end,
     cancelAtPeriodEnd: subscription.cancel_at_period_end,
     cancelAt: subscription.cancel_at ?? undefined,
     canceledAt: subscription.canceled_at ?? undefined,
@@ -186,7 +186,7 @@ export function extractInvoicePaid(
 
   return {
     customerId: invoice.customer as string,
-    subscriptionId: invoice.subscription as string | null,
+    subscriptionId: (invoice as any).subscription as string | null,
     invoiceId: invoice.id,
     amountPaid: invoice.amount_paid,
     currency: invoice.currency,
@@ -209,7 +209,7 @@ export function extractInvoicePaymentFailed(
 
   return {
     customerId: invoice.customer as string,
-    subscriptionId: invoice.subscription as string | null,
+    subscriptionId: (invoice as any).subscription as string | null,
     invoiceId: invoice.id,
     amountDue: invoice.amount_due,
     currency: invoice.currency,

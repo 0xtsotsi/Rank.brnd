@@ -57,7 +57,7 @@ export const createKeywordSchema = z.object({
   targetUrl: z.string().url('Invalid target URL').optional().or(z.literal('')),
   notes: z.string().optional(),
   tags: z.array(z.string()).optional().default([]),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 /**
@@ -115,7 +115,7 @@ export const updateKeywordSchema = z.object({
   targetUrl: z.string().url('Invalid target URL').nullable().optional(),
   notes: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 /**

@@ -5,16 +5,8 @@ Sentry.init({
   environment: process.env.NODE_ENV === "production" ? "production" : "development",
   tracesSampleRate: 1.0,
   replaysSessionSampleRate: 0.1,
-  integrations: [
-    new Sentry.consoleLoggingIntegration({
-      levels: ["log", "warn", "error"],
-    }),
-    new Sentry.BrowserTracing(),
-    new Sentry.Replay({
-      sessionSampleRate: 0.1,
-    }),
-    new Sentry.BrowserProfilingIntegration(),
-  ],
+  // Note: Some integrations may not be available in server-side config
+  integrations: [],
   beforeSend(event, hint) {
     // Don't send certain errors to Sentry
     if (process.env.NODE_ENV === "development") {
@@ -22,10 +14,15 @@ Sentry.init({
         return null;
       }
     }
-    
+
     event.release = process.env.NEXT_PUBLIC_APP_VERSION || "0.1.0";
-    event.tags = event.tags || [];
-    event.tags.push(`env:${process.env.NODE_ENV}`);
+    if (!event.tags) {
+      event.tags = { env: process.env.NODE_ENV || "unknown" };
+    } else if (Array.isArray(event.tags)) {
+      (event.tags as string[]).push(`env:${process.env.NODE_ENV}`);
+    } else {
+      event.tags.env = process.env.NODE_ENV || "unknown";
+    }
     return event;
   },
 });
